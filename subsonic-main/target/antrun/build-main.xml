@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<project name="maven-antrun-" default="main"  >
+<target name="main">
+  <tstamp/>
+  <copy file="C:\Users\haer\subsonic\subsonic-main/src/main/resources/net/sourceforge/subsonic/i18n/ResourceBundle_en.properties" tofile="C:\Users\haer\subsonic\subsonic-main\target/classes/net/sourceforge/subsonic/i18n/ResourceBundle.properties"/>
+  <echo file="C:\Users\haer\subsonic\subsonic-main\target/classes/build_number.txt">0.5.26</echo>
+  <echo file="C:\Users\haer\subsonic\subsonic-main\target/classes/build_date.txt">${DSTAMP}</echo>
+  <echo file="C:\Users\haer\subsonic\subsonic-main\target/classes/version.txt">4.6</echo>
+</target>
+</project>

@@ -1,0 +1,4 @@
+-------------------------------------------------------------------------------
+Test set: net.sourceforge.subsonic.util.StringUtilTestCase
+-------------------------------------------------------------------------------
+Tests run: 17, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.043 sec
