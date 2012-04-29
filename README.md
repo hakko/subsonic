@@ -19,7 +19,7 @@ During install:
 Building
 --------
 
-The build process assumes that you have Java 1.6 or later and Maven 3 installed, and that PostgreSQL is running.
+The build process assumes that you have Java 1.6 or later and Maven installed, and that PostgreSQL is running.
 
     Clone https://github.com/hakko/musiccabinet to $workspace/musiccabinet
     cd $workspace/musiccabinet
@@ -42,4 +42,4 @@ Installation assumes that you have previously installed Subsonic from http://sub
 
 Log in to Subsonic as usual and click the "Configure MusicCabinet" link (the header). It should be pretty self-explanatory from there.
 
-Please note that the initial import of data from last.fm will take a while. I'd guess roughly 30 minutes per 10.000 tracks. You can follow the progress meanwhile but MusicCabinet features won't work until it's finished.
+Please note that the initial import of data from last.fm will take a while, roughly 30 minutes per 10.000 tracks. You can follow the progress meanwhile but MusicCabinet features won't work until it's finished.
