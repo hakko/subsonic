@@ -3,7 +3,7 @@ Subsonic
 
 Subsonic is a web-based music streaming service, created by Sindre Mehus and released under the GPL.
 
-This project is forked from Subsonic version 4.6, adding extensive last.fm integration through the MusicCabinet library.
+This project is forked from Subsonic version 4.6, adding extensive last.fm integration through the MusicCabinet library. See https://github.com/hakko/musiccabinet for details.
 
 There's a static demo of the features added at http://dilerium.se/musiccabinet/demo.htm.
 
