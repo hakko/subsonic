@@ -103,7 +103,7 @@ public class NowPlayingService {
 
                 NowPlayingInfo npi;
                 if ((npi = lastPlayingInfo.get(player.getId())) == null ||
-                		!npi.getFile().equals(file)) {
+                		!npi.getPath().equals(file.getPath())) {
 
                 	MusicFile musicFile = musicFileService.getMusicFile(file);
                 	Artwork artwork = getArtwork(musicFile, url);
@@ -152,7 +152,7 @@ public class NowPlayingService {
                 	username = StringUtil.toHtml(StringUtils.abbreviate(username, 25));
 
 					lastPlayingInfo.put(player.getId(),
-							npi = new NowPlayingInfo(file, username, artist, title,
+							npi = new NowPlayingInfo(file.getPath(), username, artist, title,
 									tooltip, streamUrl, albumUrl, lyricsUrl,
 									coverArtUrl, coverArtZoomUrl, avatarUrl));
                 }

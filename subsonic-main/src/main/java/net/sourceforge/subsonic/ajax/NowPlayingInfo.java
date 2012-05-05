@@ -18,8 +18,6 @@
  */
 package net.sourceforge.subsonic.ajax;
 
-import java.io.File;
-
 /**
  * Details about what a user is currently listening to.
  *
@@ -27,7 +25,7 @@ import java.io.File;
  */
 public class NowPlayingInfo {
 
-	private final File file;
+	private final String path;
     private final String username;
     private final String artist;
     private final String title;
@@ -40,9 +38,9 @@ public class NowPlayingInfo {
     private final String avatarUrl;
     private final long firstRegistered;
 
-    public NowPlayingInfo(File file, String user, String artist, String title, String tooltip, String streamUrl, String albumUrl,
+    public NowPlayingInfo(String path, String user, String artist, String title, String tooltip, String streamUrl, String albumUrl,
                           String lyricsUrl, String coverArtUrl, String coverArtZoomUrl, String avatarUrl) {
-    	this.file = file;
+    	this.path = path;
         this.username = user;
         this.artist = artist;
         this.title = title;
@@ -56,8 +54,8 @@ public class NowPlayingInfo {
         this.firstRegistered = System.currentTimeMillis();
     }
 
-    public File getFile() {
-    	return file;
+    public String getPath() {
+    	return path;
     }
     
     public String getUsername() {
