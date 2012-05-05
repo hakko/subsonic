@@ -10,7 +10,6 @@ There's a static demo of the features added at http://dilerium.se/musiccabinet/d
 Pre-requisites
 --------------
 
-You need a previous, plain installation of Subsonic.
 To use this add-on, you need a PostgreSQL database running on the same host as your Subsonic server.
 There are pre-built binary packages available for most platforms at http://www.postgresql.org/download/.
 During install:
