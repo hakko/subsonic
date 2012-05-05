@@ -22,6 +22,7 @@ Building
 The build process assumes that you have Java 1.6 or later and Maven installed, and that PostgreSQL is running.
 
     Clone https://github.com/hakko/musiccabinet to $workspace/musiccabinet
+    Update PostgreSQL password in $workspace/musiccabinet/musiccabinet-server/src/main/resources/local.jdbc.properties
     cd $workspace/musiccabinet
     mvn exec:java -Dexec.mainClass=com.github.hakko.musiccabinet.service.DatabaseAdministrationService
     mvn install
