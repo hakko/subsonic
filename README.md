@@ -10,7 +10,8 @@ There's a static demo of the features added at http://dilerium.se/musiccabinet/d
 Pre-requisites
 --------------
 
-To use this, you need a PostgreSQL database running on the same host as your Subsonic server.
+You need a previous, plain installation of Subsonic.
+To use this add-on, you need a PostgreSQL database running on the same host as your Subsonic server.
 There are pre-built binary packages available for most platforms at http://www.postgresql.org/download/.
 During install:
 * you'll be asked to create a database user. Stick to the default name, "postgres".
@@ -21,13 +22,13 @@ Building
 
 The build process assumes that you have Java 1.6 or later and Maven installed, and that PostgreSQL is running.
 
-    Clone https://github.com/hakko/musiccabinet to $workspace/musiccabinet
-    Update PostgreSQL password in $workspace/musiccabinet/musiccabinet-server/src/main/resources/local.jdbc.properties
+    Clone git@github.com:hakko/musiccabinet.git to $workspace/musiccabinet
+    Update your PostgreSQL password in $workspace/musiccabinet/musiccabinet-server/src/main/resources/local.jdbc.properties
     cd $workspace/musiccabinet
     mvn exec:java -Dexec.mainClass=com.github.hakko.musiccabinet.service.DatabaseAdministrationService
     mvn install
 
-    Clone https://github.com/hakko/subsonic to $workspace/subsonic.
+    Clone git@github.com:hakko/subsonic.git to $workspace/subsonic.
     cd $workspace/subsonic/subsonic-main
     mvn package
 
