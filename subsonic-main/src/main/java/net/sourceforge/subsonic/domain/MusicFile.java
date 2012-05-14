@@ -186,7 +186,20 @@ public class MusicFile implements Serializable {
 	 *             If an I/O error occurs.
 	 */
 	public boolean isAlbum() throws IOException {
-		return !isFile && getFirstChild() != null;
+		if (isFile) {
+			return false;
+		}
+		File[] files = FileUtil.listFiles(file);
+		for (File file : files) {
+			if (file.isFile()) {
+				String suffix = FilenameUtils.getExtension(file.getName())
+						.toLowerCase();
+				if (isMusicFile(suffix)) {
+					return true;
+				}
+			}
+		}
+		return false;
 	}
 
 	/**
