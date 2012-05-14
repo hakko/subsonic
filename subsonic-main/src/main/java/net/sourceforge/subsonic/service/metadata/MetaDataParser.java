@@ -45,12 +45,6 @@ public abstract class MetaDataParser {
         String album = metaData.getAlbum();
         String title = metaData.getTitle();
 
-        if (artist == null) {
-            artist = guessArtist(file);
-        }
-        if (album == null) {
-            album = guessAlbum(file);
-        }
         if (title == null) {
             title = guessTitle(file);
         }
