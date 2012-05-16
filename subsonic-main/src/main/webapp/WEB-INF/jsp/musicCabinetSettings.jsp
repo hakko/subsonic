@@ -13,7 +13,7 @@
 
 <p style="padding-top:1em"><b>MusicCabinet configuration</b></p>
 
-<form:form method="post" action="musicCabinetSettings.view" commandName="command">
+<form:form method="post" action="musicCabinetSettings.view" commandName="command" onsubmit="document.getElementById('button').disabled = 1;">
 
 <c:choose>
  <c:when test="${command.databaseRunning}">
@@ -63,7 +63,7 @@
            <p>This is made possible by fetching all that information from <a href="http://last.fm">last.fm</a>. However, depending on the size of your library, this could take a while, as they have some regulations on data traffic. Press the button below, and be patient. Normal usage of Subsonic will work meanwhile, you'll just have to wait for the MusicCabinet extended features.</p>
           </div>
           <input type="hidden" name="updateSearchIndex" value="true"/>
-          <input type="submit" value="Start importing data" style="margin-right:0.3em" onclick="this.disabled=true;"/>
+          <input type="submit" value="Start importing data" style="margin-right:0.3em" id="button"/>
          </c:otherwise>
         </c:choose>
        </c:otherwise>
@@ -72,7 +72,7 @@
      <c:otherwise>
       <p>It seems like you recently installed or upgraded MusicCabinet. Press 'Update database' to continue.</p>
       <input type="hidden" name="updateDatabase" value="true"/>
-      <input type="submit" value="Update database" style="margin-right:0.3em" onclick="this.disabled=true;"/>
+      <input type="submit" value="Update database" style="margin-right:0.3em" id="button"/>
      </c:otherwise>
     </c:choose>
    </c:when>
