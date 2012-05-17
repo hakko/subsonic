@@ -14,7 +14,7 @@
     </parent>
 
 	<properties>
-		<musiccabinet.version>0.5.31</musiccabinet.version>
+		<musiccabinet.version>0.5.32</musiccabinet.version>
 	</properties>
 
     <dependencies>
