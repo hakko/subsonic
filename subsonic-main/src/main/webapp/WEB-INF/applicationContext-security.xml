@@ -136,6 +136,7 @@
 
                 /changeCoverArt.view=ROLE_COVERART
                 /editTags.view=ROLE_COVERART
+                /editArtist.view=ROLE_COVERART
 
                 /setMusicFileInfo.view=ROLE_COMMENT
 

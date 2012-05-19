@@ -128,6 +128,10 @@
 	<c:if test="${model.user.commentRole}">
 		| <a href="javascript:toggleComment()"><fmt:message key="main.comment"/></a>
 	</c:if>
+	<c:if test="${model.user.coverArtRole and not empty model.artistInfo}">
+		<sub:url value="/editArtist.view" var="editArtistUrl"><sub:param name="path" value="${model.dir.path}"/><sub:param name="artist" value="${model.artist}"/></sub:url>
+		| <a href="${editArtistUrl}">Edit</a>
+	</c:if>
 
 </h2>
 

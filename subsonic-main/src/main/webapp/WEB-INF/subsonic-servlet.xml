@@ -286,6 +286,12 @@
         <property name="formView" value="tagSettings"/>
     	<property name="tagService" ref="tagService"/>
     </bean>
+    <bean id="editArtistController" class="net.sourceforge.subsonic.controller.EditArtistController">
+        <property name="commandClass" value="net.sourceforge.subsonic.command.EditArtistCommand"/>
+        <property name="successView" value="editArtist"/>
+        <property name="formView" value="editArtist"/>
+    	<property name="artistInfoService" ref="artistInfoService"/>
+    </bean>
     <bean id="playlistController" class="net.sourceforge.subsonic.controller.PlaylistController">
         <property name="viewName" value="playlist"/>
         <property name="playerService" ref="playerService"/>
@@ -465,6 +471,7 @@
                 <prop key="/genres.view">genresController</prop>
                 <prop key="/related.view">relatedController</prop>
                 <prop key="/tagSettings.view">tagSettingsController</prop>
+                <prop key="/editArtist.view">editArtistController</prop>
                 <prop key="/playlist.view">playlistController</prop>
                 <prop key="/xspfPlaylist.view">xspfPlaylistController</prop>
                 <prop key="/coverArt.view">coverArtController</prop>
