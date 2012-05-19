@@ -14,7 +14,7 @@
     </parent>
 
 	<properties>
-		<musiccabinet.version>0.5.32</musiccabinet.version>
+		<musiccabinet.version>0.5.37</musiccabinet.version>
 	</properties>
 
     <dependencies>
@@ -333,6 +333,16 @@
                     </execution>
                 </executions>
             </plugin>
+
+	<plugin>
+		<groupId>org.mortbay.jetty</groupId>
+		<artifactId>maven-jetty-plugin</artifactId>
+		<version>6.1.10</version>
+		<configuration>
+			<stopPort>9966</stopPort>
+			<stopKey>foo</stopKey>
+		</configuration>
+	</plugin>
 
         </plugins>
     </build>
