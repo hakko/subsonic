@@ -47,6 +47,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -112,6 +113,9 @@ public class MainController extends ParameterizableViewController {
         	map.put("artistInfoImageSize", 63);
         } else {
         	map.put("artistInfoImageSize", 126);
+        }
+        if (!userSettings.isAlbumOrderAscending()) {
+        	Collections.reverse(albums);
         }
 
         MusicFileInfo musicInfo = musicInfoService.getMusicFileInfoForPath(dir.getPath());
