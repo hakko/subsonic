@@ -45,6 +45,8 @@ public class UserSettings {
     private boolean nowPlayingAllowed;
     private AvatarScheme avatarScheme = AvatarScheme.NONE;
     private Integer systemAvatarId;
+    private boolean albumOrderAscending = true;
+    private String defaultHomeView;
     private Date changed = new Date();
 
     public UserSettings(String username) {
@@ -195,7 +197,23 @@ public class UserSettings {
         this.systemAvatarId = systemAvatarId;
     }
 
-    /**
+	public boolean isAlbumOrderAscending() {
+		return albumOrderAscending;
+	}
+
+	public void setAlbumOrderAscending(boolean albumOrderAscending) {
+		this.albumOrderAscending = albumOrderAscending;
+	}
+
+    public String getDefaultHomeView() {
+		return defaultHomeView;
+	}
+
+	public void setDefaultHomeView(String defaultHomeView) {
+		this.defaultHomeView = defaultHomeView;
+	}
+
+	/**
      * Returns when the corresponding database entry was last changed.
      *
      * @return When the corresponding database entry was last changed.

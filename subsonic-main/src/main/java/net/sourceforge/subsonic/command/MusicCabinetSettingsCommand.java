@@ -26,6 +26,12 @@ public class MusicCabinetSettingsCommand {
 	private boolean updateDatabase;
 	private boolean updateSearchIndex;
 
+	private int artistRadioArtistCount;
+	private int artistRadioTotalCount;
+	private int artistTopTracksTotalCount;
+	private int genreRadioArtistCount;
+	private int genreRadioTotalCount;
+	
 	public boolean isDatabaseRunning() {
 		return isDatabaseRunning;
 	}
@@ -113,5 +119,45 @@ public class MusicCabinetSettingsCommand {
 	public void setUpdateSearchIndex(boolean updateSearchIndex) {
 		this.updateSearchIndex = updateSearchIndex;
 	}
-	
+
+	public int getArtistRadioArtistCount() {
+		return artistRadioArtistCount;
+	}
+
+	public void setArtistRadioArtistCount(int artistRadioArtistCount) {
+		this.artistRadioArtistCount = artistRadioArtistCount;
+	}
+
+	public int getArtistRadioTotalCount() {
+		return artistRadioTotalCount;
+	}
+
+	public void setArtistRadioTotalCount(int artistRadioTotalCount) {
+		this.artistRadioTotalCount = artistRadioTotalCount;
+	}
+
+	public int getArtistTopTracksTotalCount() {
+		return artistTopTracksTotalCount;
+	}
+
+	public void setArtistTopTracksTotalCount(int artistTopTracksTotalCount) {
+		this.artistTopTracksTotalCount = artistTopTracksTotalCount;
+	}
+
+	public int getGenreRadioArtistCount() {
+		return genreRadioArtistCount;
+	}
+
+	public void setGenreRadioArtistCount(int genreRadioArtistCount) {
+		this.genreRadioArtistCount = genreRadioArtistCount;
+	}
+
+	public int getGenreRadioTotalCount() {
+		return genreRadioTotalCount;
+	}
+
+	public void setGenreRadioTotalCount(int genreRadioTotalCount) {
+		this.genreRadioTotalCount = genreRadioTotalCount;
+	}
+
 }

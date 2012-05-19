@@ -61,6 +61,33 @@
                 <c:import url="helpToolTip.jsp"><c:param name="topic" value="theme"/></c:import>
             </td>
         </tr>
+        
+        <tr>
+        	<td>Album ordering</td>
+        	<td>
+        		<form:select path="albumOrderAscending" cssStyle="width:15em">
+        			<form:option value="true" label="Ascending"/>
+        			<form:option value="false" label="Descending"/>
+        		</form:select>
+                <c:import url="helpToolTip.jsp"><c:param name="topic" value="albumorderascending"/></c:import>
+            </td>
+        </tr>
+        
+        <tr>
+        	<td>Default home view</td>
+        	<td>
+        		<form:select path="defaultHomeView" cssStyle="width:15em">
+        			<form:option value="random" label="Random"/>
+        			<form:option value="newest" label="Recently added"/>
+        			<form:option value="highest" label="Top rated"/>
+        			<form:option value="frequent" label="Most played"/>
+        			<form:option value="recent" label="Recently played"/>
+        			<form:option value="users" label="Users"/>
+        		</form:select>
+                <c:import url="helpToolTip.jsp"><c:param name="topic" value="defaulthomeview"/></c:import>
+            </td>
+        </tr>
+        	
     </table>
 
     <table class="indent">

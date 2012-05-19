@@ -44,7 +44,13 @@ public class MusicCabinetSettingsController extends SimpleFormController {
         if (command.isDatabaseRunning() && command.isDatabaseUpdated()) {
         	command.setSearchIndexCreated(playlistService.isSearchIndexCreated());
         }
+        
         command.setLastFMUsername(settingsService.getMusicCabinetLastFMUsername());
+        command.setArtistRadioArtistCount(settingsService.getArtistRadioArtistCount());
+        command.setArtistRadioTotalCount(settingsService.getArtistRadioTotalCount());
+        command.setArtistTopTracksTotalCount(settingsService.getArtistTopTracksTotalCount());
+        command.setGenreRadioArtistCount(settingsService.getGenreRadioArtistCount());
+        command.setGenreRadioTotalCount(settingsService.getGenreRadioTotalCount());
         
         return command;
     }
@@ -90,14 +96,12 @@ public class MusicCabinetSettingsController extends SimpleFormController {
         
         if (command.getLastFMUsername() != null) {
         	settingsService.setMusicCabinetLastFMUsername(command.getLastFMUsername());
-        	settingsService.save();
         }
         
         if (command.getMusicCabinetJDBCPassword() != null) {
         	String password = command.getMusicCabinetJDBCPassword();
         	if (dbAdmService.isPasswordCorrect(password)) {
             	settingsService.setMusicCabinetJDBCPassword(password);
-            	settingsService.save();
             	command.setPasswordCorrect(true);
             	dbAdmService.forcePasswordUpdate(password);
                 command.setDatabaseUpdated(dbAdmService.isDatabaseUpdated());
@@ -106,6 +110,13 @@ public class MusicCabinetSettingsController extends SimpleFormController {
         		command.setPasswordAttemptWrong(true);
         	}
         }
+        
+        settingsService.setArtistRadioArtistCount(command.getArtistRadioArtistCount());
+        settingsService.setArtistRadioTotalCount(command.getArtistRadioTotalCount());
+        settingsService.setArtistTopTracksTotalCount(command.getArtistTopTracksTotalCount());
+        settingsService.setGenreRadioArtistCount(command.getGenreRadioArtistCount());
+        settingsService.setGenreRadioTotalCount(command.getGenreRadioTotalCount());
+        settingsService.save();
     }
     
     // Spring setters

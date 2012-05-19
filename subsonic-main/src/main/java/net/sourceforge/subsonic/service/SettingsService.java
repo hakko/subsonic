@@ -117,9 +117,15 @@ public class SettingsService {
     private static final String KEY_URL_REDIRECT_CONTEXT_PATH = "UrlRedirectContextPath";
     private static final String KEY_SERVER_ID = "ServerId";
     private static final String KEY_SETTINGS_CHANGED = "SettingsChanged";
+
     private static final String KEY_MUSICCABINET_LASTFM_USERNAME = "MusicCabinetLastFMUsername";
     private static final String KEY_MUSICCABINET_JDBC_PASSWORD = "MusicCabinetJDBCPassword";
     private static final String KEY_MUSICCABINET_FIRST_INVOCATION = "MusicCabinetFirstInvocation";
+    private static final String KEY_MUSICCABINET_ARTIST_RADIO_ARTIST_COUNT = "MusicCabinetArtistRadioArtistCount";
+    private static final String KEY_MUSICCABINET_ARTIST_RADIO_TOTAL_COUNT = "MusicCabinetArtistRadioTotalCount";
+    private static final String KEY_MUSICCABINET_ARTIST_TOP_TRACKS_TOTAL_COUNT = "MusicCabinetArtistTopTracksTotalCount";
+    private static final String KEY_MUSICCABINET_GENRE_RADIO_ARTIST_COUNT = "MusicCabinetGenreRadioArtistCount";
+    private static final String KEY_MUSICCABINET_GENRE_RADIO_TOTAL_COUNT = "MusicCabinetGenreRadioTotalCount";
     
     // Default values.
     private static final String DEFAULT_INDEX_STRING = "A B C D E F G H I J K L M N O P Q R S T U V W X-Z(XYZ)";
@@ -176,6 +182,12 @@ public class SettingsService {
     private static final String DEFAULT_SERVER_ID = null;
     private static final long DEFAULT_SETTINGS_CHANGED = 0L;
 
+    private static final int DEFAULT_MUSICCABINET_ARTIST_RADIO_ARTIST_COUNT = 3;
+    private static final int DEFAULT_MUSICCABINET_ARTIST_RADIO_TOTAL_COUNT = 20;
+    private static final int DEFAULT_MUSICCABINET_ARTIST_TOP_TRACKS_TOTAL_COUNT = 20;
+    private static final int DEFAULT_MUSICCABINET_GENRE_RADIO_ARTIST_COUNT = 1;
+    private static final int DEFAULT_MUSICCABINET_GENRE_RADIO_TOTAL_COUNT = 25;
+    
     // Array of obsolete keys.  Used to clean property file.
     private static final List<String> OBSOLETE_KEYS = Arrays.asList("PortForwardingPublicPort", "PortForwardingLocalPort", "DownsamplingCommand",
             "AutoCoverBatch", "MusicMask", "VideoMask", "CoverArtMask");
@@ -301,6 +313,14 @@ public class SettingsService {
         }
 
         return home;
+    }
+
+    private int getInt(String key, int defaultValue) {
+    	return Integer.valueOf(properties.getProperty(key, String.valueOf(defaultValue)));
+    }
+
+    private void setInt(String key, int value) {
+        setProperty(key, String.valueOf(value));
     }
 
     public String getIndexString() {
@@ -1208,5 +1228,49 @@ public class SettingsService {
     	// storing the password hex-encoded obviously isn't "safe", but better than clear-text.
     	properties.setProperty(KEY_MUSICCABINET_JDBC_PASSWORD, utf8HexEncode(password));
     }
+    public int getArtistRadioArtistCount() {
+    	return getInt(KEY_MUSICCABINET_ARTIST_RADIO_ARTIST_COUNT, 
+    			DEFAULT_MUSICCABINET_ARTIST_RADIO_ARTIST_COUNT);
+    }
+    
+    public void setArtistRadioArtistCount(int artistCount) {
+    	setInt(KEY_MUSICCABINET_ARTIST_RADIO_ARTIST_COUNT, artistCount);
+    }
 
+    public int getArtistRadioTotalCount() {
+    	return getInt(KEY_MUSICCABINET_ARTIST_RADIO_TOTAL_COUNT, 
+    			DEFAULT_MUSICCABINET_ARTIST_RADIO_TOTAL_COUNT);
+    }
+    
+    public void setArtistRadioTotalCount(int totalCount) {
+    	setInt(KEY_MUSICCABINET_ARTIST_RADIO_TOTAL_COUNT, totalCount);
+    }
+    
+    public int getArtistTopTracksTotalCount() {
+    	return getInt(KEY_MUSICCABINET_ARTIST_TOP_TRACKS_TOTAL_COUNT, 
+    			DEFAULT_MUSICCABINET_ARTIST_TOP_TRACKS_TOTAL_COUNT);
+    }
+    
+    public void setArtistTopTracksTotalCount(int totalCount) {
+    	setInt(KEY_MUSICCABINET_ARTIST_TOP_TRACKS_TOTAL_COUNT, totalCount);
+    }
+    
+    public int getGenreRadioArtistCount() {
+    	return getInt(KEY_MUSICCABINET_GENRE_RADIO_ARTIST_COUNT, 
+    			DEFAULT_MUSICCABINET_GENRE_RADIO_ARTIST_COUNT);
+    }
+    
+    public void setGenreRadioArtistCount(int artistCount) {
+    	setInt(KEY_MUSICCABINET_GENRE_RADIO_ARTIST_COUNT, artistCount);
+    }
+
+    public int getGenreRadioTotalCount() {
+    	return getInt(KEY_MUSICCABINET_GENRE_RADIO_TOTAL_COUNT, 
+    			DEFAULT_MUSICCABINET_GENRE_RADIO_TOTAL_COUNT);
+    }
+    
+    public void setGenreRadioTotalCount(int totalCount) {
+    	setInt(KEY_MUSICCABINET_GENRE_RADIO_TOTAL_COUNT, totalCount);
+    }
+    
 }

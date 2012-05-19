@@ -153,19 +153,24 @@ public class PlaylistService {
     public PlaylistInfo playArtistRadio(String path, String mode) throws Exception {
     	LOG.debug("starting playArtistRadio(" + path + ", " + mode + ")");
 
-    	return getPlaylistInfo(mode, playlistService.getPlaylistForArtist(path));
+    	return getPlaylistInfo(mode, playlistService.getPlaylistForArtist(path, 
+    			settingsService.getArtistRadioArtistCount(),
+    			settingsService.getArtistRadioTotalCount()));
     }
 
     public PlaylistInfo playTopTracks(String path, String mode) throws Exception {
     	LOG.debug("starting playTopTracks(" + path + ", " + mode + ")");
 
-    	return getPlaylistInfo(mode, playlistService.getTopTracksForArtist(path));
+    	return getPlaylistInfo(mode, playlistService.getTopTracksForArtist(path,
+    			settingsService.getArtistTopTracksTotalCount()));
     }
     
     public PlaylistInfo playGenreRadio(String[] tags) throws Exception {
     	LOG.debug("starting playGenreRadio(" + Arrays.toString(tags) + ")");
     	
-    	return getPlaylistInfo(Playlist.PLAY, playlistService.getTopTracksForTags(tags));
+    	return getPlaylistInfo(Playlist.PLAY, playlistService.getTopTracksForTags(tags,
+    			settingsService.getGenreRadioArtistCount(),
+    			settingsService.getGenreRadioTotalCount()));
     }
     
     private PlaylistInfo getPlaylistInfo(String mode, List<String> trackPaths) throws Exception {

@@ -51,8 +51,10 @@ public class PersonalSettingsCommand {
     private boolean lastFmEnabled;
     private String lastFmUsername;
     private String lastFmPassword;
+    private boolean albumOrderAscending;
+    private String defaultHomeView;
     private boolean isReloadNeeded;
-
+    
     public User getUser() {
         return user;
     }
@@ -205,7 +207,23 @@ public class PersonalSettingsCommand {
         this.lastFmPassword = lastFmPassword;
     }
 
-    public boolean isReloadNeeded() {
+    public boolean isAlbumOrderAscending() {
+		return albumOrderAscending;
+	}
+
+	public void setAlbumOrderAscending(boolean albumOrderingAscending) {
+		this.albumOrderAscending = albumOrderingAscending;
+	}
+
+	public String getDefaultHomeView() {
+		return defaultHomeView;
+	}
+
+	public void setDefaultHomeView(String defaultHomeView) {
+		this.defaultHomeView = defaultHomeView;
+	}
+
+	public boolean isReloadNeeded() {
         return isReloadNeeded;
     }
 

@@ -6,6 +6,7 @@
 <body class="mainframe bgcolor1">
 <script type="text/javascript" src="<c:url value="/script/wz_tooltip.js"/>"></script>
 <script type="text/javascript" src="<c:url value="/script/tip_balloon.js"/>"></script>
+<script type="text/javascript" src="<c:url value="/script/prototype.js"/>"></script>
 
 <c:import url="settingsHeader.jsp">
     <c:param name="cat" value="musicCabinet"/>
@@ -42,14 +43,60 @@
            <tr>
             <td>Last.fm username</td>
             <td>
-             <form:input path="lastFMUsername" size="70"/>
+             <form:input path="lastFMUsername" size="25"/>
              <c:import url="helpToolTip.jsp"><c:param name="topic" value="lastfmusername"/></c:import>
+            </td>
+           </tr>
+           <tr>
+            <td>Artist radio, number of songs</td>
+            <td>
+             <form:input path="artistRadioTotalCount" size="5"/>
+             <c:import url="helpToolTip.jsp"><c:param name="topic" value="artistradiototalcount"/></c:import>
+            </td>
+           </tr>
+           <tr>
+            <td>Artist radio, max songs for each artist</td>
+            <td>
+             <form:input path="artistRadioArtistCount" size="5"/>
+             <c:import url="helpToolTip.jsp"><c:param name="topic" value="artistradioartistcount"/></c:import>
+            </td>
+           </tr>
+           <tr>
+            <td>Artist top tracks, number of songs</td>
+            <td>
+             <form:input path="artistTopTracksTotalCount" size="5"/>
+             <c:import url="helpToolTip.jsp"><c:param name="topic" value="artisttoptrackstotalcount"/></c:import>
+            </td>
+           </tr>
+           <tr>
+            <td>Genre radio, number of songs</td>
+            <td>
+             <form:input path="genreRadioTotalCount" size="5"/>
+             <c:import url="helpToolTip.jsp"><c:param name="topic" value="genreradiototalcount"/></c:import>
+            </td>
+           </tr>
+           <tr>
+            <td>Genre radio, max songs for each artist</td>
+            <td>
+             <form:input path="genreRadioArtistCount" size="5"/>
+             <c:import url="helpToolTip.jsp"><c:param name="topic" value="genreradioartistcount"/></c:import>
             </td>
            </tr>
           </table>
           <input type="submit" value="Save" style="margin-right:0.3em"/>
           <br/><br/><br/>
           <p>Tags are configured <a href="tagSettings.view">here</a>.</p>
+
+		<script type="text/javascript" language="javascript">
+		['artistRadioTotalCount', 'artistRadioArtistCount', 'artistTopTracksTotalCount',
+		 'genreRadioTotalCount', 'genreRadioArtistCount'].each(function(item) {
+			Event.observe(item, 'keyup', function(e) {
+				this.value = this.value.replace(/[^0-9]/g,'');
+				return true;
+			})
+		});
+		</script>
+
          </c:when>
          <c:otherwise>
           <div style="width:60%">

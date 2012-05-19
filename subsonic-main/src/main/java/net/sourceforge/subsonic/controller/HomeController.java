@@ -23,11 +23,14 @@ import net.sourceforge.subsonic.domain.MusicFile;
 import net.sourceforge.subsonic.domain.MusicFile.MetaData;
 import net.sourceforge.subsonic.domain.MusicFileInfo;
 import net.sourceforge.subsonic.domain.User;
+import net.sourceforge.subsonic.domain.UserSettings;
 import net.sourceforge.subsonic.service.MusicFileService;
 import net.sourceforge.subsonic.service.MusicInfoService;
 import net.sourceforge.subsonic.service.SearchService;
 import net.sourceforge.subsonic.service.SecurityService;
 import net.sourceforge.subsonic.service.SettingsService;
+
+import org.apache.commons.lang.StringUtils;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.ParameterizableViewController;
 import org.springframework.web.servlet.view.RedirectView;
@@ -84,7 +87,8 @@ public class HomeController extends ParameterizableViewController {
 
         String listType = request.getParameter("listType");
         if (listType == null) {
-            listType = "random";
+            UserSettings userSettings = settingsService.getUserSettings(user.getUsername());
+            listType = StringUtils.defaultIfEmpty(userSettings.getDefaultHomeView(), "random");
         }
 
         List<Album> albums;

@@ -2,12 +2,20 @@
 
 <html><head>
     <%@ include file="head.jsp" %>
+ 	<script type="text/javascript" src="<c:url value="/script/prototype.js"/>"></script>
+ 	
 </head>
 <body class="mainframe bgcolor1">
 
+<script type="text/javascript" language="javascript">
+	function toggleCheckbox(h) {
+		$('tagSettings').getInputs('checkbox').each(function(e) { if (e.name != 'toggle') e.checked = h });
+	}
+</script>
+
 <p style="padding-top:1em"><b>Tag configuration</b></p>
 
-<form:form method="post" action="tagSettings.view" commandName="command">
+<form:form method="post" action="tagSettings.view" commandName="command" id="tagSettings">
 
 <div style="width:60%">
 
@@ -20,6 +28,8 @@
 <p>Tags for the artists in your library are fetched automatically from <a href="http://last.fm">last.fm</a>. You can browse your library by tags, or generate playlists based on them.</p>
 
 <p>Mark the tags you want to use on <a href="genres.view">Genres</a> and <a href="radio.view">Radio</a> pages, and press Save. To give an idea of the popularity of a tag, the number of matching artists in your library is displayed next to each tag.</p>
+
+<p><a href="javascript:toggleCheckbox(1)">Mark all</a> | <a href="javascript:toggleCheckbox(0)">Mark none</a></p>
 
 <table>
 <tr>
