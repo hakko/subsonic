@@ -39,7 +39,9 @@
 	        <tr>
    	     </c:if>
         <sub:url var="url" value="main.view">
-	        <sub:param name="path" value="${artistRecommendation.path}"/>
+			<c:forEach items="${artistRecommendation.paths}" var="artistRootPath">
+				<sub:param name="path" value="${artistRootPath}"/>
+			</c:forEach>
         </sub:url>
 		<td style="vertical-align:top">
 			<a href="${url}">
@@ -52,7 +54,7 @@
 					</div>
 					<div style="width:18px;float:right">
 					    <c:set var="path">
-					        <sub:escapeJavaScript string="${artistRecommendation.path}"/>
+					        <sub:escapeJavaScript string="${artistRecommendation.paths[0]}"/>
 	 					</c:set>
 						<a href="javascript:noop()" onclick="top.playlist.onPlayTopTracks('${path}', 'P');">
 			                <img src="<spring:theme code="playImage"/>" alt="Play top tracks" title="Play top tracks">
@@ -72,7 +74,7 @@
 <h1>You might also like:</h1>
 <ul>
 	<c:forEach items="${model.artistsNotInLibrary}" var="recommendedArtist" varStatus="loopStatus">
-		<li><a href="http://last.fm/music/${recommendedArtist.path}">${recommendedArtist.artistName}</a></li>
+		<li><a href="http://last.fm/music/${recommendedArtist.paths[0]}">${recommendedArtist.artistName}</a></li>
 	</c:forEach>
 <ul>
 </c:if>
