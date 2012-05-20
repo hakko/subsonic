@@ -951,6 +951,10 @@ public class SettingsService {
         musicFolderDao.updateMusicFolder(musicFolder);
     }
 
+    public List<String> getAllLastFmUsers() {
+    	return userDao.getAllLastFmUsers();
+    }
+    
     /**
      * Returns all internet radio stations. Disabled stations are not returned.
      *

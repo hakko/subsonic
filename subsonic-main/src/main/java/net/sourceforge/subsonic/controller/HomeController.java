@@ -18,6 +18,7 @@
  */
 package net.sourceforge.subsonic.controller;
 
+import static org.apache.commons.lang.StringUtils.isEmpty;
 import net.sourceforge.subsonic.Logger;
 import net.sourceforge.subsonic.domain.MusicFile;
 import net.sourceforge.subsonic.domain.MusicFile.MetaData;
@@ -29,14 +30,19 @@ import net.sourceforge.subsonic.service.MusicInfoService;
 import net.sourceforge.subsonic.service.SearchService;
 import net.sourceforge.subsonic.service.SecurityService;
 import net.sourceforge.subsonic.service.SettingsService;
+import net.sourceforge.subsonic.util.Util;
 
 import org.apache.commons.lang.StringUtils;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.ParameterizableViewController;
 import org.springframework.web.servlet.view.RedirectView;
 
+import com.github.hakko.musiccabinet.domain.model.aggr.ArtistRecommendation;
+import com.github.hakko.musiccabinet.domain.model.library.LastFmUser;
+import com.github.hakko.musiccabinet.domain.model.library.Period;
 import com.github.hakko.musiccabinet.domain.model.music.AlbumInfo;
 import com.github.hakko.musiccabinet.service.AlbumInfoService;
+import com.github.hakko.musiccabinet.service.UserTopArtistsService;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -68,8 +74,11 @@ public class HomeController extends ParameterizableViewController {
     private MusicFileService musicFileService;
     private SecurityService securityService;
     private AlbumInfoService albumInfoService;
+    private UserTopArtistsService userTopArtistsService;
     
     protected ModelAndView handleRequestInternal(HttpServletRequest request, HttpServletResponse response) throws Exception {
+
+        Map<String, Object> map = new HashMap<String, Object>();
 
         User user = securityService.getCurrentUser(request);
         if (user.isAdminRole() && settingsService.isGettingStartedEnabled()) {
@@ -91,7 +100,7 @@ public class HomeController extends ParameterizableViewController {
             listType = StringUtils.defaultIfEmpty(userSettings.getDefaultHomeView(), "random");
         }
 
-        List<Album> albums;
+        List<Album> albums = null;
         if ("highest".equals(listType)) {
             albums = getHighestRated(listOffset, listSize);
         } else if ("frequent".equals(listType)) {
@@ -100,12 +109,31 @@ public class HomeController extends ParameterizableViewController {
             albums = getMostRecent(listOffset, listSize);
         } else if ("newest".equals(listType)) {
             albums = getNewest(listOffset, listSize);
-        } else {
+        } else if ("random".equals(listType) || StringUtils.isEmpty(listType)) {
             albums = getRandom(listSize);
         }
 
-        Map<String, Object> map = new HashMap<String, Object>();
-        map.put("albums", albums);
+        if ("topartists".equals(listType)) {
+        	String lastFmUsername = settingsService.getUserSettings(user.getUsername()).getLastFmUsername();
+        	String listPeriod = request.getParameter("listPeriod");
+        	Period period = Period.THREE_MONTHS;
+        	for (Period p : Period.values()) {
+        		if (p.getDescription().equals(listPeriod)) {
+        			period = p;
+        		}
+        	}
+        	if (!isEmpty(lastFmUsername)) {
+        		List<ArtistRecommendation> topArtists = Util.square(userTopArtistsService.getUserTopArtists(
+        				new LastFmUser(lastFmUsername), period, 0, 25));
+        		map.put("lastFmUser", lastFmUsername);
+        		map.put("artists", topArtists);
+        		map.put("listPeriod", period.getDescription());
+        	}
+        }
+
+        if (albums != null) {
+        	map.put("albums", albums);
+        }
         map.put("welcomeTitle", settingsService.getWelcomeTitle());
         map.put("welcomeSubtitle", settingsService.getWelcomeSubtitle());
         map.put("welcomeMessage", settingsService.getWelcomeMessage());
@@ -294,8 +322,12 @@ public class HomeController extends ParameterizableViewController {
 		this.albumInfoService = albumInfoService;
 	}
 
+    public void setUserTopArtistsService(UserTopArtistsService userTopArtistsService) {
+		this.userTopArtistsService = userTopArtistsService;
+	}
 
-    /**
+
+	/**
      * Contains info for a single album.
      */
     public static class Album {

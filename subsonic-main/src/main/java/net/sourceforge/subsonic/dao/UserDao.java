@@ -85,6 +85,11 @@ public class UserDao extends AbstractDao {
         return query(sql, userRowMapper);
     }
 
+    public List<String> getAllLastFmUsers() {
+    	String sql = "select distinct LAST_FM_USERNAME from user_settings where LAST_FM_USERNAME is not null";
+    	return getJdbcTemplate().queryForList(sql, String.class);
+    }
+    
     /**
      * Creates a new user.
      *

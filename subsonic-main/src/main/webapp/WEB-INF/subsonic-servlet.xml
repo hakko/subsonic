@@ -256,6 +256,7 @@
         <property name="musicFileService" ref="musicFileService"/>
         <property name="securityService" ref="securityService"/>
         <property name="albumInfoService" ref="albumInfoService"/>
+        <property name="userTopArtistsService" ref="userTopArtistsService"/>
     </bean>
     <bean id="editTagsController" class="net.sourceforge.subsonic.controller.EditTagsController">
         <property name="viewName" value="editTags"/>

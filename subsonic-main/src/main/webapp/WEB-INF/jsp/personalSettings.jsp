@@ -82,6 +82,7 @@
         			<form:option value="highest" label="Top rated"/>
         			<form:option value="frequent" label="Most played"/>
         			<form:option value="recent" label="Recently played"/>
+        			<form:option value="topartists" label="Top artists"/>
         			<form:option value="users" label="Users"/>
         		</form:select>
                 <c:import url="helpToolTip.jsp"><c:param name="topic" value="defaulthomeview"/></c:import>

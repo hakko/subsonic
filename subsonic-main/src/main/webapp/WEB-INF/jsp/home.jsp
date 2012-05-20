@@ -21,7 +21,7 @@
 </c:if>
 
 <h2>
-    <c:forTokens items="random newest highest frequent recent users" delims=" " var="cat" varStatus="loopStatus">
+    <c:forTokens items="random newest highest frequent recent topartists users" delims=" " var="cat" varStatus="loopStatus">
         <c:if test="${loopStatus.count > 1}">&nbsp;|&nbsp;</c:if>
         <sub:url var="url" value="home.view">
             <sub:param name="listSize" value="${model.listSize}"/>
@@ -44,13 +44,12 @@
     <p class="warning"><fmt:message key="home.scan"/></p>
 </c:if>
 
-<h2><fmt:message key="home.${model.listType}.text"/></h2>
+<c:if test="${not model.listType eq 'topartists'}"><h2><fmt:message key="home.${model.listType}.text"/></h2></c:if>
 
 <table width="100%">
     <tr>
         <td style="vertical-align:top;">
-<c:choose>
-<c:when test="${model.listType eq 'users'}">
+<c:if test="${model.listType eq 'users'}">
     <table>
         <tr>
             <th><fmt:message key="home.chart.total"/></th>
@@ -69,9 +68,70 @@
             <td><img src="<c:url value="/userChart.view"><c:param name="type" value="upload"/></c:url>" alt=""></td>
         </tr>
 </table>
+</c:if>
 
-</c:when>
-<c:otherwise>
+<c:if test="${model.listType eq 'topartists'}">
+<h3>
+    <c:forTokens items="3month 6month 12month overall" delims=" " var="period" varStatus="loopStatus">
+        <c:if test="${loopStatus.count > 1}">&nbsp;|&nbsp;</c:if>
+        <sub:url var="url" value="home.view">
+            <sub:param name="listType" value="topartists"/>
+            <sub:param name="listPeriod" value="${period}"/>
+        </sub:url>
+
+        <c:choose>
+            <c:when test="${model.listPeriod eq period}">
+                <span class="headerSelected"><fmt:message key="home.${period}.title"/></span>
+            </c:when>
+            <c:otherwise>
+                <a href="${url}"><fmt:message key="home.${period}.title"/></a>
+            </c:otherwise>
+        </c:choose>
+
+    </c:forTokens>
+</h3>
+<c:if test="${empty model.lastFmUser}">You haven't yet added your Last.fm username <a href="personalSettings.view">here</a>.</c:if>
+<c:if test="${not empty model.lastFmUser and empty model.artists}">No artists found! Please update the search index <a href="searchSettings.view">here</a>.</c:if>
+<c:if test="${not empty model.listPeriod and not empty model.artists}">
+<table>
+	<c:forEach items="${model.artists}" var="artistRecommendation" varStatus="loopStatus">
+        <c:if test="${loopStatus.count % 5 == 1}">
+	        <tr>
+   	     </c:if>
+        <sub:url var="url" value="main.view">
+			<c:forEach items="${artistRecommendation.paths}" var="artistRootPath">
+				<sub:param name="path" value="${artistRootPath}"/>
+			</c:forEach>
+        </sub:url>
+		<td style="vertical-align:top">
+			<a href="${url}">
+				<div class="outerpair1"><div class="outerpair2"><div class="shadowbox"><div class="innerbox">
+					<img width="126" height="126" src="${artistRecommendation.imageUrl}" alt="">
+				</div></div></div></div>
+				<div style="detail">
+					<div style="width:108px;float:left">
+						${artistRecommendation.artistName}
+					</div>
+					<div style="width:18px;float:right">
+					    <c:set var="path">
+					        <sub:escapeJavaScript string="${artistRecommendation.paths[0]}"/>
+	 					</c:set>
+						<a href="javascript:noop()" onclick="top.playlist.onPlayTopTracks('${path}', 'P');">
+			                <img src="<spring:theme code="playImage"/>" alt="Play top tracks" title="Play top tracks">
+						</a>
+					</div>
+				</div>
+			</a>
+		</td>
+        <c:if test="${loopStatus.count % 5 == 0}">
+            </tr>
+        </c:if>
+	</c:forEach>
+</table>
+</c:if>
+</c:if>
+
+<c:if test="${not empty model.albums}">
 
     <table>
         <c:forEach items="${model.albums}" var="album" varStatus="loopStatus">
@@ -168,8 +228,7 @@
             </c:choose>
         </tr>
     </table>
-</c:otherwise>
-</c:choose>
+</c:if>
         </td>
             <c:if test="${not empty model.welcomeMessage}">
                 <td style="vertical-align:top;width:20em">

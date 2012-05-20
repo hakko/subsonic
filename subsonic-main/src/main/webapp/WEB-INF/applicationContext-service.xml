@@ -84,6 +84,7 @@
         <property name="subsonicIndexService" ref="subsonicIndexService"/>
         <property name="playlistGeneratorService" ref="playlistGeneratorService"/>
         <property name="tagInfoService" ref="tagInfoService"/>
+        <property name="userTopArtistsService" ref="userTopArtistsService"/>
         <property name="searchIndexUpdateExecutorService" ref="searchIndexUpdateExecutorService"/>
     </bean>
 
@@ -320,6 +321,12 @@
 		<property name="musicDirectoryDao" ref="musicDirectoryDao" />
 		<property name="trackRelationService" ref="trackRelationService" />
 	</bean>
+
+	<bean id="userTopArtistsService" class="com.github.hakko.musiccabinet.service.UserTopArtistsService">
+		<property name="userTopArtistsClient" ref="userTopArtistsClient" />
+		<property name="userTopArtistsDao" ref="userTopArtistsDao" />
+		<property name="webserviceHistoryDao" ref="webserviceHistoryDao" />
+	</bean>
 	
 	
 	<!--  LAST.FM WS CLIENTS -->
@@ -362,6 +369,11 @@
 		<property name="throttleService" ref="throttleService" />
 	</bean>
 
+	<bean id="userTopArtistsClient" class="com.github.hakko.musiccabinet.ws.lastfm.UserTopArtistsClient">
+		<property name="webserviceHistoryDao" ref="webserviceHistoryDao" />
+		<property name="throttleService" ref="throttleService" />
+	</bean>
+
 
 	<!--  DAOs  -->
 
@@ -384,6 +396,7 @@
 	<bean id="webserviceHistoryDao" class="com.github.hakko.musiccabinet.dao.jdbc.JdbcWebserviceHistoryDao">
 		<property name="dataSource" ref="dataSource" />
 		<property name="musicDao" ref="musicDao" />
+		<property name="lastFmUserDao" ref="lastFmUserDao" />
 	</bean>
 
 	<bean id="trackRelationDao" class="com.github.hakko.musiccabinet.dao.jdbc.JdbcTrackRelationDao">
@@ -423,6 +436,14 @@
 	</bean>
 
 	<bean id="tagInfoDao" class="com.github.hakko.musiccabinet.dao.jdbc.JdbcTagInfoDao">
+		<property name="dataSource" ref="dataSource" />
+	</bean>
+
+	<bean id="lastFmUserDao" class="com.github.hakko.musiccabinet.dao.jdbc.JdbcLastFmUserDao">
+		<property name="dataSource" ref="dataSource" />
+	</bean>
+
+	<bean id="userTopArtistsDao" class="com.github.hakko.musiccabinet.dao.jdbc.JdbcUserTopArtistsDao">
 		<property name="dataSource" ref="dataSource" />
 	</bean>
 	

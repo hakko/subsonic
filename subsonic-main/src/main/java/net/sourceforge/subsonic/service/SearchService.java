@@ -34,6 +34,7 @@ import static net.sourceforge.subsonic.service.LuceneSearchService.IndexType.*;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang.StringUtils;
 
+import com.github.hakko.musiccabinet.domain.model.library.LastFmUser;
 import com.github.hakko.musiccabinet.service.AlbumInfoService;
 import com.github.hakko.musiccabinet.service.ArtistInfoService;
 import com.github.hakko.musiccabinet.service.ArtistRelationService;
@@ -45,6 +46,7 @@ import com.github.hakko.musiccabinet.service.SearchIndexUpdateExecutorService;
 import com.github.hakko.musiccabinet.service.SearchIndexUpdateService;
 import com.github.hakko.musiccabinet.service.SubsonicIndexService;
 import com.github.hakko.musiccabinet.service.TagInfoService;
+import com.github.hakko.musiccabinet.service.UserTopArtistsService;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -109,6 +111,7 @@ public class SearchService {
     private PlaylistGeneratorService playlistGeneratorService;
     private ScrobbledTracksService scrobbledTracksService;
     private TagInfoService tagInfoService;
+    private UserTopArtistsService userTopArtistsService;
     private SearchIndexUpdateExecutorService executorService;
     
     /**
@@ -287,11 +290,21 @@ public class SearchService {
 	public List<SearchIndexUpdateService> getSearchIndexUpdateServices() {
 		List<SearchIndexUpdateService> list = new ArrayList<SearchIndexUpdateService>();
 		list.addAll(Arrays.asList(artistRelationService, artistTopTracksService,
-				artistTopTagsService, tagInfoService, artistInfoService, albumInfoService));
-    	String lastFMUser = settingsService.getMusicCabinetLastFMUsername();
-    	if (lastFMUser.length() > 0) {
-        	scrobbledTracksService.setLastFMUsername(lastFMUser);
+				artistTopTagsService, tagInfoService, artistInfoService, 
+				albumInfoService, userTopArtistsService));
+    	String lastFmUser = settingsService.getMusicCabinetLastFMUsername();
+    	if (lastFmUser.length() > 0) {
+        	scrobbledTracksService.setLastFMUsername(lastFmUser);
         	list.add(scrobbledTracksService);
+    	}
+    	List<String> lastFmUsers = settingsService.getAllLastFmUsers();
+    	if (lastFmUsers.size() > 0) {
+    		List<LastFmUser> users = new ArrayList<LastFmUser>();
+    		for (String user : lastFmUsers) {
+    			users.add(new LastFmUser(user));
+    		}
+    		LOG.debug("Found users " + users);
+    		userTopArtistsService.setUsers(users);
     	}
 		return list;
     }
@@ -835,6 +848,10 @@ public class SearchService {
 
 	public void setTagInfoService(TagInfoService tagInfoService) {
 		this.tagInfoService = tagInfoService;
+	}
+	
+	public void setUserTopArtistsService(UserTopArtistsService userTopArtistsService) {
+		this.userTopArtistsService = userTopArtistsService;
 	}
 	
 	public void setSearchIndexUpdateExecutorService(
