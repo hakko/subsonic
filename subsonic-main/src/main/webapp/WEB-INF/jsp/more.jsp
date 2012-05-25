@@ -59,6 +59,9 @@
                         <option value="10" selected="true"><fmt:message key="more.random.songs"><fmt:param value="10"/></fmt:message></option>
                         <option value="20"><fmt:message key="more.random.songs"><fmt:param value="20"/></fmt:message></option>
                         <option value="50"><fmt:message key="more.random.songs"><fmt:param value="50"/></fmt:message></option>
+                        <option value="100"><fmt:message key="more.random.songs"><fmt:param value="100"/></fmt:message></option>
+                        <option value="200"><fmt:message key="more.random.songs"><fmt:param value="200"/></fmt:message></option>
+                        <option value="500"><fmt:message key="more.random.songs"><fmt:param value="500"/></fmt:message></option>
                     </select>
                 </td>
                 <td><fmt:message key="more.random.genre"/></td>
