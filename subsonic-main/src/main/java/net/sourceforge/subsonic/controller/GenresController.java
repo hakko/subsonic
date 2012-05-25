@@ -10,7 +10,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import net.sourceforge.subsonic.service.SearchService;
-import net.sourceforge.subsonic.util.Util;
 
 import org.apache.commons.lang.StringUtils;
 import org.springframework.web.servlet.ModelAndView;
@@ -38,12 +37,21 @@ public class GenresController extends ParameterizableViewController {
     	Map<String, Object> map = new HashMap<String, Object>();
 
     	String genre = request.getParameter("genre");
+        String pageParam = StringUtils.defaultIfEmpty(request.getParameter("page"), "0");
+        int page = Integer.parseInt(pageParam);
 
         if (!searchService.hasMusicCabinetIndex()) {
             return new ModelAndView("musicCabinetUnavailable");
         } else if (request.getParameter("genre") != null) {
-    		List<ArtistRecommendation> ars = square(recService.getRecommendedArtistsFromGenre(genre, 0, 20));
+        	final int ARTISTS = 20;
+    		List<ArtistRecommendation> ars = square(recService.getRecommendedArtistsFromGenre(
+    				genre, page * ARTISTS, ARTISTS + 1));
+    		if (ars.size() > ARTISTS) {
+    			map.put("morePages", true);
+    			ars.remove(ARTISTS);
+    		}
     		String genreDescription = tagInfoService.getTagInfo(genre);
+    		map.put("page", page);
     		map.put("genre", genre);
     		map.put("genreDescription", genreDescription);
     		map.put("artistRecommendations", ars);
