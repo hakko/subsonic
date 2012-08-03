@@ -37,11 +37,9 @@ public class GeneralSettingsController extends SimpleFormController {
 
     protected Object formBackingObject(HttpServletRequest request) throws Exception {
         GeneralSettingsCommand command = new GeneralSettingsCommand();
-        command.setCoverArtFileTypes(settingsService.getCoverArtFileTypes());
         command.setIgnoredArticles(settingsService.getIgnoredArticles());
-        command.setShortcuts(settingsService.getShortcuts());
         command.setIndex(settingsService.getIndexString());
-        command.setMusicFileTypes(settingsService.getMusicFileTypes());
+        command.setmediaFileTypes(settingsService.getMediaFileTypes());
         command.setVideoFileTypes(settingsService.getVideoFileTypes());
         command.setPlaylistFolder(settingsService.getPlaylistFolder());
         command.setGettingStartedEnabled(settingsService.isGettingStartedEnabled());
@@ -87,17 +85,14 @@ public class GeneralSettingsController extends SimpleFormController {
 
         command.setReloadNeeded(!settingsService.getIndexString().equals(command.getIndex()) ||
                                 !settingsService.getIgnoredArticles().equals(command.getIgnoredArticles()) ||
-                                !settingsService.getShortcuts().equals(command.getShortcuts()) ||
                                 !settingsService.getThemeId().equals(theme.getId()) ||
                                 !settingsService.getLocale().equals(locale));
 
         settingsService.setIndexString(command.getIndex());
         settingsService.setIgnoredArticles(command.getIgnoredArticles());
-        settingsService.setShortcuts(command.getShortcuts());
         settingsService.setPlaylistFolder(command.getPlaylistFolder());
-        settingsService.setMusicFileTypes(command.getMusicFileTypes());
+        settingsService.setMediaFileTypes(command.getmediaFileTypes());
         settingsService.setVideoFileTypes(command.getVideoFileTypes());
-        settingsService.setCoverArtFileTypes(command.getCoverArtFileTypes());
         settingsService.setGettingStartedEnabled(command.isGettingStartedEnabled());
         settingsService.setWelcomeTitle(command.getWelcomeTitle());
         settingsService.setWelcomeSubtitle(command.getWelcomeSubtitle());

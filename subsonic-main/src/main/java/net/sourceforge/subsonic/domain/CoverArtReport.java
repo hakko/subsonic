@@ -29,10 +29,10 @@ import java.util.List;
  */
 public class CoverArtReport implements Serializable {
     private int totalNumberOfAlbums;
-    List<MusicFile> albumsWithCover = new ArrayList<MusicFile>();
-    List<MusicFile> albumsWithoutCover = new ArrayList<MusicFile>();
+    List<MediaFile> albumsWithCover = new ArrayList<MediaFile>();
+    List<MediaFile> albumsWithoutCover = new ArrayList<MediaFile>();
 
-    public CoverArtReport(List<MusicFile> albumsWithCover, List<MusicFile> albumsWithoutCover) {
+    public CoverArtReport(List<MediaFile> albumsWithCover, List<MediaFile> albumsWithoutCover) {
         this.albumsWithCover = albumsWithCover;
         this.albumsWithoutCover = albumsWithoutCover;
         totalNumberOfAlbums = albumsWithCover.size() + albumsWithoutCover.size();
@@ -42,11 +42,11 @@ public class CoverArtReport implements Serializable {
         return totalNumberOfAlbums;
     }
 
-    public List<MusicFile> getAlbumsWithCover() {
+    public List<MediaFile> getAlbumsWithCover() {
         return albumsWithCover;
     }
 
-    public List<MusicFile> getAlbumsWithoutCover() {
+    public List<MediaFile> getAlbumsWithoutCover() {
         return albumsWithoutCover;
     }
 }

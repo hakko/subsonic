@@ -53,8 +53,8 @@ public class MultiController extends MultiActionController {
         if (username != null && password != null) {
             username = StringUtil.urlEncode(username);
             password = StringUtil.urlEncode(password);
-            return new ModelAndView(new RedirectView("j_acegi_security_check?j_username=" + username +
-                    "&j_password=" + password + "&_acegi_security_remember_me=checked"));
+            return new ModelAndView(new RedirectView("j_spring_security_check?j_username=" + username +
+                    "&j_password=" + password + "&_spring_security_remember_me=checked"));
         }
 
         Map<String, Object> map = new HashMap<String, Object>();
@@ -118,10 +118,6 @@ public class MultiController extends MultiActionController {
             settingsService.setUrlRedirectContextPath(contextPath);
             settingsService.save();
         }
-    }
-
-    public ModelAndView test(HttpServletRequest request, HttpServletResponse response) {
-        return new ModelAndView("test");
     }
 
     public void setSecurityService(SecurityService securityService) {

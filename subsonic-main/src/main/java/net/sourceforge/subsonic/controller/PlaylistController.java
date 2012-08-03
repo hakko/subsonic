@@ -27,6 +27,7 @@ import javax.servlet.http.HttpServletResponse;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.ParameterizableViewController;
 
+import net.sourceforge.subsonic.Logger;
 import net.sourceforge.subsonic.domain.Player;
 import net.sourceforge.subsonic.domain.User;
 import net.sourceforge.subsonic.domain.UserSettings;
@@ -45,9 +46,10 @@ public class PlaylistController extends ParameterizableViewController {
     private SecurityService securityService;
     private SettingsService settingsService;
 
+    private Logger LOG = Logger.getLogger(PlaylistController.class);
+    
     @Override
     protected ModelAndView handleRequestInternal(HttpServletRequest request, HttpServletResponse response) throws Exception {
-
         User user = securityService.getCurrentUser(request);
         UserSettings userSettings = settingsService.getUserSettings(user.getUsername());
         Player player = playerService.getPlayer(request, response);

@@ -18,11 +18,11 @@
  */
 package net.sourceforge.subsonic.controller;
 
-import net.sourceforge.subsonic.domain.MusicFile;
+import net.sourceforge.subsonic.domain.MediaFile;
 import net.sourceforge.subsonic.domain.Player;
 import net.sourceforge.subsonic.domain.Playlist;
 import net.sourceforge.subsonic.service.PlayerService;
-import net.sourceforge.subsonic.service.MusicFileService;
+import net.sourceforge.subsonic.service.MediaFileService;
 import net.sourceforge.subsonic.Logger;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.ParameterizableViewController;
@@ -46,7 +46,7 @@ public class XspfPlaylistController extends ParameterizableViewController {
     private static final Logger LOG = Logger.getLogger(XspfPlaylistController.class);
 
     private PlayerService playerService;
-    private MusicFileService musicFileService;
+    private MediaFileService mediaFileService;
 
     protected ModelAndView handleRequestInternal(HttpServletRequest request, HttpServletResponse response) throws Exception {
         Player player = playerService.getPlayer(request, response);
@@ -62,12 +62,12 @@ public class XspfPlaylistController extends ParameterizableViewController {
     private List<Song> getSongs(Playlist playlist) {
         List<Song> result = new ArrayList<Song>();
 
-        MusicFile[] files = playlist.getFiles();
-        for (MusicFile file : files) {
+        MediaFile[] files = playlist.getFiles();
+        for (MediaFile file : files) {
             Song song = new Song();
-            song.setMusicFile(file);
+            song.setmediaFile(file);
             try {
-                song.setCoverArtFile(musicFileService.getCoverArt(file.getParent()));
+                song.setCoverArtFile(mediaFileService.getCoverArt(file));
             } catch (IOException x) {
                 LOG.warn("Failed to get cover art for " + file);
             }
@@ -80,23 +80,23 @@ public class XspfPlaylistController extends ParameterizableViewController {
         this.playerService = playerService;
     }
 
-    public void setMusicFileService(MusicFileService musicFileService) {
-        this.musicFileService = musicFileService;
+    public void setmediaFileService(MediaFileService mediaFileService) {
+        this.mediaFileService = mediaFileService;
     }
 
     /**
      * Contains information about a single song in the playlist.
      */
     public static class Song {
-        private MusicFile musicFile;
+        private MediaFile mediaFile;
         private File coverArtFile;
 
-        public MusicFile getMusicFile() {
-            return musicFile;
+        public MediaFile getmediaFile() {
+            return mediaFile;
         }
 
-        public void setMusicFile(MusicFile musicFile) {
-            this.musicFile = musicFile;
+        public void setmediaFile(MediaFile mediaFile) {
+            this.mediaFile = mediaFile;
         }
 
         public File getCoverArtFile() {

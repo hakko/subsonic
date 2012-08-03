@@ -6,10 +6,11 @@ import net.sourceforge.subsonic.Logger;
 import net.sourceforge.subsonic.command.EditArtistCommand;
 import net.sourceforge.subsonic.util.Util;
 
+import org.apache.commons.lang.math.NumberUtils;
 import org.springframework.web.servlet.mvc.SimpleFormController;
 
 import com.github.hakko.musiccabinet.domain.model.music.ArtistInfo;
-import com.github.hakko.musiccabinet.service.ArtistInfoService;
+import com.github.hakko.musiccabinet.service.lastfm.ArtistInfoService;
 
 /**
  * Controller for editing artists.
@@ -24,16 +25,14 @@ public class EditArtistController extends SimpleFormController {
     
     protected Object formBackingObject(HttpServletRequest request) throws Exception {
 
-        String path = request.getParameter("path");
+        int id = NumberUtils.toInt(request.getParameter("id"));
         String artist = request.getParameter("artist");
         
-        LOG.debug("got path " + path);
-        
-    	ArtistInfo artistInfo = Util.square(artistInfoService.getArtistInfo(path));
+    	ArtistInfo artistInfo = Util.square(artistInfoService.getArtistInfo(id));
 
     	EditArtistCommand command = new EditArtistCommand();
 
-    	command.setPath(path);
+    	command.setId(id);
     	command.setArtist(artist);
     	command.setArtistInfo(artistInfo);
         
@@ -43,9 +42,9 @@ public class EditArtistController extends SimpleFormController {
     protected void doSubmitAction(Object comm) throws Exception {
         EditArtistCommand command = (EditArtistCommand) comm;
 
-        LOG.debug("path = " + command.getPath() + ", bio = " + command.getBioSummary());
+        LOG.debug("id = " + command.getId() + ", bio = " + command.getBioSummary());
         
-        artistInfoService.setBioSummary(command.getPath(), command.getBioSummary());
+        artistInfoService.setBioSummary(command.getId(), command.getBioSummary());
         
         command.getArtistInfo().setBioSummary(command.getBioSummary());
     }

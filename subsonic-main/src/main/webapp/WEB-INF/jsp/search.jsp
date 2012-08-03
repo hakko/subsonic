@@ -3,22 +3,27 @@
 
 <html><head>
     <%@ include file="head.jsp" %>
+	<script type="text/javascript" src="<c:url value="/script/jquery-1.7.2.min.js"/>"></script>
     <script type="text/javascript" src="<c:url value='/script/scripts.js'/>"></script>
-    <script type="text/javascript" src="<c:url value='/script/prototype.js'/>"></script>
-    <script type="text/javascript" src="<c:url value='/dwr/util.js'/>"></script>
+    <script type="text/javascript" src="<c:url value="/dwr/engine.js"/>"></script>
+	<script type="text/javascript" src="<c:url value="/dwr/util.js"/>"></script>
+	<script type="text/javascript" src="<c:url value="/dwr/interface/uiStarService.js"/>"></script>
 
     <script type="text/javascript">
         function more(rowSelector, moreId) {
-            var rows = $$(rowSelector);
-            for (var i = 0; i < rows.length; i++) {
-                rows[i].show();
-            }
+            $(rowSelector).show();
             $(moreId).hide();
         }
-    </script>
+
+    function init() {
+        dwr.engine.setErrorHandler(null);
+	}
+	</script>
 
 </head>
-<body class="mainframe bgcolor1">
+<body class="mainframe bgcolor1" onload="init()">
+
+<%@ include file="toggleStar.jsp" %>
 
 <h1>
     <img src="<spring:theme code="searchImage"/>" alt=""/>
@@ -36,76 +41,60 @@
 
 </form:form>
 
-<c:if test="${command.indexBeingCreated}">
+<c:if test="${not command.indexCreated}">
     <p class="warning"><fmt:message key="search.index"/></p>
 </c:if>
 
-<c:if test="${not command.indexBeingCreated and empty command.artists and empty command.albums and empty command.songs}">
+<c:if test="${command.indexCreated and empty command.artists and empty command.albums and empty command.songs}">
     <p class="warning"><fmt:message key="search.hits.none"/></p>
 </c:if>
 
 <c:if test="${not empty command.artists}">
     <h2><fmt:message key="search.hits.artists"/></h2>
     <table style="border-collapse:collapse">
-        <c:forEach items="${command.artists}" var="match" varStatus="loopStatus">
+        <c:forEach items="${command.artists}" var="artist" varStatus="loopStatus">
 
-            <sub:url value="/main.view" var="mainUrl">
-                <sub:param name="path" value="${match.path}"/>
+            <sub:url value="/artist.view" var="artistUrl">
+                <sub:param name="id" value="${artist.id}"/>
             </sub:url>
 
             <tr class="artistRow" ${loopStatus.count > 5 ? "style='display:none'" : ""}>
-                <c:import url="playAddDownload.jsp">
-                    <c:param name="path" value="${match.path}"/>
-                    <c:param name="playEnabled" value="${command.user.streamRole and not command.partyModeEnabled}"/>
-                    <c:param name="enqueueEnabled" value="${command.user.streamRole and (not command.partyModeEnabled or not match.directory)}"/>
-                    <c:param name="addEnabled" value="${command.user.streamRole and (not command.partyModeEnabled or not match.directory)}"/>
-                    <c:param name="downloadEnabled" value="${command.user.downloadRole and not command.partyModeEnabled}"/>
-                    <c:param name="asTable" value="true"/>
-                </c:import>
                 <td ${loopStatus.count % 2 == 1 ? "class='bgcolor2'" : ""} style="padding-left:0.25em;padding-right:1.25em">
-                    <a href="${mainUrl}">${match.name}</a>
+                    <a href="${artistUrl}">${artist.name}</a>
                 </td>
             </tr>
 
             </c:forEach>
     </table>
     <c:if test="${fn:length(command.artists) gt 5}">
-        <div id="moreArtists" class="forward"><a href="javascript:noop()" onclick="more('tr.artistRow', 'moreArtists')"><fmt:message key="search.hits.more"/></a></div>
+        <div id="moreArtists" class="forward"><a href="javascript:noop()" onclick="more('.artistRow', '#moreArtists')"><fmt:message key="search.hits.more"/></a></div>
     </c:if>
 </c:if>
 
 <c:if test="${not empty command.albums}">
     <h2><fmt:message key="search.hits.albums"/></h2>
     <table style="border-collapse:collapse">
-        <c:forEach items="${command.albums}" var="match" varStatus="loopStatus">
+        <c:forEach items="${command.albums}" var="album" varStatus="loopStatus">
 
-            <sub:url value="/main.view" var="mainUrl">
-                <sub:param name="path" value="${match.path}"/>
+            <sub:url value="/artist.view" var="albumUrl">
+                <sub:param name="id" value="${album.artist.id}"/>
+                <sub:param name="albumId" value="${album.id}"/>
             </sub:url>
 
             <tr class="albumRow" ${loopStatus.count > 5 ? "style='display:none'" : ""}>
-                <c:import url="playAddDownload.jsp">
-                    <c:param name="path" value="${match.path}"/>
-                    <c:param name="playEnabled" value="${command.user.streamRole and not command.partyModeEnabled}"/>
-                    <c:param name="enqueueEnabled" value="${command.user.streamRole and (not command.partyModeEnabled or not match.directory)}"/>
-                    <c:param name="addEnabled" value="${command.user.streamRole and (not command.partyModeEnabled or not match.directory)}"/>
-                    <c:param name="downloadEnabled" value="${command.user.downloadRole and not command.partyModeEnabled}"/>
-                    <c:param name="asTable" value="true"/>
-                </c:import>
-
                 <td ${loopStatus.count % 2 == 1 ? "class='bgcolor2'" : ""} style="padding-left:0.25em;padding-right:1.25em">
-                    <a href="${mainUrl}">${match.firstChild.metaData.album}</a>
+                    <a href="${albumUrl}">${album.name}</a>
                 </td>
 
                 <td ${loopStatus.count % 2 == 1 ? "class='bgcolor2'" : ""} style="padding-right:0.25em">
-                    <span class="detail">${match.firstChild.metaData.artist}</span>
+                    <span class="detail">${album.artist.name}</span>
                 </td>
             </tr>
 
             </c:forEach>
     </table>
     <c:if test="${fn:length(command.albums) gt 5}">
-        <div id="moreAlbums" class="forward"><a href="javascript:noop()" onclick="more('tr.albumRow', 'moreAlbums')"><fmt:message key="search.hits.more"/></a></div>
+        <div id="moreAlbums" class="forward"><a href="javascript:noop()" onclick="more('.albumRow', '#moreAlbums')"><fmt:message key="search.hits.more"/></a></div>
     </c:if>
 </c:if>
 
@@ -113,40 +102,42 @@
 <c:if test="${not empty command.songs}">
     <h2><fmt:message key="search.hits.songs"/></h2>
     <table style="border-collapse:collapse">
-        <c:forEach items="${command.songs}" var="match" varStatus="loopStatus">
+        <c:forEach items="${command.songs}" var="track" varStatus="loopStatus">
 
-            <sub:url value="/main.view" var="mainUrl">
-                <sub:param name="path" value="${match.parent.path}"/>
+            <sub:url value="/artist.view" var="albumUrl">
+                <sub:param name="id" value="${track.metaData.artistId}"/>
+                <sub:param name="albumId" value="${track.metaData.albumId}"/>
             </sub:url>
 
             <tr class="songRow" ${loopStatus.count > 15 ? "style='display:none'" : ""}>
                 <c:import url="playAddDownload.jsp">
-                    <c:param name="path" value="${match.path}"/>
+                    <c:param name="id" value="[${track.id}]"/>
+					<c:param name="starred" value="${command.isTrackStarred[loopStatus.index]}"/>
+					<c:param name="starId" value="${track.id}"/>
                     <c:param name="playEnabled" value="${command.user.streamRole and not command.partyModeEnabled}"/>
-                    <c:param name="enqueueEnabled" value="${command.user.streamRole and (not command.partyModeEnabled or not match.directory)}"/>
-                    <c:param name="addEnabled" value="${command.user.streamRole and (not command.partyModeEnabled or not match.directory)}"/>
+                    <c:param name="enqueueEnabled" value="${command.user.streamRole}"/>
+                    <c:param name="addEnabled" value="${command.user.streamRole}"/>
                     <c:param name="downloadEnabled" value="${command.user.downloadRole and not command.partyModeEnabled}"/>
-                    <c:param name="video" value="${match.video and command.player.web}"/>
                     <c:param name="asTable" value="true"/>
                 </c:import>
 
                 <td ${loopStatus.count % 2 == 1 ? "class='bgcolor2'" : ""} style="padding-left:0.25em;padding-right:1.25em">
-                        ${match.metaData.title}
+                        ${track.name}
                 </td>
 
                 <td ${loopStatus.count % 2 == 1 ? "class='bgcolor2'" : ""} style="padding-right:1.25em">
-                    <a href="${mainUrl}"><span class="detail">${match.metaData.album}</span></a>
+                    <a href="${albumUrl}"><span class="detail">${track.metaData.album}</span></a>
                 </td>
 
                 <td ${loopStatus.count % 2 == 1 ? "class='bgcolor2'" : ""} style="padding-right:0.25em">
-                    <span class="detail">${match.metaData.artist}</span>
+                    <span class="detail">${track.metaData.artist}</span>
                 </td>
             </tr>
 
             </c:forEach>
     </table>
 <c:if test="${fn:length(command.songs) gt 15}">
-    <div id="moreSongs" class="forward"><a href="javascript:noop()" onclick="more('tr.songRow', 'moreSongs')"><fmt:message key="search.hits.more"/></a></div>
+    <div id="moreSongs" class="forward"><a href="javascript:noop()" onclick="more('.songRow', '#moreSongs')"><fmt:message key="search.hits.more"/></a></div>
 </c:if>
 </c:if>
 

@@ -36,6 +36,14 @@
             <param name="beanName" value="ajaxChatService"/>
         </create>
 
+        <create creator="spring" javascript="libraryStatusService">
+            <param name="beanName" value="ajaxLibraryStatusService"/>
+        </create>
+
+        <create creator="spring" javascript="uiStarService">
+            <param name="beanName" value="ajaxUIStarService"/>
+        </create>
+
         <convert converter="bean" match="net.sourceforge.subsonic.ajax.NetworkStatus"/>
         <convert converter="bean" match="net.sourceforge.subsonic.ajax.NowPlayingInfo"/>
         <convert converter="bean" match="net.sourceforge.subsonic.ajax.PlaylistInfo"/>
@@ -45,6 +53,8 @@
         <convert converter="bean" match="net.sourceforge.subsonic.ajax.CoverArtInfo"/>
         <convert converter="bean" match="net.sourceforge.subsonic.ajax.ChatService$Message"/>
         <convert converter="bean" match="net.sourceforge.subsonic.ajax.ChatService$Messages"/>
+        <convert converter="bean" match="net.sourceforge.subsonic.ajax.LibraryStatus"/>
+        <convert converter="bean" match="net.sourceforge.subsonic.ajax.UIStarService"/>
 
     </allow>
 </dwr>

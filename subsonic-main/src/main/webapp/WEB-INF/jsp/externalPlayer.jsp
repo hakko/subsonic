@@ -46,10 +46,10 @@
 
         <c:forEach items="${model.songs}" var="song" varStatus="loopStatus">
         <sub:url value="/stream" var="streamUrl">
-            <sub:param name="path" value="${song.path}"/>
+            <sub:param name="mfId" value="${song.id}"/>
             <sub:param name="player" value="${model.player}"/>
         </sub:url>
-        <sub:url value="/coverArt.view" var="coverUrl">
+        <sub:url value="coverArt.view" var="coverUrl">
            <sub:param name="size" value="500"/>
            <c:if test="${not empty model.coverArts[loopStatus.count - 1]}">
               <sub:param name="path" value="${model.coverArts[loopStatus.count - 1].path}"/>

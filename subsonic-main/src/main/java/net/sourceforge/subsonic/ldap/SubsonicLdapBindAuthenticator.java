@@ -22,16 +22,15 @@ import net.sourceforge.subsonic.Logger;
 import net.sourceforge.subsonic.domain.User;
 import net.sourceforge.subsonic.service.SecurityService;
 import net.sourceforge.subsonic.service.SettingsService;
-import org.acegisecurity.BadCredentialsException;
-import org.acegisecurity.ldap.DefaultInitialDirContextFactory;
-import org.acegisecurity.ldap.search.FilterBasedLdapUserSearch;
-import org.acegisecurity.providers.ldap.LdapAuthenticator;
-import org.acegisecurity.providers.ldap.authenticator.BindAuthenticator;
-import org.acegisecurity.userdetails.ldap.LdapUserDetails;
-import org.apache.commons.lang.StringUtils;
 
-import java.util.HashMap;
-import java.util.Map;
+import org.apache.commons.lang.StringUtils;
+import org.springframework.ldap.core.DirContextOperations;
+import org.springframework.ldap.core.support.LdapContextSource;
+import org.springframework.security.authentication.BadCredentialsException;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.ldap.authentication.BindAuthenticator;
+import org.springframework.security.ldap.authentication.LdapAuthenticator;
+import org.springframework.security.ldap.search.FilterBasedLdapUserSearch;
 
 /**
  * LDAP authenticator which uses a delegate {@link BindAuthenticator}, and which
@@ -49,13 +48,16 @@ public class SubsonicLdapBindAuthenticator implements LdapAuthenticator {
     private long authenticatorTimestamp;
     private BindAuthenticator delegateAuthenticator;
 
-    public LdapUserDetails authenticate(String username, String password) {
+    public DirContextOperations authenticate(Authentication authentication) {
 
         // LDAP authentication must be enabled on the system.
         if (!settingsService.isLdapEnabled()) {
             throw new BadCredentialsException("LDAP authentication disabled.");
         }
 
+        String username = authentication.getName();
+        LOG.info("Authentication principal: " + username);
+        
         // User must be defined in Subsonic, unless auto-shadowing is enabled.
         User user = securityService.getUserByName(username);
         if (user == null && !settingsService.isLdapAutoShadowing()) {
@@ -69,20 +71,20 @@ public class SubsonicLdapBindAuthenticator implements LdapAuthenticator {
 
         try {
             createDelegate();
-            LdapUserDetails details = delegateAuthenticator.authenticate(username, password);
-            if (details != null) {
-                LOG.info("User '" + username + "' successfully authenticated in LDAP. DN: " + details.getDn());
+            DirContextOperations contextOperations = delegateAuthenticator.authenticate(authentication);
+            if (contextOperations != null) {
+                LOG.info("User '" + username + "' successfully authenticated in LDAP. DN: " + contextOperations.getDn());
 
                 if (user == null) {
                     User newUser = new User(username, "", null, true, 0L, 0L, 0L);
                     newUser.setStreamRole(true);
                     newUser.setSettingsRole(true);
                     securityService.createUser(newUser);
-                    LOG.info("Created local user '" + username + "' for DN " + details.getDn());
+                    LOG.info("Created local user '" + username + "' for DN " + contextOperations.getDn());
                 }
             }
 
-            return details;
+            return contextOperations;
         } catch (RuntimeException x) {
             LOG.info("Failed to authenticate user '" + username + "' in LDAP.", x);
             throw x;
@@ -96,25 +98,23 @@ public class SubsonicLdapBindAuthenticator implements LdapAuthenticator {
 
         // Only create it if necessary.
         if (delegateAuthenticator == null || authenticatorTimestamp < settingsService.getSettingsChanged()) {
-
-            DefaultInitialDirContextFactory contextFactory = new DefaultInitialDirContextFactory(settingsService.getLdapUrl());
+        	
+        	LdapContextSource contextSource = new LdapContextSource();
+        	contextSource.setReferral("follow");
+        	contextSource.setUrl(settingsService.getLdapUrl());
 
             String managerDn = settingsService.getLdapManagerDn();
             String managerPassword = settingsService.getLdapManagerPassword();
             if (StringUtils.isNotEmpty(managerDn) && StringUtils.isNotEmpty(managerPassword)) {
-                contextFactory.setManagerDn(managerDn);
-                contextFactory.setManagerPassword(managerPassword);
+            	contextSource.setUserDn(managerDn);
+            	contextSource.setPassword(managerPassword);
             }
 
-            Map<String, String> extraEnvVars = new HashMap<String, String>();
-            extraEnvVars.put("java.naming.referral", "follow");
-            contextFactory.setExtraEnvVars(extraEnvVars);
-
-            FilterBasedLdapUserSearch userSearch = new FilterBasedLdapUserSearch("", settingsService.getLdapSearchFilter(), contextFactory);
+            FilterBasedLdapUserSearch userSearch = new FilterBasedLdapUserSearch("", settingsService.getLdapSearchFilter(), contextSource);
             userSearch.setSearchSubtree(true);
             userSearch.setDerefLinkFlag(true);
 
-            delegateAuthenticator = new BindAuthenticator(contextFactory);
+            delegateAuthenticator = new BindAuthenticator(contextSource);
             delegateAuthenticator.setUserSearch(userSearch);
 
             authenticatorTimestamp = settingsService.getSettingsChanged();
@@ -128,4 +128,5 @@ public class SubsonicLdapBindAuthenticator implements LdapAuthenticator {
     public void setSettingsService(SettingsService settingsService) {
         this.settingsService = settingsService;
     }
+
 }

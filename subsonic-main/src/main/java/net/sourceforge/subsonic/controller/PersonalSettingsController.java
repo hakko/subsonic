@@ -19,7 +19,8 @@
 package net.sourceforge.subsonic.controller;
 
 import org.springframework.web.servlet.mvc.*;
-import org.apache.commons.lang.StringUtils;
+
+import net.sourceforge.subsonic.Logger;
 import net.sourceforge.subsonic.service.*;
 import net.sourceforge.subsonic.command.*;
 import net.sourceforge.subsonic.domain.*;
@@ -37,6 +38,8 @@ public class PersonalSettingsController extends SimpleFormController {
     private SettingsService settingsService;
     private SecurityService securityService;
 
+    private static final Logger LOG = Logger.getLogger(PersonalSettingsController.class);
+    
     @Override
     protected Object formBackingObject(HttpServletRequest request) throws Exception {
         PersonalSettingsCommand command = new PersonalSettingsCommand();
@@ -56,13 +59,18 @@ public class PersonalSettingsController extends SimpleFormController {
         command.setNowPlayingAllowed(userSettings.isNowPlayingAllowed());
         command.setMainVisibility(userSettings.getMainVisibility());
         command.setPlaylistVisibility(userSettings.getPlaylistVisibility());
-        command.setFinalVersionNotificationEnabled(userSettings.isFinalVersionNotificationEnabled());
-        command.setBetaVersionNotificationEnabled(userSettings.isBetaVersionNotificationEnabled());
+        command.setHomeVisibility(userSettings.getHomeVisibility());
         command.setLastFmEnabled(userSettings.isLastFmEnabled());
         command.setLastFmUsername(userSettings.getLastFmUsername());
-        command.setLastFmPassword(userSettings.getLastFmPassword());
         command.setAlbumOrderAscending(userSettings.isAlbumOrderAscending());
         command.setDefaultHomeView(userSettings.getDefaultHomeView());
+        command.setDefaultHomeArtists(userSettings.getDefaultHomeArtists());
+        command.setDefaultHomeAlbums(userSettings.getDefaultHomeAlbums());
+        command.setDefaultHomeSongs(userSettings.getDefaultHomeSongs());
+        command.setArtistGridWidth(userSettings.getArtistGridWidth());
+        command.setRelatedArtists(userSettings.getRelatedArtists());
+        command.setRecommendedArtists(userSettings.getRecommendedArtists());
+        command.setReluctantArtistLoading(userSettings.isReluctantArtistLoading());
         
         Locale currentLocale = userSettings.getLocale();
         Locale[] locales = settingsService.getAvailableLocales();
@@ -115,23 +123,26 @@ public class PersonalSettingsController extends SimpleFormController {
         settings.setNowPlayingAllowed(command.isNowPlayingAllowed());
         settings.setMainVisibility(command.getMainVisibility());
         settings.setPlaylistVisibility(command.getPlaylistVisibility());
-        settings.setFinalVersionNotificationEnabled(command.isFinalVersionNotificationEnabled());
-        settings.setBetaVersionNotificationEnabled(command.isBetaVersionNotificationEnabled());
+        settings.setHomeVisibility(command.getHomeVisibility());
         settings.setLastFmEnabled(command.isLastFmEnabled());
         settings.setLastFmUsername(command.getLastFmUsername());
         settings.setSystemAvatarId(getSystemAvatarId(command));
         settings.setAvatarScheme(getAvatarScheme(command));
         settings.setAlbumOrderAscending(command.isAlbumOrderAscending());
         settings.setDefaultHomeView(command.getDefaultHomeView());
-
-        if (StringUtils.isNotBlank(command.getLastFmPassword())) {
-            settings.setLastFmPassword(command.getLastFmPassword());
-        }
-
+        settings.setDefaultHomeArtists(command.getDefaultHomeArtists());
+        settings.setDefaultHomeAlbums(command.getDefaultHomeAlbums());
+        settings.setDefaultHomeSongs(command.getDefaultHomeSongs());
+        settings.setArtistGridWidth(command.getArtistGridWidth());
+        settings.setRelatedArtists(command.getRelatedArtists());
+        settings.setRecommendedArtists(command.getRecommendedArtists());
+        settings.setReluctantArtistLoading(command.isReluctantArtistLoading());
+        
         settings.setChanged(new Date());
         settingsService.updateUserSettings(settings);
+        settingsService.clearUserSettingsCache(username);
 
-        command.setReloadNeeded(true);
+        command.setReloadNeeded(true); // TODO : base on locale/themeid update
     }
 
     private int getAvatarId(UserSettings userSettings) {
@@ -165,4 +176,5 @@ public class PersonalSettingsController extends SimpleFormController {
     public void setSecurityService(SecurityService securityService) {
         this.securityService = securityService;
     }
+
 }

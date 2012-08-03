@@ -24,8 +24,8 @@ public abstract class DaoTestCaseBase extends TestCase {
     private DaoHelper daoHelper;
     protected PlayerDao playerDao;
     protected InternetRadioDao internetRadioDao;
-    protected MusicFileInfoDao musicFileInfoDao;
-    protected MusicFolderDao musicFolderDao;
+    protected MusicFileInfoDao MusicFileInfoDao;
+    protected MediaFolderDao mediaFolderDao;
     protected UserDao userDao;
     protected TranscodingDao transcodingDao;
     protected PodcastDao podcastDao;
@@ -35,16 +35,16 @@ public abstract class DaoTestCaseBase extends TestCase {
 
         playerDao = new PlayerDao();
         internetRadioDao = new InternetRadioDao();
-        musicFileInfoDao = new MusicFileInfoDao();
-        musicFolderDao = new MusicFolderDao();
+        MusicFileInfoDao = new MusicFileInfoDao();
+        mediaFolderDao = new MediaFolderDao();
         userDao = new UserDao();
         transcodingDao = new TranscodingDao();
         podcastDao = new PodcastDao();
 
         playerDao.setDaoHelper(daoHelper);
         internetRadioDao.setDaoHelper(daoHelper);
-        musicFileInfoDao.setDaoHelper(daoHelper);
-        musicFolderDao.setDaoHelper(daoHelper);
+        MusicFileInfoDao.setDaoHelper(daoHelper);
+        mediaFolderDao.setDaoHelper(daoHelper);
         userDao.setDaoHelper(daoHelper);
         transcodingDao.setDaoHelper(daoHelper);
         podcastDao.setDaoHelper(daoHelper);

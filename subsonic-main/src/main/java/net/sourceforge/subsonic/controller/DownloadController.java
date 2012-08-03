@@ -18,21 +18,40 @@
  */
 package net.sourceforge.subsonic.controller;
 
+import static org.apache.commons.lang.StringUtils.removeEnd;
+import static org.apache.commons.lang.StringUtils.removeStart;
+import static org.apache.commons.lang.StringUtils.split;
+import static org.apache.commons.lang.math.NumberUtils.toInt;
+
+import java.io.BufferedInputStream;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+import java.util.Random;
+import java.util.zip.CRC32;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
 import net.sourceforge.subsonic.Logger;
-import net.sourceforge.subsonic.domain.MusicFile;
+import net.sourceforge.subsonic.domain.MediaFile;
 import net.sourceforge.subsonic.domain.Player;
 import net.sourceforge.subsonic.domain.Playlist;
 import net.sourceforge.subsonic.domain.TransferStatus;
 import net.sourceforge.subsonic.domain.User;
 import net.sourceforge.subsonic.io.RangeOutputStream;
-import net.sourceforge.subsonic.service.MusicFileService;
+import net.sourceforge.subsonic.service.MediaFileService;
 import net.sourceforge.subsonic.service.PlayerService;
 import net.sourceforge.subsonic.service.PlaylistService;
 import net.sourceforge.subsonic.service.SecurityService;
 import net.sourceforge.subsonic.service.SettingsService;
 import net.sourceforge.subsonic.service.StatusService;
 import net.sourceforge.subsonic.util.FileUtil;
-import net.sourceforge.subsonic.util.StringUtil;
 import net.sourceforge.subsonic.util.Util;
 
 import org.apache.commons.io.IOUtils;
@@ -44,19 +63,6 @@ import org.springframework.web.bind.ServletRequestUtils;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.Controller;
 import org.springframework.web.servlet.mvc.LastModified;
-
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import java.io.BufferedInputStream;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.zip.CRC32;
 
 /**
  * A controller used for downloading files to a remote client. If the requested path refers to a file, the
@@ -74,7 +80,7 @@ public class DownloadController implements Controller, LastModified {
     private SecurityService securityService;
     private PlaylistService playlistService;
     private SettingsService settingsService;
-    private MusicFileService musicFileService;
+    private MediaFileService mediaFileService;
 
     public long getLastModified(HttpServletRequest request) {
         String path = request.getParameter("path");
@@ -88,60 +94,34 @@ public class DownloadController implements Controller, LastModified {
 
     public ModelAndView handleRequest(HttpServletRequest request, HttpServletResponse response) throws Exception {
 
+        String playlistName = request.getParameter("playlist");
+        String playerId = request.getParameter("player");
+
         TransferStatus status = null;
         try {
-
             status = statusService.createDownloadStatus(playerService.getPlayer(request, response, false, false));
-
-            String path = request.getParameter("path");
-            String dir = request.getParameter("dir");
-            String playlistName = request.getParameter("playlist");
-            String playerId = request.getParameter("player");
             int[] indexes = ServletRequestUtils.getIntParameters(request, "i");
 
-            if (path != null) {
-                response.setHeader("ETag", StringUtil.utf8HexEncode(path));
-                response.setHeader("Accept-Ranges", "bytes");
-            }
-
-            LongRange range = StringUtil.parseRange(request.getHeader("Range"));
-            if (range != null) {
-                response.setStatus(HttpServletResponse.SC_PARTIAL_CONTENT);
-                LOG.info("Got range: " + range);
-            }
-
-            if (path != null) {
-                File file = new File(path);
-                if (!securityService.isReadAllowed(file)) {
-                    response.sendError(HttpServletResponse.SC_FORBIDDEN);
-                    return null;
-                }
-
-                if (file.isFile()) {
-                    downloadFile(response, status, file, range);
-                } else {
-                    downloadDirectory(response, status, file, range);
-                }
-            } else if (dir != null) {
-                File file = new File(dir);
-                if (!securityService.isReadAllowed(file)) {
-                    response.sendError(HttpServletResponse.SC_FORBIDDEN);
-                    return null;
-                }
-                downloadFiles(response, status, file, indexes);
-
-            } else if (playlistName != null) {
+            if (playlistName != null) {
+            	LOG.debug("download playlistName = " + playlistName);
                 Playlist playlist = new Playlist();
                 playlistService.loadPlaylist(playlist, playlistName);
-                downloadPlaylist(response, status, playlist, null, range);
-
+                downloadPlaylist(response, status, playlist, null, null);
             } else if (playerId != null) {
+            	LOG.debug("download playerId = " + playerId);
                 Player player = playerService.getPlayerById(playerId);
                 Playlist playlist = player.getPlaylist();
                 playlist.setName("Playlist");
-                downloadPlaylist(response, status, playlist, indexes.length == 0 ? null : indexes, range);
+                downloadPlaylist(response, status, playlist, indexes.length == 0 ? null : indexes, null);
+            } else {
+                LOG.debug("download id param = " + request.getParameter("id"));
+                List<Integer> mediaFileIds = getMediaFileIds(request.getParameter("id"));
+                LOG.debug("ids = " + mediaFileIds);
+            	downloadFiles(response, status, mediaFileIds);
             }
 
+        } catch (Throwable t) {
+        	LOG.warn("Downloading failed.", t);
 
         } finally {
             if (status != null) {
@@ -154,6 +134,20 @@ public class DownloadController implements Controller, LastModified {
         return null;
     }
 
+    /*
+     * given string "[x, y, z]", returns the integers x, y and z as a list.
+     */
+    private List<Integer> getMediaFileIds(String query) {
+    	if (query.indexOf("[") == -1) {
+    		query = "[" + query + "]"; // support request for single resource (from REST service)
+    	}
+    	List<Integer> mediaFileIds = new ArrayList<>(); 
+    	for (String s : split(removeEnd(removeStart(query, "["), "]"), ", ")) {
+    		mediaFileIds.add(toInt(s));
+    	}
+    	return mediaFileIds;
+    }
+    
     /**
      * Downloads a single file.
      *
@@ -186,10 +180,9 @@ public class DownloadController implements Controller, LastModified {
      * @param indexes  Only download files with these indexes within the directory.
      * @throws IOException If an I/O error occurs.
      */
-    private void downloadFiles(HttpServletResponse response, TransferStatus status, File dir, int[] indexes) throws IOException {
-        String zipFileName = dir.getName() + ".zip";
+    private void downloadFiles(HttpServletResponse response, TransferStatus status, List<Integer> mediaFileIds) throws IOException {
+        String zipFileName = "subsonic" + new Random().nextInt(10000) + ".zip";
         LOG.info("Starting to download '" + zipFileName + "' to " + status.getPlayer());
-        status.setFile(dir);
 
         response.setContentType("application/x-download");
         response.setHeader("Content-Disposition", "attachment; filename=\"" + zipFileName + "\"");
@@ -197,40 +190,15 @@ public class DownloadController implements Controller, LastModified {
         ZipOutputStream out = new ZipOutputStream(response.getOutputStream());
         out.setMethod(ZipOutputStream.STORED);  // No compression.
 
-        List<MusicFile> children = musicFileService.getMusicFile(dir).getChildren(true, true, true);
-        List<MusicFile> musicFiles = new ArrayList<MusicFile>();
-        for (int index : indexes) {
-            musicFiles.add(children.get(index));
+        List<MediaFile> mediaFiles = new ArrayList<MediaFile>();
+        for (int mediaFileId : mediaFileIds) {
+            mediaFiles.add(mediaFileService.getMediaFile(mediaFileId));
         }
 
-        for (MusicFile musicFile : musicFiles) {
-            zip(out, musicFile.getParent().getFile(), musicFile.getFile(), status, null);
+        for (MediaFile mediaFile : mediaFiles) {
+            zip(out, mediaFile.getParent().getFile(), mediaFile.getFile(), status, null);
         }
 
-        out.close();
-        LOG.info("Downloaded '" + zipFileName + "' to " + status.getPlayer());
-    }
-
-    /**
-     * Downloads all files in a directory (including sub-directories). The files are packed together in an
-     * uncompressed zip-file.
-     *
-     * @param response The HTTP response.
-     * @param status   The download status.
-     * @param file     The file to download.
-     * @param range    The byte range, may be <code>null</code>.
-     * @throws IOException If an I/O error occurs.
-     */
-    private void downloadDirectory(HttpServletResponse response, TransferStatus status, File file, LongRange range) throws IOException {
-        String zipFileName = file.getName() + ".zip";
-        LOG.info("Starting to download '" + zipFileName + "' to " + status.getPlayer());
-        response.setContentType("application/x-download");
-        response.setHeader("Content-Disposition", "attachment; filename=\"" + zipFileName + '"');
-
-        ZipOutputStream out = new ZipOutputStream(RangeOutputStream.wrap(response.getOutputStream(), range));
-        out.setMethod(ZipOutputStream.STORED);  // No compression.
-
-        zip(out, file.getParentFile(), file, status, range);
         out.close();
         LOG.info("Downloaded '" + zipFileName + "' to " + status.getPlayer());
     }
@@ -260,19 +228,19 @@ public class DownloadController implements Controller, LastModified {
         ZipOutputStream out = new ZipOutputStream(RangeOutputStream.wrap(response.getOutputStream(), range));
         out.setMethod(ZipOutputStream.STORED);  // No compression.
 
-        List<MusicFile> musicFiles = new ArrayList<MusicFile>();
+        List<MediaFile> mediaFiles = new ArrayList<MediaFile>();
         if (indexes == null) {
-            Collections.addAll(musicFiles, playlist.getFiles());
+            Collections.addAll(mediaFiles, playlist.getFiles());
         } else {
             for (int index : indexes) {
                 try {
-                    musicFiles.add(playlist.getFile(index));
+                    mediaFiles.add(playlist.getFile(index));
                 } catch (IndexOutOfBoundsException x) { /* Ignored */}
             }
         }
 
-        for (MusicFile musicFile : musicFiles) {
-            zip(out, musicFile.getParent().getFile(), musicFile.getFile(), status, range);
+        for (MediaFile mediaFile : mediaFiles) {
+            zip(out, mediaFile.getParent().getFile(), mediaFile.getFile(), status, range);
         }
 
         out.close();
@@ -436,7 +404,8 @@ public class DownloadController implements Controller, LastModified {
         this.settingsService = settingsService;
     }
 
-    public void setMusicFileService(MusicFileService musicFileService) {
-        this.musicFileService = musicFileService;
+    public void setmediaFileService(MediaFileService mediaFileService) {
+        this.mediaFileService = mediaFileService;
     }
+
 }

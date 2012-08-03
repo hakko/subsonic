@@ -12,7 +12,7 @@
 </head>
 <body class="mainframe bgcolor1" onload="document.getElementById('j_username').focus()">
 
-<form action="<c:url value="/j_acegi_security_check"/>" method="POST">
+<form action="<c:url value="/j_spring_security_check"/>" method="POST">
     <div class="bgcolor2" align="center" style="border:1px solid black; padding:20px 50px 20px 50px; margin-top:100px">
 
         <div style="margin-bottom:1em;max-width:50em;text-align:left;"><sub:wiki text="${model.loginMessage}"/></div>
@@ -36,7 +36,7 @@
         <tr>
             <td align="left"><input name="submit" type="submit" value="<fmt:message key="login.login"/>" tabindex="4"></td>
             <td align="left" class="detail">
-                <input type="checkbox" name="_acegi_security_remember_me" id="remember" class="checkbox" tabindex="3">
+                <input type="checkbox" name="_spring_security_remember_me" id="remember" class="checkbox" tabindex="3">
                 <label for="remember"><fmt:message key="login.remember"/></label>
             </td>
         </tr>

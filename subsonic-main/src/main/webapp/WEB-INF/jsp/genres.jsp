@@ -18,41 +18,7 @@
 		<h1 style="margin-top: 15px">Top artists</h1>
 	</c:if>
 
-	<table>
-		<c:forEach items="${model.artistRecommendations}" var="artistRecommendation" varStatus="loopStatus">
-	        <c:if test="${loopStatus.count % 5 == 1}">
-		        <tr>
-	   	     </c:if>
-	        <sub:url var="url" value="main.view">
-				<c:forEach items="${artistRecommendation.paths}" var="artistRootPath">
-					<sub:param name="path" value="${artistRootPath}"/>
-				</c:forEach>
-	        </sub:url>
-			<td style="vertical-align:top">
-				<a href="${url}">
-					<div class="outerpair1"><div class="outerpair2"><div class="shadowbox"><div class="innerbox">
-						<img width="126" height="126" src="${artistRecommendation.imageUrl}" alt="">
-					</div></div></div></div>
-					<div style="detail">
-						<div style="width:108px;float:left">
-							${artistRecommendation.artistName}
-						</div>
-						<div style="width:18px;float:right">
-						    <c:set var="path">
-						        <sub:escapeJavaScript string="${artistRecommendation.paths[0]}"/>
-   		 					</c:set>
-							<a href="javascript:noop()" onclick="top.playlist.onPlayTopTracks('${path}', 'P');">
-				                <img src="<spring:theme code="playImage"/>" alt="Play top tracks" title="Play top tracks">
-							</a>
-						</div>
-					</div>
-				</a>
-			</td>
-	        <c:if test="${loopStatus.count % 5 == 0}">
-	            </tr>
-	        </c:if>
-  		</c:forEach>
- 	</table>
+<%@ include file="artists.jsp" %>
  	
     <sub:url value="genres.view" var="prevUrl">
         <sub:param name="genre" value="${model.genre}"/>

@@ -18,6 +18,10 @@
  */
 package net.sourceforge.subsonic.controller;
 
+import static org.apache.commons.lang.StringUtils.removeEnd;
+import static org.apache.commons.lang.StringUtils.removeStart;
+import static org.apache.commons.lang.math.NumberUtils.toInt;
+
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.Map;
@@ -25,8 +29,9 @@ import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import net.sourceforge.subsonic.domain.MusicFile;
-import net.sourceforge.subsonic.service.MusicFileService;
+import net.sourceforge.subsonic.Logger;
+import net.sourceforge.subsonic.domain.MediaFile;
+import net.sourceforge.subsonic.service.MediaFileService;
 import net.sourceforge.subsonic.service.PlayerService;
 import net.sourceforge.subsonic.service.SettingsService;
 import net.sourceforge.subsonic.util.StringUtil;
@@ -45,16 +50,23 @@ public class VideoPlayerController extends ParameterizableViewController {
     public static final int DEFAULT_BIT_RATE = 1000;
     public static final int[] BIT_RATES = {200, 300, 400, 500, 700, 1000, 1200, 1500, 2000, 3000, 5000};
 
-    private MusicFileService musicFileService;
+    private static final Logger LOG = Logger.getLogger(VideoPlayerController.class);
+    
+    private MediaFileService mediaFileService;
     private SettingsService settingsService;
     private PlayerService playerService;
 
     @Override
     protected ModelAndView handleRequestInternal(HttpServletRequest request, HttpServletResponse response) throws Exception {
 
+    	LOG.debug("got request " + request.getParameter("id"));
+    	
         Map<String, Object> map = new HashMap<String, Object>();
-        String path = request.getParameter("path");
-        MusicFile file = musicFileService.getMusicFile(path);
+        int mediaFileId = toInt(removeEnd(removeStart(request.getParameter("id"), "["), "]"));
+        
+        LOG.debug("ask for id " + mediaFileId);
+        
+        MediaFile file = mediaFileService.getMediaFile(mediaFileId);
 
         int timeOffset = ServletRequestUtils.getIntParameter(request, "timeOffset", 0);
         timeOffset = Math.max(0, timeOffset);
@@ -86,8 +98,8 @@ public class VideoPlayerController extends ParameterizableViewController {
         return result;
     }
 
-    public void setMusicFileService(MusicFileService musicFileService) {
-        this.musicFileService = musicFileService;
+    public void setMediaFileService(MediaFileService mediaFileService) {
+        this.mediaFileService = mediaFileService;
     }
 
     public void setSettingsService(SettingsService settingsService) {

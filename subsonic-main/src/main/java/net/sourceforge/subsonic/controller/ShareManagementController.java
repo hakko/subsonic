@@ -18,10 +18,13 @@
  */
 package net.sourceforge.subsonic.controller;
 
-import java.io.IOException;
+import static org.apache.commons.lang.StringUtils.removeEnd;
+import static org.apache.commons.lang.StringUtils.removeStart;
+import static org.apache.commons.lang.StringUtils.split;
+import static org.apache.commons.lang.math.NumberUtils.toInt;
+
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -29,15 +32,19 @@ import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import net.sourceforge.subsonic.service.*;
-import org.springframework.web.bind.ServletRequestUtils;
-import org.springframework.web.servlet.ModelAndView;
-import org.springframework.web.servlet.mvc.multiaction.MultiActionController;
-
-import net.sourceforge.subsonic.domain.MusicFile;
+import net.sourceforge.subsonic.Logger;
+import net.sourceforge.subsonic.domain.MediaFile;
 import net.sourceforge.subsonic.domain.Player;
 import net.sourceforge.subsonic.domain.Playlist;
 import net.sourceforge.subsonic.domain.Share;
+import net.sourceforge.subsonic.service.MediaFileService;
+import net.sourceforge.subsonic.service.PlayerService;
+import net.sourceforge.subsonic.service.SecurityService;
+import net.sourceforge.subsonic.service.SettingsService;
+import net.sourceforge.subsonic.service.ShareService;
+
+import org.springframework.web.servlet.ModelAndView;
+import org.springframework.web.servlet.mvc.multiaction.MultiActionController;
 
 /**
  * Controller for sharing music on Twitter, Facebook etc.
@@ -46,26 +53,30 @@ import net.sourceforge.subsonic.domain.Share;
  */
 public class ShareManagementController extends MultiActionController {
 
-    private MusicFileService musicFileService;
+    private MediaFileService mediaFileService;
     private SettingsService settingsService;
     private ShareService shareService;
     private PlayerService playerService;
     private SecurityService securityService;
 
+    private final static Logger LOG = Logger.getLogger(ShareManagementController.class);
+
     public ModelAndView createShare(HttpServletRequest request, HttpServletResponse response) throws Exception {
 
-        List<MusicFile> files = getMusicFiles(request);
-        MusicFile dir = null;
-        if (!files.isEmpty()) {
-            dir = files.get(0);
-            if (!dir.isAlbum()) {
-                dir = dir.getParent();
-            }
+    	List<MediaFile> files;
+    	
+        String playerId = request.getParameter("player");
+        if (playerId != null) {
+            Player player = playerService.getPlayerById(playerId);
+            Playlist playlist = player.getPlaylist();
+            files = Arrays.asList(playlist.getFiles());
+        } else {
+        	List<Integer> mediaFileIds = getMediaFileIds(request.getParameter("ids"));
+	        files = mediaFileService.getMediaFiles(mediaFileIds);
         }
 
         Map<String, Object> map = new HashMap<String, Object>();
         map.put("urlRedirectionEnabled", settingsService.isUrlRedirectionEnabled());
-        map.put("dir", dir);
         map.put("user", securityService.getCurrentUser(request));
         Share share = shareService.createShare(request, files);
         map.put("playUrl", shareService.getShareUrl(share));
@@ -73,33 +84,29 @@ public class ShareManagementController extends MultiActionController {
         return new ModelAndView("createShare", "model", map);
     }
 
-    private List<MusicFile> getMusicFiles(HttpServletRequest request) throws IOException {
-        String dir = request.getParameter("dir");
-        String playerId = request.getParameter("player");
-
-        List<MusicFile> result = new ArrayList<MusicFile>();
-
-        if (dir != null) {
-            MusicFile album = musicFileService.getMusicFile(dir);
-            int[] indexes = ServletRequestUtils.getIntParameters(request, "i");
-            if (indexes.length == 0) {
-                return Arrays.asList(album);
-            }
-            List<MusicFile> children = album.getChildren(true, true, true);
-            for (int index : indexes) {
-                result.add(children.get(index));
-            }
-        } else if (playerId != null) {
-            Player player = playerService.getPlayerById(playerId);
-            Playlist playlist = player.getPlaylist();
-            Collections.addAll(result, playlist.getFiles());
-        }
-
-        return result;
+    /*
+     * given string "[x, y, z]", returns the integers x, y and z as a list.
+     */
+    private List<Integer> getMediaFileIds(String query) {
+    	List<Integer> mediaFileIds = new ArrayList<>(); 
+    	for (String s : split(removeEnd(removeStart(query, "["), "]"), ", ")) {
+    		mediaFileIds.add(toInt(s));
+    	}
+    	return mediaFileIds;
     }
 
-    public void setMusicFileService(MusicFileService musicFileService) {
-        this.musicFileService = musicFileService;
+// TODO : this used to be called, prob. when creating a share from playlist view
+//    private List<MediaFile> getMediaFiles(HttpServletRequest request) throws IOException {
+//        String playerId = request.getParameter("player");
+//        Player player = playerService.getPlayerById(playerId);
+//        Playlist playlist = player.getPlaylist();
+//        Collections.addAll(result, playlist.getFiles());
+//
+//        return result;
+//    }
+
+    public void setmediaFileService(MediaFileService mediaFileService) {
+        this.mediaFileService = mediaFileService;
     }
 
     public void setSettingsService(SettingsService settingsService) {
@@ -117,4 +124,5 @@ public class ShareManagementController extends MultiActionController {
     public void setSecurityService(SecurityService securityService) {
         this.securityService = securityService;
     }
+
 }

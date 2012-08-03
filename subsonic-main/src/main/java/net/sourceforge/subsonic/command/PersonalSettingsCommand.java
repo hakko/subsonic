@@ -42,17 +42,22 @@ public class PersonalSettingsCommand {
     private Avatar customAvatar;
     private UserSettings.Visibility mainVisibility;
     private UserSettings.Visibility playlistVisibility;
+    private UserSettings.Visibility homeVisibility;
     private boolean partyModeEnabled;
     private boolean showNowPlayingEnabled;
     private boolean showChatEnabled;
     private boolean nowPlayingAllowed;
-    private boolean finalVersionNotificationEnabled;
-    private boolean betaVersionNotificationEnabled;
     private boolean lastFmEnabled;
     private String lastFmUsername;
-    private String lastFmPassword;
     private boolean albumOrderAscending;
     private String defaultHomeView;
+    private short defaultHomeArtists;
+    private short defaultHomeAlbums;
+    private short defaultHomeSongs;
+    private short artistGridWidth;
+    private short relatedArtists;
+    private short recommendedArtists;
+    private boolean reluctantArtistLoading;
     private boolean isReloadNeeded;
     
     public User getUser() {
@@ -135,7 +140,15 @@ public class PersonalSettingsCommand {
         this.playlistVisibility = playlistVisibility;
     }
 
-    public boolean isPartyModeEnabled() {
+    public UserSettings.Visibility getHomeVisibility() {
+		return homeVisibility;
+	}
+
+	public void setHomeVisibility(UserSettings.Visibility homeVisibility) {
+		this.homeVisibility = homeVisibility;
+	}
+
+	public boolean isPartyModeEnabled() {
         return partyModeEnabled;
     }
 
@@ -167,22 +180,6 @@ public class PersonalSettingsCommand {
         this.nowPlayingAllowed = nowPlayingAllowed;
     }
 
-    public boolean isFinalVersionNotificationEnabled() {
-        return finalVersionNotificationEnabled;
-    }
-
-    public void setFinalVersionNotificationEnabled(boolean finalVersionNotificationEnabled) {
-        this.finalVersionNotificationEnabled = finalVersionNotificationEnabled;
-    }
-
-    public boolean isBetaVersionNotificationEnabled() {
-        return betaVersionNotificationEnabled;
-    }
-
-    public void setBetaVersionNotificationEnabled(boolean betaVersionNotificationEnabled) {
-        this.betaVersionNotificationEnabled = betaVersionNotificationEnabled;
-    }
-
     public boolean isLastFmEnabled() {
         return lastFmEnabled;
     }
@@ -199,14 +196,6 @@ public class PersonalSettingsCommand {
         this.lastFmUsername = lastFmUsername;
     }
 
-    public String getLastFmPassword() {
-        return lastFmPassword;
-    }
-
-    public void setLastFmPassword(String lastFmPassword) {
-        this.lastFmPassword = lastFmPassword;
-    }
-
     public boolean isAlbumOrderAscending() {
 		return albumOrderAscending;
 	}
@@ -221,6 +210,62 @@ public class PersonalSettingsCommand {
 
 	public void setDefaultHomeView(String defaultHomeView) {
 		this.defaultHomeView = defaultHomeView;
+	}
+
+	public short getDefaultHomeArtists() {
+		return defaultHomeArtists;
+	}
+
+	public void setDefaultHomeArtists(short defaultHomeArtists) {
+		this.defaultHomeArtists = defaultHomeArtists;
+	}
+
+	public short getDefaultHomeAlbums() {
+		return defaultHomeAlbums;
+	}
+
+	public void setDefaultHomeAlbums(short defaultHomeAlbums) {
+		this.defaultHomeAlbums = defaultHomeAlbums;
+	}
+
+	public short getDefaultHomeSongs() {
+		return defaultHomeSongs;
+	}
+
+	public void setDefaultHomeSongs(short defaultHomeSongs) {
+		this.defaultHomeSongs = defaultHomeSongs;
+	}
+
+	public short getArtistGridWidth() {
+		return artistGridWidth;
+	}
+
+	public void setArtistGridWidth(short artistGridWidth) {
+		this.artistGridWidth = artistGridWidth;
+	}
+
+	public short getRelatedArtists() {
+		return relatedArtists;
+	}
+
+	public void setRelatedArtists(short relatedArtists) {
+		this.relatedArtists = relatedArtists;
+	}
+
+	public short getRecommendedArtists() {
+		return recommendedArtists;
+	}
+
+	public void setRecommendedArtists(short recommendedArtists) {
+		this.recommendedArtists = recommendedArtists;
+	}
+
+	public boolean isReluctantArtistLoading() {
+		return reluctantArtistLoading;
+	}
+
+	public void setReluctantArtistLoading(boolean reluctantArtistLoading) {
+		this.reluctantArtistLoading = reluctantArtistLoading;
 	}
 
 	public boolean isReloadNeeded() {

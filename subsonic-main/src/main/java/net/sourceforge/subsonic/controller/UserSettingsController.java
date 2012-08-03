@@ -100,6 +100,7 @@ public class UserSettingsController extends SimpleFormController {
     public void createUser(UserSettingsCommand command) {
         User user = new User(command.getUsername(), command.getPassword(), StringUtils.trimToNull(command.getEmail()));
         user.setLdapAuthenticated(command.isLdapAuthenticated());
+        securityService.setSecurePassword(user);
         securityService.createUser(user);
         updateUser(command);
     }
@@ -122,6 +123,7 @@ public class UserSettingsController extends SimpleFormController {
 
         if (command.isPasswordChange()) {
             user.setPassword(command.getPassword());
+            securityService.setSecurePassword(user);
         }
 
         securityService.updateUser(user);

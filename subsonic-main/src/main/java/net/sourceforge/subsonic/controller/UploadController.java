@@ -18,7 +18,9 @@
  */
 package net.sourceforge.subsonic.controller;
 
+import static java.util.Arrays.asList;
 import net.sourceforge.subsonic.*;
+import net.sourceforge.subsonic.ajax.LibraryStatusService;
 import net.sourceforge.subsonic.domain.*;
 import net.sourceforge.subsonic.upload.*;
 import net.sourceforge.subsonic.service.*;
@@ -29,6 +31,8 @@ import org.apache.commons.io.*;
 import org.apache.tools.zip.*;
 import org.springframework.web.servlet.*;
 import org.springframework.web.servlet.mvc.*;
+
+import com.github.hakko.musiccabinet.service.LibraryUpdateService;
 
 import javax.servlet.http.*;
 import java.io.*;
@@ -47,6 +51,9 @@ public class UploadController extends ParameterizableViewController {
     private PlayerService playerService;
     private StatusService statusService;
     private SettingsService settingsService;
+    private LibraryUpdateService libraryUpdateService;
+    private LibraryStatusService libraryStatusService;
+    
     public static final String UPLOAD_STATUS = "uploadStatus";
 
     @Override
@@ -122,7 +129,11 @@ public class UploadController extends ParameterizableViewController {
                     }
                 }
             }
-
+            
+			libraryStatusService.notifyLibraryUpdate(LibraryStatusService.Message.SCAN_STARTED);
+			libraryUpdateService.createSearchIndex(new HashSet<>(asList(dir.getAbsolutePath())), true, false);
+			libraryStatusService.notifyLibraryUpdate(LibraryStatusService.Message.SCAN_FINISHED);
+            
         } catch (Exception x) {
             LOG.warn("Uploading failed.", x);
             map.put("exception", x);
@@ -211,7 +222,15 @@ public class UploadController extends ParameterizableViewController {
         this.settingsService = settingsService;
     }
 
-    /**
+    public void setLibraryUpdateService(LibraryUpdateService libraryUpdateService) {
+		this.libraryUpdateService = libraryUpdateService;
+	}
+
+	public void setLibraryStatusService(LibraryStatusService libraryStatusService) {
+		this.libraryStatusService = libraryStatusService;
+	}
+
+	/**
      * Receives callbacks as the file upload progresses.
      */
     private class UploadListenerImpl implements UploadListener {

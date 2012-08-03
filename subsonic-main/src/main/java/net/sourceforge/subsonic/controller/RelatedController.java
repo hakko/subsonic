@@ -3,7 +3,6 @@ package net.sourceforge.subsonic.controller;
 import static java.net.URLEncoder.encode;
 import static net.sourceforge.subsonic.util.StringUtil.ENCODING_UTF8;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -12,18 +11,22 @@ import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import net.sourceforge.subsonic.domain.MusicFile;
-import net.sourceforge.subsonic.service.MusicFileService;
+import net.sourceforge.subsonic.domain.ArtistLink;
+import net.sourceforge.subsonic.domain.User;
+import net.sourceforge.subsonic.domain.UserSettings;
+import net.sourceforge.subsonic.service.SecurityService;
+import net.sourceforge.subsonic.service.SettingsService;
 import net.sourceforge.subsonic.util.Util;
 
+import org.apache.commons.lang.math.NumberUtils;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.ParameterizableViewController;
 
 import com.github.hakko.musiccabinet.domain.model.aggr.ArtistRecommendation;
 import com.github.hakko.musiccabinet.domain.model.music.ArtistInfo;
 import com.github.hakko.musiccabinet.exception.ApplicationException;
-import com.github.hakko.musiccabinet.service.ArtistInfoService;
 import com.github.hakko.musiccabinet.service.ArtistRecommendationService;
+import com.github.hakko.musiccabinet.service.lastfm.ArtistInfoService;
 
 /**
  * Controller for the page displaying related artists.
@@ -34,27 +37,34 @@ public class RelatedController extends ParameterizableViewController {
 
 	private ArtistRecommendationService recommendationService;
 	private ArtistInfoService artistInfoService;
-	private MusicFileService musicFileService;
+	private SecurityService securityService;
+	private SettingsService settingsService;
 	
     protected ModelAndView handleRequestInternal(HttpServletRequest request, HttpServletResponse response) throws Exception {
 
-        String path = request.getParameter("path");
+        User user = securityService.getCurrentUser(request);
+        UserSettings userSettings = settingsService.getUserSettings(user.getUsername());
+    	
+        int id = NumberUtils.toInt(request.getParameter("id"));
         Map<String, Object> map = new HashMap<String, Object>();
 
         try {
-        	ArtistInfo artistInfo = Util.square(artistInfoService.getArtistInfo(path));
-        	List<ArtistRecommendation> artistsInLibrary = Util.square(recommendationService.getRelatedArtistsInLibrary(path, 15));
-        	List<String> namesNotInLibrary = recommendationService.getRelatedArtistsNotInLibrary(path, 5);
+        	ArtistInfo artistInfo = Util.square(artistInfoService.getArtistInfo(id));
+        	List<ArtistRecommendation> artistsInLibrary = Util.square(
+        			recommendationService.getRelatedArtistsInLibrary(id, userSettings.getRelatedArtists()));
+        	List<String> namesNotInLibrary = 
+        			recommendationService.getRelatedArtistsNotInLibrary(id, userSettings.getRecommendedArtists());
 
-        	List<ArtistRecommendation> artistsNotInLibrary = new ArrayList<ArtistRecommendation>();
+        	List<ArtistLink> artistsNotInLibrary = new ArrayList<>();
         	for (String name : namesNotInLibrary) {
-        		artistsNotInLibrary.add(new ArtistRecommendation(name, encode(name, ENCODING_UTF8)));
+        		artistsNotInLibrary.add(new ArtistLink(name, encode(name, ENCODING_UTF8)));
         	}
 
-        	map.put("path", path);
-            map.put("artist", getFirstArtistName(path));
+        	map.put("id", id);
+            map.put("artist", artistInfo.getArtist().getName());
             map.put("artistInfo", artistInfo);
-            map.put("artistsInLibrary", artistsInLibrary);
+            map.put("artists", artistsInLibrary);
+    		map.put("artistGridWidth", userSettings.getArtistGridWidth());
             map.put("artistsNotInLibrary", artistsNotInLibrary);
         } catch (ApplicationException e) {
             return new ModelAndView("musicCabinetUnavailable");
@@ -63,16 +73,6 @@ public class RelatedController extends ParameterizableViewController {
         ModelAndView result = super.handleRequestInternal(request, response);
         result.addObject("model", map);
         return result;
-    }
-
-    private String getFirstArtistName(String pathName) throws IOException {
-    	List<MusicFile> musicFiles = musicFileService.getMusicFile(pathName).getDescendants(true, false);
-    	for (MusicFile musicFile : musicFiles) {
-    		if (musicFile.isFile()) {
-    			return musicFile.getMetaData().getArtist();
-    		}
-    	}
-    	return null;
     }
     
     // Spring setters
@@ -84,9 +84,13 @@ public class RelatedController extends ParameterizableViewController {
 	public void setArtistInfoService(ArtistInfoService artistInfoService) {
 		this.artistInfoService = artistInfoService;
 	}
-	
-	public void setMusicFileService(MusicFileService musicFileService) {
-		this.musicFileService = musicFileService;
+
+	public void setSecurityService(SecurityService securityService) {
+		this.securityService = securityService;
+	}
+
+	public void setSettingsService(SettingsService settingsService) {
+		this.settingsService = settingsService;
 	}
 	
 }

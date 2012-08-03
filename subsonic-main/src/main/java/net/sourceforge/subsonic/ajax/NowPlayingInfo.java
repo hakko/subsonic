@@ -25,12 +25,11 @@ package net.sourceforge.subsonic.ajax;
  */
 public class NowPlayingInfo {
 
-	private final String path;
+	private final int mediaFileId;
     private final String username;
     private final String artist;
     private final String title;
     private final String tooltip;
-    private final String streamUrl;
     private final String albumUrl;
     private final String lyricsUrl;
     private final String coverArtUrl;
@@ -38,14 +37,13 @@ public class NowPlayingInfo {
     private final String avatarUrl;
     private final long firstRegistered;
 
-    public NowPlayingInfo(String path, String user, String artist, String title, String tooltip, String streamUrl, String albumUrl,
+    public NowPlayingInfo(int mediaFileId, String user, String artist, String title, String tooltip, String albumUrl,
                           String lyricsUrl, String coverArtUrl, String coverArtZoomUrl, String avatarUrl) {
-    	this.path = path;
-        this.username = user;
+    	this.mediaFileId = mediaFileId;
+    	this.username = user;
         this.artist = artist;
         this.title = title;
         this.tooltip = tooltip;
-        this.streamUrl = streamUrl;
         this.albumUrl = albumUrl;
         this.lyricsUrl = lyricsUrl;
         this.coverArtUrl = coverArtUrl;
@@ -54,8 +52,8 @@ public class NowPlayingInfo {
         this.firstRegistered = System.currentTimeMillis();
     }
 
-    public String getPath() {
-    	return path;
+    public int getMediaFileId() {
+    	return mediaFileId;
     }
     
     public String getUsername() {
@@ -72,10 +70,6 @@ public class NowPlayingInfo {
 
     public String getTooltip() {
         return tooltip;
-    }
-
-    public String getStreamUrl() {
-        return streamUrl;
     }
 
     public String getAlbumUrl() {
@@ -101,4 +95,5 @@ public class NowPlayingInfo {
     public int getMinutesAgo() {
         return (int) ((System.currentTimeMillis() - firstRegistered) / 1000L / 60L);
     }
+
 }

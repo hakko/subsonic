@@ -18,41 +18,46 @@
  */
 package net.sourceforge.subsonic.controller;
 
-import net.sourceforge.subsonic.command.*;
-import net.sourceforge.subsonic.service.*;
+import javax.servlet.http.HttpServletRequest;
 
-import org.springframework.web.servlet.mvc.*;
+import net.sourceforge.subsonic.Logger;
+import net.sourceforge.subsonic.command.SearchSettingsCommand;
+import net.sourceforge.subsonic.service.SearchService;
+import net.sourceforge.subsonic.service.SettingsService;
+
+import org.springframework.web.servlet.mvc.SimpleFormController;
 
 import com.github.hakko.musiccabinet.service.DatabaseAdministrationService;
-
-import javax.servlet.http.*;
+import com.github.hakko.musiccabinet.service.LibraryUpdateService;
 
 /**
  * Controller for the page used to administrate the search index.
- *
- * @author Sindre Mehus
  */
 public class SearchSettingsController extends SimpleFormController {
 
     private SettingsService settingsService;
     private SearchService searchService;
     private DatabaseAdministrationService dbAdmService;
+    private LibraryUpdateService libraryUpdateService;
+    
+    private static final Logger LOG = Logger.getLogger(SearchSettingsController.class);
     
     protected Object formBackingObject(HttpServletRequest request) throws Exception {
         SearchSettingsCommand command = new SearchSettingsCommand();
     
-        command.setMusicCabinetReady(
-        			searchService.hasMusicCabinetIndex() ||
-        			(dbAdmService.isRDBMSRunning()
-        			&& dbAdmService.isPasswordCorrect(settingsService.getMusicCabinetJDBCPassword())
-        			&& dbAdmService.isDatabaseUpdated()));
+        command.setDatabaseAvailable(dbAdmService.isRDBMSRunning()
+        				&& dbAdmService.isPasswordCorrect(settingsService.getMusicCabinetJDBCPassword())
+        				&& dbAdmService.isDatabaseUpdated());
         
-        if (searchService.isIndexBeingCreated()) {
+        if (libraryUpdateService.isIndexBeingCreated()) {
         	command.setCreatingIndex(true);
         }
 
-        if (request.getParameter("update") != null) {
-            searchService.createIndex();
+        String updateParam = request.getParameter("update");
+        if (updateParam != null) {
+        	boolean offlineScan = updateParam.equals("offline");
+        	LOG.debug("update search index, scan type " + updateParam);
+            searchService.createIndex(offlineScan, true, true);
             command.setCreatingIndex(true);
         }
 
@@ -84,5 +89,9 @@ public class SearchSettingsController extends SimpleFormController {
     public void setDatabaseAdministrationService(DatabaseAdministrationService dbAdmService) {
         this.dbAdmService = dbAdmService;
     }
+
+	public void setLibraryUpdateService(LibraryUpdateService libraryUpdateService) {
+		this.libraryUpdateService = libraryUpdateService;
+	}
 
 }

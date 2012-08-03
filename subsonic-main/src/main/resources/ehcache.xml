@@ -115,15 +115,17 @@
                   memoryStoreEvictionPolicy="LRU"/>
 
 	<!-- some changes made by MusicCabinet -->
-    <cache name="musicFileCache"
+    <cache name="mediaFileCache"
            maxElementsInMemory="1000"
-           eternal="true"
-           overflowToDisk="true"
-           diskPersistent="true"/>
+           eternal="false"
+           overflowToDisk="false"
+           diskPersistent="false"/>
 
+	<!-- EXTINCT -->
     <cache name="childDirCache"
-           maxElementsInMemory="100"
-           eternal="true"
+           maxElementsInMemory="0"
+           eternal="false"
+           diskPersistent="false"
            overflowToDisk="false"/>
 
     <cache name="coverArtCache"
@@ -141,11 +143,12 @@
            timeToLiveSeconds="172800"
            overflowToDisk="false"/>
 
+	<!-- EXTINCT -->
     <cache name="musicFolderCache"
            maxElementsInMemory="0"
-           eternal="true"
-           diskPersistent="true"
-           overflowToDisk="true"/>
+           eternal="false"
+           diskPersistent="false"
+           overflowToDisk="false"/>
 
     <cache name="chatCache"
            maxElementsInMemory="20"

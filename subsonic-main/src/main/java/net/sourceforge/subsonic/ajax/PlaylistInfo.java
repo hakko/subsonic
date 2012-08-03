@@ -33,7 +33,7 @@ public class PlaylistInfo {
     private final boolean repeatEnabled;
     private final boolean sendM3U;
     private final float gain;
-
+    
     public PlaylistInfo(List<Entry> entries, int index, boolean stopEnabled, boolean repeatEnabled, boolean sendM3U, float gain) {
         this.entries = entries;
         this.index = index;
@@ -100,7 +100,7 @@ public class PlaylistInfo {
             this.fileSize = fileSize;
             this.albumUrl = albumUrl;
             this.streamUrl = streamUrl;
-        }
+         }
 
         public Integer getTrackNumber() {
             return trackNumber;

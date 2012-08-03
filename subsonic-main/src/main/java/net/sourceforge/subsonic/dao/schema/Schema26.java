@@ -45,7 +45,7 @@ public class Schema26 extends Schema{
                              "path varchar not null," +
                              "name varchar not null," +
                              "enabled boolean not null)");
-            template.execute("insert into music_folder values (null, '" + Util.getDefaultMusicFolder() + "', 'Music', true)");
+            template.execute("insert into music_folder values (null, '" + Util.getDefaultMediaFolder() + "', 'Music', true)");
             LOG.info("Database table 'music_folder' was created successfully.");
         }
 

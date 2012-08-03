@@ -36,11 +36,10 @@ import java.util.List;
  */
 public class Playlist {
 
-    private List<MusicFile> files = new ArrayList<MusicFile>();
+    private List<MediaFile> files = new ArrayList<MediaFile>();
     private boolean repeatEnabled;
     private String name = "(unnamed)";
     private Status status = Status.PLAYING;
-    private RandomSearchCriteria randomSearchCriteria;
 
     public static final String PLAY = "P";
     public static final String ENQUEUE = "E";
@@ -57,7 +56,7 @@ public class Playlist {
     /**
      * Used for undo functionality.
      */
-    private List<MusicFile> filesBackup = new ArrayList<MusicFile>();
+    private List<MediaFile> filesBackup = new ArrayList<MediaFile>();
     private int indexBackup;
 
     public Playlist() {
@@ -87,16 +86,16 @@ public class Playlist {
      *
      * @return The current song in the playlist, or <code>null</code> if no current song exists.
      */
-    public synchronized MusicFile getCurrentFile() {
+    public synchronized MediaFile getCurrentFile() {
         if (index == -1 || index == 0 && size() == 0) {
             setStatus(Status.STOPPED);
             return null;
         } else {
         	StringBuilder sb = new StringBuilder();
-        	for (MusicFile mf : files) {
+        	for (MediaFile mf : files) {
         		sb.append(" " + mf.getName());
         	}
-            MusicFile file = files.get(index);
+            MediaFile file = files.get(index);
 
             // Remove file from playlist if it doesn't exist.
             if (!file.exists()) {
@@ -114,8 +113,8 @@ public class Playlist {
      *
      * @return All music files in the playlist.
      */
-    public synchronized MusicFile[] getFiles() {
-        return files.toArray(new MusicFile[files.size()]);
+    public synchronized MediaFile[] getFiles() {
+        return files.toArray(new MediaFile[files.size()]);
     }
 
     /**
@@ -125,7 +124,7 @@ public class Playlist {
      * @return The music file at the given index.
      * @throws IndexOutOfBoundsException If the index is out of range.
      */
-    public synchronized MusicFile getFile(int index) {
+    public synchronized MediaFile getFile(int index) {
         return files.get(index);
     }
 
@@ -179,8 +178,8 @@ public class Playlist {
         setStatus(Status.PLAYING);
     }
     
-    public synchronized void setIndex(MusicFile musicFile) {
-    	this.index = files.indexOf(musicFile);
+    public synchronized void setIndex(MediaFile mediaFile) {
+    	this.index = files.indexOf(mediaFile);
     }
 
     /**
@@ -188,10 +187,10 @@ public class Playlist {
      * will be added recursively.
      *
      * @param append     Whether existing songs in the playlist should be kept.
-     * @param musicFiles The music files to add.
+     * @param mediaFiles The music files to add.
      * @throws IOException If an I/O error occurs.
      */
-    public synchronized void addFiles(String mode, Iterable<MusicFile> musicFiles) throws IOException {
+    public synchronized void addFiles(String mode, Iterable<MediaFile> mediaFiles) throws IOException {
         makeBackup();
         int insertIndex;
         if (PLAY.equals(mode)) {
@@ -203,9 +202,9 @@ public class Playlist {
         } else { // ADD
         	insertIndex = files.size();
         }
-        List<MusicFile> list = new ArrayList<MusicFile>();
-        for (MusicFile musicFile : musicFiles) {
-            list.addAll(musicFile.getDescendants(false, true));
+        List<MediaFile> list = new ArrayList<MediaFile>();
+        for (MediaFile mediaFile : mediaFiles) {
+            list.add(mediaFile); // TODO : used to be recursive
         }
         files.addAll(insertIndex, list);
         if (PLAY.equals(mode)) {
@@ -216,8 +215,8 @@ public class Playlist {
     /**
      * Convenience method, equivalent to {@link #addFiles(boolean, Iterable)}.
      */
-    public synchronized void addFiles(String mode, MusicFile... musicFiles) throws IOException {
-        addFiles(mode, Arrays.asList(musicFiles));
+    public synchronized void addFiles(String mode, MediaFile... mediaFiles) throws IOException {
+        addFiles(mode, Arrays.asList(mediaFiles));
     }
 
     /**
@@ -252,7 +251,7 @@ public class Playlist {
      */
     public synchronized void shuffle() {
         makeBackup();
-        MusicFile currentFile = getCurrentFile();
+        MediaFile currentFile = getCurrentFile();
         Collections.shuffle(files);
         if (currentFile != null) {
             index = files.indexOf(currentFile);
@@ -264,10 +263,10 @@ public class Playlist {
      */
     public synchronized void sort(final SortOrder sortOrder) {
         makeBackup();
-        MusicFile currentFile = getCurrentFile();
+        MediaFile currentFile = getCurrentFile();
 
-        Comparator<MusicFile> comparator = new Comparator<MusicFile>() {
-            public int compare(MusicFile a, MusicFile b) {
+        Comparator<MediaFile> comparator = new Comparator<MediaFile>() {
+            public int compare(MediaFile a, MediaFile b) {
                 switch (sortOrder) {
                     case TRACK:
                         Integer trackA = a.getMetaData().getTrackNumber();
@@ -361,7 +360,7 @@ public class Playlist {
      * Revert the last operation.
      */
     public synchronized void undo() {
-        List<MusicFile> filesTmp = new ArrayList<MusicFile>(files);
+        List<MediaFile> filesTmp = new ArrayList<MediaFile>(files);
         int indexTmp = index;
 
         index = indexBackup;
@@ -393,41 +392,23 @@ public class Playlist {
     }
 
     /**
-     * Returns the criteria used to generate this random playlist.
-     *
-     * @return The search criteria, or <code>null</code> if this is not a random playlist.
-     */
-    public synchronized RandomSearchCriteria getRandomSearchCriteria() {
-        return randomSearchCriteria;
-    }
-
-    /**
-     * Sets the criteria used to generate this random playlist.
-     *
-     * @param randomSearchCriteria The search criteria, or <code>null</code> if this is not a random playlist.
-     */
-    public synchronized void setRandomSearchCriteria(RandomSearchCriteria randomSearchCriteria) {
-        this.randomSearchCriteria = randomSearchCriteria;
-    }
-
-    /**
      * Returns the total length in bytes.
      *
      * @return The total length in bytes.
      */
     public synchronized long length() {
         long length = 0;
-        for (MusicFile musicFile : files) {
-            length += musicFile.length();
+        for (MediaFile mediaFile : files) {
+            length += mediaFile.length();
         }
         return length;
     }
 
     private void makeBackup() {
-        filesBackup = new ArrayList<MusicFile>(files);
+        filesBackup = new ArrayList<MediaFile>(files);
         indexBackup = index;
     }
-
+    
     /**
      * Playlist status.
      */
@@ -448,7 +429,7 @@ public class Playlist {
     public String toString() {
     	StringBuilder sb = new StringBuilder();
     	sb.append("Playlist " + hashCode() + ":");
-    	for (MusicFile mf : files) {
+    	for (MediaFile mf : files) {
     		sb.append(" " + mf.getName());
     	}
     	return sb.toString();

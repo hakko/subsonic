@@ -18,6 +18,7 @@
  */
 package net.sourceforge.subsonic.controller;
 
+import static com.github.hakko.musiccabinet.log.Logger.getLogFileLocation;
 import net.sourceforge.subsonic.*;
 import net.sourceforge.subsonic.service.*;
 import org.springframework.web.servlet.*;
@@ -40,14 +41,6 @@ public class HelpController extends ParameterizableViewController {
     protected ModelAndView handleRequestInternal(HttpServletRequest request, HttpServletResponse response) throws Exception {
         Map<String, Object> map = new HashMap<String, Object>();
 
-        if (versionService.isNewFinalVersionAvailable()) {
-            map.put("newVersionAvailable", true);
-            map.put("latestVersion", versionService.getLatestFinalVersion());
-        } else if (versionService.isNewBetaVersionAvailable()) {
-            map.put("newVersionAvailable", true);
-            map.put("latestVersion", versionService.getLatestBetaVersion());
-        }
-
         long totalMemory = Runtime.getRuntime().totalMemory();
         long freeMemory = Runtime.getRuntime().freeMemory();
 
@@ -63,7 +56,8 @@ public class HelpController extends ParameterizableViewController {
         map.put("usedMemory", totalMemory - freeMemory);
         map.put("totalMemory", totalMemory);
         map.put("logEntries", Logger.getLatestLogEntries());
-        map.put("logFile", Logger.getLogFile());
+        map.put("subsonicLogFile", Logger.getLogFile());
+        map.put("musicCabinetLogFile", getLogFileLocation());
 
         ModelAndView result = super.handleRequestInternal(request, response);
         result.addObject("model", map);

@@ -44,8 +44,10 @@ public class PasswordSettingsController extends SimpleFormController {
 
     protected void doSubmitAction(Object comm) throws Exception {
         PasswordSettingsCommand command = (PasswordSettingsCommand) comm;
+        
         User user = securityService.getUserByName(command.getUsername());
         user.setPassword(command.getPassword());
+        securityService.setSecurePassword(user);
         securityService.updateUser(user);
 
         command.setPassword(null);

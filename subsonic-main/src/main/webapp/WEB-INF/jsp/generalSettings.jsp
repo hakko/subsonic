@@ -28,7 +28,7 @@
         <tr>
             <td><fmt:message key="generalsettings.musicmask"/></td>
             <td>
-                <form:input path="musicFileTypes" size="70"/>
+                <form:input path="mediaFileTypes" size="70"/>
                 <c:import url="helpToolTip.jsp"><c:param name="topic" value="musicmask"/></c:import>
             </td>
         </tr>
@@ -38,14 +38,6 @@
             <td>
                 <form:input path="videoFileTypes" size="70"/>
                 <c:import url="helpToolTip.jsp"><c:param name="topic" value="videomask"/></c:import>
-            </td>
-        </tr>
-
-        <tr>
-            <td><fmt:message key="generalsettings.coverartmask"/></td>
-            <td>
-                <form:input path="coverArtFileTypes" size="70"/>
-                <c:import url="helpToolTip.jsp"><c:param name="topic" value="coverartmask"/></c:import>
             </td>
         </tr>
 
@@ -64,14 +56,6 @@
             <td>
                 <form:input path="ignoredArticles" size="70"/>
                 <c:import url="helpToolTip.jsp"><c:param name="topic" value="ignoredarticles"/></c:import>
-            </td>
-        </tr>
-
-        <tr>
-            <td><fmt:message key="generalsettings.shortcuts"/></td>
-            <td>
-                <form:input path="shortcuts" size="70"/>
-                <c:import url="helpToolTip.jsp"><c:param name="topic" value="shortcuts"/></c:import>
             </td>
         </tr>
 

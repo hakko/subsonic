@@ -1,0 +1,250 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+
+<beans xmlns="http://www.springframework.org/schema/beans"
+	   xmlns:security="http://www.springframework.org/schema/security"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="
+       	http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.0.xsd
+       	http://www.springframework.org/schema/security http://www.springframework.org/schema/security/spring-security-3.1.xsd">
+
+    <bean id="springSecurityFilter" class="org.springframework.security.web.FilterChainProxy">
+    	<security:filter-chain-map request-matcher="ant">
+    		<security:filter-chain 
+    			filters="httpSessionContextIntegrationFilter,logoutFilter,authenticationProcessingFilter,basicProcessingFilter,securityContextHolderAwareRequestFilter,rememberMeProcessingFilter,anonymousProcessingFilter,exceptionTranslationFilter,filterInvocationInterceptor" 
+    			pattern="/podcastReceiver**"/>
+    		<security:filter-chain 
+    			filters="httpSessionContextIntegrationFilter,logoutFilter,basicProcessingFilter,securityContextHolderAwareRequestFilter,rememberMeProcessingFilter,anonymousProcessingFilter,basicExceptionTranslationFilter,filterInvocationInterceptor" 
+    			pattern="/podcast**"/>
+    		<security:filter-chain 
+    			filters="httpSessionContextIntegrationFilter,logoutFilter,basicProcessingFilter,restRequestParameterProcessingFilter,securityContextHolderAwareRequestFilter,rememberMeProcessingFilter,anonymousProcessingFilter,basicExceptionTranslationFilter,filterInvocationInterceptor" 
+    			pattern="/rest/**"/>
+    		<security:filter-chain 
+    			filters="httpSessionContextIntegrationFilter,logoutFilter,authenticationProcessingFilter,basicProcessingFilter,securityContextHolderAwareRequestFilter,rememberMeProcessingFilter,anonymousProcessingFilter,exceptionTranslationFilter,filterInvocationInterceptor" 
+    			pattern="/**"/>
+    	</security:filter-chain-map>
+    </bean>
+
+    <bean id="httpSessionContextIntegrationFilter" class="org.springframework.security.web.context.SecurityContextPersistenceFilter"/>
+
+    <bean id="logoutFilter" class="org.springframework.security.web.authentication.logout.LogoutFilter">
+        <constructor-arg value="/login.view?logout"/>
+        <!-- URL redirected to after logout -->
+        <constructor-arg>
+            <list>
+                <ref bean="rememberMeServices"/>
+                <bean class="org.springframework.security.web.authentication.logout.SecurityContextLogoutHandler"/>
+            </list>
+        </constructor-arg>
+    </bean>
+
+    <bean id="authenticationProcessingFilter" class="org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter">
+        <property name="authenticationManager" ref="authenticationManager"/>
+        <property name="authenticationFailureHandler" ref="authenticationFailureHandler" />
+        <property name="authenticationSuccessHandler" ref="authenticationSuccessHandler" />
+        
+        <property name="filterProcessesUrl" value="/j_spring_security_check"/>
+        <property name="rememberMeServices" ref="rememberMeServices"/>
+    </bean>
+
+	<bean id="authenticationFailureHandler" class="org.springframework.security.web.authentication.SimpleUrlAuthenticationFailureHandler" >
+		<property name="defaultFailureUrl" value="/login.view?error" />
+	</bean>
+    
+    <bean id="authenticationSuccessHandler" class="org.springframework.security.web.authentication.SavedRequestAwareAuthenticationSuccessHandler" >
+		<property name="defaultTargetUrl" value="/" />
+	</bean>
+
+    <bean id="basicProcessingFilter" class="org.springframework.security.web.authentication.www.BasicAuthenticationFilter">
+        <property name="authenticationManager" ref="authenticationManager"/>
+        <property name="authenticationEntryPoint" ref="basicProcessingFilterEntryPoint"/>
+    </bean>
+
+    <bean id="restRequestParameterProcessingFilter" class="net.sourceforge.subsonic.security.RESTRequestParameterProcessingFilter">
+        <property name="authenticationManager" ref="authenticationManager"/>
+        <property name="settingsService" ref="settingsService"/>
+    </bean>
+
+    <bean id="basicProcessingFilterEntryPoint" class="org.springframework.security.web.authentication.www.BasicAuthenticationEntryPoint">
+        <property name="realmName" value="Subsonic"/>
+    </bean>
+
+    <bean id="securityContextHolderAwareRequestFilter" class="org.springframework.security.web.servletapi.SecurityContextHolderAwareRequestFilter"/>
+
+    <bean id="rememberMeProcessingFilter" class="org.springframework.security.web.authentication.rememberme.RememberMeAuthenticationFilter">
+        <property name="authenticationManager" ref="authenticationManager"/>
+        <property name="rememberMeServices" ref="rememberMeServices"/>
+    </bean>
+
+    <bean id="anonymousProcessingFilter" class="org.springframework.security.web.authentication.AnonymousAuthenticationFilter">
+        <property name="key" value="subsonic"/>
+        <property name="userAttribute" value="anonymousUser,ROLE_ANONYMOUS"/>
+    </bean>
+
+    <bean id="exceptionTranslationFilter" class="org.springframework.security.web.access.ExceptionTranslationFilter">
+        <property name="authenticationEntryPoint">
+            <bean class="org.springframework.security.web.authentication.LoginUrlAuthenticationEntryPoint">
+                <property name="loginFormUrl" value="/login.view?"/>
+                <property name="forceHttps" value="false"/>
+            </bean>
+        </property>
+        <property name="accessDeniedHandler">
+            <bean class="org.springframework.security.web.access.AccessDeniedHandlerImpl">
+                <property name="errorPage" value="/accessDenied.view"/>
+            </bean>
+        </property>
+    </bean>
+
+    <bean id="basicExceptionTranslationFilter" class="org.springframework.security.web.access.ExceptionTranslationFilter">
+        <property name="authenticationEntryPoint">
+            <bean class="org.springframework.security.web.authentication.www.BasicAuthenticationEntryPoint">
+                <property name="realmName" value="Subsonic"/>
+            </bean>
+        </property>
+    </bean>
+
+    <bean id="filterInvocationInterceptor" class="org.springframework.security.web.access.intercept.FilterSecurityInterceptor">
+        <property name="authenticationManager" ref="authenticationManager"/>
+        <property name="alwaysReauthenticate" value="true"/>
+        <property name="accessDecisionManager" ref="accessDecisionManager"/>
+        <property name="securityMetadataSource">
+        	<security:filter-security-metadata-source> 
+        		<security:intercept-url pattern="/login.view" access="IS_AUTHENTICATED_ANONYMOUSLY"/> 
+        		<security:intercept-url pattern="/accessDenied.view" access="IS_AUTHENTICATED_ANONYMOUSLY"/> 
+        		<security:intercept-url pattern="/videoPlayer.view" access="IS_AUTHENTICATED_ANONYMOUSLY"/> 
+        		<security:intercept-url pattern="/coverArt.view" access="IS_AUTHENTICATED_ANONYMOUSLY"/> 
+        		<security:intercept-url pattern="/stream/**" access="IS_AUTHENTICATED_ANONYMOUSLY"/> 
+        		<security:intercept-url pattern="/share/**" access="IS_AUTHENTICATED_ANONYMOUSLY"/> 
+        		<security:intercept-url pattern="/style/**" access="IS_AUTHENTICATED_ANONYMOUSLY"/> 
+        		<security:intercept-url pattern="/icons/**" access="IS_AUTHENTICATED_ANONYMOUSLY"/> 
+        		<security:intercept-url pattern="/flash/**" access="IS_AUTHENTICATED_ANONYMOUSLY"/> 
+        		<security:intercept-url pattern="/script/**" access="IS_AUTHENTICATED_ANONYMOUSLY"/> 
+        		<security:intercept-url pattern="/crossdomain.xml" access="IS_AUTHENTICATED_ANONYMOUSLY"/> 
+
+        		<security:intercept-url pattern="/personalSettings.view" access="ROLE_SETTINGS"/> 
+        		<security:intercept-url pattern="/passwordSettings.view" access="ROLE_SETTINGS"/> 
+        		<security:intercept-url pattern="/playerSettings.view" access="ROLE_SETTINGS"/> 
+        		<security:intercept-url pattern="/shareSettings.view" access="ROLE_SETTINGS"/> 
+
+        		<security:intercept-url pattern="/generalSettings.view" access="ROLE_ADMIN"/> 
+        		<security:intercept-url pattern="/advancedSettings.view" access="ROLE_ADMIN"/> 
+        		<security:intercept-url pattern="/userSettings.view" access="ROLE_ADMIN"/> 
+        		<security:intercept-url pattern="/mediaFolderSettings.view" access="ROLE_ADMIN"/> 
+        		<security:intercept-url pattern="/networkSettings.view" access="ROLE_ADMIN"/> 
+        		<security:intercept-url pattern="/transcodingSettings.view" access="ROLE_ADMIN"/> 
+        		<security:intercept-url pattern="/internetRadioSettings.view" access="ROLE_ADMIN"/> 
+        		<security:intercept-url pattern="/searchSettings.view" access="ROLE_ADMIN"/> 
+        		<security:intercept-url pattern="/musicCabinetSettings.view" access="ROLE_ADMIN"/> 
+        		<security:intercept-url pattern="/podcastSettings.view" access="ROLE_ADMIN"/> 
+        		<security:intercept-url pattern="/radioSettings.view" access="ROLE_ADMIN"/> 
+        		<security:intercept-url pattern="/db.view" access="ROLE_ADMIN"/> 
+
+        		<security:intercept-url pattern="/deletePlaylist.view" access="ROLE_PLAYLIST"/> 
+        		<security:intercept-url pattern="/savePlaylist.view" access="ROLE_PLAYLIST"/> 
+
+        		<security:intercept-url pattern="/download.view" access="ROLE_DOWNLOAD"/> 
+
+        		<security:intercept-url pattern="/upload.view" access="ROLE_UPLOAD"/> 
+
+        		<security:intercept-url pattern="/createShare.view" access="ROLE_SHARE"/> 
+
+        		<security:intercept-url pattern="/changeCoverArt.view" access="ROLE_COVERART"/> 
+        		<security:intercept-url pattern="/editTags.view" access="ROLE_COVERART"/> 
+        		<security:intercept-url pattern="/editArtist.view" access="ROLE_COVERART"/> 
+
+        		<security:intercept-url pattern="/setMusicFileInfo.view" access="ROLE_COMMENT"/> 
+
+        		<security:intercept-url pattern="/podcastReceiverAdmin.view" access="ROLE_PODCAST"/> 
+
+        		<security:intercept-url pattern="/**" access="IS_AUTHENTICATED_REMEMBERED"/> 
+
+        	</security:filter-security-metadata-source>
+        </property>
+    </bean>
+
+    <bean id="accessDecisionManager" class="org.springframework.security.access.vote.AffirmativeBased">
+        <property name="allowIfAllAbstainDecisions" value="false"/>
+        <property name="decisionVoters">
+            <list>
+                <bean class="org.springframework.security.access.vote.RoleVoter"/>
+                <bean class="org.springframework.security.access.vote.AuthenticatedVoter"/>
+            </list>
+        </property>
+    </bean>
+
+    <bean id="rememberMeServices" class="org.springframework.security.web.authentication.rememberme.TokenBasedRememberMeServices">
+        <property name="userDetailsService" ref="securityService"/>
+        <property name="tokenValiditySeconds" value="31536000"/>
+        <!-- One year -->
+        <property name="key" value="subsonic"/>
+    </bean>
+
+    <bean id="authenticationManager" class="org.springframework.security.authentication.ProviderManager">
+        <property name="providers">
+            <list>
+                <ref local="daoAuthenticationProvider"/>
+                <ref local="ldapAuthenticationProvider"/>
+                <bean class="org.springframework.security.authentication.AnonymousAuthenticationProvider">
+                    <property name="key" value="subsonic"/>
+                </bean>
+                <bean class="org.springframework.security.authentication.RememberMeAuthenticationProvider">
+                    <property name="key" value="subsonic"/>
+                </bean>
+            </list>
+        </property>
+    </bean>
+
+    <bean id="daoAuthenticationProvider" class="org.springframework.security.authentication.dao.DaoAuthenticationProvider">
+        <property name="userDetailsService" ref="securityService"/>
+        <property name="userCache" ref="userCacheWrapper"/>
+    </bean>
+
+    <bean id="userCacheWrapper" class="org.springframework.security.core.userdetails.cache.EhCacheBasedUserCache">
+        <property name="cache" ref="userCache"/>
+    </bean>
+
+    <bean id="ldapAuthenticationProvider" class="org.springframework.security.ldap.authentication.LdapAuthenticationProvider">
+        <constructor-arg ref="bindAuthenticator"/>
+        <constructor-arg ref="userDetailsServiceBasedAuthoritiesPopulator"/>
+    </bean>
+
+    <bean id="bindAuthenticator" class="net.sourceforge.subsonic.ldap.SubsonicLdapBindAuthenticator">
+        <property name="securityService" ref="securityService"/>
+        <property name="settingsService" ref="settingsService"/>
+    </bean>
+
+    <bean id="userDetailsServiceBasedAuthoritiesPopulator"
+          class="net.sourceforge.subsonic.ldap.UserDetailsServiceBasedAuthoritiesPopulator">
+        <property name="userDetailsService" ref="securityService"/>
+    </bean>
+
+    <!-- Authorization of AJAX services. -->
+    <bean id="ajaxServiceInterceptor" class="org.springframework.security.access.intercept.aopalliance.MethodSecurityInterceptor">
+        <property name="authenticationManager" ref="authenticationManager"/>
+        <property name="accessDecisionManager" ref="accessDecisionManager"/>
+        <property name="securityMetadataSource">
+        	<security:method-security-metadata-source> 
+        		<security:protect access="ROLE_COVERART" method="net.sourceforge.subsonic.ajax.TagService.setTags"/>
+        		<security:protect access="ROLE_UPLOAD" method="net.sourceforge.subsonic.ajax.TransferService.getUploadInfo"/>
+			</security:method-security-metadata-source>
+		</property>
+    </bean>
+
+    <bean id="ajaxTagServiceSecure" class="org.springframework.aop.framework.ProxyFactoryBean">
+        <property name="target" ref="ajaxTagService"/>
+        <property name="interceptorNames">
+            <list>
+                <idref local="ajaxServiceInterceptor"/>
+            </list>
+        </property>
+    </bean>
+
+    <bean id="ajaxTransferServiceSecure" class="org.springframework.aop.framework.ProxyFactoryBean">
+        <property name="target" ref="ajaxTransferService"/>
+        <property name="interceptorNames">
+            <list>
+                <idref local="ajaxServiceInterceptor"/>
+            </list>
+        </property>
+    </bean>
+
+</beans>

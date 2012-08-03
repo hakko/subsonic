@@ -18,18 +18,20 @@
  */
 package net.sourceforge.subsonic.ldap;
 
-import org.acegisecurity.GrantedAuthority;
-import org.acegisecurity.ldap.LdapDataAccessException;
-import org.acegisecurity.providers.ldap.LdapAuthoritiesPopulator;
-import org.acegisecurity.userdetails.UserDetailsService;
-import org.acegisecurity.userdetails.UserDetails;
-import org.acegisecurity.userdetails.ldap.LdapUserDetails;
+import java.util.Collection;
+
+import org.springframework.ldap.core.DirContextOperations;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.ldap.authentication.LdapAuthenticationProvider;
+import org.springframework.security.ldap.userdetails.LdapAuthoritiesPopulator;
 
 /**
  * An {@link LdapAuthoritiesPopulator} that retrieves the roles from the
  * database using the {@link UserDetailsService} instead of retrieving the roles
  * from LDAP. An instance of this class can be configured for the
- * {@link org.acegisecurity.providers.ldap.LdapAuthenticationProvider} when
+ * {@link LdapAuthenticationProvider} when
  * authentication should be done using LDAP and authorization using the
  * information stored in the database.
  *
@@ -39,12 +41,14 @@ public class UserDetailsServiceBasedAuthoritiesPopulator implements LdapAuthorit
 
     private UserDetailsService userDetailsService;
 
-    public GrantedAuthority[] getGrantedAuthorities(LdapUserDetails userDetails) throws LdapDataAccessException {
-        UserDetails details = userDetailsService.loadUserByUsername(userDetails.getUsername());
+	public Collection<? extends GrantedAuthority> getGrantedAuthorities(
+			DirContextOperations userData, String username) {
+        UserDetails details = userDetailsService.loadUserByUsername(username);
         return details.getAuthorities();
-    }
+	}
 
     public void setUserDetailsService(UserDetailsService userDetailsService) {
         this.userDetailsService = userDetailsService;
     }
+
 }

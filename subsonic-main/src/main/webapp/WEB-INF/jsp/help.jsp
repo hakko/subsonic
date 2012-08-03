@@ -21,10 +21,6 @@
     <fmt:message key="help.title"><fmt:param value="${model.brand}"/></fmt:message>
 </h1>
 
-<c:if test="${model.newVersionAvailable}">
-    <p class="warning"><fmt:message key="help.upgrade"><fmt:param value="${model.brand}"/><fmt:param value="${model.latestVersion}"/></fmt:message></p>
-</c:if>
-
 <table width="75%" class="ruleTable indent">
     <tr><td class="ruleTableHeader"><fmt:message key="help.version.title"/></td><td class="ruleTableCell">${model.brand}, original version ${model.localVersion}. Built with MusicCabinet plugin, version ${model.buildNumber}, on ${buildDateString}.</td></tr>
     <tr><td class="ruleTableHeader"><fmt:message key="help.server.title"/></td><td class="ruleTableCell">${model.serverInfo} (<sub:formatBytes bytes="${model.usedMemory}"/> / <sub:formatBytes bytes="${model.totalMemory}"/>)</td></tr>
@@ -34,14 +30,8 @@
     <tr><td class="ruleTableHeader"><fmt:message key="help.homepage.title"/></td><td class="ruleTableCell"><a target="_blank" href="http://www.subsonic.org/">subsonic.org</a></td></tr>
     <tr><td class="ruleTableHeader"><fmt:message key="help.forum.title"/></td><td class="ruleTableCell"><a target="_blank" href="http://forum.subsonic.org/">forum.subsonic.org</a></td></tr>
     <tr><td class="ruleTableHeader"><fmt:message key="help.contact.title"/></td><td class="ruleTableCell"><fmt:message key="help.contact.text"><fmt:param value="${model.brand}"/></fmt:message><p>MusicCabinet is a non-affiliated plug-in for ${model.brand}. The source code, together with ${model.brand} modifications, is available at <a href="https://github.com/hakko">Github</a>.</p></td></tr>
+	<tr><td class="ruleTableHeader">Bug reports</td><td class="ruleTableCell">Please report encountered MusicCabinet bugs in <a target="_blank" href="http://forum.subsonic.org/forum/viewtopic.php?f=8&t=9504">this forum thread</a><br>To help solving problems, attach the contents of these files:<ul><li>${model.subsonicLogFile}</li><li>${model.musicCabinetLogFile}</li></ul>Try to make your bug report as re-producable as possible. The more details you can supply on what's going wrong, the more likely it is to get solved. Thanks!</td></tr>
 </table>
-
-<p></p>
-
-<table width="75%"><tr>
-    <td><a href="<c:url value="/donate.view"/>"><img src="<spring:theme code="paypalImage"/>" alt=""></a></td>
-    <td><fmt:message key="help.donate"><fmt:param value="${model.brand}"/></fmt:message></td>
-</tr></table>
 
 <h2><img src="<spring:theme code="logImage"/>" alt="">&nbsp;<fmt:message key="help.log"/></h2>
 
@@ -54,7 +44,7 @@
     </c:forEach>
 </table>
 
-<p><fmt:message key="help.logfile"><fmt:param value="${model.logFile}"/></fmt:message> </p>
+<p><fmt:message key="help.logfile"><fmt:param value="${model.subsonicLogFile}"/></fmt:message> </p>
 
 <div class="forward"><a href="help.view?"><fmt:message key="common.refresh"/></a></div>
 

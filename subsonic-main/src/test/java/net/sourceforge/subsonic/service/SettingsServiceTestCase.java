@@ -71,10 +71,8 @@ public class SettingsServiceTestCase extends TestCase {
     public void testChangeSettings() {
         settingsService.setIndexString("indexString");
         settingsService.setIgnoredArticles("a the foo bar");
-        settingsService.setShortcuts("new incoming \"rock 'n' roll\"");
         settingsService.setPlaylistFolder("playlistFolder");
-        settingsService.setMusicFileTypes("mp3 ogg  aac");
-        settingsService.setCoverArtFileTypes("jpeg gif  png");
+        settingsService.setMediaFileTypes("mp3 ogg  aac");
         settingsService.setCoverArtLimit(99);
         settingsService.setWelcomeMessage("welcomeMessage");
         settingsService.setLoginMessage("loginMessage");
@@ -109,14 +107,10 @@ public class SettingsServiceTestCase extends TestCase {
     private void verifySettings(SettingsService ss) {
         assertEquals("Wrong index string.", "indexString", ss.getIndexString());
         assertEquals("Wrong ignored articles.", "a the foo bar", ss.getIgnoredArticles());
-        assertEquals("Wrong shortcuts.", "new incoming \"rock 'n' roll\"", ss.getShortcuts());
         assertTrue("Wrong ignored articles array.", Arrays.equals(new String[] {"a", "the", "foo", "bar"}, ss.getIgnoredArticlesAsArray()));
-        assertTrue("Wrong shortcut array.", Arrays.equals(new String[] {"new", "incoming", "rock 'n' roll"}, ss.getShortcutsAsArray()));
         assertEquals("Wrong playlist folder.", "playlistFolder", ss.getPlaylistFolder());
-        assertEquals("Wrong music mask.", "mp3 ogg  aac", ss.getMusicFileTypes());
-        assertTrue("Wrong music mask array.", Arrays.equals(new String[] {"mp3", "ogg", "aac"}, ss.getMusicFileTypesAsArray()));
-        assertEquals("Wrong cover art mask.", "jpeg gif  png", ss.getCoverArtFileTypes());
-        assertTrue("Wrong cover art mask array.", Arrays.equals(new String[] {"jpeg", "gif", "png"}, ss.getCoverArtFileTypesAsArray()));
+        assertEquals("Wrong music mask.", "mp3 ogg  aac", ss.getMediaFileTypes());
+        assertTrue("Wrong music mask array.", Arrays.equals(new String[] {"mp3", "ogg", "aac"}, ss.getMediaFileTypesAsArray()));
         assertEquals("Wrong cover art limit.", 99, ss.getCoverArtLimit());
         assertEquals("Wrong welcome message.", "welcomeMessage", ss.getWelcomeMessage());
         assertEquals("Wrong login message.", "loginMessage", ss.getLoginMessage());

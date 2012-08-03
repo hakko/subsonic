@@ -18,10 +18,13 @@
  */
 package net.sourceforge.subsonic.controller;
 
+import static org.apache.commons.lang.StringUtils.removeEnd;
+import static org.apache.commons.lang.StringUtils.removeStart;
+import static org.apache.commons.lang.StringUtils.split;
+import static org.apache.commons.lang.math.NumberUtils.toInt;
+import net.sourceforge.subsonic.Logger;
 import net.sourceforge.subsonic.domain.*;
 import net.sourceforge.subsonic.service.*;
-import net.sourceforge.subsonic.service.metadata.MetaDataParser;
-import net.sourceforge.subsonic.service.metadata.MetaDataParserFactory;
 import net.sourceforge.subsonic.service.metadata.JaudiotaggerParser;
 
 import org.springframework.web.servlet.*;
@@ -37,19 +40,19 @@ import java.util.*;
  */
 public class EditTagsController extends ParameterizableViewController {
 
-    private MusicFileService musicFileService;
-    private MetaDataParserFactory metaDataParserFactory;
+    private MediaFileService mediaFileService;
 
+    private final static Logger LOG = Logger.getLogger(EditTagsController.class);
+    
     protected ModelAndView handleRequestInternal(HttpServletRequest request, HttpServletResponse response) throws Exception {
 
-        String path = request.getParameter("path");
-        MusicFile dir = musicFileService.getMusicFile(path);
-        List<MusicFile> files = dir.getChildren(true, false, true);
+        List<Integer> mediaFileIds = getMediaFileIds(request.getParameter("ids"));
+        
+        List<MediaFile> files = mediaFileService.getMediaFiles(mediaFileIds);
 
         Map<String, Object> map = new HashMap<String, Object>();
         if (!files.isEmpty()) {
-            MusicFile.MetaData metaData = files.get(0).getMetaData();
-            map.put("defaultAlbumArtist", metaData.getAlbumArtist());
+            MetaData metaData = files.get(0).getMetaData();
             map.put("defaultArtist", metaData.getArtist());
             map.put("defaultAlbum", metaData.getAlbum());
             map.put("defaultYear", metaData.getYear());
@@ -61,26 +64,37 @@ public class EditTagsController extends ParameterizableViewController {
         for (int i = 0; i < files.size(); i++) {
             songs.add(createSong(files.get(i), i));
         }
-        map.put("path", path);
+        
         map.put("songs", songs);
+        map.put("artistId", request.getParameter("artistId"));
+        map.put("albumId", request.getParameter("albumId"));
 
         ModelAndView result = super.handleRequestInternal(request, response);
         result.addObject("model", map);
         return result;
     }
 
-    private Song createSong(MusicFile file, int index) {
-        MetaDataParser parser = metaDataParserFactory.getParser(file);
-        MusicFile.MetaData metaData = parser.getRawMetaData(file);
+    /*
+     * given string "[x, y, z]", returns the integers x, y and z as a list.
+     */
+    private List<Integer> getMediaFileIds(String query) {
+    	List<Integer> mediaFileIds = new ArrayList<>(); 
+    	for (String s : split(removeEnd(removeStart(query, "["), "]"), ", ")) {
+    		mediaFileIds.add(toInt(s));
+    	}
+    	return mediaFileIds;
+    }
+
+    private Song createSong(MediaFile mf, int index) {
+        MetaData metaData = mf.getMetaData();
 
         Song song = new Song();
-        song.setPath(file.getPath());
-        song.setFileName(file.getName());
+        song.setId(mf.getId());
+        song.setFileName(mf.getName());
         song.setTrack(metaData.getTrackNumber());
         song.setSuggestedTrack(index + 1);
         song.setTitle(metaData.getTitle());
-        song.setSuggestedTitle(parser.guessTitle(file));
-        song.setAlbumArtist(metaData.getAlbumArtist());
+        song.setSuggestedTitle(mf.getNameWithoutSuffix());
         song.setArtist(metaData.getArtist());
         song.setAlbum(metaData.getAlbum());
         song.setYear(metaData.getYear());
@@ -88,39 +102,34 @@ public class EditTagsController extends ParameterizableViewController {
         return song;
     }
 
-    public void setMusicFileService(MusicFileService musicFileService) {
-        this.musicFileService = musicFileService;
-    }
-
-    public void setMetaDataParserFactory(MetaDataParserFactory metaDataParserFactory) {
-        this.metaDataParserFactory = metaDataParserFactory;
+    public void setmediaFileService(MediaFileService mediaFileService) {
+        this.mediaFileService = mediaFileService;
     }
 
     /**
      * Contains information about a single song.
      */
     public static class Song {
-        private String path;
+        private int id;
         private String fileName;
         private Integer suggestedTrack;
         private Integer track;
         private String suggestedTitle;
         private String title;
-        private String albumArtist;
         private String artist;
         private String album;
         private String year;
         private String genre;
 
-        public String getPath() {
-            return path;
-        }
+        public int getId() {
+			return id;
+		}
 
-        public void setPath(String path) {
-            this.path = path;
-        }
+		public void setId(int id) {
+			this.id = id;
+		}
 
-        public String getFileName() {
+		public String getFileName() {
             return fileName;
         }
 
@@ -160,14 +169,6 @@ public class EditTagsController extends ParameterizableViewController {
             this.title = title;
         }
 
-        public String getAlbumArtist() {
-			return albumArtist;
-		}
-
-		public void setAlbumArtist(String albumArtist) {
-			this.albumArtist = albumArtist;
-		}
-
 		public String getArtist() {
             return artist;
         }
@@ -199,5 +200,16 @@ public class EditTagsController extends ParameterizableViewController {
         public void setGenre(String genre) {
             this.genre = genre;
         }
+
+		@Override
+		public String toString() {
+			return "Song [id=" + id + ", fileName=" + fileName
+					+ ", suggestedTrack=" + suggestedTrack + ", track=" + track
+					+ ", suggestedTitle=" + suggestedTitle + ", title=" + title
+					+ ", artist=" + artist + ", album=" + album + ", year="
+					+ year + ", genre=" + genre + "]";
+		}
+        
     }
+
 }

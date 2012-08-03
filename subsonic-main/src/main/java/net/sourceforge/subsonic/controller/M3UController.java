@@ -19,7 +19,8 @@
 package net.sourceforge.subsonic.controller;
 
 import net.sourceforge.subsonic.Logger;
-import net.sourceforge.subsonic.domain.MusicFile;
+import net.sourceforge.subsonic.domain.MediaFile;
+import net.sourceforge.subsonic.domain.MetaData;
 import net.sourceforge.subsonic.domain.Player;
 import net.sourceforge.subsonic.domain.Playlist;
 import net.sourceforge.subsonic.service.PlayerService;
@@ -79,14 +80,14 @@ public class M3UController implements Controller {
 
     private void createClientSidePlaylist(PrintWriter out, Player player, String url) throws Exception {
         out.println("#EXTM3U");
-        for (MusicFile musicFile : player.getPlaylist().getFiles()) {
-            MusicFile.MetaData metaData = musicFile.getMetaData();
+        for (MediaFile mediaFile : player.getPlaylist().getFiles()) {
+            MetaData metaData = mediaFile.getMetaData();
             Integer duration = metaData.getDuration();
             if (duration == null) {
                 duration = -1;
             }
             out.println("#EXTINF:" + duration + "," + metaData.getArtist() + " - " + metaData.getTitle());
-            out.println(url + "player=" + player.getId() + "&pathUtf8Hex=" + StringUtil.utf8HexEncode(musicFile.getPath()) + "&suffix=." + transcodingService.getSuffix(player, musicFile, null));
+            out.println(url + "player=" + player.getId() + "&pathUtf8Hex=" + StringUtil.utf8HexEncode(mediaFile.getPath()) + "&suffix=." + transcodingService.getSuffix(player, mediaFile, null));
         }
     }
 

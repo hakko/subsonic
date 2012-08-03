@@ -9,7 +9,7 @@
 
 <form:form method="post" action="editArtist.view" commandName="command" id="editArtist">
 
-<form:hidden path="path"/>
+<form:hidden path="id"/>
 <form:hidden path="artist"/>
 
 <div style="padding:15px; width:60%">
@@ -37,8 +37,8 @@
 
 <p style="padding-top:1em;padding-bottom:1em">
     <input type="submit" value="<fmt:message key="common.save"/>" style="margin-right:0.3em"/>
-	<sub:url value="main.view" var="mainUrl"><sub:param name="path" value="${command.path}"/></sub:url>
-    <input type="button" value="<fmt:message key="common.back"/>" onclick="location.href='${mainUrl}'">
+	<sub:url value="artist.view" var="artistUrl"><sub:param name="id" value="${command.id}"/></sub:url>
+    <input type="button" value="<fmt:message key="common.back"/>" onclick="location.href='${artistUrl}'">
 </p>
 
 </form:form>

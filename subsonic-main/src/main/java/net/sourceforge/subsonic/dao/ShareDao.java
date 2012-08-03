@@ -89,10 +89,10 @@ public class ShareDao extends AbstractDao {
      * @param shareId The share ID.
      * @param paths   Paths of the files to share.
      */
-    public void createSharedFiles(int shareId, String... paths) {
-        String sql = "insert into share_file (share_id, path) values (?, ?)";
-        for (String path : paths) {
-            update(sql, shareId, path);
+    public void createSharedFiles(int shareId, int... mediaFileIds) {
+        String sql = "insert into share_file (share_id, media_file_id) values (?, ?)";
+        for (int mediaFileId : mediaFileIds) {
+            update(sql, shareId, mediaFileId);
         }
     }
 
@@ -102,8 +102,8 @@ public class ShareDao extends AbstractDao {
      * @param shareId The ID of the share.
      * @return The paths of the shared files.
      */
-    public List<String> getSharedFiles(int shareId) {
-        return query("select path from share_file where share_id=?", shareFileRowMapper, shareId);
+    public List<Integer> getSharedFiles(int shareId) {
+        return query("select media_file_id from share_file where share_id=?", shareFileRowMapper, shareId);
     }
 
     /**
@@ -122,9 +122,9 @@ public class ShareDao extends AbstractDao {
         }
     }
 
-    private static class ShareFileRowMapper implements ParameterizedRowMapper<String> {
-        public String mapRow(ResultSet rs, int rowNum) throws SQLException {
-            return rs.getString(1);
+    private static class ShareFileRowMapper implements ParameterizedRowMapper<Integer> {
+        public Integer mapRow(ResultSet rs, int rowNum) throws SQLException {
+            return rs.getInt(1);
         }
 
     }

@@ -19,7 +19,7 @@
 package net.sourceforge.subsonic.service;
 
 import net.sourceforge.subsonic.Logger;
-import net.sourceforge.subsonic.domain.MusicFile;
+import net.sourceforge.subsonic.domain.MediaFile;
 import net.sourceforge.subsonic.domain.Player;
 import net.sourceforge.subsonic.domain.Playlist;
 import net.sourceforge.subsonic.domain.Transcoding;
@@ -48,12 +48,11 @@ public class JukeboxService implements AudioPlayer.Listener {
     private AudioScrobblerService audioScrobblerService;
     private StatusService statusService;
     private SettingsService settingsService;
-    private MusicInfoService musicInfoService;
     private SecurityService securityService;
 
     private Player player;
     private TransferStatus status;
-    private MusicFile currentPlayingFile;
+    private MediaFile currentPlayingFile;
     private float gain = 0.5f;
     private int offset;
 
@@ -80,7 +79,7 @@ public class JukeboxService implements AudioPlayer.Listener {
         }
     }
 
-    private synchronized void play(MusicFile file, int offset) {
+    private synchronized void play(MediaFile file, int offset) {
         InputStream in = null;
         try {
 
@@ -142,16 +141,16 @@ public class JukeboxService implements AudioPlayer.Listener {
         return player;
     }
 
-    private void onSongStart(MusicFile file) {
+    private void onSongStart(MediaFile file) {
         LOG.info(player.getUsername() + " starting jukebox for \"" + FileUtil.getShortPath(file.getFile()) + "\"");
         status = statusService.createStreamStatus(player);
+        status.setMediaFileId(file.getId());
         status.setFile(file.getFile());
         status.addBytesTransfered(file.length());
-        updateStatistics(file);
         scrobble(file, false);
     }
 
-    private void onSongEnd(MusicFile file) {
+    private void onSongEnd(MediaFile file) {
         LOG.info(player.getUsername() + " stopping jukebox for \"" + FileUtil.getShortPath(file.getFile()) + "\"");
         if (status != null) {
             statusService.removeStreamStatus(status);
@@ -159,20 +158,9 @@ public class JukeboxService implements AudioPlayer.Listener {
         scrobble(file, true);
     }
 
-    private void updateStatistics(MusicFile file) {
-        try {
-            MusicFile folder = file.getParent();
-            if (!folder.isRoot()) {
-                musicInfoService.incrementPlayCount(folder);
-            }
-        } catch (Exception x) {
-            LOG.warn("Failed to update statistics for " + file, x);
-        }
-    }
-
-    private void scrobble(MusicFile file, boolean submission) {
+    private void scrobble(MediaFile file, boolean submission) {
         if (player.getClientId() == null) {  // Don't scrobble REST players.
-            audioScrobblerService.register(file, player.getUsername(), submission);
+            audioScrobblerService.scrobble(player.getUsername(), file, submission);
         }
     }
 
@@ -187,16 +175,12 @@ public class JukeboxService implements AudioPlayer.Listener {
         this.transcodingService = transcodingService;
     }
 
-    public void setAudioScrobblerService(AudioScrobblerService audioScrobblerService) {
-        this.audioScrobblerService = audioScrobblerService;
-    }
+	public void setAudioScrobblerService(AudioScrobblerService audioScrobblerService) {
+		this.audioScrobblerService = audioScrobblerService;
+	}
 
-    public void setStatusService(StatusService statusService) {
+	public void setStatusService(StatusService statusService) {
         this.statusService = statusService;
-    }
-
-    public void setMusicInfoService(MusicInfoService musicInfoService) {
-        this.musicInfoService = musicInfoService;
     }
 
     public void setSettingsService(SettingsService settingsService) {

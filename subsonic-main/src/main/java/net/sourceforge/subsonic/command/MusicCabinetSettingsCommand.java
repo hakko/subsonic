@@ -20,7 +20,8 @@ public class MusicCabinetSettingsCommand {
 	private boolean isSearchIndexBeingCreated;
 	private boolean isSearchIndexCreated;
 	private List<SearchIndexUpdateProgress> updateProgress;
-
+	private List<String> mediaFolderNames;
+	
 	private String musicCabinetJDBCPassword;
 	private String lastFMUsername;
 	private boolean updateDatabase;
@@ -31,6 +32,7 @@ public class MusicCabinetSettingsCommand {
 	private int artistTopTracksTotalCount;
 	private int genreRadioArtistCount;
 	private int genreRadioTotalCount;
+	private boolean preferLastFmArtwork;
 	
 	public boolean isDatabaseRunning() {
 		return isDatabaseRunning;
@@ -72,20 +74,28 @@ public class MusicCabinetSettingsCommand {
 		this.isSearchIndexBeingCreated = isSearchIndexBeingCreated;
 	}
 
-	public List<SearchIndexUpdateProgress> getUpdateProgress() {
-		return updateProgress;
-	}
-
-	public void setUpdateProgress(List<SearchIndexUpdateProgress> updateProgress) {
-		this.updateProgress = updateProgress;
-	}
-
 	public boolean isSearchIndexCreated() {
 		return isSearchIndexCreated;
 	}
 
 	public void setSearchIndexCreated(boolean isSearchIndexCreated) {
 		this.isSearchIndexCreated = isSearchIndexCreated;
+	}
+
+	public List<String> getMediaFolderNames() {
+		return mediaFolderNames;
+	}
+
+	public void setMediaFolderNames(List<String> mediaFolderNames) {
+		this.mediaFolderNames = mediaFolderNames;
+	}
+
+	public List<SearchIndexUpdateProgress> getUpdateProgress() {
+		return updateProgress;
+	}
+
+	public void setUpdateProgress(List<SearchIndexUpdateProgress> updateProgress) {
+		this.updateProgress = updateProgress;
 	}
 	
 	public String getMusicCabinetJDBCPassword() {
@@ -158,6 +168,14 @@ public class MusicCabinetSettingsCommand {
 
 	public void setGenreRadioTotalCount(int genreRadioTotalCount) {
 		this.genreRadioTotalCount = genreRadioTotalCount;
+	}
+
+	public boolean isPreferLastFmArtwork() {
+		return preferLastFmArtwork;
+	}
+
+	public void setPreferLastFmArtwork(boolean preferLastFmArtwork) {
+		this.preferLastFmArtwork = preferLastFmArtwork;
 	}
 
 }

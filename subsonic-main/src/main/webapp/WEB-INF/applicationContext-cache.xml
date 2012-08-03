@@ -13,9 +13,9 @@
         <property name="cacheName" value="userCache"/>
     </bean>
 
-    <bean id="musicFileCache" class="org.springframework.cache.ehcache.EhCacheFactoryBean">
+    <bean id="mediaFileCache" class="org.springframework.cache.ehcache.EhCacheFactoryBean">
         <property name="cacheManager" ref="cacheManager"/>
-        <property name="cacheName" value="musicFileCache"/>
+        <property name="cacheName" value="mediaFileCache"/>
     </bean>
 
     <bean id="childDirCache" class="org.springframework.cache.ehcache.EhCacheFactoryBean">

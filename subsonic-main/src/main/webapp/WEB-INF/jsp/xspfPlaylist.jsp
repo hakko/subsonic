@@ -8,7 +8,7 @@
 <c:forEach var="song" items="${model.songs}">
 
     <sub:url value="/stream" var="streamUrl">
-        <sub:param name="path" value="${song.musicFile.path}"/>
+        <sub:param name="path" value="${song.mediaFile.path}"/>
     </sub:url>
 
     <sub:url value="coverArt.view" var="coverArtUrl">
@@ -21,7 +21,7 @@
         <track>
             <location>${streamUrl}</location>
             <image>${coverArtUrl}</image>
-            <annotation>${song.musicFile.metaData.artist} - ${song.musicFile.title}</annotation>
+            <annotation>${song.mediaFile.metaData.artist} - ${song.mediaFile.title}</annotation>
         </track>
 
 </c:forEach>

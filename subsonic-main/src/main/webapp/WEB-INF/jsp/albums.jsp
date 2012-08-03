@@ -1,0 +1,101 @@
+<c:forEach items="${model.albums}" var="album" varStatus="i">
+	<c:choose>
+		<c:when test="${not empty album.coverArtUrl}"><c:set var="coverArtUrl">${album.coverArtUrl}</c:set></c:when>
+		<c:otherwise>
+			<sub:url value="coverArt.view" var="coverArtUrl">
+				<sub:param name="size" value="174"/>
+				<c:if test="${not empty album.coverArtPath}"><sub:param name="path" value="${album.coverArtPath}"/></c:if>
+			</sub:url>
+		</c:otherwise>
+	</c:choose>
+	<div style="padding-top:5px" id="alb${i.count}">
+		<div style="float:left">
+			<div class="outerpair1"><div class="outerpair2"><div class="shadowbox"><div class="innerbox">
+				<a href="javascript:noop()" onclick="toggleAlbum(${i.count})">
+					<img id="albart${i.count}" width="87" height="87" src="${coverArtUrl}" alt="">
+				</a>
+			</div></div></div></div>
+			<div id="albcmd${i.count}" style="display:none;float:right;padding-right:10px;padding-bottom:15px;text-align:right" class="detail">
+				<c:import url="playAddDownload.jsp">
+					<c:param name="id" value="${album.trackIds}"/>
+					<c:param name="starDisabled" value="true"/>
+					<c:param name="playEnabled" value="${model.user.streamRole}"/>
+					<c:param name="enqueueEnabled" value="${model.user.streamRole}"/>
+					<c:param name="addEnabled" value="${model.user.streamRole}"/>
+					<c:param name="downloadEnabled" value="${model.user.downloadRole}"/>
+					<c:param name="asTable" value="false"/>
+				</c:import>
+
+				<c:choose>
+					<c:when test="${not empty album.coverArtZoomUrl or not empty album.coverArtUrl}">| <a rel="zoom" href="${album.coverArtZoomUrl}">Zoom</a></c:when>
+					<c:otherwise><c:choose>
+						<c:when test="${not empty album.coverArtPath}">
+							<sub:url value="/coverArt.view" var="zoomCoverArtUrl"><sub:param name="path" value="${album.coverArtPath}"/></sub:url>
+							| <a rel="zoom" href="${zoomCoverArtUrl}">Zoom</a>
+						</c:when>
+						<c:otherwise>| Zoom</c:otherwise>						
+					</c:choose></c:otherwise>
+				</c:choose>
+
+				<br/>
+
+				<c:if test="${model.user.coverArtRole}">
+					<sub:url value="/changeCoverArt.view" var="changeCoverArtUrl">
+						<sub:param name="id" value="${album.trackIds[0]}"/>
+						<sub:param name="artistId" value="${album.artistId}"/>
+						<sub:param name="albumId" value="${album.id}"/>
+					</sub:url>
+					<a href="${changeCoverArtUrl}">Art</a> |
+				</c:if>
+
+				<c:if test="${model.user.coverArtRole}">
+					<sub:url value="editTags.view" var="editTagsUrl">
+						<sub:param name="ids" value="${album.trackIds}"/>
+						<sub:param name="artistId" value="${album.artistId}"/>
+						<sub:param name="albumId" value="${album.id}"/>
+					</sub:url>
+					<a href="${editTagsUrl}">Tags</a> |
+				</c:if>
+				
+				<c:if test="${model.user.shareRole}">
+					<sub:url value="createShare.view" var="shareUrl">
+						<sub:param name="ids" value="${album.trackIds}"/>
+					</sub:url>
+					<a href="${shareUrl}">Share</a>
+				</c:if>
+				
+			</div>
+		</div>
+		<div style="float:left;padding-left:10px;padding-bottom:15px">
+			<div>
+				<a href="#" onclick="toggleStar('alb', ${album.id}, '#starImage${album.id}'); return false;">
+					<c:choose>
+						<c:when test="${model.isAlbumStarred[i.index]}">
+							<img id="starImage${album.id}" src="<spring:theme code="ratingOnImage"/>" alt="">
+						</c:when>
+						<c:otherwise>
+							<img id="starImage${album.id}" src="<spring:theme code="ratingOffImage"/>" alt="">
+						</c:otherwise>
+					</c:choose>
+				</a>
+				<a href="javascript:noop()" onclick="toggleAlbum(${i.count})">
+					<b><c:if test="${not empty album.artistName}">${album.artistName} - </c:if>${album.title}</b><c:if test="${album.year > 0}"> <em>(${album.year})</em></c:if><br>
+				</a>
+			</div>
+			<div id="albtit${i.count}">
+				<c:import url="playAddDownload.jsp">
+					<c:param name="id" value="${album.trackIds}"/>
+					<c:param name="starDisabled" value="true"/>
+					<c:param name="playEnabled" value="${model.user.streamRole}"/>
+					<c:param name="enqueueEnabled" value="${model.user.streamRole}"/>
+					<c:param name="addEnabled" value="${model.user.streamRole}"/>
+					<c:param name="downloadEnabled" value="${model.user.downloadRole}"/>
+					<c:param name="asTable" value="false"/>
+				</c:import>
+			</div>
+			<div id="albson${i.count}" style="display:none"></div>
+		</div>
+	</div>
+	<div style="clear:both;"></div>
+
+</c:forEach>		

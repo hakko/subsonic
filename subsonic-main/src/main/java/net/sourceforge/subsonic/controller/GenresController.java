@@ -9,7 +9,10 @@ import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import net.sourceforge.subsonic.service.SearchService;
+import net.sourceforge.subsonic.domain.User;
+import net.sourceforge.subsonic.domain.UserSettings;
+import net.sourceforge.subsonic.service.SecurityService;
+import net.sourceforge.subsonic.service.SettingsService;
 
 import org.apache.commons.lang.StringUtils;
 import org.springframework.web.servlet.ModelAndView;
@@ -17,7 +20,8 @@ import org.springframework.web.servlet.mvc.ParameterizableViewController;
 
 import com.github.hakko.musiccabinet.domain.model.aggr.ArtistRecommendation;
 import com.github.hakko.musiccabinet.service.ArtistRecommendationService;
-import com.github.hakko.musiccabinet.service.TagInfoService;
+import com.github.hakko.musiccabinet.service.LibraryBrowserService;
+import com.github.hakko.musiccabinet.service.lastfm.TagInfoService;
 import com.github.hakko.musiccabinet.service.TagService;
 
 /**
@@ -27,10 +31,12 @@ import com.github.hakko.musiccabinet.service.TagService;
  */
 public class GenresController extends ParameterizableViewController {
 
+    private SettingsService settingsService;
+    private SecurityService securityService;
     private TagService tagService;
     private TagInfoService tagInfoService;
     private ArtistRecommendationService recService;
-    private SearchService searchService;
+    private LibraryBrowserService libraryBrowserService;
     
     protected ModelAndView handleRequestInternal(HttpServletRequest request, HttpServletResponse response) throws Exception {
 
@@ -40,10 +46,13 @@ public class GenresController extends ParameterizableViewController {
         String pageParam = StringUtils.defaultIfEmpty(request.getParameter("page"), "0");
         int page = Integer.parseInt(pageParam);
 
-        if (!searchService.hasMusicCabinetIndex()) {
+        if (!libraryBrowserService.hasArtists()) {
             return new ModelAndView("musicCabinetUnavailable");
         } else if (request.getParameter("genre") != null) {
-        	final int ARTISTS = 20;
+            User user = securityService.getCurrentUser(request);
+            UserSettings userSettings = settingsService.getUserSettings(user.getUsername());
+
+            final int ARTISTS = userSettings.getDefaultHomeArtists();
     		List<ArtistRecommendation> ars = square(recService.getRecommendedArtistsFromGenre(
     				genre, page * ARTISTS, ARTISTS + 1));
     		if (ars.size() > ARTISTS) {
@@ -54,7 +63,8 @@ public class GenresController extends ParameterizableViewController {
     		map.put("page", page);
     		map.put("genre", genre);
     		map.put("genreDescription", genreDescription);
-    		map.put("artistRecommendations", ars);
+    		map.put("artists", ars);
+    		map.put("artistGridWidth", userSettings.getArtistGridWidth());
     	} else {
     		map.put("topTagsOccurrences", tagService.getTopTagsOccurrence());
     	}
@@ -70,6 +80,14 @@ public class GenresController extends ParameterizableViewController {
 		this.tagService = tagService;
 	}
 
+	public void setSettingsService(SettingsService settingsService) {
+		this.settingsService = settingsService;
+	}
+
+	public void setSecurityService(SecurityService securityService) {
+		this.securityService = securityService;
+	}
+
 	public void setTagInfoService(TagInfoService tagInfoService) {
 		this.tagInfoService = tagInfoService;
 	}
@@ -78,8 +96,8 @@ public class GenresController extends ParameterizableViewController {
 		this.recService = recService;
 	}
 
-    public void setSearchService(SearchService searchService) {
-    	this.searchService = searchService;
-    }
+	public void setLibraryBrowserService(LibraryBrowserService libraryBrowserService) {
+		this.libraryBrowserService = libraryBrowserService;
+	}
 
 }

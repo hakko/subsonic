@@ -49,9 +49,9 @@ public final class Util {
     private Util() {
     }
 
-    public static String getDefaultMusicFolder() {
+    public static String getDefaultMediaFolder() {
         String def = isWindows() ? "c:\\music" : "/var/music";
-        return System.getProperty("subsonic.defaultMusicFolder", def);
+        return System.getProperty("subsonic.defaultMediaFolder", def);
     }
 
     public static String getDefaultPodcastFolder() {

@@ -33,7 +33,7 @@ import org.apache.commons.lang.StringUtils;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.ParameterizableViewController;
 
-import net.sourceforge.subsonic.domain.MusicFile;
+import net.sourceforge.subsonic.domain.MediaFile;
 import net.sourceforge.subsonic.domain.Share;
 import net.sourceforge.subsonic.domain.User;
 import net.sourceforge.subsonic.service.SecurityService;
@@ -104,9 +104,9 @@ public class ShareSettingsController extends ParameterizableViewController {
         List<ShareInfo> result = new ArrayList<ShareInfo>();
         User user = securityService.getCurrentUser(request);
         for (Share share : shareService.getSharesForUser(user)) {
-            List<MusicFile> files = shareService.getSharedFiles(share.getId());
+            List<MediaFile> files = shareService.getSharedFiles(share.getId());
             if (!files.isEmpty()) {
-                MusicFile file = files.get(0);
+                MediaFile file = files.get(0);
                 try {
                     result.add(new ShareInfo(share, file.isDirectory() ? file : file.getParent()));
                 } catch (IOException e) {
@@ -143,9 +143,9 @@ public class ShareSettingsController extends ParameterizableViewController {
 
     public static class ShareInfo {
         private final Share share;
-        private final MusicFile dir;
+        private final MediaFile dir;
 
-        public ShareInfo(Share share, MusicFile dir) {
+        public ShareInfo(Share share, MediaFile dir) {
             this.share = share;
             this.dir = dir;
         }
@@ -154,7 +154,7 @@ public class ShareSettingsController extends ParameterizableViewController {
             return share;
         }
 
-        public MusicFile getDir() {
+        public MediaFile getDir() {
             return dir;
         }
     }

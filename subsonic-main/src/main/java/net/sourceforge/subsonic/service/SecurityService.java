@@ -19,31 +19,36 @@
 package net.sourceforge.subsonic.service;
 
 import java.io.File;
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
 
-import org.acegisecurity.GrantedAuthority;
-import org.acegisecurity.GrantedAuthorityImpl;
-import org.acegisecurity.providers.dao.DaoAuthenticationProvider;
-import org.acegisecurity.userdetails.UserDetails;
-import org.acegisecurity.userdetails.UserDetailsService;
-import org.acegisecurity.userdetails.UsernameNotFoundException;
-import org.acegisecurity.wrapper.SecurityContextHolderAwareRequestWrapper;
-import org.springframework.dao.DataAccessException;
-
 import net.sf.ehcache.Ehcache;
 import net.sourceforge.subsonic.Logger;
 import net.sourceforge.subsonic.dao.UserDao;
-import net.sourceforge.subsonic.domain.MusicFolder;
+import net.sourceforge.subsonic.domain.MediaFolder;
 import net.sourceforge.subsonic.domain.User;
+
+import org.springframework.beans.factory.InitializingBean;
+import org.springframework.dao.DataAccessException;
+import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
+import org.springframework.security.authentication.dao.SaltSource;
+import org.springframework.security.authentication.encoding.PasswordEncoder;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.GrantedAuthorityImpl;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.security.web.servletapi.SecurityContextHolderAwareRequestWrapper;
 
 /**
  * Provides security-related services for authentication and authorization.
  *
  * @author Sindre Mehus
  */
-public class SecurityService implements UserDetailsService {
+public class SecurityService implements InitializingBean, UserDetailsService {
 
     private static final Logger LOG = Logger.getLogger(SecurityService.class);
 
@@ -51,6 +56,34 @@ public class SecurityService implements UserDetailsService {
     private SettingsService settingsService;
     private Ehcache userCache;
 
+    private PasswordEncoder passwordEncoder;
+	private SaltSource saltSource;
+
+	/**
+	 * After instantiation, check if this is an old Subsonic instance, still
+	 * storing passwords in clear-text. If so, update to salted hashing.
+	 */
+	public void afterPropertiesSet() throws Exception {
+		JdbcTemplate template = userDao.getJdbcTemplate();
+		if (template.queryForInt("select count(*) from version where version = 21") == 0) {
+            LOG.info("Updating database schema to version 21. (securing user passwords)");
+            template.execute("insert into version values (21)");
+
+    		for (User user : getAllUsers()) {
+    			setSecurePassword(user);
+    			updateUser(user);
+    		}
+		}
+	}
+	
+	public void setSecurePassword(User user) {
+		UserDetails userDetails = new org.springframework.security.core.userdetails.User(
+				user.getUsername(), user.getPassword(), new ArrayList<GrantedAuthority>());
+		String encodedPassword = passwordEncoder.encodePassword(userDetails.getPassword(),
+				saltSource.getSalt(userDetails));
+		user.setPassword(encodedPassword);
+	}
+	
     /**
      * Locates the user based on the username.
      *
@@ -60,22 +93,25 @@ public class SecurityService implements UserDetailsService {
      * @throws DataAccessException       If user could not be found for a repository-specific reason.
      */
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException, DataAccessException {
+    	LOG.debug("Load user " + username);
+    	System.out.println("Load user " + username);
         User user = getUserByName(username);
         if (user == null) {
             throw new UsernameNotFoundException("User \"" + username + "\" was not found.");
         }
 
         String[] roles = userDao.getRolesForUser(username);
-        GrantedAuthority[] authorities = new GrantedAuthority[roles.length];
+        List<GrantedAuthority> authorities = new ArrayList<GrantedAuthority>(roles.length);
         for (int i = 0; i < roles.length; i++) {
-            authorities[i] = new GrantedAuthorityImpl("ROLE_" + roles[i].toUpperCase());
+            authorities.add(new GrantedAuthorityImpl("ROLE_" + roles[i].toUpperCase()));
         }
 
         // If user is LDAP authenticated, disable user. The proper authentication should in that case
         // be done by SubsonicLdapBindAuthenticator.
         boolean enabled = !user.isLdapAuthenticated();
 
-        return new org.acegisecurity.userdetails.User(username, user.getPassword(), enabled, true, true, true, authorities);
+        return new org.springframework.security.core.userdetails.User(
+        		username, user.getPassword(), enabled, true, true, true, authorities);
     }
 
     /**
@@ -176,7 +212,7 @@ public class SecurityService implements UserDetailsService {
      */
     public boolean isReadAllowed(File file) {
         // Allowed to read from both music folder, playlist folder and podcast folder.
-        return isInMusicFolder(file) || isInPlaylistFolder(file) || isInPodcastFolder(file);
+        return isInMediaFolder(file) || isInPlaylistFolder(file) || isInPodcastFolder(file);
     }
 
     /**
@@ -188,7 +224,7 @@ public class SecurityService implements UserDetailsService {
         // Only allowed to write playlists, podcasts or cover art.
         boolean isPlaylist = isInPlaylistFolder(file);
         boolean isPodcast = isInPodcastFolder(file);
-        boolean isCoverArt = isInMusicFolder(file) && file.getName().startsWith("cover.");
+        boolean isCoverArt = isInMediaFolder(file) && file.getName().startsWith("folder.");
 
         return isPlaylist || isPodcast || isCoverArt;
     }
@@ -199,7 +235,7 @@ public class SecurityService implements UserDetailsService {
      * @return Whether the given file may be uploaded.
      */
     public boolean isUploadAllowed(File file) {
-        return isInMusicFolder(file) && !file.exists();
+        return isInMediaFolder(file) && !file.exists();
     }
 
     /**
@@ -208,10 +244,10 @@ public class SecurityService implements UserDetailsService {
      * @param file The file in question.
      * @return Whether the given file is located in one of the music folders.
      */
-    private boolean isInMusicFolder(File file) {
-        List<MusicFolder> folders = settingsService.getAllMusicFolders();
+    private boolean isInMediaFolder(File file) {
+        List<MediaFolder> folders = settingsService.getAllMediaFolders();
         String path = file.getPath();
-        for (MusicFolder folder : folders) {
+        for (MediaFolder folder : folders) {
             if (isFileInFolder(path, folder.getPath().getPath())) {
                 return true;
             }
@@ -274,4 +310,13 @@ public class SecurityService implements UserDetailsService {
     public void setUserCache(Ehcache userCache) {
         this.userCache = userCache;
     }
+
+	public void setPasswordEncoder(PasswordEncoder passwordEncoder) {
+		this.passwordEncoder = passwordEncoder;
+	}
+
+	public void setSaltSource(SaltSource saltSource) {
+		this.saltSource = saltSource;
+	}
+
 }

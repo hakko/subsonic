@@ -1,21 +1,20 @@
 package net.sourceforge.subsonic.controller;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.springframework.web.servlet.mvc.SimpleFormController;
-
-import com.github.hakko.musiccabinet.domain.model.aggr.SearchIndexUpdateProgress;
-import com.github.hakko.musiccabinet.service.DatabaseAdministrationService;
-import com.github.hakko.musiccabinet.service.PlaylistGeneratorService;
-import com.github.hakko.musiccabinet.service.SearchIndexUpdateService;
+import javax.servlet.http.HttpServletRequest;
 
 import net.sourceforge.subsonic.command.MusicCabinetSettingsCommand;
+import net.sourceforge.subsonic.domain.MediaFolder;
 import net.sourceforge.subsonic.service.SearchService;
 import net.sourceforge.subsonic.service.SettingsService;
 
-import javax.servlet.http.HttpServletRequest;
+import org.springframework.web.servlet.mvc.SimpleFormController;
+
+import com.github.hakko.musiccabinet.service.DatabaseAdministrationService;
+import com.github.hakko.musiccabinet.service.LibraryUpdateService;
+import com.github.hakko.musiccabinet.service.PlaylistGeneratorService;
 
 /**
  * Controller for the MusicCabinet settings page.
@@ -29,6 +28,7 @@ public class MusicCabinetSettingsController extends SimpleFormController {
     
     private SettingsService settingsService;
     private SearchService searchService;
+    private LibraryUpdateService libraryUpdateService;
     
     protected Object formBackingObject(HttpServletRequest request) throws Exception {
         MusicCabinetSettingsCommand command = new MusicCabinetSettingsCommand();
@@ -37,12 +37,16 @@ public class MusicCabinetSettingsController extends SimpleFormController {
         command.setPasswordCorrect(dbAdmService.isPasswordCorrect(
         		settingsService.getMusicCabinetJDBCPassword()));
         command.setDatabaseUpdated(dbAdmService.isDatabaseUpdated());
-        command.setSearchIndexBeingCreated(searchService.isIndexBeingCreated());
+        command.setSearchIndexBeingCreated(libraryUpdateService.isIndexBeingCreated());
         if (command.isSearchIndexBeingCreated()) {
-        	command.setUpdateProgress(getSearchIndexUpdateProgress());
+        	command.setUpdateProgress(libraryUpdateService.getSearchIndexUpdateProgress());
         }
         if (command.isDatabaseRunning() && command.isDatabaseUpdated()) {
-        	command.setSearchIndexCreated(playlistService.isSearchIndexCreated());
+        	if (playlistService.isSearchIndexCreated()) {
+        		command.setSearchIndexCreated(true);
+        	} else {
+        		command.setMediaFolderNames(getMediaFolderNames()); 
+        	}
         }
         
         command.setLastFMUsername(settingsService.getMusicCabinetLastFMUsername());
@@ -51,46 +55,26 @@ public class MusicCabinetSettingsController extends SimpleFormController {
         command.setArtistTopTracksTotalCount(settingsService.getArtistTopTracksTotalCount());
         command.setGenreRadioArtistCount(settingsService.getGenreRadioArtistCount());
         command.setGenreRadioTotalCount(settingsService.getGenreRadioTotalCount());
+        command.setPreferLastFmArtwork(settingsService.isPreferLastFmArtwork());
         
         return command;
     }
     
-    /*
-     * Build a list of all ongoing system updates and their progress
-     * (scanning/indexing library, fetching all kinds of data from last.fm, etc)
-     */
-    private List<SearchIndexUpdateProgress> getSearchIndexUpdateProgress() throws IOException {
-    	List<SearchIndexUpdateProgress> updateProgress = 
-    			new ArrayList<SearchIndexUpdateProgress>();
-    	
-    	SearchIndexUpdateProgress subsonicScanProgress = new SearchIndexUpdateProgress();
-    	subsonicScanProgress.setFinishedOperations(searchService.getSubsonicScannedFiles());
-    	subsonicScanProgress.setUpdateDescription("music files and folders scanned");
-    	updateProgress.add(subsonicScanProgress);
-    	
-    	SearchIndexUpdateProgress musicCabinetScanProgress = new SearchIndexUpdateProgress();
-    	musicCabinetScanProgress.setFinishedOperations(searchService.getMusicCabinetScannedFiles());
-    	musicCabinetScanProgress.setUpdateDescription("music files added for indexing");
-    	updateProgress.add(musicCabinetScanProgress);
-    	
-    	for (SearchIndexUpdateService updateService : 
-    		searchService.getSearchIndexUpdateServices()) {
-    		updateProgress.add(updateService.getProgress());
-    	}
-    	
-    	return updateProgress;
-    }
-
     protected void doSubmitAction(Object comm) throws Exception {
         MusicCabinetSettingsCommand command = (MusicCabinetSettingsCommand) comm;
 
         if (command.isUpdateDatabase()) {
         	dbAdmService.loadNewDatabasUpdates();
         	command.setDatabaseUpdated(dbAdmService.isDatabaseUpdated());
+        	if (playlistService.isSearchIndexCreated()) {
+        		command.setSearchIndexCreated(true);
+        	} else {
+        		command.setMediaFolderNames(getMediaFolderNames());
+        	}
         }
         
         if (command.isUpdateSearchIndex()) {
-            searchService.createIndex();
+        	searchService.createIndex(false, false, true);
             command.setSearchIndexBeingCreated(true);
         }
         
@@ -116,7 +100,16 @@ public class MusicCabinetSettingsController extends SimpleFormController {
         settingsService.setArtistTopTracksTotalCount(command.getArtistTopTracksTotalCount());
         settingsService.setGenreRadioArtistCount(command.getGenreRadioArtistCount());
         settingsService.setGenreRadioTotalCount(command.getGenreRadioTotalCount());
+        settingsService.setPreferLastFmArtwork(command.isPreferLastFmArtwork());
         settingsService.save();
+    }
+
+    private List<String> getMediaFolderNames() {
+		List<String> mediaFolderNames = new ArrayList<String>();
+		for (MediaFolder mediaFolder : settingsService.getAllMediaFolders()) {
+			mediaFolderNames.add(mediaFolder.getName());
+		}
+		return mediaFolderNames;
     }
     
     // Spring setters
@@ -136,5 +129,9 @@ public class MusicCabinetSettingsController extends SimpleFormController {
     public void setSearchService(SearchService searchService) {
     	this.searchService = searchService;
     }
+
+	public void setLibraryUpdateService(LibraryUpdateService libraryUpdateService) {
+		this.libraryUpdateService = libraryUpdateService;
+	}
     
 }

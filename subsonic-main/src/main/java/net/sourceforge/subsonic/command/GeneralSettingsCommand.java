@@ -29,12 +29,10 @@ import net.sourceforge.subsonic.domain.Theme;
 public class GeneralSettingsCommand {
 
     private String playlistFolder;
-    private String musicFileTypes;
+    private String mediaFileTypes;
     private String videoFileTypes;
-    private String coverArtFileTypes;
     private String index;
     private String ignoredArticles;
-    private String shortcuts;
     private boolean gettingStartedEnabled;
     private String welcomeTitle;
     private String welcomeSubtitle;
@@ -54,12 +52,12 @@ public class GeneralSettingsCommand {
         this.playlistFolder = playlistFolder;
     }
 
-    public String getMusicFileTypes() {
-        return musicFileTypes;
+    public String getmediaFileTypes() {
+        return mediaFileTypes;
     }
 
-    public void setMusicFileTypes(String musicFileTypes) {
-        this.musicFileTypes = musicFileTypes;
+    public void setmediaFileTypes(String mediaFileTypes) {
+        this.mediaFileTypes = mediaFileTypes;
     }
 
     public String getVideoFileTypes() {
@@ -68,14 +66,6 @@ public class GeneralSettingsCommand {
 
     public void setVideoFileTypes(String videoFileTypes) {
         this.videoFileTypes = videoFileTypes;
-    }
-
-    public String getCoverArtFileTypes() {
-        return coverArtFileTypes;
-    }
-
-    public void setCoverArtFileTypes(String coverArtFileTypes) {
-        this.coverArtFileTypes = coverArtFileTypes;
     }
 
     public String getIndex() {
@@ -92,14 +82,6 @@ public class GeneralSettingsCommand {
 
     public void setIgnoredArticles(String ignoredArticles) {
         this.ignoredArticles = ignoredArticles;
-    }
-
-    public String getShortcuts() {
-        return shortcuts;
-    }
-
-    public void setShortcuts(String shortcuts) {
-        this.shortcuts = shortcuts;
     }
 
     public String getWelcomeTitle() {

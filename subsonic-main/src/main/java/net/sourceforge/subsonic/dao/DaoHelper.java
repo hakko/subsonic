@@ -38,7 +38,14 @@ import net.sourceforge.subsonic.dao.schema.Schema40;
 import net.sourceforge.subsonic.dao.schema.Schema43;
 import net.sourceforge.subsonic.dao.schema.Schema45;
 import net.sourceforge.subsonic.dao.schema.Schema46;
+import net.sourceforge.subsonic.dao.schema.Schema46MusicCabinet;
 import net.sourceforge.subsonic.dao.schema.Schema46MusicCabinet0_5_35;
+import net.sourceforge.subsonic.dao.schema.Schema46MusicCabinet0_6_12;
+import net.sourceforge.subsonic.dao.schema.Schema46MusicCabinet0_6_54;
+import net.sourceforge.subsonic.dao.schema.Schema46MusicCabinet0_6_60;
+import net.sourceforge.subsonic.dao.schema.Schema46MusicCabinet0_6_80;
+import net.sourceforge.subsonic.dao.schema.Schema46MusicCabinet0_6_82;
+import net.sourceforge.subsonic.dao.schema.Schema46MusicCabinet0_6_85;
 import net.sourceforge.subsonic.service.SettingsService;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.datasource.DriverManagerDataSource;
@@ -59,11 +66,19 @@ public class DaoHelper {
                                 new Schema30(), new Schema31(), new Schema32(), new Schema33(), new Schema34(),
                                 new Schema35(), new Schema36(), new Schema37(), new Schema38(), new Schema40(),
                                 new Schema43(), new Schema45(), new Schema46(),
-                                new Schema46MusicCabinet0_5_35()};
+                                new Schema46MusicCabinet(),
+                                new Schema46MusicCabinet0_5_35(),
+                                new Schema46MusicCabinet0_6_12(),
+                                new Schema46MusicCabinet0_6_54(),
+                                new Schema46MusicCabinet0_6_60(),
+                                new Schema46MusicCabinet0_6_80(),
+                                new Schema46MusicCabinet0_6_82(),
+                                new Schema46MusicCabinet0_6_85()};
     private DataSource dataSource;
     private static boolean shutdownHookAdded;
 
     public DaoHelper() {
+    	LOG.debug("DAO Helper constructor.");
         dataSource = createDataSource();
         checkDatabase();
         addShutdownHook();
@@ -101,6 +116,8 @@ public class DaoHelper {
         ds.setUsername("sa");
         ds.setPassword("");
 
+        LOG.debug("Data source URL: " + ds.getUrl());
+        
         return ds;
     }
 

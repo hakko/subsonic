@@ -11,17 +11,17 @@ import net.sourceforge.subsonic.controller.EditArtistController;
  */
 public class EditArtistCommand {
 
-	private String path;
+	private int id;
 	private String artist;
 	private ArtistInfo artistInfo;
 	private String bioSummary;
 	
-	public String getPath() {
-		return path;
+	public int getId() {
+		return id;
 	}
 
-	public void setPath(String path) {
-		this.path = path;
+	public void setId(int id) {
+		this.id = id;
 	}
 
 	public String getArtist() {

@@ -11,12 +11,6 @@
 <script type="text/javascript" language="javascript">
     var index = 0;
     var fileCount = ${fn:length(model.songs)};
-    function setAlbumArtist() {
-        var albumArtist = dwr.util.getValue("albumArtistAll");
-        for (i = 0; i < fileCount; i++) {
-            dwr.util.setValue("albumArtist" + i, albumArtist);
-        }
-    }
     function setArtist() {
         var artist = dwr.util.getValue("artistAll");
         for (i = 0; i < fileCount; i++) {
@@ -75,8 +69,7 @@
         updateNextTag();
     }
     function updateNextTag() {
-        var path = dwr.util.getValue("path" + index);
-        var albumArtist = dwr.util.getValue("albumArtist" + index);
+        var id = dwr.util.getValue("id" + index);
         var artist = dwr.util.getValue("artist" + index);
         var track = dwr.util.getValue("track" + index);
         var album = dwr.util.getValue("album" + index);
@@ -84,7 +77,7 @@
         var year = dwr.util.getValue("year" + index);
         var genre = dwr.util.getValue("genre" + index);
         dwr.util.setValue("status" + index, "<fmt:message key="edittags.working"/>");
-        tagService.setTags(path, track, albumArtist, artist, album, title, year, genre, setTagsCallback);
+        tagService.setTags(id, track, artist, album, title, year, genre, setTagsCallback);
     }
     function setTagsCallback(result) {
         var message;
@@ -103,13 +96,17 @@
         if (index < fileCount) {
             updateNextTag();
         } else {
+			tagService.scanUpdatedFolders();
             document.getElementById("save").disabled = false;
         }
     }
 </script>
 
 <h1><fmt:message key="edittags.title"/></h1>
-<sub:url value="main.view" var="backUrl"><sub:param name="path" value="${model.path}"/></sub:url>
+<sub:url value="artist.view" var="backUrl">
+	<sub:param name="id" value="${model.artistId}"/>
+	<sub:param name="albumId" value="${model.albumId}"/>
+</sub:url>
 <div class="back"><a href="${backUrl}"><fmt:message key="common.back"/></a></div>
 
 <table class="ruleTable indent">
@@ -117,7 +114,6 @@
         <th class="ruleTableHeader"><fmt:message key="edittags.file"/></th>
         <th class="ruleTableHeader"><fmt:message key="edittags.track"/></th>
         <th class="ruleTableHeader"><fmt:message key="edittags.songtitle"/></th>
-        <th class="ruleTableHeader">Album artist</th>
         <th class="ruleTableHeader"><fmt:message key="edittags.artist"/></th>
         <th class="ruleTableHeader"><fmt:message key="edittags.album"/></th>
         <th class="ruleTableHeader"><fmt:message key="edittags.year"/></th>
@@ -130,7 +126,6 @@
             <a href="javascript:resetTrack()"><fmt:message key="edittags.reset.short"/></a></th>
         <th class="ruleTableHeader"><a href="javascript:suggestTitle()"><fmt:message key="edittags.suggest"/></a> |
             <a href="javascript:resetTitle()"><fmt:message key="edittags.reset"/></a></th>
-        <th class="ruleTableHeader" style="white-space: nowrap"><input type="text" name="albumArtistAll" size="15" onkeypress="dwr.util.onReturn(event, setAlbumArtist)" value="${model.defaultAlbumArtist}"/>&nbsp;<a href="javascript:setAlbumArtist()"><fmt:message key="edittags.set"/></a></th>
         <th class="ruleTableHeader" style="white-space: nowrap"><input type="text" name="artistAll" size="15" onkeypress="dwr.util.onReturn(event, setArtist)" value="${model.defaultArtist}"/>&nbsp;<a href="javascript:setArtist()"><fmt:message key="edittags.set"/></a></th>
         <th class="ruleTableHeader" style="white-space: nowrap"><input type="text" name="albumAll" size="15" onkeypress="dwr.util.onReturn(event, setAlbum)" value="${model.defaultAlbum}"/>&nbsp;<a href="javascript:setAlbum()"><fmt:message key="edittags.set"/></a></th>
         <th class="ruleTableHeader" style="white-space: nowrap"><input type="text" name="yearAll" size="5" onkeypress="dwr.util.onReturn(event, setYear)" value="${model.defaultYear}"/>&nbsp;<a href="javascript:setYear()"><fmt:message key="edittags.set"/></a></th>
@@ -147,10 +142,10 @@
         <th class="ruleTableHeader"/>
     </tr>
 
-    <c:forEach items="${model.songs}" var="song" varStatus="loopStatus">
-        <tr>
+	<c:forEach items="${model.songs}" var="song" varStatus="loopStatus">
+	<tr>
             <str:truncateNicely lower="25" upper="25" var="fileName">${song.fileName}</str:truncateNicely>
-            <input type="hidden" name="path${loopStatus.count - 1}" value="${song.path}"/>
+            <input type="hidden" name="id${loopStatus.count - 1}" value="${song.id}"/>
             <input type="hidden" name="suggestedTitle${loopStatus.count - 1}" value="${song.suggestedTitle}"/>
             <input type="hidden" name="originalTitle${loopStatus.count - 1}" value="${song.title}"/>
             <input type="hidden" name="suggestedTrack${loopStatus.count - 1}" value="${song.suggestedTrack}"/>
@@ -158,16 +153,17 @@
             <td class="ruleTableCell" title="${song.fileName}">${fileName}</td>
             <td class="ruleTableCell"><input type="text" size="5" name="track${loopStatus.count - 1}" value="${song.track}"/></td>
             <td class="ruleTableCell"><input type="text" size="30" name="title${loopStatus.count - 1}" value="${song.title}"/></td>
-            <td class="ruleTableCell"><input type="text" size="15" name="albumArtist${loopStatus.count - 1}" value="${song.albumArtist}"/></td>
             <td class="ruleTableCell"><input type="text" size="15" name="artist${loopStatus.count - 1}" value="${song.artist}"/></td>
             <td class="ruleTableCell"><input type="text" size="15" name="album${loopStatus.count - 1}" value="${song.album}"/></td>
             <td class="ruleTableCell"><input type="text" size="5"  name="year${loopStatus.count - 1}" value="${song.year}"/></td>
             <td class="ruleTableCell"><input type="text" name="genre${loopStatus.count - 1}" value="${song.genre}" style="width:7em"/></td>
             <td class="ruleTableCell"><div id="status${loopStatus.count - 1}"/></td>
-        </tr>
-    </c:forEach>
+	</tr>
+	</c:forEach>
 
+	
 </table>
+
 
 <p><input type="submit" id="save" value="<fmt:message key="common.save"/>" onclick="javascript:updateTags()"/></p>
 <div class="warning" id="errors"/>

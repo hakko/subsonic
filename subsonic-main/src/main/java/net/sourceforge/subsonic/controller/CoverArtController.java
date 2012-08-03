@@ -19,19 +19,20 @@
 package net.sourceforge.subsonic.controller;
 
 import net.sourceforge.subsonic.Logger;
-import net.sourceforge.subsonic.service.metadata.JaudiotaggerParser;
-import net.sourceforge.subsonic.domain.MusicFile;
-import net.sourceforge.subsonic.service.MusicFileService;
 import net.sourceforge.subsonic.service.SecurityService;
 import net.sourceforge.subsonic.service.SettingsService;
 
 import org.apache.commons.codec.digest.DigestUtils;
+import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.web.bind.ServletRequestUtils;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.Controller;
 import org.springframework.web.servlet.mvc.LastModified;
+
+import com.github.hakko.musiccabinet.exception.ApplicationException;
+import com.github.hakko.musiccabinet.service.library.AudioTagService;
 
 import javax.imageio.ImageIO;
 import javax.servlet.http.HttpServletRequest;
@@ -48,7 +49,7 @@ import java.io.*;
 public class CoverArtController implements Controller, LastModified {
 
     private SecurityService securityService;
-    private MusicFileService musicFileService;
+    private AudioTagService audioTagService;
 
     private static final Logger LOG = Logger.getLogger(CoverArtController.class);
 
@@ -117,7 +118,7 @@ public class CoverArtController implements Controller, LastModified {
         }
     }
 
-    private void sendUnscaled(File file, HttpServletResponse response) throws IOException {
+    private void sendUnscaled(File file, HttpServletResponse response) throws IOException, ApplicationException {
         InputStream in = null;
         try {
             in = getImageInputStream(file);
@@ -164,13 +165,14 @@ public class CoverArtController implements Controller, LastModified {
     /**
      * Returns an input stream to the image in the given file.  If the file is an audio file,
      * the embedded album art is returned.
+     * @throws ApplicationException 
+     * @throws IOException 
      */
-    private InputStream getImageInputStream(File file) throws IOException {
-        MusicFile musicFile = musicFileService.getMusicFile(file);
-        JaudiotaggerParser parser = new JaudiotaggerParser();
-        if (parser.isApplicable(musicFile)) {
-            return new ByteArrayInputStream(parser.getImageData(musicFile));
-        } else {
+    private InputStream getImageInputStream(File file) throws ApplicationException, IOException {
+    	String extension = FilenameUtils.getExtension(file.getName());
+    	if (audioTagService.isAudioFile(extension)) {
+            return new ByteArrayInputStream(audioTagService.getArtwork(file).getBinaryData());
+    	} else {
             return new FileInputStream(file);
         }
     }
@@ -222,7 +224,8 @@ public class CoverArtController implements Controller, LastModified {
         this.securityService = securityService;
     }
 
-    public void setMusicFileService(MusicFileService musicFileService) {
-        this.musicFileService = musicFileService;
-    }
+	public void setAudioTagService(AudioTagService audioTagService) {
+		this.audioTagService = audioTagService;
+	}
+    
 }

@@ -18,33 +18,33 @@
  */
 package net.sourceforge.subsonic.ajax;
 
-import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
-import java.util.Arrays;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+
+import net.sourceforge.subsonic.Logger;
+import net.sourceforge.subsonic.domain.MediaFile;
+import net.sourceforge.subsonic.domain.MetaData;
+import net.sourceforge.subsonic.domain.Player;
+import net.sourceforge.subsonic.domain.Playlist;
+import net.sourceforge.subsonic.service.AudioScrobblerService;
+import net.sourceforge.subsonic.service.JukeboxService;
+import net.sourceforge.subsonic.service.MediaFileService;
+import net.sourceforge.subsonic.service.PlayerService;
+import net.sourceforge.subsonic.service.SettingsService;
+import net.sourceforge.subsonic.service.TranscodingService;
+import net.sourceforge.subsonic.util.StringUtil;
 
 import org.directwebremoting.WebContextFactory;
 import org.springframework.web.servlet.support.RequestContextUtils;
 
 import com.github.hakko.musiccabinet.service.PlaylistGeneratorService;
-
-import net.sourceforge.subsonic.Logger;
-import net.sourceforge.subsonic.domain.MusicFile;
-import net.sourceforge.subsonic.domain.Player;
-import net.sourceforge.subsonic.domain.Playlist;
-import net.sourceforge.subsonic.service.JukeboxService;
-import net.sourceforge.subsonic.service.MusicFileService;
-import net.sourceforge.subsonic.service.MusicFileService.Album;
-import net.sourceforge.subsonic.service.PlayerService;
-import net.sourceforge.subsonic.service.TranscodingService;
-import net.sourceforge.subsonic.service.SettingsService;
-import net.sourceforge.subsonic.util.StringUtil;
 
 /**
  * Provides AJAX-enabled services for manipulating the playlist of a player.
@@ -57,12 +57,13 @@ public class PlaylistService {
     private static final Logger LOG = Logger.getLogger(PlaylistService.class);
 
     private PlayerService playerService;
-    private MusicFileService musicFileService;
+    private MediaFileService mediaFileService;
     private JukeboxService jukeboxService;
     private TranscodingService transcodingService;
     private SettingsService settingsService;
 
     private PlaylistGeneratorService playlistService;
+    private AudioScrobblerService audioScrobblerService;
 
     /**
      * Returns the playlist for the player of the current user.
@@ -113,55 +114,51 @@ public class PlaylistService {
         return convert(request, player, serverSidePlaylist, offset);
     }
 
-    public PlaylistInfo play(String path, String mode) throws Exception {
-    	LOG.debug("starting play(" + path + ", " + mode + ")");
+    public PlaylistInfo play(List<Integer> ids, String mode) throws Exception {
+    	LOG.debug("starting play(" + ids + ", " + mode + ")");
         HttpServletRequest request = WebContextFactory.get().getHttpServletRequest();
         HttpServletResponse response = WebContextFactory.get().getHttpServletResponse();
-
+        
         Player player = getCurrentPlayer(request, response);
-        MusicFile file = musicFileService.getMusicFile(path);
-        List<MusicFile> musicFiles = new ArrayList<MusicFile>();
-        if (file.isFile()) {
-        	musicFiles.add(file);
-        } else {
-        	List<Album> albums = musicFileService.getAlbums(file, new String[]{file.getPath()});
-        	for (Album album : albums) {
-        		musicFiles.addAll(album.getMusicFiles());
-        	}
+        List<MediaFile> mediaFiles = new ArrayList<MediaFile>();
+        for (int id : ids) {
+        	mediaFiles.add(mediaFileService.getMediaFile(id));
         }
         if (player.isWeb()) {
-            removeVideoFiles(musicFiles);
+            removeVideoFiles(mediaFiles);
         }
-        player.getPlaylist().addFiles(mode, musicFiles);
-        player.getPlaylist().setRandomSearchCriteria(null);
+        player.getPlaylist().addFiles(mode, mediaFiles);
         return convert(request, player, true);
     }
-
-    public PlaylistInfo playRandom(String path, int count, String mode) throws Exception {
-    	LOG.debug("starting playRandom(" + path + ", " + count + ", " + mode + ")");
+    
+    public PlaylistInfo playRandom(List<Integer> ids, int count, String mode) throws Exception {
+    	LOG.debug("starting playRandom(" + ids + ", " + count + ", " + mode + ")");
         HttpServletRequest request = WebContextFactory.get().getHttpServletRequest();
         HttpServletResponse response = WebContextFactory.get().getHttpServletResponse();
 
-        MusicFile file = musicFileService.getMusicFile(path);
-        List<MusicFile> randomFiles = getRandomChildren(file, count);
+        List<MediaFile> mediaFiles = new ArrayList<>();
+        Collections.shuffle(ids);
+        for (int i = 0; i < count && i < ids.size(); i++) {
+        	mediaFiles.add(mediaFileService.getMediaFile(ids.get(i)));
+        }
+        
         Player player = getCurrentPlayer(request, response);
-        player.getPlaylist().addFiles(mode, randomFiles);
-        player.getPlaylist().setRandomSearchCriteria(null);
+        player.getPlaylist().addFiles(mode, mediaFiles);
         return convert(request, player, true);
     }
 
-    public PlaylistInfo playArtistRadio(String path, String mode) throws Exception {
-    	LOG.debug("starting playArtistRadio(" + path + ", " + mode + ")");
+    public PlaylistInfo playArtistRadio(int artistId, String mode) throws Exception {
+    	LOG.debug("starting playArtistRadio(" + artistId + ", " + mode + ")");
 
-    	return getPlaylistInfo(mode, playlistService.getPlaylistForArtist(path, 
+    	return getPlaylistInfo(mode, playlistService.getPlaylistForArtist(artistId, 
     			settingsService.getArtistRadioArtistCount(),
     			settingsService.getArtistRadioTotalCount()));
     }
 
-    public PlaylistInfo playTopTracks(String path, String mode) throws Exception {
-    	LOG.debug("starting playTopTracks(" + path + ", " + mode + ")");
+    public PlaylistInfo playTopTracks(int artistId, String mode) throws Exception {
+    	LOG.debug("starting playTopTracks(" + artistId + ", " + mode + ")");
 
-    	return getPlaylistInfo(mode, playlistService.getTopTracksForArtist(path,
+    	return getPlaylistInfo(mode, playlistService.getTopTracksForArtist(artistId,
     			settingsService.getArtistTopTracksTotalCount()));
     }
     
@@ -173,51 +170,49 @@ public class PlaylistService {
     			settingsService.getGenreRadioTotalCount()));
     }
     
-    private PlaylistInfo getPlaylistInfo(String mode, List<String> trackPaths) throws Exception {
+    private PlaylistInfo getPlaylistInfo(String mode, List<Integer> trackIds) throws Exception {
         HttpServletRequest request = WebContextFactory.get().getHttpServletRequest();
         HttpServletResponse response = WebContextFactory.get().getHttpServletResponse();
-
-        List<MusicFile> musicFiles = new ArrayList<MusicFile>();
-        for (String track : trackPaths) {
-        	LOG.debug("adding track " + track);
-        	musicFiles.add(musicFileService.getMusicFile(track));
+        
+        mediaFileService.loadMediaFiles(trackIds);
+        List<MediaFile> mediaFiles = new ArrayList<MediaFile>();
+        for (int trackId : trackIds) {
+        	mediaFiles.add(mediaFileService.getMediaFile(trackId));
         }
         
         Player player = getCurrentPlayer(request, response);
-        player.getPlaylist().addFiles(mode, musicFiles);
-        player.getPlaylist().setRandomSearchCriteria(null);
+        player.getPlaylist().addFiles(mode, mediaFiles);
         return convert(request, player, true);
     	
     }
 
-    public PlaylistInfo add(String path) throws Exception {
+    public PlaylistInfo add(int mediaFileId) throws Exception {
         HttpServletRequest request = WebContextFactory.get().getHttpServletRequest();
         HttpServletResponse response = WebContextFactory.get().getHttpServletResponse();
-        return doAdd(request, response, Arrays.asList(path));
+        return doAdd(request, response, Arrays.asList(mediaFileId));
     }
 
-    public PlaylistInfo doAdd(HttpServletRequest request, HttpServletResponse response, List<String> paths) throws Exception {
+    public PlaylistInfo doAdd(HttpServletRequest request, HttpServletResponse response, List<Integer> mediaFileIds) throws Exception {
         Player player = getCurrentPlayer(request, response);
-        List<MusicFile> files = new ArrayList<MusicFile>(paths.size());
-        for (String path : paths) {
-            files.addAll(musicFileService.getMusicFile(path).getDescendants(false, true));
+        List<MediaFile> files = new ArrayList<MediaFile>(mediaFileIds.size());
+        for (int mediaFileId : mediaFileIds) {
+            files.add(mediaFileService.getMediaFile(mediaFileId));
         }
         if (player.isWeb()) {
             removeVideoFiles(files);
         }
         player.getPlaylist().addFiles(Playlist.ADD, files);
-        player.getPlaylist().setRandomSearchCriteria(null);
         return convert(request, player, false);
     }
     
-    public PlaylistInfo doSet(HttpServletRequest request, HttpServletResponse response, List<String> paths) throws Exception {
+    public PlaylistInfo doSet(HttpServletRequest request, HttpServletResponse response, List<Integer> mediaFileIds) throws Exception {
         Player player = getCurrentPlayer(request, response);
         Playlist playlist = player.getPlaylist();
-        MusicFile currentFile = playlist.getCurrentFile();
+        MediaFile currentFile = playlist.getCurrentFile();
         Playlist.Status status = playlist.getStatus();
 
         playlist.clear();
-        PlaylistInfo result = doAdd(request, response, paths);
+        PlaylistInfo result = doAdd(request, response, mediaFileIds);
 
         int index = currentFile == null ? -1 : Arrays.asList(playlist.getFiles()).indexOf(currentFile);
         playlist.setIndex(index);
@@ -333,21 +328,10 @@ public class PlaylistService {
         jukeboxService.setGain(gain);
     }
 
-    private List<MusicFile> getRandomChildren(MusicFile file, int count) throws IOException {
-        List<MusicFile> children = file.getDescendants(false, false);
-        removeVideoFiles(children);
-
-        if (children.isEmpty()) {
-            return children;
-        }
-        Collections.shuffle(children);
-        return children.subList(0, Math.min(count, children.size()));
-    }
-
-    private void removeVideoFiles(List<MusicFile> files) {
-        Iterator<MusicFile> iterator = files.iterator();
+    private void removeVideoFiles(List<MediaFile> files) {
+        Iterator<MediaFile> iterator = files.iterator();
         while (iterator.hasNext()) {
-            MusicFile file = iterator.next();
+            MediaFile file = iterator.next();
             if (file.isVideo()) {
                 iterator.remove();
             }
@@ -355,11 +339,11 @@ public class PlaylistService {
     }
 
     private PlaylistInfo convert(HttpServletRequest request, Player player, boolean sendM3U) throws Exception {
-        return convert(request, player, sendM3U, 0);
+		return convert(request, player, sendM3U, 0);
     }
 
     private PlaylistInfo convert(HttpServletRequest request, Player player, boolean sendM3U, int offset) throws Exception {
-        String url = request.getRequestURL().toString();
+    	String url = request.getRequestURL().toString();
 
         if (sendM3U && player.isJukebox()) {
             jukeboxService.updateJukebox(player, offset);
@@ -372,12 +356,11 @@ public class PlaylistService {
 
         List<PlaylistInfo.Entry> entries = new ArrayList<PlaylistInfo.Entry>();
         Playlist playlist = player.getPlaylist();
-        for (MusicFile file : playlist.getFiles()) {
-            MusicFile.MetaData metaData = file.getMetaData();
-            String albumUrl = url.replaceFirst("/dwr/.*", "/main.view?pathUtf8Hex=" +
-                    StringUtil.utf8HexEncode(file.getParent().getPath()));
-            String streamUrl = url.replaceFirst("/dwr/.*", "/stream?player=" + player.getId() + "&pathUtf8Hex=" +
-                                                           StringUtil.utf8HexEncode(file.getPath()));
+        for (MediaFile file : playlist.getFiles()) {
+            MetaData metaData = file.getMetaData();
+            String albumUrl = url.replaceFirst("/dwr/.*", "/artist.view?id=" + metaData.getArtistId() 
+            		+ "&albumId=" + metaData.getAlbumId());
+            String streamUrl = url.replaceFirst("/dwr/.*", "/stream?player=" + player.getId() + "&mfId=" + file.getId());
 
             // Rewrite URLs in case we're behind a proxy.
             if (settingsService.isRewriteUrlEnabled()) {
@@ -404,7 +387,7 @@ public class PlaylistService {
         return StringUtil.formatBytes(fileSize, locale);
     }
 
-    private String formatFormat(Player player, MusicFile file) {
+    private String formatFormat(Player player, MediaFile file) {
         return transcodingService.getSuffix(player, file, null);
     }
 
@@ -412,7 +395,7 @@ public class PlaylistService {
         return StringUtil.getMimeType(format);
     }
 
-    private String formatBitRate(MusicFile.MetaData metaData) {
+    private String formatBitRate(MetaData metaData) {
         if (metaData.getBitRate() == null) {
             return null;
         }
@@ -430,8 +413,8 @@ public class PlaylistService {
         this.playerService = playerService;
     }
 
-    public void setMusicFileService(MusicFileService musicFileService) {
-        this.musicFileService = musicFileService;
+    public void setMediaFileService(MediaFileService mediaFileService) {
+        this.mediaFileService = mediaFileService;
     }
 
     public void setJukeboxService(JukeboxService jukeboxService) {
@@ -449,4 +432,9 @@ public class PlaylistService {
 	public void setPlaylistGeneratorService(PlaylistGeneratorService playlistService) {
 		this.playlistService = playlistService;
 	}
+
+	public void setAudioScrobblerService(AudioScrobblerService audioScrobblerService) {
+		this.audioScrobblerService = audioScrobblerService;
+	}
+	
 }

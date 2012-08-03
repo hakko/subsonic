@@ -18,6 +18,7 @@
  */
 package net.sourceforge.subsonic.controller;
 
+import net.sourceforge.subsonic.Logger;
 import net.sourceforge.subsonic.service.*;
 import net.sourceforge.subsonic.domain.*;
 import net.sourceforge.subsonic.util.StringUtil;
@@ -42,8 +43,9 @@ public class LoadPlaylistController extends MultiActionController {
     private PlaylistService playlistService;
     private SecurityService securityService;
     private PlayerService playerService;
-    private MusicFileService musicFileService;
 
+    private static final Logger LOG = Logger.getLogger(LoadPlaylistController.class);
+    
     public ModelAndView loadPlaylist(HttpServletRequest request, HttpServletResponse response) {
         return loadOrAppendPlaylist(request, true);
     }
@@ -92,8 +94,8 @@ public class LoadPlaylistController extends MultiActionController {
         playlistService.loadPlaylist(savedPlaylist, name);
 
         // Update the existing playlist with new entries.
-        List<MusicFile> files = getFilesToAppend(request, response);
-        for (MusicFile file : files) {
+        List<MediaFile> files = getFilesToAppend(request, response);
+        for (MediaFile file : files) {
             savedPlaylist.addFiles(Playlist.ADD, file);
         }
 
@@ -104,24 +106,18 @@ public class LoadPlaylistController extends MultiActionController {
         return reload(dir);
     }
 
-    private List<MusicFile> getFilesToAppend(HttpServletRequest request, HttpServletResponse response) throws IOException {
+    private List<MediaFile> getFilesToAppend(HttpServletRequest request, HttpServletResponse response) throws IOException {
 
-        String dir = StringUtils.trimToNull(request.getParameter("dir"));
         String playerId = StringUtils.trimToNull(request.getParameter("player"));
         int[] indexes = ServletRequestUtils.getIntParameters(request, "i");
-        List<MusicFile> files = new ArrayList<MusicFile>();
+        List<MediaFile> files = new ArrayList<MediaFile>();
 
         if (playerId != null) {
             Player player = playerService.getPlayerById(playerId);
             Playlist playlist = player.getPlaylist();
             for (int index : indexes) {
-                MusicFile file = playlist.getFile(index);
+                MediaFile file = playlist.getFile(index);
                 files.add(file);
-            }
-        } else if (dir != null) {
-            List<MusicFile> children = musicFileService.getMusicFile(dir).getChildren(true, true, true);
-            for (int index : indexes) {
-                files.add(children.get(index));
             }
         }
 
@@ -163,7 +159,4 @@ public class LoadPlaylistController extends MultiActionController {
         this.playerService = playerService;
     }
 
-    public void setMusicFileService(MusicFileService musicFileService) {
-        this.musicFileService = musicFileService;
-    }
 }

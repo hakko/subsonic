@@ -22,6 +22,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.List;
 
+import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.simple.ParameterizedRowMapper;
 
 import net.sourceforge.subsonic.Logger;
@@ -29,6 +30,7 @@ import net.sourceforge.subsonic.domain.AvatarScheme;
 import net.sourceforge.subsonic.domain.TranscodeScheme;
 import net.sourceforge.subsonic.domain.User;
 import net.sourceforge.subsonic.domain.UserSettings;
+import net.sourceforge.subsonic.domain.UserSettings.Visibility;
 import net.sourceforge.subsonic.util.StringUtil;
 
 /**
@@ -40,14 +42,14 @@ public class UserDao extends AbstractDao {
 
     private static final Logger LOG = Logger.getLogger(UserDao.class);
     private static final String USER_COLUMNS = "username, password, email, ldap_authenticated, bytes_streamed, bytes_downloaded, bytes_uploaded";
-    private static final String USER_SETTINGS_COLUMNS = "username, locale, theme_id, final_version_notification, beta_version_notification, " +
-            "main_caption_cutoff, main_track_number, main_artist, main_album, main_genre, " +
-            "main_year, main_bit_rate, main_duration, main_format, main_file_size, " +
-            "playlist_caption_cutoff, playlist_track_number, playlist_artist, playlist_album, playlist_genre, " +
-            "playlist_year, playlist_bit_rate, playlist_duration, playlist_format, playlist_file_size, " +
-            "last_fm_enabled, last_fm_username, last_fm_password, transcode_scheme, show_now_playing, selected_music_folder_id, " +
-            "party_mode_enabled, now_playing_allowed, avatar_scheme, system_avatar_id, changed, show_chat, album_order_ascending, " +
-            "default_home_view";
+    private static final String USER_SETTINGS_COLUMNS = "username, locale, theme_id, " +
+            "last_fm_enabled, last_fm_username, transcode_scheme, show_now_playing, " +
+            "party_mode_enabled, now_playing_allowed, avatar_scheme, system_avatar_id, changed, show_chat, " +
+            "album_order_ascending, default_home_view, default_home_artists, default_home_albums, " +
+            "default_home_songs, artist_grid_width, related_artists, recommended_artists, " +
+    		"reluctant_artist_loading";
+    private static final String USER_VISIBILITY_COLUMNS = "username, type, caption_cutoff, track_number, artist, " +
+            "album, genre, year, bit_rate, duration, format, file_size";
 
     private static final Integer ROLE_ID_ADMIN = 1;
     private static final Integer ROLE_ID_DOWNLOAD = 2;
@@ -60,9 +62,10 @@ public class UserDao extends AbstractDao {
     private static final Integer ROLE_ID_SETTINGS = 9;
     private static final Integer ROLE_ID_JUKEBOX = 10;
     private static final Integer ROLE_ID_SHARE = 11;
-
+    
     private UserRowMapper userRowMapper = new UserRowMapper();
     private UserSettingsRowMapper userSettingsRowMapper = new UserSettingsRowMapper();
+    private UserVisibilityRowMapper userVisibilityRowMapper = new UserVisibilityRowMapper();
 
     /**
      * Returns the user with the given username.
@@ -97,7 +100,7 @@ public class UserDao extends AbstractDao {
      */
     public void createUser(User user) {
         String sql = "insert into user (" + USER_COLUMNS + ") values (" + questionMarks(USER_COLUMNS) + ')';
-        update(sql, user.getUsername(), encrypt(user.getPassword()), user.getEmail(), user.isLdapAuthenticated(),
+        update(sql, user.getUsername(), hexEncode(user.getPassword()), user.getEmail(), user.isLdapAuthenticated(),
                 user.getBytesStreamed(), user.getBytesDownloaded(), user.getBytesUploaded());
         writeRoles(user);
     }
@@ -127,7 +130,7 @@ public class UserDao extends AbstractDao {
     public void updateUser(User user) {
         String sql = "update user set password=?, email=?, ldap_authenticated=?, bytes_streamed=?, bytes_downloaded=?, bytes_uploaded=? " +
                 "where username=?";
-        getJdbcTemplate().update(sql, new Object[]{encrypt(user.getPassword()), user.getEmail(), user.isLdapAuthenticated(),
+        getJdbcTemplate().update(sql, new Object[]{hexEncode(user.getPassword()), user.getEmail(), user.isLdapAuthenticated(),
                 user.getBytesStreamed(), user.getBytesDownloaded(), user.getBytesUploaded(),
                 user.getUsername()});
         writeRoles(user);
@@ -158,7 +161,14 @@ public class UserDao extends AbstractDao {
      */
     public UserSettings getUserSettings(String username) {
         String sql = "select " + USER_SETTINGS_COLUMNS + " from user_settings where username=?";
-        return queryOne(sql, userSettingsRowMapper, username);
+        UserSettings userSettings = queryOne(sql, userSettingsRowMapper, username);
+        if (userSettings != null) {
+        	sql = "select " + USER_VISIBILITY_COLUMNS + " from user_visibility where username=? and type=?";
+        	userSettings.setMainVisibility(queryOne(sql, userVisibilityRowMapper, username, 0));
+        	userSettings.setPlaylistVisibility(queryOne(sql, userVisibilityRowMapper, username, 1));
+        	userSettings.setHomeVisibility(queryOne(sql, userVisibilityRowMapper, username, 2));
+        }
+        return userSettings;	
     }
 
     /**
@@ -167,28 +177,36 @@ public class UserDao extends AbstractDao {
      * @param settings The user-specific settings.
      */
     public void updateUserSettings(UserSettings settings) {
-        getJdbcTemplate().update("delete from user_settings where username=?", new Object[]{settings.getUsername()});
+    	JdbcTemplate template = getJdbcTemplate();
+        template.update("delete from user_settings where username=?", new Object[]{settings.getUsername()});
 
         String sql = "insert into user_settings (" + USER_SETTINGS_COLUMNS + ") values (" + questionMarks(USER_SETTINGS_COLUMNS) + ')';
         String locale = settings.getLocale() == null ? null : settings.getLocale().toString();
-        UserSettings.Visibility main = settings.getMainVisibility();
-        UserSettings.Visibility playlist = settings.getPlaylistVisibility();
-        getJdbcTemplate().update(sql, new Object[]{settings.getUsername(), locale, settings.getThemeId(),
-                settings.isFinalVersionNotificationEnabled(), settings.isBetaVersionNotificationEnabled(),
-                main.getCaptionCutoff(), main.isTrackNumberVisible(), main.isArtistVisible(), main.isAlbumVisible(),
-                main.isGenreVisible(), main.isYearVisible(), main.isBitRateVisible(), main.isDurationVisible(),
-                main.isFormatVisible(), main.isFileSizeVisible(),
-                playlist.getCaptionCutoff(), playlist.isTrackNumberVisible(), playlist.isArtistVisible(), playlist.isAlbumVisible(),
-                playlist.isGenreVisible(), playlist.isYearVisible(), playlist.isBitRateVisible(), playlist.isDurationVisible(),
-                playlist.isFormatVisible(), playlist.isFileSizeVisible(),
-                settings.isLastFmEnabled(), settings.getLastFmUsername(), encrypt(settings.getLastFmPassword()),
+        template.update(sql, new Object[]{settings.getUsername(), locale, settings.getThemeId(),
+                settings.isLastFmEnabled(), settings.getLastFmUsername(),
                 settings.getTranscodeScheme().name(), settings.isShowNowPlayingEnabled(),
-                settings.getSelectedMusicFolderId(), settings.isPartyModeEnabled(), settings.isNowPlayingAllowed(),
-                settings.getAvatarScheme().name(), settings.getSystemAvatarId(), settings.getChanged(), settings.isShowChatEnabled(),
-                settings.isAlbumOrderAscending(), settings.getDefaultHomeView()});
+                settings.isPartyModeEnabled(), settings.isNowPlayingAllowed(),
+                settings.getAvatarScheme().name(), settings.getSystemAvatarId(), settings.getChanged(),
+                settings.isShowChatEnabled(), settings.isAlbumOrderAscending(), settings.getDefaultHomeView(), 
+                settings.getDefaultHomeArtists(), settings.getDefaultHomeAlbums(), settings.getDefaultHomeSongs(),
+                settings.getArtistGridWidth(), settings.getRelatedArtists(), settings.getRecommendedArtists(),
+                settings.isReluctantArtistLoading()});
+        
+        template.update("delete from user_visibility where username=?", new Object[]{settings.getUsername()});
+
+        sql = "insert into user_visibility (" + USER_VISIBILITY_COLUMNS + ") values (" + questionMarks(USER_VISIBILITY_COLUMNS) + ')';
+        Visibility[] visibilities = new Visibility[]{settings.getMainVisibility(), 
+        	settings.getPlaylistVisibility(), settings.getHomeVisibility()};
+        for (int i = 0; i < 3; i++) {
+        	Visibility v = visibilities[i];
+            template.update(sql, new Object[]{settings.getUsername(), i, v.getCaptionCutoff(), 
+            		v.isTrackNumberVisible(), v.isArtistVisible(), v.isAlbumVisible(), v.isGenreVisible(),
+            		v.isYearVisible(), v.isBitRateVisible(), v.isDurationVisible(), v.isFormatVisible(), 
+            		v.isFileSizeVisible()});
+        }
     }
 
-    private static String encrypt(String s) {
+    private static String hexEncode(String s) {
         if (s == null) {
             return null;
         }
@@ -199,7 +217,7 @@ public class UserDao extends AbstractDao {
         }
     }
 
-    private static String decrypt(String s) {
+    private static String hexDecode(String s) {
         if (s == null) {
             return null;
         }
@@ -290,7 +308,7 @@ public class UserDao extends AbstractDao {
 
     private class UserRowMapper implements ParameterizedRowMapper<User> {
         public User mapRow(ResultSet rs, int rowNum) throws SQLException {
-            User user = new User(rs.getString(1), decrypt(rs.getString(2)), rs.getString(3), rs.getBoolean(4),
+            User user = new User(rs.getString(1), hexDecode(rs.getString(2)), rs.getString(3), rs.getBoolean(4),
                                  rs.getLong(5), rs.getLong(6), rs.getLong(7));
             readRoles(user);
             return user;
@@ -303,38 +321,12 @@ public class UserDao extends AbstractDao {
             UserSettings settings = new UserSettings(rs.getString(col++));
             settings.setLocale(StringUtil.parseLocale(rs.getString(col++)));
             settings.setThemeId(rs.getString(col++));
-            settings.setFinalVersionNotificationEnabled(rs.getBoolean(col++));
-            settings.setBetaVersionNotificationEnabled(rs.getBoolean(col++));
-
-            settings.getMainVisibility().setCaptionCutoff(rs.getInt(col++));
-            settings.getMainVisibility().setTrackNumberVisible(rs.getBoolean(col++));
-            settings.getMainVisibility().setArtistVisible(rs.getBoolean(col++));
-            settings.getMainVisibility().setAlbumVisible(rs.getBoolean(col++));
-            settings.getMainVisibility().setGenreVisible(rs.getBoolean(col++));
-            settings.getMainVisibility().setYearVisible(rs.getBoolean(col++));
-            settings.getMainVisibility().setBitRateVisible(rs.getBoolean(col++));
-            settings.getMainVisibility().setDurationVisible(rs.getBoolean(col++));
-            settings.getMainVisibility().setFormatVisible(rs.getBoolean(col++));
-            settings.getMainVisibility().setFileSizeVisible(rs.getBoolean(col++));
-
-            settings.getPlaylistVisibility().setCaptionCutoff(rs.getInt(col++));
-            settings.getPlaylistVisibility().setTrackNumberVisible(rs.getBoolean(col++));
-            settings.getPlaylistVisibility().setArtistVisible(rs.getBoolean(col++));
-            settings.getPlaylistVisibility().setAlbumVisible(rs.getBoolean(col++));
-            settings.getPlaylistVisibility().setGenreVisible(rs.getBoolean(col++));
-            settings.getPlaylistVisibility().setYearVisible(rs.getBoolean(col++));
-            settings.getPlaylistVisibility().setBitRateVisible(rs.getBoolean(col++));
-            settings.getPlaylistVisibility().setDurationVisible(rs.getBoolean(col++));
-            settings.getPlaylistVisibility().setFormatVisible(rs.getBoolean(col++));
-            settings.getPlaylistVisibility().setFileSizeVisible(rs.getBoolean(col++));
 
             settings.setLastFmEnabled(rs.getBoolean(col++));
             settings.setLastFmUsername(rs.getString(col++));
-            settings.setLastFmPassword(decrypt(rs.getString(col++)));
 
             settings.setTranscodeScheme(TranscodeScheme.valueOf(rs.getString(col++)));
             settings.setShowNowPlayingEnabled(rs.getBoolean(col++));
-            settings.setSelectedMusicFolderId(rs.getInt(col++));
             settings.setPartyModeEnabled(rs.getBoolean(col++));
             settings.setNowPlayingAllowed(rs.getBoolean(col++));
             settings.setAvatarScheme(AvatarScheme.valueOf(rs.getString(col++)));
@@ -343,8 +335,35 @@ public class UserDao extends AbstractDao {
             settings.setShowChatEnabled(rs.getBoolean(col++));
             settings.setAlbumOrderAscending(rs.getBoolean(col++));
             settings.setDefaultHomeView(rs.getString(col++));
-
+            settings.setDefaultHomeArtists(rs.getShort(col++));
+            settings.setDefaultHomeAlbums(rs.getShort(col++));
+            settings.setDefaultHomeSongs(rs.getShort(col++));
+            settings.setArtistGridWidth(rs.getShort(col++));
+            settings.setRelatedArtists(rs.getShort(col++));
+            settings.setRecommendedArtists(rs.getShort(col++));
+            settings.setReluctantArtistLoading(rs.getBoolean(col++));
+            
             return settings;
+        }
+    }
+
+    private static class UserVisibilityRowMapper implements ParameterizedRowMapper<UserSettings.Visibility> {
+        public UserSettings.Visibility mapRow(ResultSet rs, int rowNum) throws SQLException {
+            int col = 3; // skip username + type
+            
+            UserSettings.Visibility visibility = new UserSettings.Visibility();
+            visibility.setCaptionCutoff(rs.getInt(col++));
+            visibility.setTrackNumberVisible(rs.getBoolean(col++));
+            visibility.setArtistVisible(rs.getBoolean(col++));
+            visibility.setAlbumVisible(rs.getBoolean(col++));
+            visibility.setGenreVisible(rs.getBoolean(col++));
+            visibility.setYearVisible(rs.getBoolean(col++));
+            visibility.setBitRateVisible(rs.getBoolean(col++));
+            visibility.setDurationVisible(rs.getBoolean(col++));
+            visibility.setFormatVisible(rs.getBoolean(col++));
+            visibility.setFileSizeVisible(rs.getBoolean(col++));
+
+            return visibility;
         }
     }
 }

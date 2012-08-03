@@ -24,11 +24,12 @@ Before you can use the new features, some configuration needs to be done.<br>
     <tr>
         <td style="font-size:26pt;padding:20pt">1</td>
         <td>
-            <div style="font-size:14pt;padding-top:20pt"><a href="http://www.postgresql.org/download/" target="_new">Install PostgreSQL, version 9.1.3</a></div>
+            <div style="font-size:14pt;padding-top:20pt"><a href="http://www.postgresql.org/download/" target="_new">Install PostgreSQL, version 9.1 or above.</a></div>
             <div style="padding-top:5pt">PostgreSQL is a database, used to store meta-data about your music library. During the installation:
             	<ul>
             		<li>create a user called <b>postgres</b>, when asked to.</li>
             		<li>use port 5432, when asked to.</li>
+            		<li>select the default locale, when asked to.</li>
             	</ul>
             	Then make sure it is running as a service. Simple as that.
             </div>

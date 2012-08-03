@@ -32,21 +32,25 @@ public class UserSettings {
     private String themeId;
     private boolean showNowPlayingEnabled;
     private boolean showChatEnabled;
-    private boolean finalVersionNotificationEnabled;
-    private boolean betaVersionNotificationEnabled;
     private Visibility mainVisibility = new Visibility();
     private Visibility playlistVisibility = new Visibility();
+    private Visibility homeVisibility = new Visibility();
     private boolean lastFmEnabled;
     private String lastFmUsername;
-    private String lastFmPassword;
     private TranscodeScheme transcodeScheme = TranscodeScheme.OFF;
-    private int selectedMusicFolderId = -1;
     private boolean partyModeEnabled;
     private boolean nowPlayingAllowed;
     private AvatarScheme avatarScheme = AvatarScheme.NONE;
     private Integer systemAvatarId;
     private boolean albumOrderAscending = true;
     private String defaultHomeView;
+    private short defaultHomeArtists;
+    private short defaultHomeAlbums;
+    private short defaultHomeSongs;
+    private short artistGridWidth;
+    private short relatedArtists;
+    private short recommendedArtists;
+    private boolean reluctantArtistLoading;
     private Date changed = new Date();
 
     public UserSettings(String username) {
@@ -93,22 +97,6 @@ public class UserSettings {
         this.showChatEnabled = showChatEnabled;
     }
 
-    public boolean isFinalVersionNotificationEnabled() {
-        return finalVersionNotificationEnabled;
-    }
-
-    public void setFinalVersionNotificationEnabled(boolean finalVersionNotificationEnabled) {
-        this.finalVersionNotificationEnabled = finalVersionNotificationEnabled;
-    }
-
-    public boolean isBetaVersionNotificationEnabled() {
-        return betaVersionNotificationEnabled;
-    }
-
-    public void setBetaVersionNotificationEnabled(boolean betaVersionNotificationEnabled) {
-        this.betaVersionNotificationEnabled = betaVersionNotificationEnabled;
-    }
-
     public Visibility getMainVisibility() {
         return mainVisibility;
     }
@@ -125,7 +113,15 @@ public class UserSettings {
         this.playlistVisibility = playlistVisibility;
     }
 
-    public boolean isLastFmEnabled() {
+    public Visibility getHomeVisibility() {
+		return homeVisibility;
+	}
+
+	public void setHomeVisibility(Visibility homeVisibility) {
+		this.homeVisibility = homeVisibility;
+	}
+
+	public boolean isLastFmEnabled() {
         return lastFmEnabled;
     }
 
@@ -141,28 +137,12 @@ public class UserSettings {
         this.lastFmUsername = lastFmUsername;
     }
 
-    public String getLastFmPassword() {
-        return lastFmPassword;
-    }
-
-    public void setLastFmPassword(String lastFmPassword) {
-        this.lastFmPassword = lastFmPassword;
-    }
-
     public TranscodeScheme getTranscodeScheme() {
         return transcodeScheme;
     }
 
     public void setTranscodeScheme(TranscodeScheme transcodeScheme) {
         this.transcodeScheme = transcodeScheme;
-    }
-
-    public int getSelectedMusicFolderId() {
-        return selectedMusicFolderId;
-    }
-
-    public void setSelectedMusicFolderId(int selectedMusicFolderId) {
-        this.selectedMusicFolderId = selectedMusicFolderId;
     }
 
     public boolean isPartyModeEnabled() {
@@ -213,6 +193,62 @@ public class UserSettings {
 		this.defaultHomeView = defaultHomeView;
 	}
 
+	public short getDefaultHomeArtists() {
+		return defaultHomeArtists;
+	}
+
+	public void setDefaultHomeArtists(short defaultHomeArtists) {
+		this.defaultHomeArtists = defaultHomeArtists;
+	}
+
+	public short getDefaultHomeAlbums() {
+		return defaultHomeAlbums;
+	}
+
+	public void setDefaultHomeAlbums(short defaultHomeAlbums) {
+		this.defaultHomeAlbums = defaultHomeAlbums;
+	}
+
+	public short getDefaultHomeSongs() {
+		return defaultHomeSongs;
+	}
+
+	public void setDefaultHomeSongs(short defaultHomeSongs) {
+		this.defaultHomeSongs = defaultHomeSongs;
+	}
+
+	public short getArtistGridWidth() {
+		return artistGridWidth;
+	}
+
+	public void setArtistGridWidth(short artistGridWidth) {
+		this.artistGridWidth = artistGridWidth;
+	}
+
+	public short getRelatedArtists() {
+		return relatedArtists;
+	}
+
+	public void setRelatedArtists(short relatedArtists) {
+		this.relatedArtists = relatedArtists;
+	}
+
+	public short getRecommendedArtists() {
+		return recommendedArtists;
+	}
+
+	public void setRecommendedArtists(short recommendedArtists) {
+		this.recommendedArtists = recommendedArtists;
+	}
+
+	public boolean isReluctantArtistLoading() {
+		return reluctantArtistLoading;
+	}
+
+	public void setReluctantArtistLoading(boolean reluctantArtistLoading) {
+		this.reluctantArtistLoading = reluctantArtistLoading;
+	}
+
 	/**
      * Returns when the corresponding database entry was last changed.
      *
@@ -245,23 +281,6 @@ public class UserSettings {
         private boolean isDurationVisible;
         private boolean isFormatVisible;
         private boolean isFileSizeVisible;
-
-        public Visibility() {}
-
-        public Visibility(int captionCutoff, boolean trackNumberVisible, boolean artistVisible, boolean albumVisible,
-                          boolean genreVisible, boolean yearVisible, boolean bitRateVisible,
-                          boolean durationVisible, boolean formatVisible, boolean fileSizeVisible) {
-            this.captionCutoff = captionCutoff;
-            isTrackNumberVisible = trackNumberVisible;
-            isArtistVisible = artistVisible;
-            isAlbumVisible = albumVisible;
-            isGenreVisible = genreVisible;
-            isYearVisible = yearVisible;
-            isBitRateVisible = bitRateVisible;
-            isDurationVisible = durationVisible;
-            isFormatVisible = formatVisible;
-            isFileSizeVisible = fileSizeVisible;
-        }
 
         public int getCaptionCutoff() {
             return captionCutoff;

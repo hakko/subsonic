@@ -22,20 +22,16 @@ import java.io.File;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Calendar;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.springframework.web.servlet.ModelAndView;
-import org.springframework.web.servlet.mvc.ParameterizableViewController;
-
-import net.sourceforge.subsonic.domain.MusicFolder;
-import net.sourceforge.subsonic.domain.Player;
-import net.sourceforge.subsonic.service.PlayerService;
-import net.sourceforge.subsonic.service.SearchService;
+import net.sourceforge.subsonic.domain.MediaFolder;
 import net.sourceforge.subsonic.service.SecurityService;
 import net.sourceforge.subsonic.service.SettingsService;
+
+import org.springframework.web.servlet.ModelAndView;
+import org.springframework.web.servlet.mvc.ParameterizableViewController;
 
 /**
  * Controller for the "more" page.
@@ -46,28 +42,20 @@ public class MoreController extends ParameterizableViewController {
 
     private SettingsService settingsService;
     private SecurityService securityService;
-    private SearchService searchService;
-    private PlayerService playerService;
 
     protected ModelAndView handleRequestInternal(HttpServletRequest request, HttpServletResponse response) throws Exception {
         Map<String, Object> map = new HashMap<String, Object>();
 
         String uploadDirectory = null;
-        List<MusicFolder> musicFolders = settingsService.getAllMusicFolders();
-        if (musicFolders.size() > 0) {
-            uploadDirectory = new File(musicFolders.get(0).getPath(), "Incoming").getPath();
+        List<MediaFolder> mediaFolders = settingsService.getAllMediaFolders();
+        if (mediaFolders.size() > 0) {
+            uploadDirectory = new File(mediaFolders.get(0).getPath(), "Incoming").getPath();
         }
 
-        Player player = playerService.getPlayer(request, response);
         ModelAndView result = super.handleRequestInternal(request, response);
         result.addObject("model", map);
         map.put("user", securityService.getCurrentUser(request));
         map.put("uploadDirectory", uploadDirectory);
-        map.put("genres", searchService.getGenres());
-        map.put("currentYear", Calendar.getInstance().get(Calendar.YEAR));
-        map.put("musicFolders", settingsService.getAllMusicFolders());
-        map.put("clientSidePlaylist", player.isExternalWithPlaylist() || player.isWeb());
-        map.put("brand", settingsService.getBrand());
         return result;
     }
 
@@ -79,11 +67,4 @@ public class MoreController extends ParameterizableViewController {
         this.securityService = securityService;
     }
 
-    public void setSearchService(SearchService searchService) {
-        this.searchService = searchService;
-    }
-
-    public void setPlayerService(PlayerService playerService) {
-        this.playerService = playerService;
-    }
 }

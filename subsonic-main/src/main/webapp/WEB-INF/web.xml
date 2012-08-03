@@ -5,7 +5,7 @@
 
     <display-name>Subsonic Music Streamer</display-name>
 
-    <!-- Location of application context.  Used by ContextLoaderListener. -->
+    <!-- Location of application context. Used by ContextLoaderListener. -->
     <context-param>
         <param-name>contextConfigLocation</param-name>
         <param-value>
@@ -32,6 +32,10 @@
         <display-name>DWR Servlet</display-name>
         <servlet-name>dwr-invoker</servlet-name>
         <servlet-class>org.directwebremoting.servlet.DwrServlet</servlet-class>
+        <init-param>
+        	<param-name>activeReverseAjaxEnabled</param-name>
+        	<param-value>true</param-value>
+        </init-param>
     </servlet>
 
     <servlet-mapping>
@@ -41,10 +45,6 @@
     <servlet-mapping>
         <servlet-name>subsonic</servlet-name>
         <url-pattern>/podcast</url-pattern>
-    </servlet-mapping>
-    <servlet-mapping>
-        <servlet-name>subsonic</servlet-name>
-        <url-pattern>/wap</url-pattern>
     </servlet-mapping>
     <servlet-mapping>
         <servlet-name>subsonic</servlet-name>
@@ -191,16 +191,12 @@
     </filter-mapping>
 
     <filter>
-        <filter-name>AcegiFilter</filter-name>
-        <filter-class>org.acegisecurity.util.FilterToBeanProxy</filter-class>
-        <init-param>
-            <param-name>targetClass</param-name>
-            <param-value>org.acegisecurity.util.FilterChainProxy</param-value>
-        </init-param>
+        <filter-name>springSecurityFilterChain</filter-name>
+        <filter-class>org.springframework.web.filter.DelegatingFilterProxy</filter-class>
     </filter>
 
     <filter-mapping>
-        <filter-name>AcegiFilter</filter-name>
+        <filter-name>springSecurityFilterChain</filter-name>
         <url-pattern>/*</url-pattern>
     </filter-mapping>
 

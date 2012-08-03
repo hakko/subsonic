@@ -1,0 +1,24 @@
+<h3>
+    <c:forTokens items="3month 6month 12month overall" delims=" " var="period" varStatus="loopStatus">
+        <c:if test="${loopStatus.count > 1}">&nbsp;|&nbsp;</c:if>
+        <sub:url var="url" value="home.view">
+            <sub:param name="listType" value="topartists"/>
+            <sub:param name="listGroup" value="${period}"/>
+        </sub:url>
+
+        <c:choose>
+            <c:when test="${model.listGroup eq period}">
+                <span class="headerSelected"><fmt:message key="home.${period}.title"/></span>
+            </c:when>
+            <c:otherwise>
+                <a href="${url}"><fmt:message key="home.${period}.title"/></a>
+            </c:otherwise>
+        </c:choose>
+
+    </c:forTokens>
+</h3>
+<c:if test="${empty model.lastFmUser}">You haven't yet added your Last.fm username <a href="personalSettings.view">here</a>.</c:if>
+<c:if test="${not empty model.lastFmUser and empty model.artists}">No artists found! Please update the search index <a href="searchSettings.view">here</a>.</c:if>
+<c:if test="${not empty model.artists}">
+<%@ include file="homeArtists.jsp" %>
+</c:if>

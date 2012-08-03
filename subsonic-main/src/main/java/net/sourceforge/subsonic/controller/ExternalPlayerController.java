@@ -35,11 +35,11 @@ import org.springframework.web.servlet.mvc.ParameterizableViewController;
 
 import net.sourceforge.subsonic.Logger;
 import net.sourceforge.subsonic.dao.ShareDao;
-import net.sourceforge.subsonic.domain.MusicFile;
+import net.sourceforge.subsonic.domain.MediaFile;
 import net.sourceforge.subsonic.domain.Player;
 import net.sourceforge.subsonic.domain.Share;
 import net.sourceforge.subsonic.domain.User;
-import net.sourceforge.subsonic.service.MusicFileService;
+import net.sourceforge.subsonic.service.MediaFileService;
 import net.sourceforge.subsonic.service.PlayerService;
 import net.sourceforge.subsonic.service.SecurityService;
 import net.sourceforge.subsonic.service.SettingsService;
@@ -54,7 +54,7 @@ public class ExternalPlayerController extends ParameterizableViewController {
     private static final Logger LOG = Logger.getLogger(ExternalPlayerController.class);
     private static final String GUEST_USERNAME = "guest";
 
-    private MusicFileService musicFileService;
+    private MediaFileService mediaFileService;
     private SettingsService settingsService;
     private SecurityService securityService;
     private PlayerService playerService;
@@ -63,6 +63,7 @@ public class ExternalPlayerController extends ParameterizableViewController {
     @Override
     protected ModelAndView handleRequestInternal(HttpServletRequest request, HttpServletResponse response) throws Exception {
 
+    	try {
         Map<String, Object> map = new HashMap<String, Object>();
 
         String pathInfo = request.getPathInfo();
@@ -87,12 +88,14 @@ public class ExternalPlayerController extends ParameterizableViewController {
         share.setVisitCount(share.getVisitCount() + 1);
         shareDao.updateShare(share);
 
-        List<MusicFile> songs = getSongs(share);
+        List<MediaFile> songs = getSongs(share);
         List<File> coverArts = getCoverArts(songs);
 
         map.put("share", share);
         map.put("songs", songs);
+        LOG.debug("pass songs to externalplayer: " + songs);
         map.put("coverArts", coverArts);
+        LOG.debug("pass coverArts to externalplayer: " + coverArts);
 
         if (!coverArts.isEmpty()) {
             map.put("coverArt", coverArts.get(0));
@@ -103,32 +106,22 @@ public class ExternalPlayerController extends ParameterizableViewController {
         ModelAndView result = super.handleRequestInternal(request, response);
         result.addObject("model", map);
         return result;
+    	} catch (Throwable t) {
+    		LOG.warn("EXTERNAL PLAYER ERROR.", t);
+    		throw t;
+    	}
     }
 
-    private List<MusicFile> getSongs(Share share) throws IOException {
-        List<MusicFile> result = new ArrayList<MusicFile>();
-
-        for (String path : shareDao.getSharedFiles(share.getId())) {
-            try {
-                MusicFile file = musicFileService.getMusicFile(path);
-                if (file.exists()) {
-                    if (file.isDirectory()) {
-                        result.addAll(file.getChildren(true, false, true));
-                    } else {
-                        result.add(file);
-                    }
-                }
-            } catch (Exception x) {
-                LOG.warn("Couldn't read file " + path);
-            }
-        }
-        return result;
+    private List<MediaFile> getSongs(Share share) {
+        List<Integer> mediaFileIds = shareDao.getSharedFiles(share.getId());
+        mediaFileService.loadMediaFiles(mediaFileIds);
+        return mediaFileService.getMediaFiles(mediaFileIds);
     }
 
-    private List<File> getCoverArts(List<MusicFile> songs) throws IOException {
+    private List<File> getCoverArts(List<MediaFile> songs) throws IOException {
         List<File> result = new ArrayList<File>();
-        for (MusicFile song : songs) {
-            result.add(musicFileService.getCoverArt(song.getParent()));
+        for (MediaFile song : songs) {
+            result.add(mediaFileService.getCoverArt(song));
         }
         return result;
     }
@@ -159,8 +152,8 @@ public class ExternalPlayerController extends ParameterizableViewController {
         return player;
     }
 
-    public void setMusicFileService(MusicFileService musicFileService) {
-        this.musicFileService = musicFileService;
+    public void setmediaFileService(MediaFileService mediaFileService) {
+        this.mediaFileService = mediaFileService;
     }
 
     public void setSettingsService(SettingsService settingsService) {

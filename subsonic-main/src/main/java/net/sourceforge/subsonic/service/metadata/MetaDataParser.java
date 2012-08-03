@@ -18,11 +18,13 @@
  */
 package net.sourceforge.subsonic.service.metadata;
 
+import static org.apache.commons.lang.StringUtils.defaultIfEmpty;
+
+import org.apache.commons.lang.StringUtils;
+
 import net.sourceforge.subsonic.*;
-import net.sourceforge.subsonic.domain.MusicFile;
-
-import java.io.*;
-
+import net.sourceforge.subsonic.domain.MediaFile;
+import net.sourceforge.subsonic.domain.MetaData;
 
 /**
  * Parses meta data from media files.
@@ -38,18 +40,13 @@ public abstract class MetaDataParser {
      * @param file The music file to parse.
      * @return Meta data for the file.
      */
-    public MusicFile.MetaData getMetaData(MusicFile file) {
+    public MetaData getMetaData(MediaFile file) {
 
-        MusicFile.MetaData metaData = getRawMetaData(file);
-        String artist = metaData.getArtist();
-        String album = metaData.getAlbum();
-        String title = metaData.getTitle();
+        MetaData metaData = getRawMetaData(file);
+        String artist = defaultIfEmpty(metaData.getArtist(), "[unknown artist]");
+        String album = defaultIfEmpty(metaData.getAlbum(), "[unknown album]");
+        String title = defaultIfEmpty(metaData.getTitle(), file.getName());
 
-        if (title == null) {
-            title = guessTitle(file);
-        }
-
-        title = removeTrackNumberFromTitle(title, metaData.getTrackNumber());
         metaData.setArtist(artist);
         metaData.setAlbum(album);
         metaData.setTitle(title);
@@ -63,7 +60,7 @@ public abstract class MetaDataParser {
      * @param file The music file to parse.
      * @return Meta data for the file.
      */
-    public abstract MusicFile.MetaData getRawMetaData(MusicFile file);
+    public abstract MetaData getRawMetaData(MediaFile file);
 
     /**
      * Updates the given file with the given meta data.
@@ -71,7 +68,7 @@ public abstract class MetaDataParser {
      * @param file     The music file to update.
      * @param metaData The new meta data.
      */
-    public abstract void setMetaData(MusicFile file, MusicFile.MetaData metaData);
+    public abstract void setMetaData(MediaFile file, MetaData metaData);
 
     /**
      * Returns whether this parser is applicable to the given file.
@@ -79,7 +76,7 @@ public abstract class MetaDataParser {
      * @param file The music file in question.
      * @return Whether this parser is applicable to the given file.
      */
-    public abstract boolean isApplicable(MusicFile file);
+    public abstract boolean isApplicable(MediaFile file);
 
     /**
      * Returns whether this parser supports tag editing (using the {@link #setMetaData} method).
@@ -89,71 +86,16 @@ public abstract class MetaDataParser {
     public abstract boolean isEditingSupported();
 
     /**
-     * Guesses the artist for the given music file.
-     */
-    public String guessArtist(MusicFile file) {
-        try {
-            MusicFile parent = file.getParent();
-            if (parent.isRoot()) {
-                return "";
-            }
-            MusicFile grandParent = parent.getParent();
-            return grandParent.isRoot() ? "" : grandParent.getName();
-        } catch (IOException x) {
-            LOG.warn("Error in guessArtist()", x);
-            return null;
-        }
-    }
-
-    /**
      * Returns meta-data containg file size and format.
      *
      * @param file The music file.
      * @return Meta-data containg file size and format.
      */
-    protected MusicFile.MetaData getBasicMetaData(MusicFile file) {
-        MusicFile.MetaData metaData = new MusicFile.MetaData();
+    protected MetaData getBasicMetaData(MediaFile file) {
+        MetaData metaData = new MetaData();
         metaData.setFileSize(file.length());
         metaData.setFormat(file.getSuffix());
         return metaData;
     }
 
-    /**
-     * Guesses the album for the given music file.
-     */
-    public String guessAlbum(MusicFile file) {
-        try {
-            MusicFile parent = file.getParent();
-            return parent.isRoot() ? "" : parent.getName();
-        } catch (IOException x) {
-            LOG.warn("Error in guessAlbum()", x);
-            return null;
-        }
-    }
-
-    /**
-     * Guesses the title for the given music file.
-     */
-    public String guessTitle(MusicFile file) {
-        return removeTrackNumberFromTitle(file.getNameWithoutSuffix(), null);
-    }
-
-    /**
-     * Removes any prefixed track number from the given title string.
-     *
-     * @param title       The title with or without a prefixed track number, e.g., "02 - Back In Black".
-     * @param trackNumber If specified, this is the "true" track number.
-     * @return The title with the track number removed, e.g., "Back In Black".
-     */
-    protected String removeTrackNumberFromTitle(String title, Integer trackNumber) {
-        title = title.trim();
-
-        // Don't remove numbers if true track number is given, and title does not start with it.
-        if (trackNumber != null && !title.matches("0?" + trackNumber + "[\\.\\- ].*")) {
-            return title;
-        }
-
-        String result = title.replaceFirst("^\\d{2}[\\.\\- ]+", "");
-        return result.length() == 0 ? title : result;
-    }
 }

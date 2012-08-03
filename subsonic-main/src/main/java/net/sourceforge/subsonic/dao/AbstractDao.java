@@ -54,11 +54,11 @@ public class AbstractDao {
         return getJdbcTemplate().update(sql, args);
     }
 
-    protected <T> List<T> query(String sql, RowMapper rowMapper, Object... args) {
+    protected <T> List<T> query(String sql, RowMapper<T> rowMapper, Object... args) {
         return getJdbcTemplate().query(sql, args, rowMapper);
     }
 
-    protected <T> T queryOne(String sql, RowMapper rowMapper, Object... args) {
+    protected <T> T queryOne(String sql, RowMapper<T> rowMapper, Object... args) {
         List<T> result = query(sql, rowMapper, args);
         return result.isEmpty() ? null : result.get(0);
     }

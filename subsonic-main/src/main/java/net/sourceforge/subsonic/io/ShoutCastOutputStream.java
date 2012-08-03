@@ -19,7 +19,7 @@
 package net.sourceforge.subsonic.io;
 
 import net.sourceforge.subsonic.Logger;
-import net.sourceforge.subsonic.domain.MusicFile;
+import net.sourceforge.subsonic.domain.MediaFile;
 import net.sourceforge.subsonic.domain.Playlist;
 import net.sourceforge.subsonic.service.SettingsService;
 
@@ -135,9 +135,9 @@ public class ShoutCastOutputStream extends OutputStream {
     private void writeMetaData() throws IOException {
         String streamTitle = StringUtils.trimToEmpty(settingsService.getWelcomeTitle());
 
-        MusicFile musicFile = playlist.getCurrentFile();
-        if (musicFile != null) {
-            streamTitle = musicFile.getMetaData().getArtist() + " - " + musicFile.getMetaData().getTitle();
+        MediaFile mediaFile = playlist.getCurrentFile();
+        if (mediaFile != null) {
+            streamTitle = mediaFile.getMetaData().getArtist() + " - " + mediaFile.getMetaData().getTitle();
         }
 
         byte[] bytes;

@@ -18,10 +18,14 @@
  */
 package net.sourceforge.subsonic.command;
 
-import net.sourceforge.subsonic.domain.*;
-import net.sourceforge.subsonic.controller.*;
+import java.util.List;
 
-import java.util.*;
+import net.sourceforge.subsonic.domain.Player;
+import net.sourceforge.subsonic.domain.User;
+
+import com.github.hakko.musiccabinet.domain.model.music.Album;
+import com.github.hakko.musiccabinet.domain.model.music.Artist;
+import com.github.hakko.musiccabinet.domain.model.music.Track;
 
 /**
  * Command used in {@link SearchController}.
@@ -31,10 +35,11 @@ import java.util.*;
 public class SearchCommand {
 
     private String query;
-    private List<MusicFile> artists;
-    private List<MusicFile> albums;
-    private List<MusicFile> songs;
-    private boolean isIndexBeingCreated;
+    private List<Artist> artists;
+    private List<Album> albums;
+    private List<Track> songs;
+    private boolean[] isTrackStarred;
+    private boolean indexCreated;
     private User user;
     private boolean partyModeEnabled;
     private Player player;
@@ -47,39 +52,47 @@ public class SearchCommand {
         this.query = query;
     }
 
-    public boolean isIndexBeingCreated() {
-        return isIndexBeingCreated;
+    public boolean isIndexCreated() {
+        return indexCreated;
     }
 
-    public void setIndexBeingCreated(boolean indexBeingCreated) {
-        isIndexBeingCreated = indexBeingCreated;
+    public void setIndexCreated(boolean indexCreated) {
+        this.indexCreated = indexCreated;
     }
 
-    public List<MusicFile> getArtists() {
+    public List<Artist> getArtists() {
         return artists;
     }
 
-    public void setArtists(List<MusicFile> artists) {
+    public void setArtists(List<Artist> artists) {
         this.artists = artists;
     }
 
-    public List<MusicFile> getAlbums() {
+    public List<Album> getAlbums() {
         return albums;
     }
 
-    public void setAlbums(List<MusicFile> albums) {
+    public void setAlbums(List<Album> albums) {
         this.albums = albums;
     }
 
-    public List<MusicFile> getSongs() {
+    public List<Track> getSongs() {
         return songs;
     }
 
-    public void setSongs(List<MusicFile> songs) {
+    public void setSongs(List<Track> songs) {
         this.songs = songs;
     }
 
-    public User getUser() {
+    public boolean[] getIsTrackStarred() {
+		return isTrackStarred;
+	}
+
+	public void setIsTrackStarred(boolean[] isTrackStarred) {
+		this.isTrackStarred = isTrackStarred;
+	}
+
+	public User getUser() {
         return user;
     }
 
@@ -103,33 +116,4 @@ public class SearchCommand {
         this.player = player;
     }
 
-    public static class Match {
-        private MusicFile musicFile;
-        private String title;
-        private String album;
-        private String artist;
-
-        public Match(MusicFile musicFile, String title, String album, String artist) {
-            this.musicFile = musicFile;
-            this.title = title;
-            this.album = album;
-            this.artist = artist;
-        }
-
-        public MusicFile getMusicFile() {
-            return musicFile;
-        }
-
-        public String getTitle() {
-            return title;
-        }
-
-        public String getAlbum() {
-            return album;
-        }
-
-        public String getArtist() {
-            return artist;
-        }
-    }
 }

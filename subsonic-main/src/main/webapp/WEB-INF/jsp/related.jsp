@@ -8,15 +8,14 @@
 
 <div style="padding: 15px;">
 
-<sub:url value="main.view" var="mainUrl"><sub:param name="path" value="${model.path}"/></sub:url>
-<!--<div class="back"><a href="${backUrl}"><fmt:message key="common.back"/></a></div>-->
+<sub:url value="artist.view" var="artistUrl"><sub:param name="id" value="${model.id}"/></sub:url>
 
 <h1>${model.artist}</h1>
 <table>
 	<tr>
 		<td style="vertical-align:top">
 			<div class="outerpair1"><div class="outerpair2"><div class="shadowbox"><div class="innerbox">
-				<a href="${mainUrl}">
+				<a href="${artistUrl}">
 					<img width="126" height="126" src="${model.artistInfo.largeImageUrl}" alt="">
 				</a>
 			</div></div></div></div>
@@ -32,49 +31,15 @@
 <br>
 <h1>Related artists:</h1>
 
-<c:if test="${empty model.artistsInLibrary}">Not a single related artist found!</c:if>
-<table>
-	<c:forEach items="${model.artistsInLibrary}" var="artistRecommendation" varStatus="loopStatus">
-        <c:if test="${loopStatus.count % 5 == 1}">
-	        <tr>
-   	     </c:if>
-        <sub:url var="url" value="main.view">
-			<c:forEach items="${artistRecommendation.paths}" var="artistRootPath">
-				<sub:param name="path" value="${artistRootPath}"/>
-			</c:forEach>
-        </sub:url>
-		<td style="vertical-align:top">
-			<a href="${url}">
-				<div class="outerpair1"><div class="outerpair2"><div class="shadowbox"><div class="innerbox">
-					<img width="126" height="126" src="${artistRecommendation.imageUrl}" alt="">
-				</div></div></div></div>
-				<div style="detail">
-					<div style="width:108px;float:left">
-						${artistRecommendation.artistName}
-					</div>
-					<div style="width:18px;float:right">
-					    <c:set var="path">
-					        <sub:escapeJavaScript string="${artistRecommendation.paths[0]}"/>
-	 					</c:set>
-						<a href="javascript:noop()" onclick="top.playlist.onPlayTopTracks('${path}', 'P');">
-			                <img src="<spring:theme code="playImage"/>" alt="Play top tracks" title="Play top tracks">
-						</a>
-					</div>
-				</div>
-			</a>
-		</td>
-        <c:if test="${loopStatus.count % 5 == 0}">
-            </tr>
-        </c:if>
-	</c:forEach>
-</table>
+<c:if test="${empty model.artists}"><p>Not a single related artist found!</p></c:if>
+<%@ include file="artists.jsp" %>
 
 <c:if test="${not empty model.artistsNotInLibrary}">
 <br>
 <h1>You might also like:</h1>
 <ul>
 	<c:forEach items="${model.artistsNotInLibrary}" var="recommendedArtist" varStatus="loopStatus">
-		<li><a href="http://last.fm/music/${recommendedArtist.paths[0]}">${recommendedArtist.artistName}</a></li>
+		<li><a href="http://last.fm/music/${recommendedArtist.artistURL}">${recommendedArtist.artistName}</a></li>
 	</c:forEach>
 <ul>
 </c:if>

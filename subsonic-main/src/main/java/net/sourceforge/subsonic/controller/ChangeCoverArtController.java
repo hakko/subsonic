@@ -18,8 +18,10 @@
  */
 package net.sourceforge.subsonic.controller;
 
-import net.sourceforge.subsonic.domain.MusicFile;
-import net.sourceforge.subsonic.service.MusicFileService;
+import net.sourceforge.subsonic.domain.MediaFile;
+import net.sourceforge.subsonic.service.MediaFileService;
+
+import org.apache.commons.lang.math.NumberUtils;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.ParameterizableViewController;
 
@@ -35,32 +37,23 @@ import java.util.Map;
  */
 public class ChangeCoverArtController extends ParameterizableViewController {
 
-    private MusicFileService musicFileService;
+    private MediaFileService mediaFileService;
 
     @Override
     protected ModelAndView handleRequestInternal(HttpServletRequest request, HttpServletResponse response) throws Exception {
 
-        String path = request.getParameter("path");
-        String artist = request.getParameter("artist");
-        String album = request.getParameter("album");
-        MusicFile dir = musicFileService.getMusicFile(path);
+        int mediaFileId = NumberUtils.toInt(request.getParameter("id"));
+        MediaFile mediaFile = mediaFileService.getMediaFile(mediaFileId);
 
-        MusicFile child = dir.getFirstChild();
-        if (child != null) {
-            MusicFile.MetaData metaData = child.getMetaData();
-            if (artist == null) {
-                artist = metaData.getArtist();
-            }
-            if (album == null) {
-                album = metaData.getAlbum();
-            }
-
-        }
-
+        String artist = mediaFile.getMetaData().getArtist();
+        String album = mediaFile.getMetaData().getAlbum();
+        
         Map<String, Object> map = new HashMap<String, Object>();
-        map.put("path", path);
         map.put("artist", artist);
         map.put("album", album);
+        map.put("id", mediaFileId);
+        map.put("artistId", request.getParameter("artistId"));
+        map.put("albumId", request.getParameter("albumId"));
 
         ModelAndView result = super.handleRequestInternal(request, response);
         result.addObject("model", map);
@@ -68,7 +61,7 @@ public class ChangeCoverArtController extends ParameterizableViewController {
         return result;
     }
 
-    public void setMusicFileService(MusicFileService musicFileService) {
-        this.musicFileService = musicFileService;
+    public void setMediaFileService(MediaFileService mediaFileService) {
+        this.mediaFileService = mediaFileService;
     }
 }

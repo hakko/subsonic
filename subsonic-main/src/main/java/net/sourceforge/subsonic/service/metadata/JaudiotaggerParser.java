@@ -19,7 +19,9 @@
 package net.sourceforge.subsonic.service.metadata;
 
 import net.sourceforge.subsonic.Logger;
-import net.sourceforge.subsonic.domain.MusicFile;
+import net.sourceforge.subsonic.domain.MediaFile;
+import net.sourceforge.subsonic.domain.MetaData;
+
 import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.lang.StringUtils;
 import org.jaudiotagger.audio.AudioFile;
@@ -63,16 +65,15 @@ public class JaudiotaggerParser extends MetaDataParser {
      * @return Meta data for the file.
      */
     @Override
-    public MusicFile.MetaData getRawMetaData(MusicFile file) {
+    public MetaData getRawMetaData(MediaFile file) {
 
-        MusicFile.MetaData metaData = getBasicMetaData(file);
+        MetaData metaData = getBasicMetaData(file);
 
         try {
             AudioFile audioFile = AudioFileIO.read(file.getFile());
             Tag tag = audioFile.getTag();
             if (tag != null) {
                 metaData.setArtist(getTagField(tag, FieldKey.ARTIST));
-                metaData.setAlbumArtist(getTagField(tag, FieldKey.ALBUM_ARTIST));
                 metaData.setAlbum(getTagField(tag, FieldKey.ALBUM));
                 metaData.setTitle(getTagField(tag, FieldKey.TITLE));
                 metaData.setYear(getTagField(tag, FieldKey.YEAR));
@@ -178,13 +179,12 @@ public class JaudiotaggerParser extends MetaDataParser {
     * @param metaData The new meta data.
     */
     @Override
-    public void setMetaData(MusicFile file, MusicFile.MetaData metaData) {
+    public void setMetaData(MediaFile file, MetaData metaData) {
 
         try {
             AudioFile audioFile = AudioFileIO.read(file.getFile());
             Tag tag = audioFile.getTagOrCreateAndSetDefault();
 
-            tag.setField(FieldKey.ALBUM_ARTIST, StringUtils.trimToEmpty(metaData.getAlbumArtist()));
             tag.setField(FieldKey.ARTIST, StringUtils.trimToEmpty(metaData.getArtist()));
             tag.setField(FieldKey.ALBUM, StringUtils.trimToEmpty(metaData.getAlbum()));
             tag.setField(FieldKey.TITLE, StringUtils.trimToEmpty(metaData.getTitle()));
@@ -223,7 +223,7 @@ public class JaudiotaggerParser extends MetaDataParser {
      * @return Whether this parser is applicable to the given file.
      */
     @Override
-    public boolean isApplicable(MusicFile file) {
+    public boolean isApplicable(MediaFile file) {
         if (!file.isFile()) {
             return false;
         }
@@ -248,7 +248,7 @@ public class JaudiotaggerParser extends MetaDataParser {
      * @param file The music file.
      * @return Whether cover art image data is available.
      */
-    public boolean isImageAvailable(MusicFile file) {
+    public boolean isImageAvailable(MediaFile file) {
         try {
             return getArtwork(file) != null;
         } catch (Throwable x) {
@@ -263,7 +263,7 @@ public class JaudiotaggerParser extends MetaDataParser {
      * @param file The music file.
      * @return The embedded cover art image data, or <code>null</code> if not available.
      */
-    public byte[] getImageData(MusicFile file) {
+    public byte[] getImageData(MediaFile file) {
         try {
             return getArtwork(file).getBinaryData();
         } catch (Throwable x) {
@@ -272,7 +272,7 @@ public class JaudiotaggerParser extends MetaDataParser {
         }
     }
 
-    private Artwork getArtwork(MusicFile file) throws Exception {
+    private Artwork getArtwork(MediaFile file) throws Exception {
         AudioFile audioFile = AudioFileIO.read(file.getFile());
         Tag tag = audioFile.getTag();
         return tag == null ? null : tag.getFirstArtwork();

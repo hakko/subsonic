@@ -19,7 +19,8 @@
 package net.sourceforge.subsonic.service.metadata;
 
 import net.sourceforge.subsonic.service.metadata.MetaDataParser;
-import net.sourceforge.subsonic.domain.MusicFile;
+import net.sourceforge.subsonic.domain.MediaFile;
+import net.sourceforge.subsonic.domain.MetaData;
 
 /**
  * Parses meta data by guessing artist, album and song title based on the path of the file.
@@ -34,12 +35,8 @@ public class DefaultMetaDataParser extends MetaDataParser {
      * @param file The music file to parse.
      * @return Meta data for the file.
      */
-    public MusicFile.MetaData getRawMetaData(MusicFile file) {
-        MusicFile.MetaData metaData = getBasicMetaData(file);
-        metaData.setArtist(guessArtist(file));
-        metaData.setAlbum(guessAlbum(file));
-        metaData.setTitle(guessTitle(file));
-        return metaData;
+    public MetaData getRawMetaData(MediaFile file) {
+        return getBasicMetaData(file);
     }
 
     /**
@@ -49,7 +46,7 @@ public class DefaultMetaDataParser extends MetaDataParser {
      * @param file     The music file to update.
      * @param metaData The new meta data.
      */
-    public void setMetaData(MusicFile file, MusicFile.MetaData metaData) {
+    public void setMetaData(MediaFile file, MetaData metaData) {
     }
 
     /**
@@ -67,7 +64,7 @@ public class DefaultMetaDataParser extends MetaDataParser {
      * @param file The music file in question.
      * @return Whether this parser is applicable to the given file.
      */
-    public boolean isApplicable(MusicFile file) {
+    public boolean isApplicable(MediaFile file) {
         return file.isFile();
     }
 }

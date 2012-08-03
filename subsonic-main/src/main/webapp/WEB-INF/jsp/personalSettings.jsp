@@ -3,24 +3,9 @@
 
 <html><head>
     <%@ include file="head.jsp" %>
-    <script type="text/javascript" src="<c:url value="/script/scripts.js"/>"></script>
-    <script type="text/javascript" src="<c:url value="/script/prototype.js"/>"></script>
-
-    <script type="text/javascript" language="javascript">
-        function enableLastFmFields() {
-            var checkbox = $("lastFm");
-            var table = $("lastFmTable");
-
-            if (checkbox && checkbox.checked) {
-                table.show();
-            } else {
-                table.hide();
-            }
-        }
-    </script>
 </head>
 
-<body class="mainframe bgcolor1" onload="enableLastFmFields()">
+<body class="mainframe bgcolor1">
 <script type="text/javascript" src="<c:url value="/script/wz_tooltip.js"/>"></script>
 <script type="text/javascript" src="<c:url value="/script/tip_balloon.js"/>"></script>
 
@@ -77,18 +62,95 @@
         	<td>Default home view</td>
         	<td>
         		<form:select path="defaultHomeView" cssStyle="width:15em">
-        			<form:option value="random" label="Random"/>
         			<form:option value="newest" label="Recently added"/>
-        			<form:option value="highest" label="Top rated"/>
-        			<form:option value="frequent" label="Most played"/>
-        			<form:option value="recent" label="Recently played"/>
-        			<form:option value="topartists" label="Top artists"/>
-        			<form:option value="users" label="Users"/>
+        			<form:option value="recent+Artists" label="Recently played - Artists"/>
+        			<form:option value="recent+Albums" label="Recently played - Albums"/>
+        			<form:option value="recent+Songs" label="Recently played - Songs"/>
+        			<form:option value="frequent+Artists" label="Frequently played - Artists"/>
+        			<form:option value="frequent+Albums" label="Frequently played - Albums"/>
+        			<form:option value="frequent+Songs" label="Frequently played - Songs"/>
+        			<form:option value="starred+Artists" label="Starred - Artists"/>
+        			<form:option value="starred+Albums" label="Starred - Albums"/>
+        			<form:option value="starred+Songs" label="Starred - Songs"/>
+        			<form:option value="topartists+3month" label="Top artists - Three months"/>
+        			<form:option value="topartists+6month" label="Top artists - Six months"/>
+        			<form:option value="topartists+12month" label="Top artists - Twelve months"/>
+        			<form:option value="topartists+overall" label="Top artists - Overall"/>
+        			<form:option value="random+Artists" label="Random - Artists"/>
+        			<form:option value="random+Albums" label="Random - Albums"/>
+        			<form:option value="random+Songs" label="Random - Songs"/>
         		</form:select>
                 <c:import url="helpToolTip.jsp"><c:param name="topic" value="defaulthomeview"/></c:import>
             </td>
         </tr>
-        	
+
+        <tr>
+        	<td>Default home artists</td>
+        	<td>
+				<form:input path="defaultHomeArtists" size="3"/>
+                <c:import url="helpToolTip.jsp"><c:param name="topic" value="defaulthomeartists"/></c:import>
+            </td>
+        </tr>
+
+        <tr>
+        	<td>Default home albums</td>
+        	<td>
+				<form:input path="defaultHomeAlbums" size="3"/>
+                <c:import url="helpToolTip.jsp"><c:param name="topic" value="defaulthomealbums"/></c:import>
+            </td>
+        </tr>
+
+        <tr>
+        	<td>Default home songs</td>
+        	<td>
+				<form:input path="defaultHomeSongs" size="3"/>
+                <c:import url="helpToolTip.jsp"><c:param name="topic" value="defaulthomesongs"/></c:import>
+            </td>
+        </tr>
+
+        <tr>
+        	<td>Artist grid width</td>
+        	<td>
+				<form:input path="artistGridWidth" size="3"/>
+                <c:import url="helpToolTip.jsp"><c:param name="topic" value="artistgridwidth"/></c:import>
+            </td>
+        </tr>
+
+        <tr>
+        	<td>Related artists</td>
+        	<td>
+                <form:select path="relatedArtists">
+                    <c:forTokens items="8 9 10 11 12 13 14 15 16 17 18 19 20 21" delims=" " var="i">
+                        <form:option value="${i}" label="${i}"/>
+                    </c:forTokens>
+                </form:select>
+                <c:import url="helpToolTip.jsp"><c:param name="topic" value="relatedartists"/></c:import>
+            </td>
+        </tr>
+
+        <tr>
+        	<td>Recommended artists</td>
+        	<td>
+                <form:select path="recommendedArtists">
+                    <c:forTokens items="3 4 5 6 7 8 9 10" delims=" " var="i">
+                        <form:option value="${i}" label="${i}"/>
+                    </c:forTokens>
+                </form:select>
+                <c:import url="helpToolTip.jsp"><c:param name="topic" value="recommendedartists"/></c:import>
+            </td>
+        </tr>
+		
+        <tr>
+        	<td>Reluctant artist loading</td>
+        	<td>
+        		<form:select path="reluctantArtistLoading">
+        			<form:option value="false" label="No"/>
+        			<form:option value="true" label="Yes"/>
+        		</form:select>
+                <c:import url="helpToolTip.jsp"><c:param name="topic" value="reluctantartistloading"/></c:import>
+            </td>
+        </tr>
+        
     </table>
 
     <table class="indent">
@@ -96,6 +158,7 @@
             <th style="padding:0 0.5em 0.5em 0;text-align:left;"><fmt:message key="personalsettings.display"/></th>
             <th style="padding:0 0.5em 0.5em 0.5em;text-align:center;"><fmt:message key="personalsettings.browse"/></th>
             <th style="padding:0 0 0.5em 0.5em;text-align:center;"><fmt:message key="personalsettings.playlist"/></th>
+            <th style="padding:0 0 0.5em 0.5em;text-align:center;">Home</th>
             <th style="padding:0 0 0.5em 0.5em">
                 <c:import url="helpToolTip.jsp"><c:param name="topic" value="visibility"/></c:import>
             </th>
@@ -104,51 +167,61 @@
             <td><fmt:message key="personalsettings.tracknumber"/></td>
             <td style="text-align:center"><form:checkbox path="mainVisibility.trackNumberVisible" cssClass="checkbox"/></td>
             <td style="text-align:center"><form:checkbox path="playlistVisibility.trackNumberVisible" cssClass="checkbox"/></td>
+            <td style="text-align:center"><form:checkbox path="homeVisibility.trackNumberVisible" cssClass="checkbox"/></td>
         </tr>
         <tr>
             <td><fmt:message key="personalsettings.artist"/></td>
             <td style="text-align:center"><form:checkbox path="mainVisibility.artistVisible" cssClass="checkbox"/></td>
             <td style="text-align:center"><form:checkbox path="playlistVisibility.artistVisible" cssClass="checkbox"/></td>
+            <td style="text-align:center"><form:checkbox path="homeVisibility.artistVisible" cssClass="checkbox"/></td>
         </tr>
         <tr>
             <td><fmt:message key="personalsettings.album"/></td>
             <td style="text-align:center"><form:checkbox path="mainVisibility.albumVisible" cssClass="checkbox"/></td>
             <td style="text-align:center"><form:checkbox path="playlistVisibility.albumVisible" cssClass="checkbox"/></td>
+            <td style="text-align:center"><form:checkbox path="homeVisibility.albumVisible" cssClass="checkbox"/></td>
         </tr>
         <tr>
             <td><fmt:message key="personalsettings.genre"/></td>
             <td style="text-align:center"><form:checkbox path="mainVisibility.genreVisible" cssClass="checkbox"/></td>
             <td style="text-align:center"><form:checkbox path="playlistVisibility.genreVisible" cssClass="checkbox"/></td>
+            <td style="text-align:center"><form:checkbox path="homeVisibility.genreVisible" cssClass="checkbox"/></td>
         </tr>
         <tr>
             <td><fmt:message key="personalsettings.year"/></td>
             <td style="text-align:center"><form:checkbox path="mainVisibility.yearVisible" cssClass="checkbox"/></td>
             <td style="text-align:center"><form:checkbox path="playlistVisibility.yearVisible" cssClass="checkbox"/></td>
+            <td style="text-align:center"><form:checkbox path="homeVisibility.yearVisible" cssClass="checkbox"/></td>
         </tr>
         <tr>
             <td><fmt:message key="personalsettings.bitrate"/></td>
             <td style="text-align:center"><form:checkbox path="mainVisibility.bitRateVisible" cssClass="checkbox"/></td>
             <td style="text-align:center"><form:checkbox path="playlistVisibility.bitRateVisible" cssClass="checkbox"/></td>
+            <td style="text-align:center"><form:checkbox path="homeVisibility.bitRateVisible" cssClass="checkbox"/></td>
         </tr>
         <tr>
             <td><fmt:message key="personalsettings.duration"/></td>
             <td style="text-align:center"><form:checkbox path="mainVisibility.durationVisible" cssClass="checkbox"/></td>
             <td style="text-align:center"><form:checkbox path="playlistVisibility.durationVisible" cssClass="checkbox"/></td>
+            <td style="text-align:center"><form:checkbox path="homeVisibility.durationVisible" cssClass="checkbox"/></td>
         </tr>
         <tr>
             <td><fmt:message key="personalsettings.format"/></td>
             <td style="text-align:center"><form:checkbox path="mainVisibility.formatVisible" cssClass="checkbox"/></td>
             <td style="text-align:center"><form:checkbox path="playlistVisibility.formatVisible" cssClass="checkbox"/></td>
+            <td style="text-align:center"><form:checkbox path="homeVisibility.formatVisible" cssClass="checkbox"/></td>
         </tr>
         <tr>
             <td><fmt:message key="personalsettings.filesize"/></td>
             <td style="text-align:center"><form:checkbox path="mainVisibility.fileSizeVisible" cssClass="checkbox"/></td>
             <td style="text-align:center"><form:checkbox path="playlistVisibility.fileSizeVisible" cssClass="checkbox"/></td>
+            <td style="text-align:center"><form:checkbox path="homeVisibility.fileSizeVisible" cssClass="checkbox"/></td>
         </tr>
         <tr>
             <td><fmt:message key="personalsettings.captioncutoff"/></td>
             <td style="text-align:center"><form:input path="mainVisibility.captionCutoff" size="3"/></td>
             <td style="text-align:center"><form:input path="playlistVisibility.captionCutoff" size="3"/></td>
+            <td style="text-align:center"><form:input path="homeVisibility.captionCutoff" size="3"/></td>
         </tr>
     </table>
 
@@ -169,34 +242,17 @@
         </tr>
     </table>
 
-    <table class="indent">
-        <tr>
-            <td><form:checkbox path="finalVersionNotificationEnabled" id="final" cssClass="checkbox"/></td>
-            <td><label for="final"><fmt:message key="personalsettings.finalversionnotification"/></label></td>
-        </tr>
-        <tr>
-            <td><form:checkbox path="betaVersionNotificationEnabled" id="beta" cssClass="checkbox"/></td>
-            <td><label for="beta"><fmt:message key="personalsettings.betaversionnotification"/></label></td>
-        </tr>
-    </table>
-
-    <table class="indent">
-        <tr>
-            <td><form:checkbox path="lastFmEnabled" id="lastFm" cssClass="checkbox" onclick="javascript:enableLastFmFields()"/></td>
-            <td><label for="lastFm"><fmt:message key="personalsettings.lastfmenabled"/></label></td>
-        </tr>
-    </table>
-
-    <table id="lastFmTable" style="padding-left:2em">
-        <tr>
-            <td><fmt:message key="personalsettings.lastfmusername"/></td>
-            <td><form:input path="lastFmUsername" size="24"/></td>
-        </tr>
-        <tr>
-            <td><fmt:message key="personalsettings.lastfmpassword"/></td>
-            <td><form:password path="lastFmPassword" size="24"/></td>
-        </tr>
-    </table>
+	<c:if test="${command.lastFmEnabled}">
+		<table class="indent">
+			<tr>
+				<td><form:checkbox path="lastFmEnabled" id="lastFm" cssClass="checkbox" /></td>
+				<td><label for="lastFm">Scrobble tracks as user ${command.lastFmUsername}.</label></td>
+			</tr>
+		</table>
+	</c:if>
+    <div id="lastFmLink" class="forward" style="padding-left:2em">
+		<a href="lastFmSettings.view">Configure last.fm scrobbling</a>
+	</div>
 
     <p style="padding-top:1em;padding-bottom:1em">
         <input type="submit" value="<fmt:message key="common.save"/>" style="margin-right:0.3em"/>

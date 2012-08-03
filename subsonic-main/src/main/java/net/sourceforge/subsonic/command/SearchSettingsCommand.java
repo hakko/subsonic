@@ -29,7 +29,7 @@ public class SearchSettingsCommand {
     private String interval;
     private String hour;
     private boolean isCreatingIndex;
-    private boolean isMusicCabinetReady;
+    private boolean isDatabaseAvailable;
     private String brand;
 
     public String getInterval() {
@@ -56,12 +56,12 @@ public class SearchSettingsCommand {
         isCreatingIndex = creatingIndex;
     }
 
-	public boolean isMusicCabinetReady() {
-		return isMusicCabinetReady;
+	public boolean isDatabaseAvailable() {
+		return isDatabaseAvailable;
 	}
 
-	public void setMusicCabinetReady(boolean isMusicCabinetReady) {
-		this.isMusicCabinetReady = isMusicCabinetReady;
+	public void setDatabaseAvailable(boolean isDatabaseAvailable) {
+		this.isDatabaseAvailable = isDatabaseAvailable;
 	}
 
 	public String getBrand() {
@@ -71,4 +71,5 @@ public class SearchSettingsCommand {
     public void setBrand(String brand) {
         this.brand = brand;
     }
+   
 }

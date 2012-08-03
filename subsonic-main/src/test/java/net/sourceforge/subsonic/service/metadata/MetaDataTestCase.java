@@ -19,10 +19,10 @@
 package net.sourceforge.subsonic.service.metadata;
 
 import junit.framework.*;
-import net.sourceforge.subsonic.domain.MusicFile;
+import net.sourceforge.subsonic.domain.MetaData;
 
 /**
- * Unit test of {@link MusicFile.MetaData}.
+ * Unit test of {@link MetaData}.
  *
  * @author Sindre Mehus
  */
@@ -53,7 +53,7 @@ public class MetaDataTestCase extends TestCase {
     }
 
     private void doTestGetDurationAsString(int seconds, String expected) {
-        MusicFile.MetaData metaData = new MusicFile.MetaData();
+        MetaData metaData = new MetaData();
         metaData.setDuration(seconds);
         assertEquals("Error in getDurationAsString().", expected, metaData.getDurationAsString());
     }
@@ -76,7 +76,7 @@ public class MetaDataTestCase extends TestCase {
     }
 
     private void doTestGetYearAsInteger(String yearString, Integer expected) {
-        MusicFile.MetaData metaData = new MusicFile.MetaData();
+        MetaData metaData = new MetaData();
         metaData.setYear(yearString);
         assertEquals("Error in getYearAsInteger().", expected, metaData.getYearAsInteger());
     }

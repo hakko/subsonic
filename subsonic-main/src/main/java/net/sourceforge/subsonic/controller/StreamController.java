@@ -18,6 +18,8 @@
  */
 package net.sourceforge.subsonic.controller;
 
+import static org.apache.commons.lang.math.NumberUtils.toInt;
+
 import java.awt.Dimension;
 import java.io.IOException;
 import java.io.OutputStream;
@@ -30,13 +32,14 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang.math.LongRange;
+import org.apache.commons.lang.math.NumberUtils;
 import org.springframework.web.bind.ServletRequestBindingException;
 import org.springframework.web.bind.ServletRequestUtils;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.Controller;
 
 import net.sourceforge.subsonic.Logger;
-import net.sourceforge.subsonic.domain.MusicFile;
+import net.sourceforge.subsonic.domain.MediaFile;
 import net.sourceforge.subsonic.domain.Player;
 import net.sourceforge.subsonic.domain.PlayerTechnology;
 import net.sourceforge.subsonic.domain.Playlist;
@@ -47,11 +50,9 @@ import net.sourceforge.subsonic.io.PlaylistInputStream;
 import net.sourceforge.subsonic.io.RangeOutputStream;
 import net.sourceforge.subsonic.io.ShoutCastOutputStream;
 import net.sourceforge.subsonic.service.AudioScrobblerService;
-import net.sourceforge.subsonic.service.MusicFileService;
-import net.sourceforge.subsonic.service.MusicInfoService;
+import net.sourceforge.subsonic.service.MediaFileService;
 import net.sourceforge.subsonic.service.PlayerService;
 import net.sourceforge.subsonic.service.PlaylistService;
-import net.sourceforge.subsonic.service.SearchService;
 import net.sourceforge.subsonic.service.SecurityService;
 import net.sourceforge.subsonic.service.SettingsService;
 import net.sourceforge.subsonic.service.StatusService;
@@ -73,15 +74,12 @@ public class StreamController implements Controller {
     private PlayerService playerService;
     private PlaylistService playlistService;
     private SecurityService securityService;
-    private MusicInfoService musicInfoService;
     private SettingsService settingsService;
     private TranscodingService transcodingService;
+    private MediaFileService mediaFileService;
     private AudioScrobblerService audioScrobblerService;
-    private MusicFileService musicFileService;
-    private SearchService searchService;
 
     public ModelAndView handleRequest(HttpServletRequest request, HttpServletResponse response) throws Exception {
-
         TransferStatus status = null;
         PlaylistInputStream in = null;
         Player player = playerService.getPlayer(request, response, false, true);
@@ -121,19 +119,21 @@ public class StreamController implements Controller {
             // (typically from the embedded Flash player). In that case, create a separate
             // playlist (in order to support multiple parallel streams). Also, enable
             // partial download (HTTP byte range).
-            String path = request.getParameter("path");
-            boolean isSingleFile = path != null;
+            int mediaFileId = toInt(request.getParameter("mfId"), 
+            		toInt("" + request.getAttribute("mfId"), -1));
+            LOG.debug("got mfId = " + mediaFileId + " from param " + request.getParameter("mfId"));
+            boolean isSingleFile = mediaFileId != -1;
             LongRange range = null;
 
             if (isSingleFile) {
                 Playlist playlist = new Playlist();
-                MusicFile file = musicFileService.getMusicFile(path);
+                MediaFile file = mediaFileService.getMediaFile(mediaFileId);
                 player.getPlaylist().setIndex(file); // force index update of "main" playlist
                 playlist.addFiles(Playlist.PLAY, file);
                 player.setPlaylist(playlist);
 
                 if (!file.isVideo()) {
-                    response.setHeader("ETag", StringUtil.utf8HexEncode(path));
+                    response.setHeader("ETag", "" + mediaFileId);
                     response.setHeader("Accept-Ranges", "bytes");
                 }
 
@@ -175,8 +175,8 @@ public class StreamController implements Controller {
 
             status = statusService.createStreamStatus(player);
 
-            in = new PlaylistInputStream(player, status, maxBitRate, preferredTargetFormat, videoTranscodingSettings, transcodingService,
-                    musicInfoService, audioScrobblerService, searchService);
+            in = new PlaylistInputStream(player, status, maxBitRate, preferredTargetFormat, videoTranscodingSettings, 
+            		transcodingService, audioScrobblerService);
             OutputStream out = RangeOutputStream.wrap(response.getOutputStream(), range);
 
             // Enabled SHOUTcast, if requested.
@@ -221,7 +221,8 @@ public class StreamController implements Controller {
                     }
                 }
             }
-
+        } catch (Throwable t) {
+        	LOG.warn("throwable caught!", t);
         } finally {
             if (status != null) {
                 securityService.updateUserByteCounts(user, status.getBytesTransfered(), 0L, 0L);
@@ -233,7 +234,7 @@ public class StreamController implements Controller {
     }
 
     private long getFileLength(TranscodingService.Parameters parameters) {
-        MusicFile file = parameters.getMusicFile();
+        MediaFile file = parameters.getmediaFile();
 
         if (!parameters.isDownsample() && !parameters.isTranscode()) {
             return file.length();
@@ -254,7 +255,7 @@ public class StreamController implements Controller {
         return duration * maxBitRate * 1000L / 8L;
     }
 
-    private LongRange getRange(HttpServletRequest request, MusicFile file) {
+    private LongRange getRange(HttpServletRequest request, MediaFile file) {
 
         // First, look for "Range" HTTP header.
         LongRange range = StringUtil.parseRange(request.getHeader("Range"));
@@ -272,7 +273,7 @@ public class StreamController implements Controller {
         return null;
     }
 
-    private LongRange parseAndConvertOffsetSeconds(String offsetSeconds, MusicFile file) {
+    private LongRange parseAndConvertOffsetSeconds(String offsetSeconds, MediaFile file) {
         if (offsetSeconds == null) {
             return null;
         }
@@ -295,7 +296,7 @@ public class StreamController implements Controller {
         }
     }
 
-    private VideoTranscodingSettings createVideoTranscodingSettings(MusicFile file, HttpServletRequest request) throws ServletRequestBindingException {
+    private VideoTranscodingSettings createVideoTranscodingSettings(MediaFile file, HttpServletRequest request) throws ServletRequestBindingException {
         Integer existingWidth = file.getMetaData().getWidth();
         Integer existingHeight = file.getMetaData().getHeight();
         Integer maxBitRate = ServletRequestUtils.getIntParameter(request, "maxBitRate");
@@ -389,12 +390,8 @@ public class StreamController implements Controller {
         this.securityService = securityService;
     }
 
-    public void setMusicFileService(MusicFileService musicFileService) {
-        this.musicFileService = musicFileService;
-    }
-
-    public void setMusicInfoService(MusicInfoService musicInfoService) {
-        this.musicInfoService = musicInfoService;
+    public void setMediaFileService(MediaFileService mediaFileService) {
+        this.mediaFileService = mediaFileService;
     }
 
     public void setSettingsService(SettingsService settingsService) {
@@ -405,11 +402,8 @@ public class StreamController implements Controller {
         this.transcodingService = transcodingService;
     }
 
-    public void setAudioScrobblerService(AudioScrobblerService audioScrobblerService) {
-        this.audioScrobblerService = audioScrobblerService;
-    }
+	public void setAudioScrobblerService(AudioScrobblerService audioScrobblerService) {
+		this.audioScrobblerService = audioScrobblerService;
+	}
 
-    public void setSearchService(SearchService searchService) {
-        this.searchService = searchService;
-    }
 }

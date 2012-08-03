@@ -1,237 +1,87 @@
-<?xml version="1.0" encoding="ISO-8859-1"?>
+<?xml version="1.0" encoding="UTF-8"?>
+<beans:beans xmlns="http://www.springframework.org/schema/security"
+	xmlns:beans="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="
+		http://www.springframework.org/schema/beans
+		http://www.springframework.org/schema/beans/spring-beans.xsd
+		http://www.springframework.org/schema/security
+		http://www.springframework.org/schema/security/spring-security-3.1.xsd">
 
-<beans xmlns="http://www.springframework.org/schema/beans"
-       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.5.xsd">
+	<http pattern="/rest/**" create-session="stateless" entry-point-ref="restRequestEntryPoint" use-expressions="true">
+		<intercept-url pattern="/**" access="permitAll" />
+		<custom-filter ref="restRequestParameterProcessingFilter" after="PRE_AUTH_FILTER" />
+	</http>
 
-    <bean id="filterChainProxy" class="org.acegisecurity.util.FilterChainProxy">
-        <property name="filterInvocationDefinitionSource">
-            <value>
-                PATTERN_TYPE_APACHE_ANT
-                /wap**=httpSessionContextIntegrationFilter,logoutFilter,basicProcessingFilter,securityContextHolderAwareRequestFilter,rememberMeProcessingFilter,anonymousProcessingFilter,basicExceptionTranslationFilter,filterInvocationInterceptor
-                /podcastReceiver**=httpSessionContextIntegrationFilter,logoutFilter,authenticationProcessingFilter,basicProcessingFilter,securityContextHolderAwareRequestFilter,rememberMeProcessingFilter,anonymousProcessingFilter,exceptionTranslationFilter,filterInvocationInterceptor
-                /podcast**=httpSessionContextIntegrationFilter,logoutFilter,basicProcessingFilter,securityContextHolderAwareRequestFilter,rememberMeProcessingFilter,anonymousProcessingFilter,basicExceptionTranslationFilter,filterInvocationInterceptor
-                /rest/**=httpSessionContextIntegrationFilter,logoutFilter,basicProcessingFilter,restRequestParameterProcessingFilter,securityContextHolderAwareRequestFilter,rememberMeProcessingFilter,anonymousProcessingFilter,basicExceptionTranslationFilter,filterInvocationInterceptor
-                /**=httpSessionContextIntegrationFilter,logoutFilter,authenticationProcessingFilter,basicProcessingFilter,securityContextHolderAwareRequestFilter,rememberMeProcessingFilter,anonymousProcessingFilter,exceptionTranslationFilter,filterInvocationInterceptor
-            </value>
-        </property>
-    </bean>
+	<http auto-config="true" use-expressions="true">
+		<intercept-url pattern="/login.view" access="permitAll" />
 
-    <bean id="httpSessionContextIntegrationFilter" class="org.acegisecurity.context.HttpSessionContextIntegrationFilter"/>
+		<intercept-url pattern="/accessDenied.view" access="permitAll" />
+		<intercept-url pattern="/videoPlayer.view" access="permitAll" />
+		<intercept-url pattern="/coverArt.view" access="permitAll" />
+		<intercept-url pattern="/stream/**" access="permitAll" />
+		<intercept-url pattern="/share/**" access="permitAll" />
+		<intercept-url pattern="/style/**" access="permitAll" />
+		<intercept-url pattern="/icons/**" access="permitAll" />
+		<intercept-url pattern="/flash/**" access="permitAll" />
+		<intercept-url pattern="/script/**" access="permitAll" />
+		<intercept-url pattern="/crossdomain.xml" access="permitAll" />
 
-    <bean id="logoutFilter" class="org.acegisecurity.ui.logout.LogoutFilter">
-        <constructor-arg value="/login.view?logout"/>
-        <!-- URL redirected to after logout -->
-        <constructor-arg>
-            <list>
-                <ref bean="rememberMeServices"/>
-                <bean class="org.acegisecurity.ui.logout.SecurityContextLogoutHandler"/>
-            </list>
-        </constructor-arg>
-    </bean>
+		<intercept-url pattern="/personalSettings.view" access="hasRole('ROLE_SETTINGS')" />
+		<intercept-url pattern="/lastFmSettings.view" access="hasRole('ROLE_SETTINGS')" />
+		<intercept-url pattern="/passwordSettings.view" access="hasRole('ROLE_SETTINGS')" />
+		<intercept-url pattern="/playerSettings.view" access="hasRole('ROLE_SETTINGS')" />
+		<intercept-url pattern="/shareSettings.view" access="hasRole('ROLE_SETTINGS')" />
 
-    <bean id="authenticationProcessingFilter" class="org.acegisecurity.ui.webapp.AuthenticationProcessingFilter">
-        <property name="authenticationManager" ref="authenticationManager"/>
-        <property name="authenticationFailureUrl" value="/login.view?error"/>
-        <property name="defaultTargetUrl" value="/"/>
-        <property name="alwaysUseDefaultTargetUrl" value="true"/>
-        <property name="filterProcessesUrl" value="/j_acegi_security_check"/>
-        <property name="rememberMeServices" ref="rememberMeServices"/>
-    </bean>
+		<intercept-url pattern="/generalSettings.view" access="hasRole('ROLE_ADMIN')" />
+		<intercept-url pattern="/advancedSettings.view" access="hasRole('ROLE_ADMIN')" />
+		<intercept-url pattern="/userSettings.view" access="hasRole('ROLE_ADMIN')" />
+		<intercept-url pattern="/mediaFolderSettings.view" access="hasRole('ROLE_ADMIN')" />
+		<intercept-url pattern="/networkSettings.view" access="hasRole('ROLE_ADMIN')" />
+		<intercept-url pattern="/transcodingSettings.view" access="hasRole('ROLE_ADMIN')" />
+		<intercept-url pattern="/internetRadioSettings.view" access="hasRole('ROLE_ADMIN')" />
+		<intercept-url pattern="/searchSettings.view" access="hasRole('ROLE_ADMIN')" />
+		<intercept-url pattern="/musicCabinetSettings.view" access="hasRole('ROLE_ADMIN')" />
+		<intercept-url pattern="/podcastSettings.view" access="hasRole('ROLE_ADMIN')" />
+		<intercept-url pattern="/radioSettings.view" access="hasRole('ROLE_ADMIN')" />
+		<intercept-url pattern="/db.view" access="hasRole('ROLE_ADMIN')" />
 
-    <bean id="basicProcessingFilter" class="org.acegisecurity.ui.basicauth.BasicProcessingFilter">
-        <property name="authenticationManager" ref="authenticationManager"/>
-        <property name="authenticationEntryPoint" ref="basicProcessingFilterEntryPoint"/>
-    </bean>
+		<intercept-url pattern="/deletePlaylist.view" access="hasRole('ROLE_PLAYLIST')" />
+		<intercept-url pattern="/savePlaylist.view" access="hasRole('ROLE_PLAYLIST')" />
 
-    <bean id="restRequestParameterProcessingFilter" class="net.sourceforge.subsonic.security.RESTRequestParameterProcessingFilter">
-        <property name="authenticationManager" ref="authenticationManager"/>
-        <property name="settingsService" ref="settingsService"/>
-    </bean>
+		<intercept-url pattern="/download.view" access="hasRole('ROLE_DOWNLOAD')" />
 
-    <bean id="basicProcessingFilterEntryPoint" class="org.acegisecurity.ui.basicauth.BasicProcessingFilterEntryPoint">
-        <property name="realmName" value="Subsonic"/>
-    </bean>
+		<intercept-url pattern="/upload.view" access="hasRole('ROLE_UPLOAD')" />
 
-    <bean id="securityContextHolderAwareRequestFilter" class="org.acegisecurity.wrapper.SecurityContextHolderAwareRequestFilter"/>
+		<intercept-url pattern="/createShare.view" access="hasRole('ROLE_SHARE')" />
 
-    <bean id="rememberMeProcessingFilter" class="org.acegisecurity.ui.rememberme.RememberMeProcessingFilter">
-        <property name="authenticationManager" ref="authenticationManager"/>
-        <property name="rememberMeServices" ref="rememberMeServices"/>
-    </bean>
+		<intercept-url pattern="/changeCoverArt.view" access="hasRole('ROLE_COVERART')" />
+		<intercept-url pattern="/editTags.view" access="hasRole('ROLE_COVERART')" />
+		<intercept-url pattern="/editArtist.view" access="hasRole('ROLE_COVERART')" />
 
-    <bean id="anonymousProcessingFilter" class="org.acegisecurity.providers.anonymous.AnonymousProcessingFilter">
-        <property name="key" value="subsonic"/>
-        <property name="userAttribute" value="anonymousUser,ROLE_ANONYMOUS"/>
-    </bean>
+		<intercept-url pattern="/setMusicFileInfo.view" access="hasRole('ROLE_COMMENT')" />
 
-    <bean id="exceptionTranslationFilter" class="org.acegisecurity.ui.ExceptionTranslationFilter">
-        <property name="authenticationEntryPoint">
-            <bean class="org.acegisecurity.ui.webapp.AuthenticationProcessingFilterEntryPoint">
-                <property name="loginFormUrl" value="/login.view?"/>
-                <property name="forceHttps" value="false"/>
-            </bean>
-        </property>
-        <property name="accessDeniedHandler">
-            <bean class="org.acegisecurity.ui.AccessDeniedHandlerImpl">
-                <property name="errorPage" value="/accessDenied.view"/>
-            </bean>
-        </property>
-    </bean>
+		<intercept-url pattern="/podcastReceiverAdmin.view" access="hasRole('ROLE_PODCAST')" />
 
-    <bean id="basicExceptionTranslationFilter" class="org.acegisecurity.ui.ExceptionTranslationFilter">
-        <property name="authenticationEntryPoint">
-            <bean class="org.acegisecurity.ui.basicauth.BasicProcessingFilterEntryPoint">
-                <property name="realmName" value="Subsonic"/>
-            </bean>
-        </property>
-    </bean>
+		<intercept-url pattern="/*" access="fullyAuthenticated" />
 
-    <bean id="filterInvocationInterceptor" class="org.acegisecurity.intercept.web.FilterSecurityInterceptor">
-        <property name="authenticationManager" ref="authenticationManager"/>
-        <property name="alwaysReauthenticate" value="true"/>
-        <property name="accessDecisionManager" ref="accessDecisionManager"/>
-        <property name="objectDefinitionSource">
-            <value>
-                PATTERN_TYPE_APACHE_ANT
+		<form-login login-page="/login.view" default-target-url="/index.view" always-use-default-target="true" />
+	</http>
 
-                /login.view=IS_AUTHENTICATED_ANONYMOUSLY
-                /accessDenied.view=IS_AUTHENTICATED_ANONYMOUSLY
-                /videoPlayer.view=IS_AUTHENTICATED_ANONYMOUSLY
-                /coverArt.view=IS_AUTHENTICATED_ANONYMOUSLY
-                /stream/**=IS_AUTHENTICATED_ANONYMOUSLY
-                /share/**=IS_AUTHENTICATED_ANONYMOUSLY
-                /style/**=IS_AUTHENTICATED_ANONYMOUSLY
-                /icons/**=IS_AUTHENTICATED_ANONYMOUSLY
-                /flash/**=IS_AUTHENTICATED_ANONYMOUSLY
-                /script/**=IS_AUTHENTICATED_ANONYMOUSLY
-                /crossdomain.xml=IS_AUTHENTICATED_ANONYMOUSLY
+    <beans:bean id="restRequestParameterProcessingFilter" class="net.sourceforge.subsonic.security.RESTRequestParameterProcessingFilter">
+        <beans:property name="authenticationManager" ref="authenticationManager"/>
+    </beans:bean>
+    
+    <beans:bean id="restRequestEntryPoint" class="org.springframework.security.web.authentication.www.DigestAuthenticationEntryPoint">
+    	<beans:property name="realmName" value="REST requests realm" />
+    	<beans:property name="key" value="acegi" />
+    </beans:bean>
+    
+	<authentication-manager alias="authenticationManager">
+		<authentication-provider user-service-ref="securityService">
+			<password-encoder ref="passwordEncoder">
+				<salt-source ref="saltSource" />
+			</password-encoder>
+		</authentication-provider>
+	</authentication-manager>
 
-                /personalSettings.view=ROLE_SETTINGS
-                /passwordSettings.view=ROLE_SETTINGS
-                /playerSettings.view=ROLE_SETTINGS
-                /shareSettings.view=ROLE_SETTINGS
-
-                /generalSettings.view=ROLE_ADMIN
-                /advancedSettings.view=ROLE_ADMIN
-                /userSettings.view=ROLE_ADMIN
-                /musicFolderSettings.view=ROLE_ADMIN
-                /networkSettings.view=ROLE_ADMIN
-                /transcodingSettings.view=ROLE_ADMIN
-                /internetRadioSettings.view=ROLE_ADMIN
-                /searchSettings.view=ROLE_ADMIN
-                /musicCabinetSettings.view=ROLE_ADMIN
-                /podcastSettings.view=ROLE_ADMIN
-                /radioSettings.view=ROLE_ADMIN
-                /db.view=ROLE_ADMIN
-
-                /deletePlaylist.view=ROLE_PLAYLIST
-                /savePlaylist.view=ROLE_PLAYLIST
-
-                /download.view=ROLE_DOWNLOAD
-
-                /upload.view=ROLE_UPLOAD
-
-                /createShare.view=ROLE_SHARE
-
-                /changeCoverArt.view=ROLE_COVERART
-                /editTags.view=ROLE_COVERART
-                /editArtist.view=ROLE_COVERART
-
-                /setMusicFileInfo.view=ROLE_COMMENT
-
-                /podcastReceiverAdmin.view=ROLE_PODCAST
-
-                /**=IS_AUTHENTICATED_REMEMBERED
-            </value>
-        </property>
-    </bean>
-
-    <bean id="accessDecisionManager" class="org.acegisecurity.vote.AffirmativeBased">
-        <property name="allowIfAllAbstainDecisions" value="false"/>
-        <property name="decisionVoters">
-            <list>
-                <bean class="org.acegisecurity.vote.RoleVoter"/>
-                <bean class="org.acegisecurity.vote.AuthenticatedVoter"/>
-            </list>
-        </property>
-    </bean>
-
-    <bean id="rememberMeServices" class="org.acegisecurity.ui.rememberme.TokenBasedRememberMeServices">
-        <property name="userDetailsService" ref="securityService"/>
-        <property name="tokenValiditySeconds" value="31536000"/>
-        <!-- One year -->
-        <property name="key" value="subsonic"/>
-    </bean>
-
-    <bean id="authenticationManager" class="org.acegisecurity.providers.ProviderManager">
-        <property name="providers">
-            <list>
-                <ref local="daoAuthenticationProvider"/>
-                <ref local="ldapAuthenticationProvider"/>
-                <bean class="org.acegisecurity.providers.anonymous.AnonymousAuthenticationProvider">
-                    <property name="key" value="subsonic"/>
-                </bean>
-                <bean class="org.acegisecurity.providers.rememberme.RememberMeAuthenticationProvider">
-                    <property name="key" value="subsonic"/>
-                </bean>
-            </list>
-        </property>
-    </bean>
-
-    <bean id="daoAuthenticationProvider" class="org.acegisecurity.providers.dao.DaoAuthenticationProvider">
-        <property name="userDetailsService" ref="securityService"/>
-        <property name="userCache" ref="userCacheWrapper"/>
-    </bean>
-
-    <bean id="userCacheWrapper" class="org.acegisecurity.providers.dao.cache.EhCacheBasedUserCache">
-        <property name="cache" ref="userCache"/>
-    </bean>
-
-    <bean id="ldapAuthenticationProvider" class="org.acegisecurity.providers.ldap.LdapAuthenticationProvider">
-        <constructor-arg ref="bindAuthenticator"/>
-        <constructor-arg ref="userDetailsServiceBasedAuthoritiesPopulator"/>
-        <property name="userCache" ref="userCacheWrapper"/>
-    </bean>
-
-    <bean id="bindAuthenticator" class="net.sourceforge.subsonic.ldap.SubsonicLdapBindAuthenticator">
-        <property name="securityService" ref="securityService"/>
-        <property name="settingsService" ref="settingsService"/>
-    </bean>
-
-    <bean id="userDetailsServiceBasedAuthoritiesPopulator"
-          class="net.sourceforge.subsonic.ldap.UserDetailsServiceBasedAuthoritiesPopulator">
-        <property name="userDetailsService" ref="securityService"/>
-    </bean>
-
-    <!-- Authorization of AJAX services. -->
-    <bean id="ajaxServiceInterceptor" class="org.acegisecurity.intercept.method.aopalliance.MethodSecurityInterceptor">
-        <property name="authenticationManager" ref="authenticationManager"/>
-        <property name="accessDecisionManager" ref="accessDecisionManager"/>
-        <property name="objectDefinitionSource">
-            <value>
-                net.sourceforge.subsonic.ajax.TagService.setTags=ROLE_COVERART
-                net.sourceforge.subsonic.ajax.TransferService.getUploadInfo=ROLE_UPLOAD
-            </value>
-        </property>
-    </bean>
-
-    <bean id="ajaxTagServiceSecure" class="org.springframework.aop.framework.ProxyFactoryBean">
-        <property name="target" ref="ajaxTagService"/>
-        <property name="interceptorNames">
-            <list>
-                <idref local="ajaxServiceInterceptor"/>
-            </list>
-        </property>
-    </bean>
-
-    <bean id="ajaxTransferServiceSecure" class="org.springframework.aop.framework.ProxyFactoryBean">
-        <property name="target" ref="ajaxTransferService"/>
-        <property name="interceptorNames">
-            <list>
-                <idref local="ajaxServiceInterceptor"/>
-            </list>
-        </property>
-    </bean>
-
-</beans>
+</beans:beans>

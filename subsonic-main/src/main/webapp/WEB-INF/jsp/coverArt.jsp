@@ -61,15 +61,6 @@ PARAMETERS
             </div>
         </div>
     </div>
-    <c:if test="${not empty param.appearAfter}">
-        <script type="text/javascript">
-            if (window.addEventListener) {
-                window.addEventListener('load', function() {
-                    setTimeout("new Effect.Opacity('${divId}', { from: 0.0, to: 1.0, duration: 0.5 })", ${param.appearAfter});
-                }, false);
-            }
-        </script>
-    </c:if>
 </div>
 
 <div style="text-align:right; padding-right: 8px;">

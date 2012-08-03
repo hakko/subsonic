@@ -19,7 +19,8 @@
 package net.sourceforge.subsonic.service.metadata;
 
 import net.sourceforge.subsonic.Logger;
-import net.sourceforge.subsonic.domain.MusicFile;
+import net.sourceforge.subsonic.domain.MediaFile;
+import net.sourceforge.subsonic.domain.MetaData;
 import net.sourceforge.subsonic.io.InputStreamReaderThread;
 import net.sourceforge.subsonic.service.TranscodingService;
 import net.sourceforge.subsonic.util.StringUtil;
@@ -53,9 +54,9 @@ public class FFmpegParser extends MetaDataParser {
      * @return Meta data for the file.
      */
     @Override
-    public MusicFile.MetaData getRawMetaData(MusicFile file) {
+    public MetaData getRawMetaData(MediaFile file) {
 
-        MusicFile.MetaData metaData = getBasicMetaData(file);
+        MetaData metaData = getBasicMetaData(file);
 
         try {
 
@@ -129,7 +130,7 @@ public class FFmpegParser extends MetaDataParser {
      * Not supported.
      */
     @Override
-    public void setMetaData(MusicFile file, MusicFile.MetaData metaData) {
+    public void setMetaData(MediaFile file, MetaData metaData) {
         throw new RuntimeException("setMetaData() not supported in " + getClass().getSimpleName());
     }
 
@@ -150,7 +151,7 @@ public class FFmpegParser extends MetaDataParser {
      * @return Whether this parser is applicable to the given file.
      */
     @Override
-    public boolean isApplicable(MusicFile file) {
+    public boolean isApplicable(MediaFile file) {
         return file.isVideo();
     }
 

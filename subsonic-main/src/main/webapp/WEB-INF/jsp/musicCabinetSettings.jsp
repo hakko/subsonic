@@ -82,6 +82,16 @@
              <c:import url="helpToolTip.jsp"><c:param name="topic" value="genreradioartistcount"/></c:import>
             </td>
            </tr>
+           <tr>
+            <td>Prefer last.fm artwork</td>
+            <td>
+               <form:select path="preferLastFmArtwork">
+                <form:option value="true" label="Yes"/>
+                <form:option value="false" label="No"/>
+               </form:select>
+             <c:import url="helpToolTip.jsp"><c:param name="topic" value="preferlastfmartwork"/></c:import>
+            </td>
+           </tr>
           </table>
           <input type="submit" value="Save" style="margin-right:0.3em"/>
           <br/><br/><br/>
@@ -100,26 +110,28 @@
          </c:when>
          <c:otherwise>
           <div style="width:60%">
-           <p>MusicCabinet is a tool that:
-           <ul>
-            <li>generates smart playlists, based on an artist or a musical genre
-            <li>helps you find new music, by displaying related artists to what's in your library
-            <li>allows you to browse your library by musical genre
-            <li>adds artist biographies and artwork to Subsonic
-           </ul>
-           <p>This is made possible by fetching all that information from <a href="http://last.fm">last.fm</a>. However, depending on the size of your library, this could take a while, as they have some regulations on data traffic. Press the button below, and be patient. Normal usage of Subsonic will work meanwhile, you'll just have to wait for the MusicCabinet extended features.</p>
+		   <p>MusicCabinet is now ready to scan your library, and fetch meta-data from <a href="http://last.fm">last.fm</a>. Depending on the size of your library, this could take a while, as they have some regulations on data traffic. A rough estimate is 30 minutes per 10.000 tracks.</p>
+		   <p>You can use the simplified file-based interface to access your music during the import.</p>
+           <c:if test="${fn:length(command.mediaFolderNames) > 0}">
+			<p>These folders will be scanned:</p>
+			<ul>
+			<c:forEach items="${command.mediaFolderNames}" var="mediaFolderName" varStatus="loopStatus">
+				<li>${mediaFolderName}</li>
+			</c:forEach>			
+		   </ul>
+		  </c:if>
           </div>
           <input type="hidden" name="updateSearchIndex" value="true"/>
-          <input type="submit" value="Start importing data" style="margin-right:0.3em" id="button"/>
+          <input type="submit" value="Update search index now" style="margin-right:0.3em" id="button"/>
          </c:otherwise>
         </c:choose>
        </c:otherwise>
       </c:choose>
      </c:when>
      <c:otherwise>
-      <p>It seems like you recently installed or upgraded MusicCabinet. Press 'Update database' to continue.</p>
+      <p>It seems like you recently installed or upgraded MusicCabinet. Press 'Upgrade database' to load the latest version.</p>
       <input type="hidden" name="updateDatabase" value="true"/>
-      <input type="submit" value="Update database" style="margin-right:0.3em" id="button"/>
+      <input type="submit" value="Upgrade database" style="margin-right:0.3em" id="button"/>
      </c:otherwise>
     </c:choose>
    </c:when>

@@ -21,18 +21,15 @@ package net.sourceforge.subsonic.io;
 import net.sourceforge.subsonic.Logger;
 import net.sourceforge.subsonic.domain.VideoTranscodingSettings;
 import net.sourceforge.subsonic.util.FileUtil;
-import net.sourceforge.subsonic.domain.MusicFile;
+import net.sourceforge.subsonic.domain.MediaFile;
 import net.sourceforge.subsonic.domain.Player;
 import net.sourceforge.subsonic.domain.Playlist;
 import net.sourceforge.subsonic.domain.TransferStatus;
 import net.sourceforge.subsonic.service.AudioScrobblerService;
-import net.sourceforge.subsonic.service.MusicInfoService;
 import net.sourceforge.subsonic.service.TranscodingService;
-import net.sourceforge.subsonic.service.SearchService;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.List;
 
 /**
  * Implementation of {@link InputStream} which reads from a {@link Playlist}.
@@ -48,26 +45,22 @@ public class PlaylistInputStream extends InputStream {
     private final Integer maxBitRate;
     private final String preferredTargetFormat;
     private final VideoTranscodingSettings videoTranscodingSettings;
-    private final SearchService searchService;
     private final TranscodingService transcodingService;
-    private final MusicInfoService musicInfoService;
-
     private final AudioScrobblerService audioScrobblerService;
-    private MusicFile currentFile;
+
+    private MediaFile currentFile;
     private InputStream currentInputStream;
 
     public PlaylistInputStream(Player player, TransferStatus status, Integer maxBitRate, String preferredTargetFormat,
             VideoTranscodingSettings videoTranscodingSettings, TranscodingService transcodingService,
-            MusicInfoService musicInfoService, AudioScrobblerService audioScrobblerService, SearchService searchService) {
+            AudioScrobblerService audioScrobblerService) {
         this.player = player;
         this.status = status;
         this.maxBitRate = maxBitRate;
         this.preferredTargetFormat = preferredTargetFormat;
         this.videoTranscodingSettings = videoTranscodingSettings;
         this.transcodingService = transcodingService;
-        this.musicInfoService = musicInfoService;
         this.audioScrobblerService = audioScrobblerService;
-        this.searchService = searchService;
     }
 
     /**
@@ -113,45 +106,22 @@ public class PlaylistInputStream extends InputStream {
 
     private void prepare() throws IOException {
         Playlist playlist = player.getPlaylist();
-
-        // If playlist is in auto-random mode, populate it with new random songs.
-        if (playlist.getIndex() == -1 && playlist.getRandomSearchCriteria() != null) {
-            populateRandomPlaylist(playlist);
-        }
         
-        MusicFile file = playlist.getCurrentFile();
+        MediaFile file = playlist.getCurrentFile();
         if (file == null) {
             close();
         } else if (!file.equals(currentFile)) {
             close();
             LOG.info(player.getUsername() + " listening to \"" + FileUtil.getShortPath(file.getFile()) + "\"");
-            updateStatistics(file);
             if (player.getClientId() == null) {  // Don't scrobble REST players.
-                audioScrobblerService.register(file, player.getUsername(), false);
+                audioScrobblerService.scrobble(player.getUsername(), file, false);
             }
 
             TranscodingService.Parameters parameters = transcodingService.getParameters(file, player, maxBitRate, preferredTargetFormat, videoTranscodingSettings);
             currentInputStream = transcodingService.getTranscodedInputStream(parameters);
             currentFile = file;
+            status.setMediaFileId(file.getId());
             status.setFile(currentFile.getFile());
-        }
-    }
-
-    private void populateRandomPlaylist(Playlist playlist) throws IOException {
-        List<MusicFile> files = searchService.getRandomSongs(playlist.getRandomSearchCriteria());
-        playlist.addFiles(Playlist.PLAY, files);
-
-        LOG.info("Recreated random playlist with " + playlist.size() + " songs.");
-    }
-
-    private void updateStatistics(MusicFile file) {
-        try {
-            MusicFile folder = file.getParent();
-            if (!folder.isRoot()) {
-                musicInfoService.incrementPlayCount(folder);
-            }
-        } catch (Exception x) {
-            LOG.warn("Failed to update statistics for " + file, x);
         }
     }
 
@@ -165,8 +135,8 @@ public class PlaylistInputStream extends InputStream {
                 currentInputStream.close();
             }
         } finally {
-            if (player.getClientId() == null) {  // Don't scrobble REST players.
-                audioScrobblerService.register(currentFile, player.getUsername(), true);
+            if (player.getClientId() == null && currentFile != null) {  // Don't scrobble REST players.
+                audioScrobblerService.scrobble(player.getUsername(), currentFile, true);
             }
             currentInputStream = null;
             currentFile = null;

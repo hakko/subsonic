@@ -24,12 +24,12 @@ import net.sourceforge.subsonic.domain.Version;
 import net.sourceforge.subsonic.controller.RESTController;
 import net.sourceforge.subsonic.util.StringUtil;
 import net.sourceforge.subsonic.util.XMLBuilder;
-import org.acegisecurity.Authentication;
-import org.acegisecurity.AuthenticationException;
-import org.acegisecurity.context.SecurityContextHolder;
-import org.acegisecurity.providers.ProviderManager;
-import org.acegisecurity.providers.UsernamePasswordAuthenticationToken;
 import org.apache.commons.lang.StringUtils;
+import org.springframework.security.authentication.ProviderManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.AuthenticationException;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.ServletRequestUtils;
 
 import javax.servlet.Filter;
@@ -58,13 +58,13 @@ public class RESTRequestParameterProcessingFilter implements Filter {
     private static final Logger LOG = Logger.getLogger(RESTRequestParameterProcessingFilter.class);
 
     private ProviderManager authenticationManager;
-    private SettingsService settingsService;
 
     /**
      * {@inheritDoc}
      */
     public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException, ServletException {
-        if (!(request instanceof HttpServletRequest)) {
+    	
+    	if (!(request instanceof HttpServletRequest)) {
             throw new ServletException("Can only process HttpServletRequest");
         }
         if (!(response instanceof HttpServletResponse)) {
@@ -78,7 +78,7 @@ public class RESTRequestParameterProcessingFilter implements Filter {
         String password = decrypt(StringUtils.trimToNull(httpRequest.getParameter("p")));
         String version = StringUtils.trimToNull(httpRequest.getParameter("v"));
         String client = StringUtils.trimToNull(httpRequest.getParameter("c"));
-
+        
         RESTController.ErrorCode errorCode = null;
 
         // The username and password parameters are not required if the user
@@ -107,11 +107,6 @@ public class RESTRequestParameterProcessingFilter implements Filter {
 
         if (errorCode == null && previousAuth == null) {
             errorCode = authenticate(username, password);
-        }
-
-        if (errorCode == null) {
-            String restMethod = StringUtils.substringAfterLast(httpRequest.getRequestURI(), "/");
-            errorCode = checkLicense(client, restMethod);
         }
 
         if (errorCode == null) {
@@ -147,10 +142,6 @@ public class RESTRequestParameterProcessingFilter implements Filter {
             return RESTController.ErrorCode.NOT_AUTHENTICATED;
         }
         return null;
-    }
-
-    private RESTController.ErrorCode checkLicense(String client, String restMethod) {
-    	return null;
     }
 
     public static String decrypt(String s) {
@@ -215,7 +206,4 @@ public class RESTRequestParameterProcessingFilter implements Filter {
         this.authenticationManager = authenticationManager;
     }
 
-    public void setSettingsService(SettingsService settingsService) {
-        this.settingsService = settingsService;
-    }
 }

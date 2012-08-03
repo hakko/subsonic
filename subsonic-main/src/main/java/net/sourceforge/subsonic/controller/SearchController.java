@@ -18,24 +18,28 @@
  */
 package net.sourceforge.subsonic.controller;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+
+import net.sourceforge.subsonic.command.SearchCommand;
+import net.sourceforge.subsonic.domain.User;
+import net.sourceforge.subsonic.domain.UserSettings;
+import net.sourceforge.subsonic.service.PlayerService;
+import net.sourceforge.subsonic.service.SecurityService;
+import net.sourceforge.subsonic.service.SettingsService;
 
 import org.apache.commons.lang.StringUtils;
 import org.springframework.validation.BindException;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.SimpleFormController;
 
-import net.sourceforge.subsonic.command.SearchCommand;
-import net.sourceforge.subsonic.domain.SearchCriteria;
-import net.sourceforge.subsonic.domain.SearchResult;
-import net.sourceforge.subsonic.domain.User;
-import net.sourceforge.subsonic.domain.UserSettings;
-import net.sourceforge.subsonic.service.PlayerService;
-import net.sourceforge.subsonic.service.SearchService;
-import net.sourceforge.subsonic.service.SecurityService;
-import net.sourceforge.subsonic.service.SettingsService;
-import net.sourceforge.subsonic.service.LuceneSearchService;
+import com.github.hakko.musiccabinet.domain.model.music.Track;
+import com.github.hakko.musiccabinet.service.LibraryUpdateService;
+import com.github.hakko.musiccabinet.service.NameSearchService;
+import com.github.hakko.musiccabinet.service.StarService;
 
 /**
  * Controller for the search page.
@@ -46,11 +50,13 @@ public class SearchController extends SimpleFormController {
 
     private static final int MATCH_COUNT = 25;
 
-    private SearchService searchService;
     private SecurityService securityService;
     private SettingsService settingsService;
     private PlayerService playerService;
-
+    private LibraryUpdateService libraryUpdateService;
+    private NameSearchService nameSearchService;
+    private StarService starService;
+    
     @Override
     protected Object formBackingObject(HttpServletRequest request) throws Exception {
         return new SearchCommand();
@@ -70,32 +76,29 @@ public class SearchController extends SimpleFormController {
 
         if (any != null) {
 
-            if (searchService.isIndexBeingCreated()) {
-                command.setIndexBeingCreated(true);
-            } else {
-
-                SearchCriteria criteria = new SearchCriteria();
-                criteria.setCount(MATCH_COUNT);
-                criteria.setQuery(any);
-
-                SearchResult artists = searchService.search(criteria, LuceneSearchService.IndexType.ARTIST);
-                command.setArtists(artists.getMusicFiles());
-
-                SearchResult albums = searchService.search(criteria, LuceneSearchService.IndexType.ALBUM);
-                command.setAlbums(albums.getMusicFiles());
-
-                SearchResult songs = searchService.search(criteria, LuceneSearchService.IndexType.SONG);
-                command.setSongs(songs.getMusicFiles());
+            if (libraryUpdateService.isIndexCreated()) {
+                command.setArtists(nameSearchService.getArtists(any, 0, MATCH_COUNT).getResults());
+                command.setAlbums(nameSearchService.getAlbums(any, 0, MATCH_COUNT).getResults());
+                command.setSongs(nameSearchService.getTracks(any, 0, MATCH_COUNT).getResults());
+                command.setIsTrackStarred(starService.getStarredTracksMask(userSettings.getLastFmUsername(), 
+                		getTrackIds(command.getSongs())));
 
                 command.setPlayer(playerService.getPlayer(request, response));
+                command.setIndexCreated(true);
+            } else {
+                command.setIndexCreated(false);
             }
         }
 
         return new ModelAndView(getSuccessView(), errors.getModel());
     }
-
-    public void setSearchService(SearchService searchService) {
-        this.searchService = searchService;
+    
+    private List<Integer> getTrackIds(List<Track> tracks) {
+    	List<Integer> trackIds = new ArrayList<>();
+    	for (Track track : tracks) {
+    		trackIds.add(track.getId());
+    	}
+    	return trackIds;
     }
 
     public void setSecurityService(SecurityService securityService) {
@@ -109,4 +112,17 @@ public class SearchController extends SimpleFormController {
     public void setPlayerService(PlayerService playerService) {
         this.playerService = playerService;
     }
+
+	public void setLibraryUpdateService(LibraryUpdateService libraryUpdateService) {
+		this.libraryUpdateService = libraryUpdateService;
+	}
+
+	public void setNameSearchService(NameSearchService nameSearchService) {
+		this.nameSearchService = nameSearchService;
+	}
+
+	public void setStarService(StarService starService) {
+		this.starService = starService;
+	}
+
 }

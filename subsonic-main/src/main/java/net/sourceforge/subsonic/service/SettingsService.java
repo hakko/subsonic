@@ -30,9 +30,11 @@ import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
+import java.util.Map;
 import java.util.Properties;
 import java.util.StringTokenizer;
 
@@ -48,11 +50,11 @@ import org.apache.http.params.HttpConnectionParams;
 import net.sourceforge.subsonic.Logger;
 import net.sourceforge.subsonic.dao.AvatarDao;
 import net.sourceforge.subsonic.dao.InternetRadioDao;
-import net.sourceforge.subsonic.dao.MusicFolderDao;
+import net.sourceforge.subsonic.dao.MediaFolderDao;
 import net.sourceforge.subsonic.dao.UserDao;
 import net.sourceforge.subsonic.domain.Avatar;
 import net.sourceforge.subsonic.domain.InternetRadio;
-import net.sourceforge.subsonic.domain.MusicFolder;
+import net.sourceforge.subsonic.domain.MediaFolder;
 import net.sourceforge.subsonic.domain.Theme;
 import net.sourceforge.subsonic.domain.User;
 import net.sourceforge.subsonic.domain.UserSettings;
@@ -73,11 +75,9 @@ public class SettingsService {
     // Global settings.
     private static final String KEY_INDEX_STRING = "IndexString";
     private static final String KEY_IGNORED_ARTICLES = "IgnoredArticles";
-    private static final String KEY_SHORTCUTS = "Shortcuts";
     private static final String KEY_PLAYLIST_FOLDER = "PlaylistFolder";
-    private static final String KEY_MUSIC_FILE_TYPES = "MusicFileTypes";
+    private static final String KEY_MUSIC_FILE_TYPES = "MediaFileTypes";
     private static final String KEY_VIDEO_FILE_TYPES = "VideoFileTypes";
-    private static final String KEY_COVER_ART_FILE_TYPES = "CoverArtFileTypes";
     private static final String KEY_COVER_ART_LIMIT = "CoverArtLimit";
     private static final String KEY_WELCOME_TITLE = "WelcomeTitle";
     private static final String KEY_WELCOME_SUBTITLE = "WelcomeSubtitle";
@@ -126,15 +126,14 @@ public class SettingsService {
     private static final String KEY_MUSICCABINET_ARTIST_TOP_TRACKS_TOTAL_COUNT = "MusicCabinetArtistTopTracksTotalCount";
     private static final String KEY_MUSICCABINET_GENRE_RADIO_ARTIST_COUNT = "MusicCabinetGenreRadioArtistCount";
     private static final String KEY_MUSICCABINET_GENRE_RADIO_TOTAL_COUNT = "MusicCabinetGenreRadioTotalCount";
+    private static final String KEY_MUSICCABINET_PREFER_LAST_FM_ARTWORK = "MusicCabinetPreferLastFmArtwork";
     
     // Default values.
     private static final String DEFAULT_INDEX_STRING = "A B C D E F G H I J K L M N O P Q R S T U V W X-Z(XYZ)";
     private static final String DEFAULT_IGNORED_ARTICLES = "The El La Los Las Le Les";
-    private static final String DEFAULT_SHORTCUTS = "New Incoming Podcast";
     private static final String DEFAULT_PLAYLIST_FOLDER = Util.getDefaultPlaylistFolder();
     private static final String DEFAULT_MUSIC_FILE_TYPES = "mp3 ogg oga aac m4a flac wav wma aif aiff ape mpc shn";
     private static final String DEFAULT_VIDEO_FILE_TYPES = "flv avi mpg mpeg mp4 m4v mkv mov wmv ogv divx m2ts";
-    private static final String DEFAULT_COVER_ART_FILE_TYPES = "cover.jpg folder.jpg jpg jpeg gif png";
     private static final int DEFAULT_COVER_ART_LIMIT = 30;
     private static final String DEFAULT_WELCOME_TITLE = "Welcome to Subsonic!";
     private static final String DEFAULT_WELCOME_SUBTITLE = null;
@@ -187,10 +186,11 @@ public class SettingsService {
     private static final int DEFAULT_MUSICCABINET_ARTIST_TOP_TRACKS_TOTAL_COUNT = 20;
     private static final int DEFAULT_MUSICCABINET_GENRE_RADIO_ARTIST_COUNT = 1;
     private static final int DEFAULT_MUSICCABINET_GENRE_RADIO_TOTAL_COUNT = 25;
+    private static final boolean DEFAULT_MUSICCABINET_PREFER_LAST_FM_ARTWORK = true;
     
     // Array of obsolete keys.  Used to clean property file.
     private static final List<String> OBSOLETE_KEYS = Arrays.asList("PortForwardingPublicPort", "PortForwardingLocalPort", "DownsamplingCommand",
-            "AutoCoverBatch", "MusicMask", "VideoMask", "CoverArtMask");
+            "AutoCoverBatch", "MusicMask", "VideoMask", "CoverArtMask", "Shortcuts", "CoverArtFileTypes");
 
     private static final String LOCALES_FILE = "/net/sourceforge/subsonic/i18n/locales.txt";
     private static final String THEMES_FILE = "/net/sourceforge/subsonic/theme/themes.txt";
@@ -201,15 +201,16 @@ public class SettingsService {
     private List<Theme> themes;
     private List<Locale> locales;
     private InternetRadioDao internetRadioDao;
-    private MusicFolderDao musicFolderDao;
+    private MediaFolderDao mediaFolderDao;
     private UserDao userDao;
     private AvatarDao avatarDao;
     private VersionService versionService;
 
-    private String[] cachedCoverArtFileTypesArray;
-    private String[] cachedMusicFileTypesArray;
+    private String[] cachedMediaFileTypesArray;
     private String[] cachedVideoFileTypesArray;
-    private static File subsonicHome;
+	private Map<String, UserSettings> cachedUserSettings = new HashMap<>();
+
+	private static File subsonicHome;
 
     private boolean licenseValidated = true;
 
@@ -323,6 +324,14 @@ public class SettingsService {
         setProperty(key, String.valueOf(value));
     }
 
+    private boolean getBoolean(String key, boolean defaultValue) {
+    	return Boolean.valueOf(properties.getProperty(key, String.valueOf(defaultValue)));
+    }
+
+    private void setBoolean(String key, boolean value) {
+        setProperty(key, String.valueOf(value));
+    }
+
     public String getIndexString() {
         return properties.getProperty(KEY_INDEX_STRING, DEFAULT_INDEX_STRING);
     }
@@ -343,18 +352,6 @@ public class SettingsService {
         setProperty(KEY_IGNORED_ARTICLES, ignoredArticles);
     }
 
-    public String getShortcuts() {
-        return properties.getProperty(KEY_SHORTCUTS, DEFAULT_SHORTCUTS);
-    }
-
-    public String[] getShortcutsAsArray() {
-        return StringUtil.split(getShortcuts());
-    }
-
-    public void setShortcuts(String shortcuts) {
-        setProperty(KEY_SHORTCUTS, shortcuts);
-    }
-
     public String getPlaylistFolder() {
         return properties.getProperty(KEY_PLAYLIST_FOLDER, DEFAULT_PLAYLIST_FOLDER);
     }
@@ -363,20 +360,20 @@ public class SettingsService {
         setProperty(KEY_PLAYLIST_FOLDER, playlistFolder);
     }
 
-    public String getMusicFileTypes() {
+    public String getMediaFileTypes() {
         return properties.getProperty(KEY_MUSIC_FILE_TYPES, DEFAULT_MUSIC_FILE_TYPES);
     }
 
-    public synchronized void setMusicFileTypes(String fileTypes) {
+    public synchronized void setMediaFileTypes(String fileTypes) {
         setProperty(KEY_MUSIC_FILE_TYPES, fileTypes);
-        cachedMusicFileTypesArray = null;
+        cachedMediaFileTypesArray = null;
     }
 
-    public synchronized String[] getMusicFileTypesAsArray() {
-        if (cachedMusicFileTypesArray == null) {
-            cachedMusicFileTypesArray = toStringArray(getMusicFileTypes());
+    public synchronized String[] getMediaFileTypesAsArray() {
+        if (cachedMediaFileTypesArray == null) {
+            cachedMediaFileTypesArray = toStringArray(getMediaFileTypes());
         }
-        return cachedMusicFileTypesArray;
+        return cachedMediaFileTypesArray;
     }
 
     public String getVideoFileTypes() {
@@ -393,22 +390,6 @@ public class SettingsService {
             cachedVideoFileTypesArray = toStringArray(getVideoFileTypes());
         }
         return cachedVideoFileTypesArray;
-    }
-
-    public String getCoverArtFileTypes() {
-        return properties.getProperty(KEY_COVER_ART_FILE_TYPES, DEFAULT_COVER_ART_FILE_TYPES);
-    }
-
-    public synchronized void setCoverArtFileTypes(String fileTypes) {
-        setProperty(KEY_COVER_ART_FILE_TYPES, fileTypes);
-        cachedCoverArtFileTypesArray = null;
-    }
-
-    public synchronized String[] getCoverArtFileTypesAsArray() {
-        if (cachedCoverArtFileTypesArray == null) {
-            cachedCoverArtFileTypesArray = toStringArray(getCoverArtFileTypes());
-        }
-        return cachedCoverArtFileTypesArray;
     }
 
     public int getCoverArtLimit() {
@@ -764,6 +745,10 @@ public class SettingsService {
     public long getSettingsChanged() {
         return Long.parseLong(properties.getProperty(KEY_SETTINGS_CHANGED, String.valueOf(DEFAULT_SETTINGS_CHANGED)));
     }
+    
+    public void setSettingsChanged() {
+    	properties.setProperty(KEY_SETTINGS_CHANGED, String.valueOf(System.currentTimeMillis()));
+    }
 
     /**
      * Returns the locale (for language, date format etc).
@@ -887,8 +872,8 @@ public class SettingsService {
      *
      * @return Possibly empty list of all music folders.
      */
-    public List<MusicFolder> getAllMusicFolders() {
-        return getAllMusicFolders(false);
+    public List<MediaFolder> getAllMediaFolders() {
+        return getAllMediaFolders(false);
     }
 
     /**
@@ -897,10 +882,10 @@ public class SettingsService {
      * @param includeAll Whether non-existing and disabled folders should be included.
      * @return Possibly empty list of all music folders.
      */
-    public List<MusicFolder> getAllMusicFolders(boolean includeAll) {
-        List<MusicFolder> all = musicFolderDao.getAllMusicFolders();
-        List<MusicFolder> result = new ArrayList<MusicFolder>(all.size());
-        for (MusicFolder folder : all) {
+    public List<MediaFolder> getAllMediaFolders(boolean includeAll) {
+        List<MediaFolder> all = mediaFolderDao.getAllMediaFolders();
+        List<MediaFolder> result = new ArrayList<MediaFolder>(all.size());
+        for (MediaFolder folder : all) {
             if (includeAll || folder.isEnabled() && folder.getPath().exists()) {
                 result.add(folder);
             }
@@ -914,9 +899,9 @@ public class SettingsService {
      * @param id The ID.
      * @return The music folder with the given ID, or <code>null</code> if not found.
      */
-    public MusicFolder getMusicFolderById(Integer id) {
-        List<MusicFolder> all = getAllMusicFolders();
-        for (MusicFolder folder : all) {
+    public MediaFolder getMediaFolderById(Integer id) {
+        List<MediaFolder> all = getAllMediaFolders();
+        for (MediaFolder folder : all) {
             if (id.equals(folder.getId())) {
                 return folder;
             }
@@ -927,10 +912,10 @@ public class SettingsService {
     /**
      * Creates a new music folder.
      *
-     * @param musicFolder The music folder to create.
+     * @param mediaFolder The music folder to create.
      */
-    public void createMusicFolder(MusicFolder musicFolder) {
-        musicFolderDao.createMusicFolder(musicFolder);
+    public void createMediaFolder(MediaFolder mediaFolder) {
+        mediaFolderDao.createMediaFolder(mediaFolder);
     }
 
     /**
@@ -938,17 +923,17 @@ public class SettingsService {
      *
      * @param id The ID of the music folder to delete.
      */
-    public void deleteMusicFolder(Integer id) {
-        musicFolderDao.deleteMusicFolder(id);
+    public void deleteMediaFolder(Integer id) {
+        mediaFolderDao.deleteMediaFolder(id);
     }
 
     /**
      * Updates the given music folder.
      *
-     * @param musicFolder The music folder to update.
+     * @param mediaFolder The music folder to update.
      */
-    public void updateMusicFolder(MusicFolder musicFolder) {
-        musicFolderDao.updateMusicFolder(musicFolder);
+    public void updateMediaFolder(MediaFolder mediaFolder) {
+        mediaFolderDao.updateMediaFolder(mediaFolder);
     }
 
     public List<String> getAllLastFmUsers() {
@@ -1030,22 +1015,49 @@ public class SettingsService {
      * @return User-specific settings. Never <code>null</code>.
      */
     public UserSettings getUserSettings(String username) {
-        UserSettings settings = userDao.getUserSettings(username);
-        return settings == null ? createDefaultUserSettings(username) : settings;
+    	if (cachedUserSettings.containsKey(username)) {
+    		return cachedUserSettings.get(username);
+    	} else {
+    		UserSettings settings = userDao.getUserSettings(username);
+        	if (settings == null) {
+        		settings = createDefaultUserSettings(username);
+        	}
+        	cachedUserSettings.put(username, settings);
+        	return settings;
+    	}
     }
 
+    public String getLastFmUsername(String username) {
+    	UserSettings userSettings = getUserSettings(username);
+    	return userSettings.isLastFmEnabled() ? userSettings.getLastFmUsername() : null;
+    }
+    
+    public void clearUserSettingsCache(String username) {
+    	cachedUserSettings.remove(username);
+    }
+    
     private UserSettings createDefaultUserSettings(String username) {
         UserSettings settings = new UserSettings(username);
-        settings.setFinalVersionNotificationEnabled(true);
-        settings.setBetaVersionNotificationEnabled(false);
         settings.setShowNowPlayingEnabled(true);
         settings.setShowChatEnabled(true);
         settings.setPartyModeEnabled(false);
         settings.setNowPlayingAllowed(true);
         settings.setLastFmEnabled(false);
         settings.setLastFmUsername(null);
-        settings.setLastFmPassword(null);
+        settings.setDefaultHomeArtists((short) 20);
+        settings.setDefaultHomeAlbums((short) 10);
+        settings.setDefaultHomeSongs((short) 50);
+        settings.setArtistGridWidth((short) 5);
+        settings.setRelatedArtists((short) 15);
+        settings.setRecommendedArtists((short) 5);
+        settings.setReluctantArtistLoading(false);
         settings.setChanged(new Date());
+
+        UserSettings.Visibility main = settings.getMainVisibility();
+        main.setCaptionCutoff(35);
+        main.setTrackNumberVisible(true);
+        main.setArtistVisible(true);
+        main.setDurationVisible(true);
 
         UserSettings.Visibility playlist = settings.getPlaylistVisibility();
         playlist.setCaptionCutoff(35);
@@ -1057,11 +1069,12 @@ public class SettingsService {
         playlist.setFormatVisible(true);
         playlist.setFileSizeVisible(true);
 
-        UserSettings.Visibility main = settings.getMainVisibility();
-        main.setCaptionCutoff(35);
-        main.setTrackNumberVisible(true);
-        main.setArtistVisible(true);
-        main.setDurationVisible(true);
+        UserSettings.Visibility home = settings.getHomeVisibility();
+        home.setCaptionCutoff(35);
+        home.setArtistVisible(true);
+        home.setAlbumVisible(true);
+        home.setYearVisible(true);
+        home.setDurationVisible(true);
 
         return settings;
     }
@@ -1192,8 +1205,8 @@ public class SettingsService {
         this.internetRadioDao = internetRadioDao;
     }
 
-    public void setMusicFolderDao(MusicFolderDao musicFolderDao) {
-        this.musicFolderDao = musicFolderDao;
+    public void setMediaFolderDao(MediaFolderDao mediaFolderDao) {
+        this.mediaFolderDao = mediaFolderDao;
     }
 
     public void setUserDao(UserDao userDao) {
@@ -1276,5 +1289,14 @@ public class SettingsService {
     public void setGenreRadioTotalCount(int totalCount) {
     	setInt(KEY_MUSICCABINET_GENRE_RADIO_TOTAL_COUNT, totalCount);
     }
+
+    public boolean isPreferLastFmArtwork() {
+    	return getBoolean(KEY_MUSICCABINET_PREFER_LAST_FM_ARTWORK, 
+    			DEFAULT_MUSICCABINET_PREFER_LAST_FM_ARTWORK);
+    }
     
+    public void setPreferLastFmArtwork(boolean preferLastFmArtwork) {
+    	setBoolean(KEY_MUSICCABINET_PREFER_LAST_FM_ARTWORK, preferLastFmArtwork);
+    }
+
 }

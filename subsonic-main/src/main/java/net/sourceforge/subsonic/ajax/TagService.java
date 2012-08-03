@@ -18,14 +18,22 @@
  */
 package net.sourceforge.subsonic.ajax;
 
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
+
 import net.sourceforge.subsonic.Logger;
 import net.sourceforge.subsonic.service.metadata.MetaDataParser;
-import net.sourceforge.subsonic.domain.MusicFile;
+import net.sourceforge.subsonic.domain.MediaFile;
+import net.sourceforge.subsonic.domain.MetaData;
 import net.sourceforge.subsonic.service.metadata.MetaDataParserFactory;
-import net.sourceforge.subsonic.service.MusicFileService;
+import net.sourceforge.subsonic.service.MediaFileService;
 import net.sourceforge.subsonic.util.StringUtil;
 import org.apache.commons.lang.ObjectUtils;
 import org.apache.commons.lang.StringUtils;
+
+import com.github.hakko.musiccabinet.service.LibraryUpdateService;
 
 /**
  * Provides AJAX-enabled services for editing tags in music files.
@@ -37,9 +45,12 @@ public class TagService {
 
     private static final Logger LOG = Logger.getLogger(TagService.class);
 
-    private MusicFileService musicFileService;
+    private MediaFileService mediaFileService;
     private MetaDataParserFactory metaDataParserFactory;
+    private LibraryUpdateService libraryUpdateService;
 
+    private List<Integer> updatedMusicFileIds = new ArrayList<>();
+    
     /**
      * Updated tags for a given music file.
      *
@@ -53,10 +64,9 @@ public class TagService {
      * @return "UPDATED" if the new tags were updated, "SKIPPED" if no update was necessary.
      *         Otherwise the error message is returned.
      */
-    public String setTags(String path, String track, String albumartist, String artist, String album, String title, String year, String genre) {
+    public String setTags(int id, String track, String artist, String album, String title, String year, String genre) {
 
         track = StringUtils.trimToNull(track);
-        albumartist = StringUtils.trimToNull(albumartist);
         artist = StringUtils.trimToNull(artist);
         album = StringUtils.trimToNull(album);
         title = StringUtils.trimToNull(title);
@@ -74,17 +84,16 @@ public class TagService {
 
         try {
 
-            MusicFile file = musicFileService.getMusicFile(path);
+            MediaFile file = mediaFileService.getMediaFile(id);
             MetaDataParser parser = metaDataParserFactory.getParser(file);
 
             if (!parser.isEditingSupported()) {
                 return "Tag editing of " + StringUtil.getSuffix(file.getName()) + " files is not supported.";
             }
 
-            MusicFile.MetaData existingMetaData = parser.getRawMetaData(file);
+            MetaData existingMetaData = parser.getRawMetaData(file);
 
-            if (StringUtils.equals(albumartist, existingMetaData.getAlbumArtist()) &&
-            	StringUtils.equals(artist, existingMetaData.getArtist()) &&
+            if (StringUtils.equals(artist, existingMetaData.getArtist()) &&
                 StringUtils.equals(album, existingMetaData.getAlbum()) &&
                 StringUtils.equals(title, existingMetaData.getTitle()) &&
                 StringUtils.equals(year, existingMetaData.getYear()) &&
@@ -93,8 +102,7 @@ public class TagService {
                 return "SKIPPED";
             }
 
-            MusicFile.MetaData newMetaData = new MusicFile.MetaData();
-            newMetaData.setAlbumArtist(albumartist);
+            MetaData newMetaData = new MetaData();
             newMetaData.setArtist(artist);
             newMetaData.setAlbum(album);
             newMetaData.setTitle(title);
@@ -102,19 +110,39 @@ public class TagService {
             newMetaData.setGenre(genre);
             newMetaData.setTrackNumber(trackNumber);
             parser.setMetaData(file, newMetaData);
+            updatedMusicFileIds.add(id);
             return "UPDATED";
 
         } catch (Exception x) {
-            LOG.warn("Failed to update tags for " + path, x);
+            LOG.warn("Failed to update tags for " + id, x);
             return x.getMessage();
         }
     }
+    
+    public void scanUpdatedFolders() {
+    	Set<String> updatedDirectories = new HashSet<>();
+    	for (int musicFileId : updatedMusicFileIds) {
+    		updatedDirectories.add(mediaFileService.getMediaFile(musicFileId).getFile().getParent());
+    	}
+    	updatedMusicFileIds.clear(); // possible synchronization issue if multiple clients updates tags
+    	LOG.debug("Updated directories: " + updatedDirectories);
+    	try {
+			libraryUpdateService.createSearchIndex(updatedDirectories, true, false);
+		} catch (Throwable t) {
+			LOG.warn("Could not complete scan after updating tags!", t);
+		}
+    }
 
-    public void setMusicFileService(MusicFileService musicFileService) {
-        this.musicFileService = musicFileService;
+    public void setMediaFileService(MediaFileService mediaFileService) {
+        this.mediaFileService = mediaFileService;
     }
 
     public void setMetaDataParserFactory(MetaDataParserFactory metaDataParserFactory) {
         this.metaDataParserFactory = metaDataParserFactory;
     }
+
+	public void setLibraryUpdateService(LibraryUpdateService libraryUpdateService) {
+		this.libraryUpdateService = libraryUpdateService;
+	}
+
 }

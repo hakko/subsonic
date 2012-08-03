@@ -265,5 +265,9 @@
 </c:if>
 
 
+<h2><img src="<spring:theme code="podcastImage"/>" alt=""/>&nbsp;<fmt:message key="more.podcast.title"/></h2>
+<fmt:message key="more.podcast.text"/>
+
+
 </body>
 </html>
