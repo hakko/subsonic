@@ -33,7 +33,7 @@ body {
 }
 
 /* The secondary foreground colour used for h1, details etc. */
-h1, .detail, .albumComment {
+h1, .detail {
     color: #696969;
 }
 
@@ -85,4 +85,5 @@ html {
 
 label, p {
 	color: #696969;
+}or: #696969;
 }

@@ -48,7 +48,7 @@ body {
 }
 
 /* The secondary foreground color used for h1, details etc (gray). */
-h1, .detail, .albumComment {
+h1, .detail {
     color: #696969;
 }
 
@@ -184,10 +184,14 @@ img {
     padding: 0.25em;
 }
 
-.detail {
+.detail, .detailSelected {
     white-space: nowrap;
     font-size: 8pt;
     line-height: 1.25em;
+}
+
+.detailSelected {
+    font-weight: bold;
 }
 
 .warning {
@@ -214,13 +218,6 @@ img {
     background-image:url("../icons/forward.gif");
 }
 
-.albumComment {
-    width: 50em;
-    font-size: 8pt;
-    line-height: 1.4em;
-    padding-top: 0.25em;
-}
-
 .log {
     white-space: nowrap;
     font-size: 8pt;
@@ -233,6 +230,15 @@ img {
 /* Table with simple lines between the cells. */
 .ruleTable {
     border-collapse: collapse;
+}
+
+.ruleTableHeader, .ruleTableCell {
+    margin: 5px;
+    padding: 5px;
+}
+
+.ruleTableHeader {
+    font-weight: bold;
 }
 
 .ruleTableHeader, .ruleTableCell {
