@@ -98,7 +98,7 @@
         <property name="versionService" ref="versionService"/>
     </bean>
 
-    <bean id="searchService" class="net.sourceforge.subsonic.service.SearchService" init-method="schedule" depends-on="metaDataParserFactory">
+    <bean id="searchService" class="net.sourceforge.subsonic.service.SearchService" init-method="schedule">
         <property name="settingsService" ref="settingsService"/>
         <property name="libraryUpdateService" ref="libraryUpdateService"/>
         <property name="libraryStatusService" ref="ajaxLibraryStatusService"/>
@@ -440,10 +440,9 @@
 
 	<bean id="scrobbleClient" class="com.github.hakko.musiccabinet.ws.lastfm.ScrobbleClient"/>
 	
-	<bean id="authSessionClient" class="com.github.hakko.musiccabinet.ws.lastfm.AuthSessionClient">
-		<property name="webserviceHistoryService" ref="webserviceHistoryService"/>
-		<!-- not throttled -->
-	</bean>	
+	<bean id="authSessionClient" class="com.github.hakko.musiccabinet.ws.lastfm.AuthSessionClient"/>
+
+	<bean id="radioPlaylistClient" class="com.github.hakko.musiccabinet.ws.lastfm.RadioPlaylistClient"/>
 	
 	<bean id="artistInfoClient" class="com.github.hakko.musiccabinet.ws.lastfm.ArtistInfoClient">
 		<property name="webserviceHistoryService" ref="webserviceHistoryService"/>
@@ -481,6 +480,7 @@
 	</bean>
 	
 	<bean id="tagInfoClient" class="com.github.hakko.musiccabinet.ws.lastfm.TagInfoClient">
+		<property name="webserviceHistoryService" ref="webserviceHistoryService"/>
 		<property name="throttleService" ref="throttleService"/>
 	</bean>
 
