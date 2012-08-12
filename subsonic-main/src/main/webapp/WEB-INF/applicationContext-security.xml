@@ -62,9 +62,11 @@
 
 		<intercept-url pattern="/podcastReceiverAdmin.view" access="hasRole('ROLE_PODCAST')" />
 
-		<intercept-url pattern="/*" access="fullyAuthenticated" />
+		<intercept-url pattern="/*" access="hasRole('ROLE_STREAM')" />
 
 		<form-login login-page="/login.view" default-target-url="/index.view" always-use-default-target="true" />
+		
+		<remember-me key="subsonic"/>
 	</http>
 
     <beans:bean id="restRequestParameterProcessingFilter" class="net.sourceforge.subsonic.security.RESTRequestParameterProcessingFilter">
