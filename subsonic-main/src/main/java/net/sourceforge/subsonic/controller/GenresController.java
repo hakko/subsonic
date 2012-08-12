@@ -54,7 +54,7 @@ public class GenresController extends ParameterizableViewController {
 
             final int ARTISTS = userSettings.getDefaultHomeArtists();
     		List<ArtistRecommendation> ars = square(recService.getRecommendedArtistsFromGenre(
-    				genre, page * ARTISTS, ARTISTS + 1));
+    				genre, page * ARTISTS, ARTISTS + 1, userSettings.isOnlyAlbumArtistRecommendations()));
     		if (ars.size() > ARTISTS) {
     			map.put("morePages", true);
     			ars.remove(ARTISTS);

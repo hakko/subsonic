@@ -47,13 +47,14 @@ public class RelatedController extends ParameterizableViewController {
     	
         int id = NumberUtils.toInt(request.getParameter("id"));
         Map<String, Object> map = new HashMap<String, Object>();
+        boolean onlyAlbumArtists = userSettings.isOnlyAlbumArtistRecommendations();
 
         try {
         	ArtistInfo artistInfo = Util.square(artistInfoService.getArtistInfo(id));
-        	List<ArtistRecommendation> artistsInLibrary = Util.square(
-        			recommendationService.getRelatedArtistsInLibrary(id, userSettings.getRelatedArtists()));
-        	List<String> namesNotInLibrary = 
-        			recommendationService.getRelatedArtistsNotInLibrary(id, userSettings.getRecommendedArtists());
+        	List<ArtistRecommendation> artistsInLibrary = Util.square(recommendationService.
+        			getRelatedArtistsInLibrary(id, userSettings.getRelatedArtists(), onlyAlbumArtists));
+        	List<String> namesNotInLibrary = recommendationService.
+        			getRelatedArtistsNotInLibrary(id, userSettings.getRecommendedArtists(), onlyAlbumArtists);
 
         	List<ArtistLink> artistsNotInLibrary = new ArrayList<>();
         	for (String name : namesNotInLibrary) {

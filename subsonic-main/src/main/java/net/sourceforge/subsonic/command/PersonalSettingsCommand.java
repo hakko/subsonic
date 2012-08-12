@@ -58,6 +58,7 @@ public class PersonalSettingsCommand {
     private short relatedArtists;
     private short recommendedArtists;
     private boolean reluctantArtistLoading;
+    private boolean onlyAlbumArtistRecommendations;
     private boolean isReloadNeeded;
     
     public User getUser() {
@@ -266,6 +267,14 @@ public class PersonalSettingsCommand {
 
 	public void setReluctantArtistLoading(boolean reluctantArtistLoading) {
 		this.reluctantArtistLoading = reluctantArtistLoading;
+	}
+
+	public boolean isOnlyAlbumArtistRecommendations() {
+		return onlyAlbumArtistRecommendations;
+	}
+
+	public void setOnlyAlbumArtistRecommendations(boolean onlyAlbumArtistRecommendations) {
+		this.onlyAlbumArtistRecommendations = onlyAlbumArtistRecommendations;
 	}
 
 	public boolean isReloadNeeded() {

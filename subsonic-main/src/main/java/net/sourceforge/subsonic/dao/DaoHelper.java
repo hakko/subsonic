@@ -46,7 +46,9 @@ import net.sourceforge.subsonic.dao.schema.Schema46MusicCabinet0_6_60;
 import net.sourceforge.subsonic.dao.schema.Schema46MusicCabinet0_6_80;
 import net.sourceforge.subsonic.dao.schema.Schema46MusicCabinet0_6_82;
 import net.sourceforge.subsonic.dao.schema.Schema46MusicCabinet0_6_85;
+import net.sourceforge.subsonic.dao.schema.Schema46MusicCabinet0_7_04;
 import net.sourceforge.subsonic.service.SettingsService;
+
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.datasource.DriverManagerDataSource;
 
@@ -59,8 +61,8 @@ import java.io.File;
  * @author Sindre Mehus
  */
 public class DaoHelper {
-
-    private static final Logger LOG = Logger.getLogger(DaoHelper.class);
+	
+	private static final Logger LOG = Logger.getLogger(DaoHelper.class);
 
     private Schema[] schemas = {new Schema25(), new Schema26(), new Schema27(), new Schema28(), new Schema29(),
                                 new Schema30(), new Schema31(), new Schema32(), new Schema33(), new Schema34(),
@@ -73,7 +75,8 @@ public class DaoHelper {
                                 new Schema46MusicCabinet0_6_60(),
                                 new Schema46MusicCabinet0_6_80(),
                                 new Schema46MusicCabinet0_6_82(),
-                                new Schema46MusicCabinet0_6_85()};
+                                new Schema46MusicCabinet0_6_85(),
+                                new Schema46MusicCabinet0_7_04()};
     private DataSource dataSource;
     private static boolean shutdownHookAdded;
 
@@ -132,4 +135,5 @@ public class DaoHelper {
             LOG.error("Failed to initialize database.", x);
         }
     }
+
 }

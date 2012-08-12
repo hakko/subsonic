@@ -47,7 +47,7 @@ public class UserDao extends AbstractDao {
             "party_mode_enabled, now_playing_allowed, avatar_scheme, system_avatar_id, changed, show_chat, " +
             "album_order_ascending, default_home_view, default_home_artists, default_home_albums, " +
             "default_home_songs, artist_grid_width, related_artists, recommended_artists, " +
-    		"reluctant_artist_loading";
+    		"reluctant_artist_loading, only_album_artist_recommendations";
     private static final String USER_VISIBILITY_COLUMNS = "username, type, caption_cutoff, track_number, artist, " +
             "album, genre, year, bit_rate, duration, format, file_size";
 
@@ -190,7 +190,7 @@ public class UserDao extends AbstractDao {
                 settings.isShowChatEnabled(), settings.isAlbumOrderAscending(), settings.getDefaultHomeView(), 
                 settings.getDefaultHomeArtists(), settings.getDefaultHomeAlbums(), settings.getDefaultHomeSongs(),
                 settings.getArtistGridWidth(), settings.getRelatedArtists(), settings.getRecommendedArtists(),
-                settings.isReluctantArtistLoading()});
+                settings.isReluctantArtistLoading(), settings.isOnlyAlbumArtistRecommendations()});
         
         template.update("delete from user_visibility where username=?", new Object[]{settings.getUsername()});
 
@@ -342,6 +342,7 @@ public class UserDao extends AbstractDao {
             settings.setRelatedArtists(rs.getShort(col++));
             settings.setRecommendedArtists(rs.getShort(col++));
             settings.setReluctantArtistLoading(rs.getBoolean(col++));
+            settings.setOnlyAlbumArtistRecommendations(rs.getBoolean(col++));
             
             return settings;
         }

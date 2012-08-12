@@ -150,6 +150,17 @@
                 <c:import url="helpToolTip.jsp"><c:param name="topic" value="reluctantartistloading"/></c:import>
             </td>
         </tr>
+
+        <tr>
+        	<td>Album artist filter</td>
+        	<td>
+        		<form:select path="onlyAlbumArtistRecommendations">
+        			<form:option value="false" label="No"/>
+        			<form:option value="true" label="Yes"/>
+        		</form:select>
+                <c:import url="helpToolTip.jsp"><c:param name="topic" value="onlyalbumartistrecommendations"/></c:import>
+            </td>
+        </tr>
         
     </table>
 

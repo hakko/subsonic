@@ -1051,6 +1051,7 @@ public class SettingsService {
         settings.setRelatedArtists((short) 15);
         settings.setRecommendedArtists((short) 5);
         settings.setReluctantArtistLoading(false);
+        settings.setOnlyAlbumArtistRecommendations(true);
         settings.setChanged(new Date());
 
         UserSettings.Visibility main = settings.getMainVisibility();

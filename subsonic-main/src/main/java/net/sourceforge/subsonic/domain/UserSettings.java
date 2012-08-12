@@ -51,6 +51,7 @@ public class UserSettings {
     private short relatedArtists;
     private short recommendedArtists;
     private boolean reluctantArtistLoading;
+    private boolean onlyAlbumArtistRecommendations;
     private Date changed = new Date();
 
     public UserSettings(String username) {
@@ -247,6 +248,14 @@ public class UserSettings {
 
 	public void setReluctantArtistLoading(boolean reluctantArtistLoading) {
 		this.reluctantArtistLoading = reluctantArtistLoading;
+	}
+
+	public boolean isOnlyAlbumArtistRecommendations() {
+		return onlyAlbumArtistRecommendations;
+	}
+
+	public void setOnlyAlbumArtistRecommendations(boolean onlyAlbumArtistRecommendations) {
+		this.onlyAlbumArtistRecommendations = onlyAlbumArtistRecommendations;
 	}
 
 	/**
