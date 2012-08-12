@@ -104,6 +104,9 @@
 			<option value="${leftUrl}"<c:if test="${tag eq model.currentTag}"> selected</c:if>>${fn:escapeXml(tag)}</option>
 		</c:forEach>
 		</select>
+		<c:if test="${not empty model.currentTag}">
+			<br><a href="javascript:noop()" onclick="javascript:top.playlist.onPlayGenreRadio(new Array('${model.currentTag}'))">Play ${model.currentTag} radio</a>
+		</c:if>
 	</c:if>
 	<div id="leftMessage"></div>
 
