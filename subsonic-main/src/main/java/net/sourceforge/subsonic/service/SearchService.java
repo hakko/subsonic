@@ -19,7 +19,6 @@
 package net.sourceforge.subsonic.service;
 
 import java.io.File;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
@@ -31,11 +30,9 @@ import java.util.TimerTask;
 
 import net.sourceforge.subsonic.Logger;
 import net.sourceforge.subsonic.ajax.LibraryStatusService;
-import net.sourceforge.subsonic.domain.MediaFile;
 import net.sourceforge.subsonic.domain.MediaFolder;
 
 import com.github.hakko.musiccabinet.domain.model.library.LastFmUser;
-import com.github.hakko.musiccabinet.exception.ApplicationException;
 import com.github.hakko.musiccabinet.service.LibraryUpdateService;
 import com.github.hakko.musiccabinet.service.lastfm.ScrobbledTracksService;
 import com.github.hakko.musiccabinet.service.lastfm.UserTopArtistsService;
@@ -167,33 +164,10 @@ public class SearchService {
     }
 
     /**
-     * Returns a number of random albums.
-     *
-     * @param count Maximum number of albums to return.
-     * @return Array of random albums.
-     * @throws IOException If an I/O error occurs.
-     */
-    public List<MediaFile> getRandomAlbums(int count) throws IOException {
-    	throw new IllegalArgumentException("NOT IMPLEMENTED");
-    }
-
-    /**
-     * Returns a number of least recently modified music files. Only directories (albums) are returned.
-     *
-     * @param offset Number of music files to skip.
-     * @param count  Maximum number of music files to return.
-     * @return Array of new music files.
-     * @throws IOException If an I/O error occurs.
-     */
-    public List<MediaFile> getNewestAlbums(int offset, int count) throws IOException {
-    	throw new IllegalArgumentException("NOT IMPLEMENTED");
-    }
-
-    /**
      * Deletes old versions of the index file.
      */
     private void deleteOldIndexFiles() {
-        for (int i = 2; i < 15; i++) {
+        for (int i = 2; i <= 15; i++) {
             File file = new File(SettingsService.getSubsonicHome(), "subsonic" + i + ".index");
             try {
                 if (file.exists() && file.delete()) {
