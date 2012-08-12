@@ -127,7 +127,8 @@ public class NowPlayingService {
     	MetaData md = mediaFile.getMetaData();
     	String artist = md.getArtist();
     	String title = md.getTitle();
-    	String albumUrl = "artist.view?id=" + md.getArtistId() + "&albumId=" + md.getAlbumId();
+    	String albumUrl = "artist.view?id=" + md.getArtistId() + "&albumId=" + md.getAlbumId()
+    			+ "&trackId=" + mediaFile.getId();
     	String lyricsUrl = "lyrics.view?artistUtf8Hex=" + utf8HexEncode(md.getArtist()) +
     			"&songUtf8Hex=" + utf8HexEncode(md.getTitle());
 

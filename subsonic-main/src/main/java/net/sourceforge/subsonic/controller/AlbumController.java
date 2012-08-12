@@ -75,7 +75,8 @@ public class AlbumController extends ParameterizableViewController {
         map.put("user", securityService.getCurrentUser(request));
         map.put("isTrackStarred", starService.getStarredTracksMask(userSettings.getLastFmUsername(), 
         		getTrackIds(mediaFiles)));
-        
+        map.put("trackId", request.getParameter("trackId"));
+
         ModelAndView result = super.handleRequestInternal(request, response);
         result.addObject("model", map);
         return result;

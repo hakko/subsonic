@@ -78,6 +78,9 @@ public class ArtistController extends ParameterizableViewController {
         setArtistInfo(artistId, map);
         setAlbums(artistId, userSettings, map, albumIds);
         
+        LOG.debug("trackId = " + request.getParameter("trackId"));
+        
+        map.put("trackId", request.getParameter("trackId"));
         map.put("artistStarred", starService.isArtistStarred(userSettings.getLastFmUsername(), artistId));
         map.put("visibility", userSettings.getMainVisibility());
         map.put("player", player);

@@ -56,7 +56,8 @@ public class NowPlayingController extends AbstractController {
         String url;
         if (current != null) {
             url = "artist.view?id=" + current.getMetaData().getArtistId() +
-                    "&albumId=" + current.getMetaData().getAlbumId();
+                    "&albumId=" + current.getMetaData().getAlbumId() +
+                    "&trackId=" + current.getId();
         } else {
             url = "home.view";
         }
