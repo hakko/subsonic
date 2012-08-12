@@ -4,6 +4,7 @@
 
 <html><head>
 	<%@ include file="head.jsp" %>
+	<link href="<c:url value="/style/shadow.css"/>" rel="stylesheet">
 	<script type="text/javascript" src="<c:url value="/script/jquery-1.7.2.min.js"/>"></script>
     <script type="text/javascript" src="<c:url value="/dwr/engine.js"/>"></script>
 	<script type="text/javascript" src="<c:url value="/dwr/util.js"/>"></script>
