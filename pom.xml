@@ -4,17 +4,13 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>net.sourceforge.subsonic</groupId>
     <artifactId>subsonic</artifactId>
-    <version>4.6</version>
+    <version>0.7</version>
     <name>Subsonic</name>
     <packaging>pom</packaging>
-    <organization>
-        <name>Sindre Mehus</name>
-        <url>http://subsonic.org/</url>
-    </organization>
     <inceptionYear>2004</inceptionYear>
 
     <properties>
-        <failOnDependencyWarning>true</failOnDependencyWarning>
+        <failOnDependencyWarning>false</failOnDependencyWarning>
         <project.build.sourceEncoding>iso-8859-1</project.build.sourceEncoding>
     </properties>
 
@@ -43,31 +39,6 @@
         </pluginRepository>
     </pluginRepositories>
 
-    <scm>
-        <connection>scm:svn:https://subsonic.svn.sourceforge.net/svnroot/subsonic/trunk</connection>
-        <developerConnection>scm:svn:https://subsonic.svn.sourceforge.net/svnroot/subsonic/trunk</developerConnection>
-        <url>http://subsonic.svn.sourceforge.net/viewvc/subsonic/</url>
-    </scm>
-
-    <ciManagement>
-        <system>continuum</system>
-        <notifiers>
-            <notifier>
-                <type>mail</type>
-                <configuration>
-                    <address>sindre@activeobjects.no</address>
-                </configuration>
-            </notifier>
-        </notifiers>
-    </ciManagement>
-
-    <developers>
-        <developer>
-            <name>Sindre Mehus</name>
-            <email>sindre@activeobjects.no</email>
-        </developer>
-    </developers>
-
     <modules>
         <module>subsonic-main</module>
     </modules>
@@ -81,9 +52,6 @@
                 <module>subsonic-installer-mac</module>
                 <module>subsonic-installer-debian</module>
                 <module>subsonic-installer-rpm</module>
-                <module>subsonic-backend</module>
-                <module>subsonic-site</module>
-                <module>subsonic-assembly</module>
             </modules>
         </profile>
 
@@ -121,19 +89,6 @@
     </pluginManagement>
 
         <plugins>
-
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-compiler-plugin</artifactId>
-                <configuration>
-                    <source>1.5</source>
-                    <target>1.5</target>
-                    <encoding>ISO-8859-1</encoding>
-                    <verbose>false</verbose>
-                    <compilerVersion>1.5</compilerVersion>
-                    <showWarnings>true</showWarnings>
-                </configuration>
-            </plugin>
 
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
