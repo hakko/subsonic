@@ -95,7 +95,7 @@
 	</c:forEach>
 </c:if>
 
-<c:if test="${not empty model.indexes}">
+<c:if test="${not empty model.indexes or not empty model.currentTag}">
 	<h2 class="bgcolor1">Artists</h2>
 	<c:if test="${not empty model.tags}">
 		<select id="tag">
