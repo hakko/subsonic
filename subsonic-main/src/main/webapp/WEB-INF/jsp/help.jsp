@@ -22,7 +22,7 @@
 </h1>
 
 <table width="75%" class="ruleTable indent">
-    <tr><td class="ruleTableHeader"><fmt:message key="help.version.title"/></td><td class="ruleTableCell">${model.brand}, original version ${model.localVersion}. Built with MusicCabinet plugin, version ${model.buildNumber}, on ${buildDateString}.</td></tr>
+    <tr><td class="ruleTableHeader"><fmt:message key="help.version.title"/></td><td class="ruleTableCell">${model.brand}, originally written by Sindre Mehus. Built with MusicCabinet plugin, version ${model.buildNumber}, on ${buildDateString}.</td></tr>
     <tr><td class="ruleTableHeader"><fmt:message key="help.server.title"/></td><td class="ruleTableCell">${model.serverInfo} (<sub:formatBytes bytes="${model.usedMemory}"/> / <sub:formatBytes bytes="${model.totalMemory}"/>)</td></tr>
     <tr><td class="ruleTableHeader"><fmt:message key="help.license.title"/></td><td class="ruleTableCell">
         <a href="http://www.gnu.org/copyleft/gpl.html" target="_blank"><img style="float:right;margin-left: 10px" alt="GPL 3.0" src="<c:url value="/icons/gpl.png"/>"></a>
