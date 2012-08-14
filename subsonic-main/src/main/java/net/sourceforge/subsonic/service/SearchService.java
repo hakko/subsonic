@@ -18,6 +18,9 @@
  */
 package net.sourceforge.subsonic.service;
 
+import static net.sourceforge.subsonic.ajax.LibraryStatusService.Message.SCAN_STARTED;
+import static net.sourceforge.subsonic.ajax.LibraryStatusService.Message.SCAN_FINISHED;
+
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -50,31 +53,37 @@ public class SearchService {
     private LibraryUpdateService libraryUpdateService;
     private LibraryScannerService libraryScannerService;
     private LibraryStatusService libraryStatusService;
-    
+
     /**
      * Generates the search index.  If the index already exists it will be
      * overwritten.  The index is created asynchronously, i.e., this method returns
      * before the index is created.
      */
     public void createIndex(final boolean offlineScan, final boolean onlyNewArtists, final boolean notify) {
+        /**
+         * Generates the search index.  If the index already exists it will be
+         * overwritten.  The index is created asynchronously, i.e., this method returns
+         * before the index is created.
+         */
+		deleteOldIndexFiles(); // TODO : remove after reaching version 0.8 or so
+		updateSearchServices();
+		List<MediaFolder> mediaFolders = settingsService.getAllMediaFolders();
+		Set<String> paths = new HashSet<>();
+		for (int i = 0; i < mediaFolders.size(); i++) {
+			paths.add(mediaFolders.get(i).getPath().getPath());
+		}
+		createIndex(paths, true, offlineScan, onlyNewArtists, notify);
+    }
+
+    public void createIndex(final Set<String> paths, final boolean isRootPaths, 
+    		final boolean offlineScan, final boolean onlyNewArtists, final boolean notify) {
         Thread thread = new Thread("Search Index Generator") { // TODO : use concurrent scheduler?
             @Override
             public void run() {
             	try {
-            		if (notify) {
-            			libraryStatusService.notifyLibraryUpdate(LibraryStatusService.Message.SCAN_STARTED);
-            		}
-            		deleteOldIndexFiles(); // TODO : remove after reaching version 0.8 or so
-            		updateSearchServices();
-            		List<MediaFolder> mediaFolders = settingsService.getAllMediaFolders();
-            		Set<String> paths = new HashSet<>();
-            		for (int i = 0; i < mediaFolders.size(); i++) {
-            			paths.add(mediaFolders.get(i).getPath().getPath());
-            		}
-            		libraryUpdateService.createSearchIndex(paths, offlineScan, onlyNewArtists);
-            		if (notify) {
-            			libraryStatusService.notifyLibraryUpdate(LibraryStatusService.Message.SCAN_FINISHED);
-            		}
+            		if (notify) libraryStatusService.notifyLibraryUpdate(SCAN_STARTED);
+            		libraryUpdateService.createSearchIndex(paths, isRootPaths, offlineScan, onlyNewArtists);
+            		if (notify) libraryStatusService.notifyLibraryUpdate(SCAN_FINISHED);
             	} catch (Throwable t) {
             		LOG.warn("Search index update failed!", t);
             	}
@@ -89,9 +98,9 @@ public class SearchService {
             @Override
             public void run() {
             	try {
-        			libraryStatusService.notifyLibraryUpdate(LibraryStatusService.Message.SCAN_STARTED);
+        			libraryStatusService.notifyLibraryUpdate(SCAN_STARTED);
             		libraryScannerService.delete(deletedPaths);
-        			libraryStatusService.notifyLibraryUpdate(LibraryStatusService.Message.SCAN_FINISHED);
+        			libraryStatusService.notifyLibraryUpdate(SCAN_FINISHED);
             	} catch (Throwable t) {
             		LOG.warn("Could not delete " + deletedPaths, t);
             	}
