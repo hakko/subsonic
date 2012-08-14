@@ -38,6 +38,10 @@
 	            <a href="radio.view?" target="main"><img src="<spring:theme code="radioImage"/>" title="Radio" alt="Radio"></a><br>
 	            <a href="radio.view?" target="main">Radio</a>
 	        </td>
+	        <td style="min-width:4em;padding-right:1.5em">
+	            <a href="fileTree.view?" target="main"><img src="<spring:theme code="fileTreeImage"/>" title="File tree" alt="File tree"></a><br>
+	            <a href="fileTree.view?" target="main">File tree</a>
+	        </td>
             <td style="min-width:4em;padding-right:1.5em">
                 <a href="podcastReceiver.view?" target="main"><img src="<spring:theme code="podcastLargeImage"/>" title="${podcast}" alt="${podcast}"></a><br>
                 <a href="podcastReceiver.view?" target="main">${podcast}</a>

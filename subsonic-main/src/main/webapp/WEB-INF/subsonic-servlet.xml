@@ -28,7 +28,6 @@
         <property name="viewName" value="main"/>
         <property name="securityService" ref="securityService"/>
         <property name="playerService" ref="playerService"/>
-        <property name="settingsService" ref="settingsService"/>
         <property name="mediaFileService" ref="mediaFileService"/>
     </bean>
     <bean id="artistController" class="net.sourceforge.subsonic.controller.ArtistController">
@@ -281,6 +280,16 @@
         <property name="artistRecommendationService" ref="artistRecommendationService"/>
         <property name="libraryBrowserService" ref="libraryBrowserService"/>
     </bean>
+    <bean id="fileTreeController" class="net.sourceforge.subsonic.controller.FileTreeController">
+    	<property name="viewName" value="fileTree"/>
+        <property name="settingsService" ref="settingsService"/>
+        <property name="securityService" ref="securityService"/>
+        <property name="searchService" ref="searchService"/>
+        <property name="mediaFileService" ref="mediaFileService"/>
+        <property name="starService" ref="starService"/>
+        <property name="libraryBrowserService" ref="libraryBrowserService"/>
+        <property name="directoryBrowserService" ref="directoryBrowserService"/>
+    </bean>
     <bean id="tagSettingsController" class="net.sourceforge.subsonic.controller.TagSettingsController">
         <property name="commandClass" value="net.sourceforge.subsonic.command.TagSettingsCommand"/>
         <property name="successView" value="tagSettings"/>
@@ -461,6 +470,7 @@
                 <prop key="/editTags.view">editTagsController</prop>
                 <prop key="/radio.view">radioController</prop>
                 <prop key="/genres.view">genresController</prop>
+                <prop key="/fileTree.view">fileTreeController</prop>
                 <prop key="/related.view">relatedController</prop>
                 <prop key="/tagSettings.view">tagSettingsController</prop>
                 <prop key="/editArtist.view">editArtistController</prop>
