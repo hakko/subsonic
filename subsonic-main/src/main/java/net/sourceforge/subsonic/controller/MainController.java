@@ -31,7 +31,6 @@ import net.sourceforge.subsonic.domain.Player;
 import net.sourceforge.subsonic.service.MediaFileService;
 import net.sourceforge.subsonic.service.PlayerService;
 import net.sourceforge.subsonic.service.SecurityService;
-import net.sourceforge.subsonic.service.SettingsService;
 
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.ParameterizableViewController;
@@ -43,7 +42,6 @@ public class MainController extends ParameterizableViewController {
 
     private SecurityService securityService;
     private PlayerService playerService;
-    private SettingsService settingsService;
     private MediaFileService mediaFileService;
 	
 	private static final Logger LOG = Logger.getLogger(MainController.class);
@@ -78,10 +76,6 @@ public class MainController extends ParameterizableViewController {
 
     public void setPlayerService(PlayerService playerService) {
         this.playerService = playerService;
-    }
-
-    public void setSettingsService(SettingsService settingsService) {
-        this.settingsService = settingsService;
     }
 
     public void setmediaFileService(MediaFileService mediaFileService) {
