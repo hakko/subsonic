@@ -18,7 +18,7 @@
  */
 package net.sourceforge.subsonic.ajax;
 
-import static java.util.Arrays.asList;
+import static com.github.hakko.musiccabinet.service.library.LibraryUtil.set;
 import net.sourceforge.subsonic.Logger;
 import net.sourceforge.subsonic.domain.MediaFile;
 import net.sourceforge.subsonic.service.MediaFileService;
@@ -37,7 +37,6 @@ import com.github.hakko.musiccabinet.service.LibraryUpdateService;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.InputStream;
-import java.util.HashSet;
 
 /**
  * Provides AJAX-enabled services for changing cover art images.
@@ -108,7 +107,7 @@ public class CoverArtService {
 
             LOG.debug("Initialize scan of " + path);
         	try {
-    			libraryUpdateService.createSearchIndex(new HashSet<>(asList(path)), true, false);
+    			libraryUpdateService.createSearchIndex(set(path), false, true, true);
     		} catch (ApplicationException e) {
     			LOG.warn("Could not complete scan after updating tags!", e);
     		}

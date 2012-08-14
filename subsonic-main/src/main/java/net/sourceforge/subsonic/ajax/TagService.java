@@ -127,7 +127,7 @@ public class TagService {
     	updatedMusicFileIds.clear(); // possible synchronization issue if multiple clients updates tags
     	LOG.debug("Updated directories: " + updatedDirectories);
     	try {
-			libraryUpdateService.createSearchIndex(updatedDirectories, true, false);
+			libraryUpdateService.createSearchIndex(updatedDirectories, false, true, true);
 		} catch (Throwable t) {
 			LOG.warn("Could not complete scan after updating tags!", t);
 		}
