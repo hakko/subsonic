@@ -18,6 +18,7 @@
  */
 package net.sourceforge.subsonic.controller;
 
+import static com.github.hakko.musiccabinet.service.library.LibraryUtil.set;
 import static java.util.Arrays.asList;
 import net.sourceforge.subsonic.*;
 import net.sourceforge.subsonic.ajax.LibraryStatusService;
@@ -131,7 +132,7 @@ public class UploadController extends ParameterizableViewController {
             }
             
 			libraryStatusService.notifyLibraryUpdate(LibraryStatusService.Message.SCAN_STARTED);
-			libraryUpdateService.createSearchIndex(new HashSet<>(asList(dir.getAbsolutePath())), true, false);
+			libraryUpdateService.createSearchIndex(set(dir.getAbsolutePath()), false, true, true);
 			libraryStatusService.notifyLibraryUpdate(LibraryStatusService.Message.SCAN_FINISHED);
             
         } catch (Exception x) {
