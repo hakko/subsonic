@@ -10,6 +10,8 @@
 </head>
 <body class="mainframe bgcolor1">
 
+<%@ include file="toggleStar.jsp" %>
+
 <script type="text/javascript">
 <%@ include file="albumsHeader.jsp" %>
 </script>
@@ -63,8 +65,11 @@
 		<li><a href="fileTree.view?id=${model.parentId}">[..]</a></li>
 	</c:if>
 	<c:forEach items="${model.directories}" var="directory">
-		<li><a href="fileTree.view?id=${directory.id}&action=add"><img src="<spring:theme code="plusImage"/>" alt="Look for added files" title="Look for added files"></a>
-			<a href="fileTree.view?id=${directory.id}">${directory.name}</a></li>
+		<li>
+		<c:if test="${model.user.adminRole}">
+			<a href="fileTree.view?id=${directory.id}&action=add"><img src="<spring:theme code="plusImage"/>" alt="Look for added files" title="Look for added files"></a>
+		</c:if>
+		<a href="fileTree.view?id=${directory.id}">${directory.name}</a></li>
 	</c:forEach>
 	</ul>
 
