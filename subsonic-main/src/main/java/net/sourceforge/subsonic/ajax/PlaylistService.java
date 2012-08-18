@@ -33,7 +33,6 @@ import net.sourceforge.subsonic.domain.MediaFile;
 import net.sourceforge.subsonic.domain.MetaData;
 import net.sourceforge.subsonic.domain.Player;
 import net.sourceforge.subsonic.domain.Playlist;
-import net.sourceforge.subsonic.service.AudioScrobblerService;
 import net.sourceforge.subsonic.service.JukeboxService;
 import net.sourceforge.subsonic.service.MediaFileService;
 import net.sourceforge.subsonic.service.PlayerService;
@@ -63,7 +62,6 @@ public class PlaylistService {
     private SettingsService settingsService;
 
     private PlaylistGeneratorService playlistService;
-    private AudioScrobblerService audioScrobblerService;
 
     /**
      * Returns the playlist for the player of the current user.
@@ -169,7 +167,14 @@ public class PlaylistService {
     			settingsService.getGenreRadioArtistCount(),
     			settingsService.getGenreRadioTotalCount()));
     }
-    
+
+    public PlaylistInfo playRelatedArtistsSampler(int artistId, int totalCount) throws Exception {
+    	LOG.debug("starting playRelatedArtistsSampler(" + artistId + ", " + totalCount + ")");
+
+    	return getPlaylistInfo(Playlist.PLAY, playlistService.getPlaylistForRelatedArtists(
+    			artistId, settingsService.getRelatedArtistsSamplerArtistCount(), totalCount));
+    }
+
     private PlaylistInfo getPlaylistInfo(String mode, List<Integer> trackIds) throws Exception {
         HttpServletRequest request = WebContextFactory.get().getHttpServletRequest();
         HttpServletResponse response = WebContextFactory.get().getHttpServletResponse();
@@ -431,10 +436,6 @@ public class PlaylistService {
 
 	public void setPlaylistGeneratorService(PlaylistGeneratorService playlistService) {
 		this.playlistService = playlistService;
-	}
-
-	public void setAudioScrobblerService(AudioScrobblerService audioScrobblerService) {
-		this.audioScrobblerService = audioScrobblerService;
 	}
 	
 }

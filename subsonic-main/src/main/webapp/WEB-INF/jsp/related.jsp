@@ -29,7 +29,10 @@
 </table>
 
 <br>
-<h1>Related artists:</h1>
+<h1><a href="javascript:noop()" onclick="top.playlist.onPlayRelatedArtistsSampler(${model.id}, ${fn:length(model.artists)});">
+		<img src="<spring:theme code="playImage"/>" alt="Play related artists sampler" title="Play related artists sampler">
+	</a>Related artists
+</h1>
 
 <c:if test="${empty model.artists}"><p>Not a single related artist found!</p></c:if>
 <%@ include file="artists.jsp" %>

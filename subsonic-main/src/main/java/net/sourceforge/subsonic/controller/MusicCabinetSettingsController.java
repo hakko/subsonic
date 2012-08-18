@@ -55,6 +55,7 @@ public class MusicCabinetSettingsController extends SimpleFormController {
         command.setArtistTopTracksTotalCount(settingsService.getArtistTopTracksTotalCount());
         command.setGenreRadioArtistCount(settingsService.getGenreRadioArtistCount());
         command.setGenreRadioTotalCount(settingsService.getGenreRadioTotalCount());
+        command.setRelatedArtistsSamplerArtistCount(settingsService.getRelatedArtistsSamplerArtistCount());
         command.setPreferLastFmArtwork(settingsService.isPreferLastFmArtwork());
         
         return command;
@@ -100,6 +101,7 @@ public class MusicCabinetSettingsController extends SimpleFormController {
         settingsService.setArtistTopTracksTotalCount(command.getArtistTopTracksTotalCount());
         settingsService.setGenreRadioArtistCount(command.getGenreRadioArtistCount());
         settingsService.setGenreRadioTotalCount(command.getGenreRadioTotalCount());
+        settingsService.setRelatedArtistsSamplerArtistCount(command.getRelatedArtistsSamplerArtistCount());
         settingsService.setPreferLastFmArtwork(command.isPreferLastFmArtwork());
         settingsService.save();
     }

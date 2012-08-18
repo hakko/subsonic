@@ -126,6 +126,7 @@ public class SettingsService {
     private static final String KEY_MUSICCABINET_ARTIST_TOP_TRACKS_TOTAL_COUNT = "MusicCabinetArtistTopTracksTotalCount";
     private static final String KEY_MUSICCABINET_GENRE_RADIO_ARTIST_COUNT = "MusicCabinetGenreRadioArtistCount";
     private static final String KEY_MUSICCABINET_GENRE_RADIO_TOTAL_COUNT = "MusicCabinetGenreRadioTotalCount";
+    private static final String KEY_MUSICCABINET_RELATED_ARTISTS_SAMPLER_ARTIST_COUNT = "MusicCabinetRelatedArtistsSamplerArtistCount";
     private static final String KEY_MUSICCABINET_PREFER_LAST_FM_ARTWORK = "MusicCabinetPreferLastFmArtwork";
     
     // Default values.
@@ -186,11 +187,12 @@ public class SettingsService {
     private static final int DEFAULT_MUSICCABINET_ARTIST_TOP_TRACKS_TOTAL_COUNT = 20;
     private static final int DEFAULT_MUSICCABINET_GENRE_RADIO_ARTIST_COUNT = 1;
     private static final int DEFAULT_MUSICCABINET_GENRE_RADIO_TOTAL_COUNT = 25;
+    private static final int DEFAULT_MUSICCABINET_RELATED_ARTISTS_SAMPLER_ARTIST_COUNT = 3;
     private static final boolean DEFAULT_MUSICCABINET_PREFER_LAST_FM_ARTWORK = true;
     
     // Array of obsolete keys.  Used to clean property file.
-    private static final List<String> OBSOLETE_KEYS = Arrays.asList("PortForwardingPublicPort", "PortForwardingLocalPort", "DownsamplingCommand",
-            "AutoCoverBatch", "MusicMask", "VideoMask", "CoverArtMask", "Shortcuts", "CoverArtFileTypes");
+    private static final List<String> OBSOLETE_KEYS = Arrays.asList("PortForwardingPublicPort", "PortForwardingLocalPort", 
+    		"DownsamplingCommand", "AutoCoverBatch", "MusicMask", "VideoMask", "CoverArtMask", "Shortcuts", "CoverArtFileTypes");
 
     private static final String LOCALES_FILE = "/net/sourceforge/subsonic/i18n/locales.txt";
     private static final String THEMES_FILE = "/net/sourceforge/subsonic/theme/themes.txt";
@@ -1289,6 +1291,15 @@ public class SettingsService {
     
     public void setGenreRadioTotalCount(int totalCount) {
     	setInt(KEY_MUSICCABINET_GENRE_RADIO_TOTAL_COUNT, totalCount);
+    }
+    
+    public int getRelatedArtistsSamplerArtistCount() {
+    	return getInt(KEY_MUSICCABINET_RELATED_ARTISTS_SAMPLER_ARTIST_COUNT, 
+    			DEFAULT_MUSICCABINET_RELATED_ARTISTS_SAMPLER_ARTIST_COUNT);
+    }
+    
+    public void setRelatedArtistsSamplerArtistCount(int artistCount) {
+    	setInt(KEY_MUSICCABINET_RELATED_ARTISTS_SAMPLER_ARTIST_COUNT, artistCount);
     }
 
     public boolean isPreferLastFmArtwork() {

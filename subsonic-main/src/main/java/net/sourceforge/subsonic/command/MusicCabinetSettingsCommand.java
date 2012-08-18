@@ -32,6 +32,7 @@ public class MusicCabinetSettingsCommand {
 	private int artistTopTracksTotalCount;
 	private int genreRadioArtistCount;
 	private int genreRadioTotalCount;
+	private int relatedArtistsSamplerArtistCount;
 	private boolean preferLastFmArtwork;
 	
 	public boolean isDatabaseRunning() {
@@ -168,6 +169,14 @@ public class MusicCabinetSettingsCommand {
 
 	public void setGenreRadioTotalCount(int genreRadioTotalCount) {
 		this.genreRadioTotalCount = genreRadioTotalCount;
+	}
+
+	public int getRelatedArtistsSamplerArtistCount() {
+		return relatedArtistsSamplerArtistCount;
+	}
+
+	public void setRelatedArtistsSamplerArtistCount(int relatedArtistsSamplerArtistCount) {
+		this.relatedArtistsSamplerArtistCount = relatedArtistsSamplerArtistCount;
 	}
 
 	public boolean isPreferLastFmArtwork() {

@@ -55,7 +55,7 @@
             </td>
            </tr>
            <tr>
-            <td>Artist radio, max songs for each artist</td>
+            <td>Artist radio, max songs per artist</td>
             <td>
              <form:input path="artistRadioArtistCount" size="5"/>
              <c:import url="helpToolTip.jsp"><c:param name="topic" value="artistradioartistcount"/></c:import>
@@ -76,10 +76,17 @@
             </td>
            </tr>
            <tr>
-            <td>Genre radio, max songs for each artist</td>
+            <td>Genre radio, max songs per artist</td>
             <td>
              <form:input path="genreRadioArtistCount" size="5"/>
              <c:import url="helpToolTip.jsp"><c:param name="topic" value="genreradioartistcount"/></c:import>
+            </td>
+           </tr>
+           <tr>
+            <td>Related artists sampler, songs per artist</td>
+            <td>
+             <form:input path="relatedArtistsSamplerArtistCount" size="5"/>
+             <c:import url="helpToolTip.jsp"><c:param name="topic" value="relatedartistssamplerartistcount"/></c:import>
             </td>
            </tr>
            <tr>
