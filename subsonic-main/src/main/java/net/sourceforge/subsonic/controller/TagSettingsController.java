@@ -1,13 +1,16 @@
 package net.sourceforge.subsonic.controller;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 
 import net.sourceforge.subsonic.command.TagSettingsCommand;
 import net.sourceforge.subsonic.service.SettingsService;
 
+import org.apache.commons.lang.StringUtils;
 import org.springframework.web.servlet.mvc.SimpleFormController;
 
 import com.github.hakko.musiccabinet.domain.model.aggr.TagOccurrence;
@@ -27,14 +30,6 @@ public class TagSettingsController extends SimpleFormController {
         TagSettingsCommand command = new TagSettingsCommand();
         
         command.setAvailableTags(tagService.getAvailableTags());
-
-        List<String> topTags = new ArrayList<String>();
-        for (TagOccurrence to : command.getAvailableTags()) {
-        	if (to.isUse()) {
-        		topTags.add(to.getTag());
-        	}
-        }
-        command.setTopTags(topTags);
         
         return command;
     }
@@ -42,7 +37,17 @@ public class TagSettingsController extends SimpleFormController {
     protected void doSubmitAction(Object comm) throws Exception {
         TagSettingsCommand command = (TagSettingsCommand) comm;
         
-        tagService.setTopTags(command.getTopTags());
+        Map<String, String> tagCorrections = new HashMap<>();
+        List<String> topTags = new ArrayList<>();
+        for (TagOccurrence to : command.getAvailableTags()) {
+        	tagCorrections.put(to.getTag(), to.getCorrectedTag());
+        	if (to.isUse() && StringUtils.trimToNull(to.getCorrectedTag()) == null) {
+        		topTags.add(to.getTag());
+        	}
+        }
+        
+        tagService.createTagCorrections(tagCorrections);
+        tagService.setTopTags(topTags);
         settingsService.setSettingsChanged(); // forces a cache timeout for left.view
     }
     
