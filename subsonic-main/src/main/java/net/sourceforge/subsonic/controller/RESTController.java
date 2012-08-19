@@ -240,7 +240,7 @@ public class RESTController extends MultiActionController {
         try {
             artistId = ServletRequestUtils.getRequiredIntParameter(request, "id");
             artistInfo = artistInfoService.getArtistInfo(artistId);
-            albums = mediaFileService.getAlbums(libraryBrowserService.getAlbums(artistId, false));
+            albums = mediaFileService.getAlbums(libraryBrowserService.getAlbums(artistId, false), true);
         } catch (Exception x) {
             LOG.warn("Error in REST API.", x);
             error(request, response, ErrorCode.GENERIC, getErrorMessage(x));
