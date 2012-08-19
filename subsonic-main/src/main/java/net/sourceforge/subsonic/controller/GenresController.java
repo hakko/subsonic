@@ -1,7 +1,11 @@
 package net.sourceforge.subsonic.controller;
 
+import static java.net.URLEncoder.encode;
+import static net.sourceforge.subsonic.util.StringUtil.ENCODING_UTF8;
 import static net.sourceforge.subsonic.util.Util.square;
 
+import java.io.UnsupportedEncodingException;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -9,12 +13,13 @@ import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import net.sourceforge.subsonic.domain.ArtistLink;
 import net.sourceforge.subsonic.domain.User;
 import net.sourceforge.subsonic.domain.UserSettings;
 import net.sourceforge.subsonic.service.SecurityService;
 import net.sourceforge.subsonic.service.SettingsService;
 
-import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang.math.NumberUtils;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.ParameterizableViewController;
 
@@ -43,18 +48,22 @@ public class GenresController extends ParameterizableViewController {
     	Map<String, Object> map = new HashMap<String, Object>();
 
     	String genre = request.getParameter("genre");
-        String pageParam = StringUtils.defaultIfEmpty(request.getParameter("page"), "0");
-        int page = Integer.parseInt(pageParam);
+    	int page = NumberUtils.toInt(request.getParameter("page"), 0);
 
         if (!libraryBrowserService.hasArtists()) {
             return new ModelAndView("musicCabinetUnavailable");
-        } else if (request.getParameter("genre") != null) {
+        } else if (genre != null) {
             User user = securityService.getCurrentUser(request);
             UserSettings userSettings = settingsService.getUserSettings(user.getUsername());
+            boolean albumArtists = userSettings.isOnlyAlbumArtistRecommendations();
 
             final int ARTISTS = userSettings.getDefaultHomeArtists();
-    		List<ArtistRecommendation> ars = square(recService.getRecommendedArtistsFromGenre(
-    				genre, page * ARTISTS, ARTISTS + 1, userSettings.isOnlyAlbumArtistRecommendations()));
+    		List<ArtistRecommendation> ars = square(recService.getGenreArtistsInLibrary(
+    				genre, page * ARTISTS, ARTISTS + 1, albumArtists));
+    		if (page == 0) {
+    			map.put("artistsNotInLibrary", getRecommendedArtists(
+    					genre, userSettings.getRecommendedArtists(), albumArtists));
+    		}
     		if (ars.size() > ARTISTS) {
     			map.put("morePages", true);
     			ars.remove(ARTISTS);
@@ -72,6 +81,17 @@ public class GenresController extends ParameterizableViewController {
         ModelAndView result = super.handleRequestInternal(request, response);
         result.addObject("model", map);
         return result;
+    }
+    
+    private List<ArtistLink> getRecommendedArtists(String genre, int amount, boolean onlyAlbumArtists) throws UnsupportedEncodingException {
+    	List<String> namesNotInLibrary = recService.getGenreArtistsNotInLibrary(genre, amount, onlyAlbumArtists);
+
+    	List<ArtistLink> artistsNotInLibrary = new ArrayList<>();
+    	for (String name : namesNotInLibrary) {
+    		artistsNotInLibrary.add(new ArtistLink(name, encode(name, ENCODING_UTF8)));
+    	}
+    	
+    	return artistsNotInLibrary;
     }
     
     // Spring setters

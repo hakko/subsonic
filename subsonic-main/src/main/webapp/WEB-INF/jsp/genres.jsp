@@ -33,6 +33,8 @@
 	<c:if test="${model.page > 0}"><div class="back"><a href="${prevUrl}"><fmt:message key="common.previous"/></a></div></c:if>
 	<c:if test="${not empty model.morePages}"><div class="forward"><a href="${nextUrl}"><fmt:message key="common.next"/></a></div></c:if>
  	
+	<%@ include file="artistRecommendation.jsp" %>
+
 	</c:when>
     <c:when test="${empty model.topTagsOccurrences}">
     	<p>Please configure which genres to use <a href="tagSettings.view">here</a>.
