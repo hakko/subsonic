@@ -118,6 +118,10 @@ public class MediaFileService {
     }
 
     public List<Album> getAlbums(List<com.github.hakko.musiccabinet.domain.model.music.Album> alb) {
+    	return getAlbums(alb, false);
+    }
+
+    public List<Album> getAlbums(List<com.github.hakko.musiccabinet.domain.model.music.Album> alb, boolean onlyLocalArtwork) {
     	List<Album> albums = new ArrayList<>();
         List<Integer> trackIds = new ArrayList<>();
 
@@ -133,7 +137,7 @@ public class MediaFileService {
         	album.setCoverArtUrl(a.getCoverArtURL());
         	album.setTrackIds(a.getTrackIds());
         	if (album.getCoverArtPath() != null && album.getCoverArtUrl() != null) {
-        		if (preferLastFmArtwork) {
+        		if (preferLastFmArtwork && !onlyLocalArtwork) {
         			album.setCoverArtPath(null);
         		} else {
         			album.setCoverArtUrl(null);
