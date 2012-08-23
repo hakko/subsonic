@@ -40,7 +40,7 @@ public class TagSettingsController extends SimpleFormController {
         Map<String, String> tagCorrections = new HashMap<>();
         List<String> topTags = new ArrayList<>();
         for (TagOccurrence to : command.getAvailableTags()) {
-        	tagCorrections.put(to.getTag(), to.getCorrectedTag());
+        	tagCorrections.put(to.getTag(), to.getCorrectedTag().toLowerCase());
         	if (to.isUse() && StringUtils.trimToNull(to.getCorrectedTag()) == null) {
         		topTags.add(to.getTag());
         	}
