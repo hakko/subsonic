@@ -33,9 +33,9 @@ The build process assumes that you have Java 1.7 or later and Maven installed, a
     Clone git@github.com:hakko/subsonic.git to $workspace/subsonic.
     cd $workspace/subsonic/subsonic-main
     mvn package
-
     cd $workspace/subsonic/subsonic-booter
     mvn package
+
 
 Installation
 ------------
