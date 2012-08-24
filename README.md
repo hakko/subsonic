@@ -34,6 +34,9 @@ The build process assumes that you have Java 1.7 or later and Maven installed, a
     cd $workspace/subsonic/subsonic-main
     mvn package
 
+    cd $workspace/subsonic/subsonic-booter
+    mvn package
+
 Installation
 ------------
 
@@ -42,7 +45,8 @@ Installation assumes that you have previously installed Subsonic from http://sub
 1. Stop your Subsonic service
 2. Make a backup of current settings, just in case
 3. Use the subsonic.war file from $workspace/subsonic/subsonic-main/target/subsonic.war, and replace your current one.
-4. Start your Subsonic service
+4. Use the subsonic-booter-jar-with-dependencies.jar file from $workspace/subsonic/subsonic-booter/target/subsonic-booter-jar-with-dependencies.jar, and replace your current one.
+5. Start your Subsonic service
 
 Log in to Subsonic as usual and click the "Configure MusicCabinet" link (the header). It should be pretty self-explanatory from there.
 
