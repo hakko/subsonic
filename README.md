@@ -21,7 +21,7 @@ You also need Java 7. Uninstalling Java 6 is a good idea, unless you don't expli
 Building
 --------
 
-The build process assumes that you have Java 1.7 or later and Maven installed, and that PostgreSQL is running.
+The build process assumes that you have Java 7 or later and Maven installed, and that PostgreSQL is running.
 
     Clone git@github.com:hakko/musiccabinet.git to $workspace/musiccabinet
     Update your PostgreSQL password in $workspace/musiccabinet/musiccabinet-server/src/main/resources/local.jdbc.properties
