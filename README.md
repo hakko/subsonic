@@ -5,7 +5,7 @@ Subsonic is a web-based music streaming service, created by Sindre Mehus and rel
 
 This project is forked from Subsonic version 4.6, adding extensive last.fm integration through the MusicCabinet library. See https://github.com/hakko/musiccabinet for details.
 
-There's a static demo of the features added at http://dilerium.se/musiccabinet/demo.htm.
+There's an introduction to the project at http://dilerium.se/musiccabinet.
 
 Pre-requisites
 --------------
@@ -15,6 +15,7 @@ There are pre-built binary packages available for most platforms at http://www.p
 During install:
 * you'll be asked to create a database user. Stick to the default name, "postgres".
 * you'll be asked to choose a port number. Stick to the default value, "5432".
+You also need Java 7. Uninstalling Java 6 is a good idea, unless you don't explicitly need it.
 
 Building
 --------
@@ -23,7 +24,8 @@ The build process assumes that you have Java 1.7 or later and Maven installed, a
 
     Clone git@github.com:hakko/musiccabinet.git to $workspace/musiccabinet
     Update your PostgreSQL password in $workspace/musiccabinet/musiccabinet-server/src/main/resources/local.jdbc.properties
-    cd $workspace/musiccabinet
+    cd $workspace/musiccabinet/musiccabinet-server
+    mvn compile
     mvn exec:java -Dexec.mainClass=com.github.hakko.musiccabinet.service.DatabaseAdministrationService
     mvn install
 
