@@ -15,6 +15,7 @@ There are pre-built binary packages available for most platforms at http://www.p
 During install:
 * you'll be asked to create a database user. Stick to the default name, "postgres".
 * you'll be asked to choose a port number. Stick to the default value, "5432".
+
 You also need Java 7. Uninstalling Java 6 is a good idea, unless you don't explicitly need it.
 
 Building
