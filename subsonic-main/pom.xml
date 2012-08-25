@@ -32,6 +32,11 @@
 			<name>EBR External Release Repository</name>
 			<url>http://repository.springsource.com/maven/bundles/external</url>
 		</repository>
+		<repository>
+			<id>oss-sonatype-snapshots</id>
+			<name>OSS Sonatype Snapshots Repository</name>
+			<url>http://oss.sonatype.org/content/repositories/snapshots</url>
+		</repository>
 	</repositories>
 
     <parent>
@@ -127,7 +132,7 @@
         <dependency>
             <groupId>org.directwebremoting</groupId>
             <artifactId>dwr</artifactId>
-            <version>3.0.rc1</version>
+            <version>3.0.0-rc3-SNAPSHOT</version>
         </dependency>
 
         <!--Needed by dwr-->
