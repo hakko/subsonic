@@ -30,6 +30,9 @@ The build process assumes that you have Java 7 or later and Maven installed, and
     mvn exec:java -Dexec.mainClass=com.github.hakko.musiccabinet.service.DatabaseAdministrationService
     mvn install
 
+    Download http://dilerium.se/musiccabinet/dwr-3.0.0-rc1.jar (this is not available from public repos)
+    mvn install:install-file -Dfile=dwr-3.0.0-rc1.jar -DgroupId=org.directwebremoting -DartifactId=dwr -Dversion=3.0.0-rc1 -Dpackaging=jar
+
     Clone git@github.com:hakko/subsonic.git to $workspace/subsonic.
     cd $workspace/subsonic/subsonic-main
     mvn package
