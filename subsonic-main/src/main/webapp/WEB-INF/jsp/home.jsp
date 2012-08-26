@@ -30,7 +30,7 @@
 </c:if>
 
 <h2>
-    <c:forTokens items="newest recent frequent starred topartists random" delims=" " var="cat" varStatus="loopStatus">
+    <c:forTokens items="newest recent frequent starred topartists random recommended" delims=" " var="cat" varStatus="loopStatus">
         <c:if test="${loopStatus.count > 1}">&nbsp;|&nbsp;</c:if>
         <sub:url var="url" value="home.view">
             <sub:param name="listType" value="${cat}"/>
@@ -63,6 +63,7 @@
 	<%@ include file="homeArtistAlbumSongMenu.jsp" %>
 </c:if>
 <c:if test="${model.listType eq 'topartists'}"><%@ include file="homeTopArtists.jsp" %></c:if>
+<c:if test="${model.listType eq 'recommended'}"><%@ include file="homeArtists.jsp" %><%@ include file="artistRecommendation.jsp" %></c:if>
 
         </td>
             <c:if test="${not empty model.welcomeMessage}">

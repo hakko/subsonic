@@ -18,9 +18,12 @@
  */
 package net.sourceforge.subsonic.controller;
 
+import static java.net.URLEncoder.encode;
+import static net.sourceforge.subsonic.util.StringUtil.ENCODING_UTF8;
 import static org.apache.commons.lang.StringUtils.isEmpty;
 import static org.apache.commons.lang.math.NumberUtils.toInt;
 
+import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -31,6 +34,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import net.sourceforge.subsonic.Logger;
 import net.sourceforge.subsonic.domain.Album;
+import net.sourceforge.subsonic.domain.ArtistLink;
 import net.sourceforge.subsonic.domain.MediaFile;
 import net.sourceforge.subsonic.domain.User;
 import net.sourceforge.subsonic.domain.UserSettings;
@@ -47,6 +51,7 @@ import org.springframework.web.servlet.view.RedirectView;
 import com.github.hakko.musiccabinet.domain.model.aggr.ArtistRecommendation;
 import com.github.hakko.musiccabinet.domain.model.library.LastFmUser;
 import com.github.hakko.musiccabinet.domain.model.library.Period;
+import com.github.hakko.musiccabinet.service.ArtistRecommendationService;
 import com.github.hakko.musiccabinet.service.LibraryBrowserService;
 import com.github.hakko.musiccabinet.service.LibraryUpdateService;
 import com.github.hakko.musiccabinet.service.StarService;
@@ -62,6 +67,7 @@ public class HomeController extends ParameterizableViewController {
     private SettingsService settingsService;
     private SecurityService securityService;
     private UserTopArtistsService userTopArtistsService;
+    private ArtistRecommendationService artistRecommendationService;
     private LibraryUpdateService libraryUpdateService;
     private LibraryBrowserService libraryBrowserService;
     private MediaFileService mediaFileService;
@@ -104,7 +110,7 @@ public class HomeController extends ParameterizableViewController {
         	listGroup = "topartists".equals(listType) ? "3month" : "Albums";
         }
 
-        if ("topartists".equals(listType) || "Artists".equals(listGroup)) {
+        if ("topartists".equals(listType) || "recommended".equals(listType) || "Artists".equals(listGroup)) {
         	setArtists(listType, listGroup, query, page, userSettings, map);
         } else if ("newest".equals(listType) || "Albums".equals(listGroup)) {
         	setAlbums(listType, query, page, userSettings, map);
@@ -145,7 +151,8 @@ public class HomeController extends ParameterizableViewController {
         	final int ARTISTS = userSettings.getDefaultHomeArtists();
         	int offset = page * ARTISTS, limit = ARTISTS + 1;
 
-        	List<ArtistRecommendation> artists = Util.square(getArtists(listType, lastFmUsername, offset, limit, query));
+        	List<ArtistRecommendation> artists = Util.square(
+        			getArtists(listType, lastFmUsername, offset, limit, query, userSettings));
         	
         	if (artists.size() > ARTISTS) {
         		map.put("morePages", true);
@@ -153,16 +160,43 @@ public class HomeController extends ParameterizableViewController {
         	}
         	map.put("page", page);
     		map.put("artists", artists);
+    		
+    		if ("recommended".equals(listType)) {
+                map.put("artistsNotInLibrary", getRecommendedArtistsNotInLibrary(lastFmUsername, userSettings));
+    		}
     	}
 		map.put("artistGridWidth", userSettings.getArtistGridWidth());
     }
+    
+    private List<ArtistLink> getRecommendedArtistsNotInLibrary(String lastFmUsername, UserSettings userSettings) {
+    	List<ArtistLink> artistsNotInLibrary = new ArrayList<>();
+    	short amount = userSettings.getRecommendedArtists(); 
+		boolean onlyAlbumArtists = userSettings.isOnlyAlbumArtistRecommendations();
+		List<String> namesNotInLibrary = artistRecommendationService.
+				getRecommendedArtistsNotInLibrary(lastFmUsername, amount, onlyAlbumArtists);
+    	for (String name : namesNotInLibrary) {
+    		artistsNotInLibrary.add(new ArtistLink(name, getURLEncodedName(name)));
+    	}
+    	return artistsNotInLibrary;
+    }
+    
+    private String getURLEncodedName(String name) {
+    	try {
+    		return encode(name, ENCODING_UTF8);
+    	} catch (UnsupportedEncodingException e) {
+    		return name;
+    	}
+    }
 
-    private List<ArtistRecommendation> getArtists(String listType, String lastFmUsername, int offset, int limit, String query) {
+    private List<ArtistRecommendation> getArtists(String listType, String lastFmUsername, 
+    		int offset, int limit, String query, UserSettings userSettings) {
     	switch (listType) {
     	case "recent": return libraryBrowserService.getRecentlyPlayedArtists(lastFmUsername, offset, limit, query); 
     	case "frequent": return libraryBrowserService.getMostPlayedArtists(lastFmUsername, offset, limit, query);
     	case "starred": return libraryBrowserService.getStarredArtists(lastFmUsername, offset, limit, query);
     	case "random": return libraryBrowserService.getRandomArtists(limit);
+    	case "recommended": return artistRecommendationService.getRecommendedArtistsInLibrary(
+    			lastFmUsername, offset, limit, userSettings.isOnlyAlbumArtistRecommendations());
     	}
     	return null;
     }
@@ -182,6 +216,8 @@ public class HomeController extends ParameterizableViewController {
     	map.put("page", page);
     	map.put("albums", albums);
         map.put("isAlbumStarred", starService.getStarredAlbumsMask(lastFmUsername, getAlbumIds(albums)));
+		map.put("artistGridWidth", userSettings.getArtistGridWidth());
+		map.put("albumGridLayout", userSettings.isAlbumGridLayout());
     }
 
     private List<Integer> getAlbumIds(List<Album> albums) {
@@ -254,6 +290,10 @@ public class HomeController extends ParameterizableViewController {
 
     public void setUserTopArtistsService(UserTopArtistsService userTopArtistsService) {
 		this.userTopArtistsService = userTopArtistsService;
+	}
+
+	public void setArtistRecommendationService(ArtistRecommendationService artistRecommendationService) {
+		this.artistRecommendationService = artistRecommendationService;
 	}
 
 	public void setLibraryUpdateService(LibraryUpdateService libraryUpdateService) {

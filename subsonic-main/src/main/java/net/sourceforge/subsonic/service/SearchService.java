@@ -38,6 +38,7 @@ import net.sourceforge.subsonic.domain.MediaFolder;
 import com.github.hakko.musiccabinet.domain.model.library.LastFmUser;
 import com.github.hakko.musiccabinet.service.LibraryUpdateService;
 import com.github.hakko.musiccabinet.service.lastfm.ScrobbledTracksService;
+import com.github.hakko.musiccabinet.service.lastfm.UserRecommendedArtistsService;
 import com.github.hakko.musiccabinet.service.lastfm.UserTopArtistsService;
 import com.github.hakko.musiccabinet.service.library.LibraryScannerService;
 
@@ -50,6 +51,7 @@ public class SearchService {
 
     private ScrobbledTracksService scrobbledTracksService;
     private UserTopArtistsService userTopArtistsService;
+    private UserRecommendedArtistsService userRecommendedArtistsService;
     private LibraryUpdateService libraryUpdateService;
     private LibraryScannerService libraryScannerService;
     private LibraryStatusService libraryStatusService;
@@ -127,6 +129,7 @@ public class SearchService {
     		}
     		LOG.debug("Found users " + users);
     		userTopArtistsService.setUsers(users);
+    		userRecommendedArtistsService.setUsers(users);
     	}
     }
     
@@ -198,6 +201,10 @@ public class SearchService {
 	
 	public void setUserTopArtistsService(UserTopArtistsService userTopArtistsService) {
 		this.userTopArtistsService = userTopArtistsService;
+	}
+
+	public void setUserRecommendedArtistsService(UserRecommendedArtistsService userRecommendedArtistsService) {
+		this.userRecommendedArtistsService = userRecommendedArtistsService;
 	}
 
 	public void setLibraryUpdateService(LibraryUpdateService libraryUpdateService) {
