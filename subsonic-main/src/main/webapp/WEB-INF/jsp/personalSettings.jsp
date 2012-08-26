@@ -79,6 +79,7 @@
         			<form:option value="random+Artists" label="Random - Artists"/>
         			<form:option value="random+Albums" label="Random - Albums"/>
         			<form:option value="random+Songs" label="Random - Songs"/>
+        			<form:option value="recommended" label="Recommended"/>
         		</form:select>
                 <c:import url="helpToolTip.jsp"><c:param name="topic" value="defaulthomeview"/></c:import>
             </td>
@@ -116,6 +117,16 @@
             </td>
         </tr>
 
+        <tr>
+        	<td>Album grid layout</td>
+        	<td>
+        		<form:select path="albumGridLayout">
+        			<form:option value="true" label="Yes"/>
+        			<form:option value="false" label="No"/>
+        		</form:select>
+                <c:import url="helpToolTip.jsp"><c:param name="topic" value="albumgridlayout"/></c:import>
+            </td>
+        </tr>
         <tr>
         	<td>Related artists</td>
         	<td>

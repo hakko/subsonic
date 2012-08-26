@@ -1047,9 +1047,10 @@ public class SettingsService {
         settings.setLastFmEnabled(false);
         settings.setLastFmUsername(null);
         settings.setDefaultHomeArtists((short) 20);
-        settings.setDefaultHomeAlbums((short) 10);
+        settings.setDefaultHomeAlbums((short) 20);
         settings.setDefaultHomeSongs((short) 50);
         settings.setArtistGridWidth((short) 5);
+        settings.setAlbumGridLayout(true);
         settings.setRelatedArtists((short) 15);
         settings.setRecommendedArtists((short) 5);
         settings.setReluctantArtistLoading(false);

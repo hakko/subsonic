@@ -68,6 +68,7 @@ public class PersonalSettingsController extends SimpleFormController {
         command.setDefaultHomeAlbums(userSettings.getDefaultHomeAlbums());
         command.setDefaultHomeSongs(userSettings.getDefaultHomeSongs());
         command.setArtistGridWidth(userSettings.getArtistGridWidth());
+        command.setAlbumGridLayout(userSettings.isAlbumGridLayout());
         command.setRelatedArtists(userSettings.getRelatedArtists());
         command.setRecommendedArtists(userSettings.getRecommendedArtists());
         command.setOnlyAlbumArtistRecommendations(userSettings.isOnlyAlbumArtistRecommendations());
@@ -135,6 +136,7 @@ public class PersonalSettingsController extends SimpleFormController {
         settings.setDefaultHomeAlbums(command.getDefaultHomeAlbums());
         settings.setDefaultHomeSongs(command.getDefaultHomeSongs());
         settings.setArtistGridWidth(command.getArtistGridWidth());
+        settings.setAlbumGridLayout(command.isAlbumGridLayout());
         settings.setRelatedArtists(command.getRelatedArtists());
         settings.setRecommendedArtists(command.getRecommendedArtists());
         settings.setReluctantArtistLoading(command.isReluctantArtistLoading());

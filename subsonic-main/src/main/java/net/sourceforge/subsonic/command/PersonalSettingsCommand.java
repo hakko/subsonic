@@ -55,6 +55,7 @@ public class PersonalSettingsCommand {
     private short defaultHomeAlbums;
     private short defaultHomeSongs;
     private short artistGridWidth;
+    private boolean albumGridLayout;
     private short relatedArtists;
     private short recommendedArtists;
     private boolean reluctantArtistLoading;
@@ -243,6 +244,14 @@ public class PersonalSettingsCommand {
 
 	public void setArtistGridWidth(short artistGridWidth) {
 		this.artistGridWidth = artistGridWidth;
+	}
+
+	public boolean isAlbumGridLayout() {
+		return albumGridLayout;
+	}
+
+	public void setAlbumGridLayout(boolean albumGridLayout) {
+		this.albumGridLayout = albumGridLayout;
 	}
 
 	public short getRelatedArtists() {
