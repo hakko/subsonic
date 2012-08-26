@@ -2,15 +2,15 @@ package net.sourceforge.subsonic.controller;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
+import java.util.HashSet;
 import java.util.Map;
+import java.util.Set;
 
 import javax.servlet.http.HttpServletRequest;
 
 import net.sourceforge.subsonic.command.TagSettingsCommand;
 import net.sourceforge.subsonic.service.SettingsService;
 
-import org.apache.commons.lang.StringUtils;
 import org.springframework.web.servlet.mvc.SimpleFormController;
 
 import com.github.hakko.musiccabinet.domain.model.aggr.TagOccurrence;
@@ -38,17 +38,22 @@ public class TagSettingsController extends SimpleFormController {
         TagSettingsCommand command = (TagSettingsCommand) comm;
         
         Map<String, String> tagCorrections = new HashMap<>();
-        List<String> topTags = new ArrayList<>();
+        Set<String> topTags = new HashSet<>();
         for (TagOccurrence to : command.getAvailableTags()) {
-        	tagCorrections.put(to.getTag(), to.getCorrectedTag().toLowerCase());
-        	if (to.isUse() && StringUtils.trimToNull(to.getCorrectedTag()) == null) {
+        	if (to.isUse() && to.getCorrectedTag().isEmpty()) {
         		topTags.add(to.getTag());
+        	}
+        	if (!to.getCorrectedTag().isEmpty()) {
+            	tagCorrections.put(to.getTag(), to.getCorrectedTag().toLowerCase());
+        		topTags.add(to.getCorrectedTag());
         	}
         }
         
         tagService.createTagCorrections(tagCorrections);
-        tagService.setTopTags(topTags);
+        tagService.setTopTags(new ArrayList<>(topTags));
         settingsService.setSettingsChanged(); // forces a cache timeout for left.view
+        
+        command.setAvailableTags(tagService.getAvailableTags());
     }
     
     // Spring setters
