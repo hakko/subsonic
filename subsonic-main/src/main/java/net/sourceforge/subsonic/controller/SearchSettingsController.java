@@ -28,7 +28,6 @@ import net.sourceforge.subsonic.service.SettingsService;
 import org.springframework.web.servlet.mvc.SimpleFormController;
 
 import com.github.hakko.musiccabinet.service.DatabaseAdministrationService;
-import com.github.hakko.musiccabinet.service.LibraryUpdateService;
 
 /**
  * Controller for the page used to administrate the search index.
@@ -38,7 +37,6 @@ public class SearchSettingsController extends SimpleFormController {
     private SettingsService settingsService;
     private SearchService searchService;
     private DatabaseAdministrationService dbAdmService;
-    private LibraryUpdateService libraryUpdateService;
     
     private static final Logger LOG = Logger.getLogger(SearchSettingsController.class);
     
@@ -48,16 +46,13 @@ public class SearchSettingsController extends SimpleFormController {
         command.setDatabaseAvailable(dbAdmService.isRDBMSRunning()
         				&& dbAdmService.isPasswordCorrect(settingsService.getMusicCabinetJDBCPassword())
         				&& dbAdmService.isDatabaseUpdated());
-        
-        if (libraryUpdateService.isIndexBeingCreated()) {
-        	command.setCreatingIndex(true);
-        }
 
         String updateParam = request.getParameter("update");
         if (updateParam != null) {
         	boolean offlineScan = updateParam.equals("offline");
+        	boolean onlyNewArtists = updateParam.equals("normal");
         	LOG.debug("update search index, scan type " + updateParam);
-            searchService.createIndex(offlineScan, true, true);
+            searchService.createIndex(offlineScan, onlyNewArtists, true);
             command.setCreatingIndex(true);
         }
 
@@ -89,9 +84,5 @@ public class SearchSettingsController extends SimpleFormController {
     public void setDatabaseAdministrationService(DatabaseAdministrationService dbAdmService) {
         this.dbAdmService = dbAdmService;
     }
-
-	public void setLibraryUpdateService(LibraryUpdateService libraryUpdateService) {
-		this.libraryUpdateService = libraryUpdateService;
-	}
 
 }

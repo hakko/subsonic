@@ -153,6 +153,8 @@
         <property name="settingsService" ref="settingsService"/>
         <property name="searchService" ref="searchService"/>
         <property name="libraryBrowserService" ref="libraryBrowserService"/>
+        <property name="libraryUpdateService" ref="libraryUpdateService"/>
+        <property name="databaseAdministrationService" ref="databaseAdministrationService"/>
     </bean>
     <bean id="networkSettingsController" class="net.sourceforge.subsonic.controller.NetworkSettingsController">
         <property name="commandClass" value="net.sourceforge.subsonic.command.NetworkSettingsCommand"/>
@@ -185,7 +187,6 @@
         <property name="settingsService" ref="settingsService"/>
         <property name="searchService" ref="searchService"/>
         <property name="databaseAdministrationService" ref="databaseAdministrationService"/>
-        <property name="libraryUpdateService" ref="libraryUpdateService"/>
     </bean>
     <bean id="musicCabinetSettingsController" class="net.sourceforge.subsonic.controller.MusicCabinetSettingsController">
         <property name="commandClass" value="net.sourceforge.subsonic.command.MusicCabinetSettingsCommand"/>
@@ -250,6 +251,7 @@
         <property name="settingsService" ref="settingsService"/>
         <property name="securityService" ref="securityService"/>
         <property name="userTopArtistsService" ref="userTopArtistsService"/>
+        <property name="artistRecommendationService" ref="artistRecommendationService"/>
         <property name="libraryUpdateService" ref="libraryUpdateService"/>
         <property name="libraryBrowserService" ref="libraryBrowserService"/>
         <property name="mediaFileService" ref="mediaFileService"/>

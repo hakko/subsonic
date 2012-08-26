@@ -4,6 +4,8 @@
     <%@ include file="head.jsp" %>
 </head>
 <body class="mainframe bgcolor1">
+<script type="text/javascript" src="<c:url value="/script/wz_tooltip.js"/>"></script>
+<script type="text/javascript" src="<c:url value="/script/tip_balloon.js"/>"></script>
 
 <c:import url="settingsHeader.jsp">
     <c:param name="cat" value="mediaFolder"/>
@@ -52,10 +54,20 @@
     <p class="warning"><fmt:message key="${model.error}"/></p>
 </c:if>
 
+<c:if test="${not model.databaseAvailable}">
+	<p style="padding-top:1em"><b>MusicCabinet configuration</b></p>
+	<p>MusicCabinet configuration isn't completed. Please finish it <a href="musicCabinetSettings.view">here</a> before scanning media folders.</p>
+</c:if>
+
+<c:if test="${model.databaseAvailable and not model.indexBeingCreated}">
 <div style="padding-top:30px">
-	<div class="forward"><a href="searchSettings.view?update=offline">Offline scan - quickly scan your library for new tracks, without reading any last.fm meta-data.</a></div>
-	<div class="forward"><a href="searchSettings.view?update=normal">Normal scan - scan your library for new tracks, and add related artists, biographies etc for new artists from last.fm.</a></div><br>
+	<div class="forward"><b>Scan media folders</b></div>
+		<a href="searchSettings.view?update=offline">Offline scan</a> | 
+		<a href="searchSettings.view?update=normal">Normal scan</a> | 
+		<a href="searchSettings.view?update=full">Full scan</a>
+		<c:import url="helpToolTip.jsp"><c:param name="topic" value="searchsettingsscan"/></c:import>
 </div>
+</c:if>
 
 <c:if test="${model.reload}">
     <script type="text/javascript">

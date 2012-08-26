@@ -26,7 +26,9 @@ import org.springframework.web.servlet.*;
 import org.springframework.web.servlet.mvc.*;
 import org.apache.commons.lang.StringUtils;
 
+import com.github.hakko.musiccabinet.service.DatabaseAdministrationService;
 import com.github.hakko.musiccabinet.service.LibraryBrowserService;
+import com.github.hakko.musiccabinet.service.LibraryUpdateService;
 
 import javax.servlet.http.*;
 import java.util.*;
@@ -42,6 +44,8 @@ public class MediaFolderSettingsController extends ParameterizableViewController
     private SettingsService settingsService;
     private SearchService searchService;
     private LibraryBrowserService libraryBrowserService;
+    private LibraryUpdateService libraryUpdateService;
+    private DatabaseAdministrationService dbAdmService;
     
     private static final Logger LOG = Logger.getLogger(MediaFolderSettingsController.class);
     
@@ -61,6 +65,10 @@ public class MediaFolderSettingsController extends ParameterizableViewController
 
         ModelAndView result = super.handleRequestInternal(request, response);
         map.put("mediaFolders", settingsService.getAllMediaFolders(true));
+        map.put("indexBeingCreated", libraryUpdateService.isIndexBeingCreated());
+        map.put("databaseAvailable", dbAdmService.isRDBMSRunning()
+				&& dbAdmService.isPasswordCorrect(settingsService.getMusicCabinetJDBCPassword())
+				&& dbAdmService.isDatabaseUpdated());
 
         result.addObject("model", map);
         return result;
@@ -146,6 +154,14 @@ public class MediaFolderSettingsController extends ParameterizableViewController
 
 	public void setLibraryBrowserService(LibraryBrowserService libraryBrowserService) {
 		this.libraryBrowserService = libraryBrowserService;
+	}
+
+	public void setLibraryUpdateService(LibraryUpdateService libraryUpdateService) {
+		this.libraryUpdateService = libraryUpdateService;
+	}
+
+	public void setDatabaseAdministrationService(DatabaseAdministrationService dbAdmService) {
+		this.dbAdmService = dbAdmService;
 	}
 
 }

@@ -5,6 +5,8 @@
     <%@ include file="head.jsp" %>
 </head>
 <body class="mainframe bgcolor1">
+<script type="text/javascript" src="<c:url value="/script/wz_tooltip.js"/>"></script>
+<script type="text/javascript" src="<c:url value="/script/tip_balloon.js"/>"></script>
 
 <c:if test="${command.creatingIndex}">
 	<script type="text/javascript">
@@ -16,20 +18,16 @@
     <c:param name="cat" value="search"/>
 </c:import>
 
-<p style="padding-top:1em"><b>Search configuration</b></p>
 <div style="width:60%">
 <c:if test="${not command.databaseAvailable}">
+	<p style="padding-top:1em"><b>Search configuration</b></p>
 	<p>MusicCabinet configuration isn't completed. Please finish it <a href="musicCabinetSettings.view">here</a> before updating search index.</p>
 </c:if>
 
 <c:if test="${command.databaseAvailable and not command.creatingIndex}">
-	<p>Search index scans your music folders, looking for removed and added tracks.<br>
 
 	<form:form commandName="command" action="searchSettings.view" method="post">
-		<div class="forward"><a href="searchSettings.view?update=offline">Offline scan - quickly scan your library for new tracks, without reading any last.fm meta-data.</a></div>
-		<div class="forward"><a href="searchSettings.view?update=normal">Normal scan - scan your library for new tracks, and add related artists, biographies etc for new artists from last.fm.</a></div><br>
-
-		<div style="padding-top:20px">
+		<div style="padding-top:1em">
 			<p><b>Nightly update</b></p>
 			<p>It is recommended to have your library scanned nightly, to keep the information fetched from last.fm up-to-date.</p>
 			<p><fmt:message key="searchsettings.auto"/>
