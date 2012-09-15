@@ -302,9 +302,9 @@ public class RESTController extends MultiActionController {
                     new Attribute("id", track.getId()),
                     new Attribute("parent", -album.getId()),
                     new Attribute("title", track.getName()),
-                    new Attribute("isDir", false),
                     new Attribute("album", track.getMetaData().getAlbum()),
                     new Attribute("artist", track.getMetaData().getArtist()),
+                    new Attribute("isDir", false),
                     new Attribute("track", track.getMetaData().getTrackNr()),
                     new Attribute("year", track.getMetaData().getYear()),
                     new Attribute("coverArt", StringUtil.utf8HexEncode(album.getCoverArtPath())),
@@ -321,6 +321,7 @@ public class RESTController extends MultiActionController {
 
     @Deprecated
     public void search(HttpServletRequest request, HttpServletResponse response) throws Exception {
+    	LOG.debug("search!");
         request = wrapRequest(request);
         XMLBuilder builder = createXMLBuilder(request, response, true);
         builder.add("searchResult", true,
@@ -357,6 +358,7 @@ public class RESTController extends MultiActionController {
                     new Attribute("id", "-" + album.getId()),
                     new Attribute("parent", album.getArtist().getId()),
                     new Attribute("title", album.getName()),
+                    new Attribute("album", album.getName()),
                     new Attribute("artist", album.getArtist().getName()),
                     new Attribute("isDir", true),
                     new Attribute("coverArt", StringUtil.utf8HexEncode(album.getCoverArtPath())));
@@ -706,7 +708,7 @@ public class RESTController extends MultiActionController {
     private AttributeSet createAttributesForMediaFile(Player player, File coverArt, MediaFile mediaFile) throws IOException {
         AttributeSet attributes = new AttributeSet();
         attributes.add("id", mediaFile.getId());
-        attributes.add("parent", mediaFile.getMetaData().getAlbumId());
+        attributes.add("parent", "-" + mediaFile.getMetaData().getAlbumId());
         attributes.add("title", mediaFile.getTitle());
         attributes.add("isDir", false);
 
