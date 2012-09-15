@@ -213,7 +213,7 @@ public class PlaylistService {
                 if (!line.startsWith("#")) {
                     try {
                         MediaFile file = mediaFileService.getMediaFile(line);
-                        if (file.exists()) {
+                        if (file != null && file.exists()) {
                             playlist.addFiles(Playlist.ADD, file);
                         }
                     } catch (SecurityException x) {
@@ -250,7 +250,7 @@ public class PlaylistService {
                 if (matcher.find()) {
                     try {
                         MediaFile file = mediaFileService.getMediaFile(matcher.group(1));
-                        if (file.exists()) {
+                        if (file != null && file.exists()) {
                             playlist.addFiles(Playlist.ADD, file);
                         }
                     } catch (SecurityException x) {
@@ -307,7 +307,7 @@ public class PlaylistService {
                     
                     try {
                         MediaFile file = mediaFileService.getMediaFile(location);
-                        if (file != null) {
+                        if (file != null && file.exists()) {
                             playlist.addFiles(Playlist.ADD, file);
                         }
                     } catch (SecurityException x) {
