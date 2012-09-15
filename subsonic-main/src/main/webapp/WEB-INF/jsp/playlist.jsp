@@ -171,6 +171,12 @@
     		playlistService.playGenreRadio(genres, playlistCallback);
     	}
     }
+    function onPlayGroupRadio(group) {
+        if (verifyIfPartyMode()) {
+	    	startPlayer = true;
+    		playlistService.playGroupRadio(group, playlistCallback);
+    	}
+    }
     function onPlayRelatedArtistsSampler(artistId, artistCount) {
         if (verifyIfPartyMode()) {
 	    	startPlayer = true;

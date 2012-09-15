@@ -279,6 +279,7 @@
         <property name="securityService" ref="securityService"/>
     	<property name="tagService" ref="tagService"/>
     	<property name="tagInfoService" ref="tagInfoService"/>
+        <property name="lastFmService" ref="lastFmService"/>
         <property name="artistRecommendationService" ref="artistRecommendationService"/>
         <property name="libraryBrowserService" ref="libraryBrowserService"/>
     </bean>
@@ -298,6 +299,11 @@
         <property name="formView" value="tagSettings"/>
     	<property name="tagService" ref="tagService"/>
     	<property name="settingsService" ref="settingsService"/>
+    </bean>
+    <bean id="groupSettingsController" class="net.sourceforge.subsonic.controller.GroupSettingsController">
+    	<property name="viewName" value="groupSettings"/>
+        <property name="lastFmService" ref="lastFmService"/>
+        <property name="groupWeeklyArtistChartService" ref="groupWeeklyArtistChartService"/>
     </bean>
     <bean id="editArtistController" class="net.sourceforge.subsonic.controller.EditArtistController">
         <property name="commandClass" value="net.sourceforge.subsonic.command.EditArtistCommand"/>
@@ -475,6 +481,7 @@
                 <prop key="/fileTree.view">fileTreeController</prop>
                 <prop key="/related.view">relatedController</prop>
                 <prop key="/tagSettings.view">tagSettingsController</prop>
+                <prop key="/groupSettings.view">groupSettingsController</prop>
                 <prop key="/editArtist.view">editArtistController</prop>
                 <prop key="/playlist.view">playlistController</prop>
                 <prop key="/xspfPlaylist.view">xspfPlaylistController</prop>

@@ -286,12 +286,12 @@
 	</bean>
 
 	<bean id="starService" class="com.github.hakko.musiccabinet.service.StarService">
-		<property name="lastFmUserDao" ref="lastFmUserDao"/>
+		<property name="lastFmDao" ref="lastFmDao"/>
 		<property name="starDao" ref="starDao"/>
 	</bean>
 
 	<bean id="lastFmService" class="com.github.hakko.musiccabinet.service.LastFmService">
-		<property name="lastFmUserDao" ref="lastFmUserDao"/>
+		<property name="lastFmDao" ref="lastFmDao"/>
 		<property name="authSessionClient" ref="authSessionClient"/>
 	</bean>
 
@@ -299,7 +299,7 @@
 		<property name="scrobbleChannel" ref="scrobbleChannel"/>
 		<property name="updateNowPlayingClient" ref="updateNowPlayingClient"/>
 		<property name="scrobbleClient" ref="scrobbleClient"/>
-		<property name="lastFmUserDao" ref="lastFmUserDao"/>
+		<property name="lastFmDao" ref="lastFmDao"/>
 		<property name="playCountDao" ref="playCountDao"/>
 	</bean>
 
@@ -402,6 +402,13 @@
 		<property name="webserviceHistoryService" ref="webserviceHistoryService"/>
 	</bean>
 
+	<bean id="groupWeeklyArtistChartService" class="com.github.hakko.musiccabinet.service.lastfm.GroupWeeklyArtistChartService">
+		<property name="groupWeeklyArtistChartClient" ref="groupWeeklyArtistChartClient"/>
+		<property name="groupWeeklyArtistChartDao" ref="groupWeeklyArtistChartDao"/>
+		<property name="webserviceHistoryService" ref="webserviceHistoryService"/>
+		<property name="lastFmDao" ref="lastFmDao"/>
+	</bean>
+
 	<bean id="tagTopArtistsService" class="com.github.hakko.musiccabinet.service.lastfm.TagTopArtistsService">
 		<property name="tagTopArtistsClient" ref="tagTopArtistsClient"/>
 		<property name="tagDao" ref="tagDao"/>
@@ -447,6 +454,7 @@
         <property name="scrobbledTracksService" ref="scrobbledTracksService"/>
         <property name="playlistGeneratorService" ref="playlistGeneratorService"/>
         <property name="tagInfoService" ref="tagInfoService"/>
+        <property name="groupWeeklyArtistChartService" ref="groupWeeklyArtistChartService"/>
         <property name="tagTopArtistsService" ref="tagTopArtistsService"/>
         <property name="userTopArtistsService" ref="userTopArtistsService"/>
         <property name="userRecommendedArtistsService" ref="userRecommendedArtistsService"/>
@@ -511,7 +519,11 @@
 	<bean id="userRecommendedArtistsClient" class="com.github.hakko.musiccabinet.ws.lastfm.UserRecommendedArtistsClient">
 		<property name="webserviceHistoryService" ref="webserviceHistoryService"/>
 		<property name="throttleService" ref="throttleService"/>
-		<property name="lastFmUserDao" ref="lastFmUserDao"/>
+		<property name="lastFmDao" ref="lastFmDao"/>
+	</bean>
+
+	<bean id="groupWeeklyArtistChartClient" class="com.github.hakko.musiccabinet.ws.lastfm.GroupWeeklyArtistChartClient">
+		<property name="webserviceHistoryService" ref="webserviceHistoryService"/>
 	</bean>
 
 	<bean id="tagTopArtistsClient" class="com.github.hakko.musiccabinet.ws.lastfm.TagTopArtistsClient">
@@ -561,7 +573,7 @@
 	<bean id="webserviceHistoryDao" class="com.github.hakko.musiccabinet.dao.jdbc.JdbcWebserviceHistoryDao">
 		<property name="dataSource" ref="dataSource"/>
 		<property name="musicDao" ref="musicDao"/>
-		<property name="lastFmUserDao" ref="lastFmUserDao"/>
+		<property name="lastFmDao" ref="lastFmDao"/>
 	</bean>
 
 	<bean id="trackRelationDao" class="com.github.hakko.musiccabinet.dao.jdbc.JdbcTrackRelationDao">
@@ -608,7 +620,7 @@
 		<property name="dataSource" ref="dataSource"/>
 	</bean>
 
-	<bean id="lastFmUserDao" class="com.github.hakko.musiccabinet.dao.jdbc.JdbcLastFmUserDao">
+	<bean id="lastFmDao" class="com.github.hakko.musiccabinet.dao.jdbc.JdbcLastFmDao">
 		<property name="dataSource" ref="dataSource"/>
 	</bean>
 
@@ -617,6 +629,10 @@
 	</bean>
 
 	<bean id="userRecommendedArtistsDao" class="com.github.hakko.musiccabinet.dao.jdbc.JdbcUserRecommendedArtistsDao">
+		<property name="dataSource" ref="dataSource"/>
+	</bean>
+
+	<bean id="groupWeeklyArtistChartDao" class="com.github.hakko.musiccabinet.dao.jdbc.JdbcGroupWeeklyArtistChartDao">
 		<property name="dataSource" ref="dataSource"/>
 	</bean>
 	

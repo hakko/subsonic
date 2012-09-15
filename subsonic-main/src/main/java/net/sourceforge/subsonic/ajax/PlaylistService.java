@@ -163,7 +163,15 @@ public class PlaylistService {
     public PlaylistInfo playGenreRadio(String[] tags) throws Exception {
     	LOG.debug("starting playGenreRadio(" + Arrays.toString(tags) + ")");
     	
-    	return getPlaylistInfo(Playlist.PLAY, playlistService.getTopTracksForTags(tags,
+    	return getPlaylistInfo(Playlist.PLAY, playlistService.getPlaylistForTags(tags,
+    			settingsService.getGenreRadioArtistCount(),
+    			settingsService.getGenreRadioTotalCount()));
+    }
+
+    public PlaylistInfo playGroupRadio(String group) throws Exception {
+    	LOG.debug("starting playGroupRadio(" + group + ")");
+    	
+    	return getPlaylistInfo(Playlist.PLAY, playlistService.getPlaylistForGroup(group,
     			settingsService.getGenreRadioArtistCount(),
     			settingsService.getGenreRadioTotalCount()));
     }

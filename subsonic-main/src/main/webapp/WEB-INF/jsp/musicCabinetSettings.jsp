@@ -102,7 +102,7 @@
           </table>
           <input type="submit" value="Save" style="margin-right:0.3em"/>
           <br/><br/><br/>
-          <p>Tags are configured <a href="tagSettings.view">here</a>.</p>
+          <p><a href="tagSettings.view">Tag settings</a> | <a href="groupSettings.view">Group settings</a></p>
 
 		<script type="text/javascript" language="javascript">
 		['artistRadioTotalCount', 'artistRadioArtistCount', 'artistTopTracksTotalCount',
