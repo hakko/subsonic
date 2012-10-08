@@ -76,7 +76,7 @@
 
             <td style="padding-left:15pt;text-align:center;">
                 <p class="detail" style="line-height:1.5">
-                    <a href="/j_spring_security_logout" target="_top"><fmt:message key="top.logout"><fmt:param value="${model.user.username}"/></fmt:message></a>
+                    <a href="j_spring_security_logout" target="_top"><fmt:message key="top.logout"><fmt:param value="${model.user.username}"/></fmt:message></a>
                     <c:if test="${not model.licensed}">
                         <br>
                         <a href="donate.view" target="main"><img src="<spring:theme code="donateSmallImage"/>" alt=""></a>
