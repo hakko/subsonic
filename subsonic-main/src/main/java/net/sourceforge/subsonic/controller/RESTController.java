@@ -19,6 +19,7 @@
 package net.sourceforge.subsonic.controller;
 
 import static net.sourceforge.subsonic.security.RESTRequestParameterProcessingFilter.decrypt;
+import static org.apache.commons.lang.math.NumberUtils.toInt;
 
 import java.io.File;
 import java.io.IOException;
@@ -79,12 +80,16 @@ import org.springframework.web.bind.ServletRequestUtils;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.multiaction.MultiActionController;
 
+import com.github.hakko.musiccabinet.domain.model.aggr.ArtistRecommendation;
 import com.github.hakko.musiccabinet.domain.model.music.Album;
 import com.github.hakko.musiccabinet.domain.model.music.Artist;
 import com.github.hakko.musiccabinet.domain.model.music.ArtistInfo;
 import com.github.hakko.musiccabinet.domain.model.music.Track;
+import com.github.hakko.musiccabinet.service.ArtistRecommendationService;
 import com.github.hakko.musiccabinet.service.LibraryBrowserService;
 import com.github.hakko.musiccabinet.service.NameSearchService;
+import com.github.hakko.musiccabinet.service.PlaylistGeneratorService;
+import com.github.hakko.musiccabinet.service.TagService;
 import com.github.hakko.musiccabinet.service.lastfm.ArtistInfoService;
 
 /**
@@ -122,6 +127,18 @@ public class RESTController extends MultiActionController {
     private ArtistIndexService artistIndexService;
     private ArtistInfoService artistInfoService;
     private AudioScrobblerService audioScrobblerService;
+    private TagService tagService;
+    private PlaylistGeneratorService playlistGeneratorService;
+    private ArtistRecommendationService artistRecommendationService;
+    
+    private static final String GENRE_RADIO_ID = "GenreRadio_";
+    private static final String GENRE_RADIO_NAME = "Genre Radio";
+
+    private static final String ARTIST_RADIO_ID = "ArtistRadio_";
+    private static final String ARTIST_RADIO_NAME = "Artist Radio";
+
+    private static final String RELATED_ARTISTS_ID = "RelatedArtists_";
+    private static final String RELATED_ARTISTS_NAME = "Related Artists";
 
     private Comparator<Track> trackComparator = new Comparator<Track>() {
 		@Override
@@ -167,14 +184,14 @@ public class RESTController extends MultiActionController {
         XMLBuilder builder = createXMLBuilder(request, response, true);
         builder.add("musicFolders", false);
 
-        for (MediaFolder mediaFolder : settingsService.getAllMediaFolders()) {
+        int id = 0;
+        for (String tag : tagService.getTopTags()) {
             AttributeSet attributes = new AttributeSet();
-            attributes.add("id", mediaFolder.getId());
-            if (mediaFolder.getName() != null) {
-                attributes.add("name", mediaFolder.getName());
-            }
+            attributes.add("id", ++id);
+            attributes.add("name", tag);
             builder.add("musicFolder", attributes, true);
         }
+
         builder.endAll();
         response.getWriter().print(builder);
     }
@@ -194,20 +211,24 @@ public class RESTController extends MultiActionController {
 
         builder.add("indexes", "lastModified", lastModified, false);
 
-        List<MediaFolder> mediaFolders = settingsService.getAllMediaFolders();
-        Integer mediaFolderId = ServletRequestUtils.getIntParameter(request, "musicFolderId");
-        if (mediaFolderId != null) {
-            for (MediaFolder mediaFolder : mediaFolders) {
-                if (mediaFolderId.equals(mediaFolder.getId())) {
-                    mediaFolders = Arrays.asList(mediaFolder);
-                    break;
-                }
-            }
-        }
+        int genreId = NumberUtils.toInt(request.getParameter("musicFolderId"));
+        LOG.debug("genreId = " + genreId);
+        String genre = genreId == 0 ? null : tagService.getTopTags().get(genreId - 1);
+        LOG.debug("genre = " + genre);
         
         if (libraryBrowserService.hasArtists()) {
         	SortedMap<String, List<Artist>> indexedArtists = 
-        			artistIndexService.getIndexedArtists(libraryBrowserService.getArtists());
+        			artistIndexService.getIndexedArtists(genre == null ?
+        				libraryBrowserService.getArtists() :
+        				libraryBrowserService.getArtists(genre, 25));
+
+        	if (genre != null) {
+        		builder.add("index", "name", "!", false);
+        		builder.add("artist", true, 
+        					new Attribute("name", GENRE_RADIO_NAME),
+        					new Attribute("id", GENRE_RADIO_ID + StringUtil.utf8HexEncode(genre)));
+        		builder.end();
+        	}
         	
         	for (String index : indexedArtists.keySet()) {
         		builder.add("index", "name", index, false);
@@ -216,7 +237,7 @@ public class RESTController extends MultiActionController {
         					new Attribute("name", artist.getName()),
         					new Attribute("id", artist.getId()));
         		}
-            	builder.end();
+        		builder.end();
         	}
         }
 
@@ -225,11 +246,26 @@ public class RESTController extends MultiActionController {
     }
 
     public void getMusicDirectory(HttpServletRequest request, HttpServletResponse response) throws Exception {
-        if (ServletRequestUtils.getRequiredIntParameter(request, "id") >= 0) {
-        	getArtistDirectory(request, response);
-        } else {
-        	getAlbumDirectory(request, response);
-        }
+    	String id = request.getParameter("id");
+    	if (id.startsWith(GENRE_RADIO_ID)) {
+    		String genre = StringUtil.utf8HexDecode(id.substring(GENRE_RADIO_ID.length()));
+    		LOG.debug("genre radio for " + genre);
+    		getGenreRadio(genre, request, response);
+    	} else if (id.startsWith(ARTIST_RADIO_ID)) {
+    		String artistId = id.substring(ARTIST_RADIO_ID.length());
+    		LOG.debug("artist radio for " + artistId);
+    		getArtistRadio(toInt(artistId), request, response);
+    	} else if (id.startsWith(RELATED_ARTISTS_ID)) {
+    		String artistId = id.substring(RELATED_ARTISTS_ID.length());
+    		LOG.debug("related artists for " + artistId);
+    		getRelatedArtists(toInt(artistId), request, response);
+    	} else {
+    		if (NumberUtils.toInt(id) >= 0) {
+            	getArtistDirectory(request, response);
+            } else {
+            	getAlbumDirectory(request, response);
+            }
+    	}
     }
 
     private void getArtistDirectory(HttpServletRequest request, HttpServletResponse response) throws Exception {
@@ -255,15 +291,54 @@ public class RESTController extends MultiActionController {
 
         for (net.sourceforge.subsonic.domain.Album album : albums) {
             builder.add("child", true,
-                    new Attribute("id", "-" + album.getId()),
-                    new Attribute("parent", artistId),
-                    new Attribute("title", album.getTitle()),
-                    new Attribute("isDir", true),
-                    new Attribute("coverArt", StringUtil.utf8HexEncode(album.getCoverArtPath())));
+        		new Attribute("id", "-" + album.getId()),
+        		new Attribute("parent", artistId),
+        		new Attribute("title", album.getTitle()),
+        		new Attribute("isDir", true),
+        		new Attribute("coverArt", StringUtil.utf8HexEncode(album.getCoverArtPath())));
         }
+        
+        builder.add("child", true, 
+        		new Attribute("id", ARTIST_RADIO_ID + artistId),
+        		new Attribute("parent", artistId),
+        		new Attribute("title", ARTIST_RADIO_NAME),
+        		new Attribute("isDir", true));
+
+        builder.add("child", true, 
+        		new Attribute("id", RELATED_ARTISTS_ID + artistId),
+        		new Attribute("parent", artistId),
+        		new Attribute("title", RELATED_ARTISTS_NAME),
+        		new Attribute("isDir", true));
+
         builder.endAll();
         response.getWriter().print(builder);
 
+    }
+
+    private void getRelatedArtists(int artistId, HttpServletRequest request, HttpServletResponse response) throws Exception {
+    	
+    	UserSettings userSettings = settingsService.getUserSettings(request.getParameter("u"));
+    	
+    	ArtistInfo artistInfo = artistInfoService.getArtistInfo(artistId);
+    	List<ArtistRecommendation> relatedArtists = artistRecommendationService.getRelatedArtistsInLibrary(
+    			artistId, userSettings.getRelatedArtists(), userSettings.isOnlyAlbumArtistRecommendations());
+    	
+        XMLBuilder builder = createXMLBuilder(request, response, true);
+
+        builder.add("directory", false,
+                new Attribute("id", artistId),
+                new Attribute("name", artistInfo.getArtist().getName()));
+
+        for (ArtistRecommendation ar : relatedArtists) {
+            builder.add("child", true,
+        		new Attribute("id", ar.getArtistId()),
+        		new Attribute("parent", artistId),
+        		new Attribute("title", ar.getArtistName()),
+        		new Attribute("isDir", true));
+        }
+
+        builder.endAll();
+        response.getWriter().print(builder);
     }
 
     private void getAlbumDirectory(HttpServletRequest request, HttpServletResponse response) throws Exception {
@@ -271,6 +346,8 @@ public class RESTController extends MultiActionController {
         Album album;
         List<Track> tracks;
 
+        Player player = playerService.getPlayer(request, response);
+        
         try {
             albumId = -ServletRequestUtils.getRequiredIntParameter(request, "id");
             album = libraryBrowserService.getAlbum(albumId);
@@ -288,35 +365,86 @@ public class RESTController extends MultiActionController {
                 new Attribute("name", album.getName()));
 
         Collections.sort(tracks, trackComparator);
-        addTracks(builder, album, tracks);
+        addTracks(builder, album, tracks, player);
         
         builder.endAll();
         response.getWriter().print(builder);
 
     }
     
-    private void addTracks(XMLBuilder builder, Album album, List<Track> tracks) throws IOException {
+    private void addTracks(XMLBuilder builder, Album album, List<Track> tracks, Player player) throws IOException {
         for (Track track : tracks) {
         	String suffix = track.getMetaData().getMediaType().getFilesuffix().toLowerCase();
-            builder.add("child", true,
-                    new Attribute("id", track.getId()),
-                    new Attribute("parent", -album.getId()),
-                    new Attribute("title", track.getName()),
-                    new Attribute("album", track.getMetaData().getAlbum()),
-                    new Attribute("artist", track.getMetaData().getArtist()),
-                    new Attribute("isDir", false),
-                    new Attribute("track", track.getMetaData().getTrackNr()),
-                    new Attribute("year", track.getMetaData().getYear()),
-                    new Attribute("coverArt", StringUtil.utf8HexEncode(album.getCoverArtPath())),
-                    new Attribute("size", track.getMetaData().getSize()),
-                    new Attribute("contentType", StringUtil.getMimeType(suffix)),
-                    new Attribute("suffix", suffix),
-                    new Attribute("duration", track.getMetaData().getDuration()),
-                    new Attribute("bitrate", track.getMetaData().getBitrate()),
-            		new Attribute("path", track.getMetaData().getPath())
-                    );
-                    
+            MediaFile mediaFile = mediaFileService.getMediaFile(track.getId());
+            
+        	AttributeSet attributes = new AttributeSet();
+            attributes.add(new Attribute("id", track.getId()));
+            attributes.add(new Attribute("parent", -album.getId()));
+            attributes.add(new Attribute("title", track.getName()));
+            attributes.add(new Attribute("album", track.getMetaData().getAlbum()));
+            attributes.add(new Attribute("artist", track.getMetaData().getArtist()));
+            attributes.add(new Attribute("isDir", false));
+            attributes.add(new Attribute("track", track.getMetaData().getTrackNr()));
+            attributes.add(new Attribute("year", track.getMetaData().getYear()));
+            attributes.add(new Attribute("coverArt", StringUtil.utf8HexEncode(album.getCoverArtPath())));
+            attributes.add(new Attribute("size", track.getMetaData().getSize()));
+            attributes.add(new Attribute("contentType", StringUtil.getMimeType(suffix)));
+            attributes.add(new Attribute("suffix", suffix));
+            attributes.add(new Attribute("duration", track.getMetaData().getDuration()));
+            attributes.add(new Attribute("bitrate", track.getMetaData().getBitrate()));
+            attributes.add(new Attribute("path", getRelativePath(mediaFile)));
+            
+            if (transcodingService.isTranscodingRequired(mediaFile, player)) {
+            	String transcodingSuffix = transcodingService.getSuffix(player, mediaFile, null);
+            	attributes.add("transcodedSuffix", transcodingSuffix);
+            	attributes.add("transcodedContentType", StringUtil.getMimeType(transcodingSuffix));
+            }
+            
+            builder.add("child", attributes, true);
         }
+    }
+    
+    private void getGenreRadio(String genre, HttpServletRequest request, HttpServletResponse response) throws Exception {
+    	LOG.debug("getGenreRadio() for " + genre);
+
+    	List<Integer> trackIds = playlistGeneratorService.getPlaylistForTags(new String[]{genre}, 
+    			settingsService.getGenreRadioArtistCount(), settingsService.getGenreRadioTotalCount());
+        List<Track> tracks = trackIds.isEmpty() ? new ArrayList<Track>() : libraryBrowserService.getTracks(trackIds);
+        
+        XMLBuilder builder = createXMLBuilder(request, response, true);
+
+        builder.add("directory", false,
+                new Attribute("id", GENRE_RADIO_ID + genre),
+                new Attribute("name", GENRE_RADIO_NAME));
+
+        Player player = playerService.getPlayer(request, response);
+        addTracks(builder, new Album(), tracks, player);
+        
+        builder.endAll();
+        response.getWriter().print(builder);
+
+    }
+
+    private void getArtistRadio(int artistId, HttpServletRequest request, HttpServletResponse response) throws Exception {
+    	LOG.debug("getArtistRadio() for " + artistId);
+
+    	List<Integer> trackIds = playlistGeneratorService.getPlaylistForArtist(artistId, 
+    			settingsService.getArtistRadioArtistCount(), settingsService.getArtistRadioTotalCount());
+        List<Track> tracks = trackIds.isEmpty() ? new ArrayList<Track>() : libraryBrowserService.getTracks(trackIds);
+        Collections.shuffle(tracks);
+        
+        XMLBuilder builder = createXMLBuilder(request, response, true);
+
+        builder.add("directory", false,
+                new Attribute("id", ARTIST_RADIO_ID + artistId),
+                new Attribute("name", ARTIST_RADIO_NAME));
+
+        Player player = playerService.getPlayer(request, response);
+        addTracks(builder, new Album(null, -artistId, null), tracks, player);
+        
+        builder.endAll();
+        response.getWriter().print(builder);
+
     }
 
     @Deprecated
@@ -1495,6 +1623,18 @@ public class RESTController extends MultiActionController {
 
 	public void setAudioScrobblerService(AudioScrobblerService audioScrobblerService) {
 		this.audioScrobblerService = audioScrobblerService;
+	}
+
+	public void setTagService(TagService tagService) {
+		this.tagService = tagService;
+	}
+
+	public void setPlaylistGeneratorService(PlaylistGeneratorService playlistGeneratorService) {
+		this.playlistGeneratorService = playlistGeneratorService;
+	}
+
+	public void setArtistRecommendationService(ArtistRecommendationService artistRecommendationService) {
+		this.artistRecommendationService = artistRecommendationService;
 	}
 
 	public void setShareService(ShareService shareService) {

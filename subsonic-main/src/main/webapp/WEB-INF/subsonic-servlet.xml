@@ -409,6 +409,9 @@
         <property name="artistIndexService" ref="artistIndexService"/>
         <property name="artistInfoService" ref="artistInfoService"/>
         <property name="audioScrobblerService" ref="audioScrobblerService"/>
+        <property name="tagService" ref="tagService"/>
+        <property name="playlistGeneratorService" ref="playlistGeneratorService"/>
+        <property name="artistRecommendationService" ref="artistRecommendationService"/>
     </bean>
     <bean id="dbController" class="net.sourceforge.subsonic.controller.DBController">
         <property name="viewName" value="db"/>
