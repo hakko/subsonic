@@ -65,7 +65,7 @@ public class MusicCabinetSettingsController extends SimpleFormController {
         MusicCabinetSettingsCommand command = (MusicCabinetSettingsCommand) comm;
 
         if (command.isUpdateDatabase()) {
-        	dbAdmService.loadNewDatabasUpdates();
+        	dbAdmService.loadNewDatabaseUpdates();
         	command.setDatabaseUpdated(dbAdmService.isDatabaseUpdated());
         	if (playlistService.isSearchIndexCreated()) {
         		command.setSearchIndexCreated(true);
