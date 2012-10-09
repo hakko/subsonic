@@ -2,8 +2,8 @@
 
 <html><head>
     <%@ include file="head.jsp" %>
+    <script type="text/javascript" src="<c:url value="/dwr/engine.js"/>"></script>    
     <script type="text/javascript" src="<c:url value="/dwr/interface/tagService.js"/>"></script>
-    <script type="text/javascript" src="<c:url value="/dwr/engine.js"/>"></script>
     <script type="text/javascript" src="<c:url value="/dwr/util.js"/>"></script>
 </head>
 <body class="mainframe bgcolor1">
