@@ -1,14 +1,6 @@
 package net.sourceforge.subsonic.booter.agent;
 
-import com.jgoodies.forms.builder.DefaultFormBuilder;
-import com.jgoodies.forms.factories.Borders;
-import com.jgoodies.forms.factories.ButtonBarFactory;
-import com.jgoodies.forms.layout.FormLayout;
-import net.sourceforge.subsonic.booter.deployer.DeploymentStatus;
-import net.sourceforge.subsonic.booter.deployer.SubsonicDeployer;
-
-import javax.swing.*;
-import java.awt.*;
+import java.awt.BorderLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.BufferedReader;
@@ -27,6 +19,21 @@ import java.util.List;
 import java.util.Locale;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+
+import javax.swing.JButton;
+import javax.swing.JCheckBox;
+import javax.swing.JComboBox;
+import javax.swing.JFormattedTextField;
+import javax.swing.JOptionPane;
+import javax.swing.JPanel;
+
+import net.sourceforge.subsonic.booter.deployer.DeploymentStatus;
+import net.sourceforge.subsonic.booter.deployer.SubsonicDeployer;
+
+import com.jgoodies.forms.builder.ButtonBarBuilder;
+import com.jgoodies.forms.builder.DefaultFormBuilder;
+import com.jgoodies.forms.factories.Borders;
+import com.jgoodies.forms.layout.FormLayout;
 
 /**
  * Panel displaying the settings of the Subsonic service.
@@ -138,7 +145,14 @@ public class SettingsPanel extends JPanel implements SubsonicListener {
 
         setLayout(new BorderLayout(12, 12));
         add(builder.getPanel(), BorderLayout.CENTER);
-        add(ButtonBarFactory.buildCenteredBar(defaultButton, saveButton), BorderLayout.SOUTH);
+        JPanel buttons = new ButtonBarBuilder()
+            .addGlue()
+            .addButton(defaultButton)
+            .addRelatedGap()
+            .addButton(saveButton)
+            .addGlue()
+            .build();
+        add(buttons, BorderLayout.SOUTH);
     }
 
     private void addBehaviour() {

@@ -1,15 +1,24 @@
 package net.sourceforge.subsonic.booter.agent;
 
-import com.jgoodies.forms.factories.Borders;
-import com.jgoodies.forms.factories.ButtonBarFactory;
-import net.sourceforge.subsonic.booter.Main;
-
-import javax.swing.*;
-import java.awt.*;
+import java.awt.BorderLayout;
+import java.awt.Dimension;
+import java.awt.Image;
+import java.awt.Toolkit;
+import java.awt.Window;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.lang.reflect.Method;
 import java.util.Arrays;
+
+import javax.swing.JButton;
+import javax.swing.JFrame;
+import javax.swing.JPanel;
+import javax.swing.JTabbedPane;
+
+import net.sourceforge.subsonic.booter.Main;
+
+import com.jgoodies.forms.builder.ButtonBarBuilder;
+import com.jgoodies.forms.factories.Borders;
 
 /**
  * Frame that is activated by the tray icon. Contains a tabbed pane
@@ -76,7 +85,11 @@ public class SubsonicFrame extends JFrame {
         JPanel pane = (JPanel) getContentPane();
         pane.setLayout(new BorderLayout(10, 10));
         pane.add(tabbedPane, BorderLayout.CENTER);
-        pane.add(ButtonBarFactory.buildCloseBar(closeButton), BorderLayout.SOUTH);
+        JPanel buttons = new ButtonBarBuilder()
+            .addGlue()
+            .addButton(closeButton)
+            .build();
+        pane.add(buttons, BorderLayout.SOUTH);
 
         pane.setBorder(Borders.TABBED_DIALOG_BORDER);
     }

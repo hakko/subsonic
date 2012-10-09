@@ -1,15 +1,21 @@
 package net.sourceforge.subsonic.booter.mac;
 
-import com.jgoodies.forms.factories.Borders;
-import com.jgoodies.forms.factories.ButtonBarFactory;
-import net.sourceforge.subsonic.booter.Main;
-import net.sourceforge.subsonic.booter.deployer.SubsonicDeployerService;
-
-import javax.swing.*;
-import java.awt.*;
+import java.awt.BorderLayout;
+import java.awt.Dimension;
+import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.net.URL;
+
+import javax.swing.JButton;
+import javax.swing.JFrame;
+import javax.swing.JPanel;
+
+import net.sourceforge.subsonic.booter.Main;
+import net.sourceforge.subsonic.booter.deployer.SubsonicDeployerService;
+
+import com.jgoodies.forms.builder.ButtonBarBuilder;
+import com.jgoodies.forms.factories.Borders;
 
 /**
  * Frame with Subsonic status.  Used on Mac installs.
@@ -61,7 +67,13 @@ public class SubsonicFrame extends JFrame {
         JPanel pane = (JPanel) getContentPane();
         pane.setLayout(new BorderLayout(10, 10));
         pane.add(statusPanel, BorderLayout.CENTER);
-        pane.add(ButtonBarFactory.buildRightAlignedBar(hideButton, exitButton), BorderLayout.SOUTH);
+        JPanel buttons = new ButtonBarBuilder()
+            .addGlue()
+            .addButton(hideButton)
+            .addRelatedGap()
+            .addButton(exitButton)
+            .build();
+        pane.add(buttons, BorderLayout.SOUTH);
 
         pane.setBorder(Borders.DIALOG_BORDER);
     }

@@ -1,17 +1,23 @@
 package net.sourceforge.subsonic.booter.agent;
 
-import com.jgoodies.forms.builder.DefaultFormBuilder;
-import com.jgoodies.forms.factories.Borders;
-import com.jgoodies.forms.factories.ButtonBarFactory;
-import com.jgoodies.forms.layout.FormLayout;
-import net.sourceforge.subsonic.booter.deployer.DeploymentStatus;
-
-import javax.swing.*;
-import java.awt.*;
+import java.awt.Color;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.text.DateFormat;
 import java.util.Locale;
+
+import javax.swing.JButton;
+import javax.swing.JPanel;
+import javax.swing.JTextArea;
+import javax.swing.JTextField;
+import javax.swing.SwingConstants;
+
+import net.sourceforge.subsonic.booter.deployer.DeploymentStatus;
+
+import com.jgoodies.forms.builder.ButtonBarBuilder;
+import com.jgoodies.forms.builder.DefaultFormBuilder;
+import com.jgoodies.forms.factories.Borders;
+import com.jgoodies.forms.layout.FormLayout;
 
 /**
  * Panel displaying the status of the Subsonic service.
@@ -67,8 +73,12 @@ public class StatusPanel extends JPanel implements SubsonicListener {
     }
 
     private void layoutComponents() {
-        JPanel buttons = ButtonBarFactory.buildRightAlignedBar(startButton, stopButton);
-
+        JPanel buttons = new ButtonBarBuilder()
+            .addGlue()
+            .addButton(startButton)
+            .addRelatedGap()
+            .addButton(stopButton)
+            .build();
         FormLayout layout = new FormLayout("right:d, 6dlu, max(d;30dlu):grow");
         DefaultFormBuilder builder = new DefaultFormBuilder(layout, this);
         builder.append("Service status", statusTextField);

@@ -1,12 +1,20 @@
 package net.sourceforge.subsonic.booter.mac;
 
-import net.sourceforge.subsonic.booter.deployer.SubsonicDeployerService;
-
-import javax.swing.*;
-import java.awt.*;
+import java.awt.Desktop;
+import java.awt.Image;
+import java.awt.MenuItem;
+import java.awt.PopupMenu;
+import java.awt.SystemTray;
+import java.awt.Toolkit;
+import java.awt.TrayIcon;
 import java.awt.event.ActionEvent;
-import java.net.URL;
 import java.net.URI;
+import java.net.URL;
+
+import javax.swing.AbstractAction;
+import javax.swing.Action;
+
+import net.sourceforge.subsonic.booter.deployer.SubsonicDeployerService;
 
 /**
  * Controller for the Mac booter.
