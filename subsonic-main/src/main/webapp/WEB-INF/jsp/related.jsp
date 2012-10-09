@@ -1,7 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=utf-8" pageEncoding="utf-8"%>
 
 <html><head>
-    <%@ include file="head.jsp" %>
+    <%@ include file="head.jspf" %>
     <link href="<c:url value="/style/shadow.css"/>" rel="stylesheet">
 </head>
 <body class="mainframe bgcolor1">
@@ -35,9 +35,9 @@
 </h1>
 
 <c:if test="${empty model.artists}"><p>Not a single related artist found!</p></c:if>
-<%@ include file="artists.jsp" %>
+<%@ include file="artists.jspf" %>
 
-<%@ include file="artistRecommendation.jsp" %>
+<%@ include file="artistRecommendation.jspf" %>
 
 </div>
 

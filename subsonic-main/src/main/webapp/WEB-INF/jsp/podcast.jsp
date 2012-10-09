@@ -1,4 +1,4 @@
-<%@ include file="include.jsp" %>
+<%@ include file="include.jspf" %>
 <%@ page language="java" contentType="text/xml; charset=utf-8" pageEncoding="iso-8859-1"%>
 
 <rss version="2.0">

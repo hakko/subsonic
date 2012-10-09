@@ -2,7 +2,7 @@
 <%--@elvariable id="command" type="net.sourceforge.subsonic.command.DonateCommand"--%>
 <html>
 <head>
-    <%@ include file="head.jsp" %>
+    <%@ include file="head.jspf" %>
 </head>
 <body class="mainframe bgcolor1">
 

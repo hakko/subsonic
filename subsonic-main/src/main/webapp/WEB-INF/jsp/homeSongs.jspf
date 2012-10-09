@@ -4,6 +4,6 @@
 <a href="javascript:noop()" onclick="top.playlist.onPlay(${model.trackIds}, 'A');">Add all</a>
 </h2>
 
-<%@ include file="songs.jsp" %>
+<%@ include file="songs.jspf" %>
 
-<%@ include file="homePrevNext.jsp" %>
+<%@ include file="homePrevNext.jspf" %>

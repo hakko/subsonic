@@ -1,7 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=utf-8" pageEncoding="utf-8"%>
 
 <html><head>
-    <%@ include file="head.jsp" %>
+    <%@ include file="head.jspf" %>
 	<link href="<c:url value="/style/shadow.css"/>" rel="stylesheet">
 	<script type="text/javascript" src="<c:url value="/script/jquery-1.7.2.min.js"/>"></script>
     <script type="text/javascript" src="<c:url value="/dwr/engine.js"/>"></script>
@@ -10,10 +10,10 @@
 </head>
 <body class="mainframe bgcolor1">
 
-<%@ include file="toggleStar.jsp" %>
+<%@ include file="toggleStar.jspf" %>
 
 <script type="text/javascript">
-<%@ include file="albumsHeader.jsp" %>
+<%@ include file="albumsHeader.jspf" %>
 </script>
 
 <h1>
@@ -74,7 +74,7 @@
 	</ul>
 
 	<c:if test="${not empty model.albums}">
-		<%@ include file="albums.jsp" %>
+		<%@ include file="albums.jspf" %>
 	</c:if>
 
 </c:otherwise>

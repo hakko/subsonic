@@ -3,7 +3,7 @@
 
 <html>
 <head>
-    <%@ include file="head.jsp" %>
+    <%@ include file="head.jspf" %>
     <script type="text/javascript" src="<c:url value="/script/swfobject.js"/>"></script>
     <script type="text/javascript" src="<c:url value="/script/prototype.js"/>"></script>
 

@@ -2,7 +2,7 @@
 <%--@elvariable id="command" type="net.sourceforge.subsonic.command.SearchCommand"--%>
 
 <html><head>
-    <%@ include file="head.jsp" %>
+    <%@ include file="head.jspf" %>
 	<script type="text/javascript" src="<c:url value="/script/jquery-1.7.2.min.js"/>"></script>
     <script type="text/javascript" src="<c:url value='/script/scripts.js'/>"></script>
     <script type="text/javascript" src="<c:url value="/dwr/engine.js"/>"></script>
@@ -23,7 +23,7 @@
 </head>
 <body class="mainframe bgcolor1" onload="init()">
 
-<%@ include file="toggleStar.jsp" %>
+<%@ include file="toggleStar.jspf" %>
 
 <h1>
     <img src="<spring:theme code="searchImage"/>" alt=""/>

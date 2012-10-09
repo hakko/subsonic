@@ -18,8 +18,8 @@
     </c:forTokens>
 </h3>
 
-<c:if test="${model.listType ne 'random'}"><%@ include file="homeQuery.jsp" %></c:if>
+<c:if test="${model.listType ne 'random'}"><%@ include file="homeQuery.jspf" %></c:if>
 
-<c:if test="${model.listGroup eq 'Songs'}"><%@ include file="homeSongs.jsp" %></c:if>
-<c:if test="${model.listGroup eq 'Albums'}"><%@ include file="homeAlbums.jsp" %></c:if>
-<c:if test="${model.listGroup eq 'Artists'}"><%@ include file="homeArtists.jsp" %></c:if>
+<c:if test="${model.listGroup eq 'Songs'}"><%@ include file="homeSongs.jspf" %></c:if>
+<c:if test="${model.listGroup eq 'Albums'}"><%@ include file="homeAlbums.jspf" %></c:if>
+<c:if test="${model.listGroup eq 'Artists'}"><%@ include file="homeArtists.jspf" %></c:if>

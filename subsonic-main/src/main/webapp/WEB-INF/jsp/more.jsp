@@ -1,7 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=utf-8" pageEncoding="iso-8859-1"%>
 
 <html><head>
-    <%@ include file="head.jsp" %>
+    <%@ include file="head.jspf" %>
     <style type="text/css">
         #progressBar {width: 350px; height: 10px; border: 1px solid black; display:none;}
         #progressBarContent {width: 0; height: 10px; background: url("<c:url value="/icons/progress.png"/>") repeat;}

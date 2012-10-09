@@ -2,7 +2,7 @@
 
 <html>
 <head>
-    <%@ include file="head.jsp" %>
+    <%@ include file="head.jspf" %>
     <script type="text/javascript" src="https://apis.google.com/js/plusone.js"></script>
 </head>
 <body class="mainframe bgcolor1">

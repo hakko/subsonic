@@ -1,0 +1,3 @@
+<%@ include file="artists.jspf" %>
+
+<%@ include file="homePrevNext.jspf" %>

@@ -2,7 +2,7 @@
 
 <html>
  <head>
-  <%@ include file="head.jsp" %>
+  <%@ include file="head.jspf" %>
  </head>
 <body class="mainframe bgcolor1">
 

@@ -1,0 +1,10 @@
+<script type="text/javascript">
+<%@ include file="albumsHeader.jspf" %>
+</script>
+
+<c:choose>
+<c:when test="${model.albumGridLayout}"><%@ include file="albumsGrid.jspf" %></c:when>
+<c:otherwise><%@ include file="albums.jspf" %></c:otherwise>
+</c:choose>
+
+<%@ include file="homePrevNext.jspf" %>

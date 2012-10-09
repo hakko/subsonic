@@ -1,7 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=utf-8" pageEncoding="utf-8"%>
 
 <html><head>
-    <%@ include file="head.jsp" %>
+    <%@ include file="head.jspf" %>
     <link href="<c:url value="/style/shadow.css"/>" rel="stylesheet">
 </head>
 <body class="mainframe bgcolor1">
@@ -21,7 +21,7 @@
 		<h1 style="margin-top: 15px">Top artists</h1>
 	</c:if>
 
-	<%@ include file="artists.jsp" %>
+	<%@ include file="artists.jspf" %>
  	
     <sub:url value="genres.view" var="prevUrl">
         <sub:param name="genre" value="${model.genre}"/>
@@ -38,7 +38,7 @@
 	<c:if test="${model.page > 0}"><div class="back"><a href="${prevUrl}"><fmt:message key="common.previous"/></a></div></c:if>
 	<c:if test="${not empty model.morePages}"><div class="forward"><a href="${nextUrl}"><fmt:message key="common.next"/></a></div></c:if>
  	
-	<%@ include file="artistRecommendation.jsp" %>
+	<%@ include file="artistRecommendation.jspf" %>
 </c:if>
 
 <c:if test="${empty model.title}">

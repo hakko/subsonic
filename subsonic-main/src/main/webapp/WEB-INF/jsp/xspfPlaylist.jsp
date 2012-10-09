@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<%@ include file="include.jsp" %>
+<%@ include file="include.jspf" %>
 <%@ page language="java" contentType="text/xml; charset=utf-8" pageEncoding="iso-8859-1" %>
 
 <playlist version="0" xmlns="http://xspf.org/ns/0/">

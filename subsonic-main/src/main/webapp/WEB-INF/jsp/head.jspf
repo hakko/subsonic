@@ -1,4 +1,4 @@
-<%@ include file="include.jsp" %>
+<%@ include file="include.jspf" %>
 
 <!--[if lt IE 7.]>
 <script defer type="text/javascript" src="<c:url value="/script/pngfix.js"/>"></script>

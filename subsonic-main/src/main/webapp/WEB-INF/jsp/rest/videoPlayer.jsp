@@ -2,7 +2,7 @@
 
 <html>
 <head>
-    <%@ include file="../include.jsp" %>
+    <%@ include file="../include.jspf" %>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
     <link rel="stylesheet" href="../<spring:theme code="styleSheet"/>" type="text/css">
     <link rel="shortcut icon" href="../<spring:theme code="faviconImage"/>">

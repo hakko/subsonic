@@ -2,7 +2,7 @@
 <%--@elvariable id="command" type="net.sourceforge.subsonic.command.GeneralSettingsCommand"--%>
 
 <html><head>
-    <%@ include file="head.jsp" %>
+    <%@ include file="head.jspf" %>
     <script type="text/javascript" src="<c:url value="/script/scripts.js"/>"></script>
 </head>
 

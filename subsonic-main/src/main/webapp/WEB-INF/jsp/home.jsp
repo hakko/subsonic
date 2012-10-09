@@ -2,7 +2,7 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 
 <html><head>
-    <%@ include file="head.jsp" %>
+    <%@ include file="head.jspf" %>
     <link href="<c:url value="/style/shadow.css"/>" rel="stylesheet">
     <script type="text/javascript" src="<c:url value="/script/prototype.js"/>"></script>
 	<script type="text/javascript" src="<c:url value="/script/jquery-1.7.2.min.js"/>"></script>
@@ -12,7 +12,7 @@
 </head>
 </head><body class="mainframe bgcolor1" onload="init()">
 
-<%@ include file="toggleStar.jsp" %>
+<%@ include file="toggleStar.jspf" %>
 
 <script type="text/javascript" language="javascript">
     function init() {
@@ -58,12 +58,12 @@
     <tr>
         <td style="vertical-align:top;">
 
-<c:if test="${model.listType eq 'newest'}"><%@ include file="homeQuery.jsp" %><%@ include file="homeAlbums.jsp" %></c:if>
+<c:if test="${model.listType eq 'newest'}"><%@ include file="homeQuery.jspf" %><%@ include file="homeAlbums.jspf" %></c:if>
 <c:if test="${model.listType eq 'recent' or model.listType eq 'frequent' or model.listType eq 'starred' or model.listType eq 'random'}">
-	<%@ include file="homeArtistAlbumSongMenu.jsp" %>
+	<%@ include file="homeArtistAlbumSongMenu.jspf" %>
 </c:if>
-<c:if test="${model.listType eq 'topartists'}"><%@ include file="homeTopArtists.jsp" %></c:if>
-<c:if test="${model.listType eq 'recommended'}"><%@ include file="homeArtists.jsp" %><%@ include file="artistRecommendation.jsp" %></c:if>
+<c:if test="${model.listType eq 'topartists'}"><%@ include file="homeTopArtists.jspf" %></c:if>
+<c:if test="${model.listType eq 'recommended'}"><%@ include file="homeArtists.jspf" %><%@ include file="artistRecommendation.jspf" %></c:if>
 
         </td>
             <c:if test="${not empty model.welcomeMessage}">

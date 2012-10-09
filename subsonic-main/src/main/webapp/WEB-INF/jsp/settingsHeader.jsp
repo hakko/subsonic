@@ -1,6 +1,6 @@
 
 <%@ page language="java" contentType="text/html; charset=utf-8" pageEncoding="iso-8859-1" %>
-<%@ include file="include.jsp" %>
+<%@ include file="include.jspf" %>
 
 <c:set var="categories" value="${param.restricted ? 'personal password player share' : 'mediaFolder general advanced personal user player share network transcoding internetRadio podcast search musicCabinet'}"/>
 <h1>

@@ -3,7 +3,7 @@
 <%--@elvariable id="model" type="java.util.Map"--%>
 
 <html><head>
-	<%@ include file="head.jsp" %>
+	<%@ include file="head.jspf" %>
 </head><body class="mainframe bgcolor1">
 
 <h1>${model.dir.name}</h1>

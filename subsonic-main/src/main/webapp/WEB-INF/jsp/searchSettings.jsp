@@ -2,7 +2,7 @@
 <%--@elvariable id="command" type="net.sourceforge.subsonic.command.SearchSettingsCommand"--%>
 
 <html><head>
-    <%@ include file="head.jsp" %>
+    <%@ include file="head.jspf" %>
 </head>
 <body class="mainframe bgcolor1">
 <script type="text/javascript" src="<c:url value="/script/wz_tooltip.js"/>"></script>

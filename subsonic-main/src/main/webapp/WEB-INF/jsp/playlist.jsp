@@ -1,12 +1,12 @@
 <%@ page language="java" contentType="text/html; charset=utf-8" pageEncoding="iso-8859-1"%>
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html><head>
-    <%@ include file="head.jsp" %>
+    <%@ include file="head.jspf" %>
     <script type="text/javascript" src="<c:url value="/dwr/engine.js"/>"></script>    
     <script type="text/javascript" src="<c:url value="/dwr/interface/nowPlayingService.js"/>"></script>
     <script type="text/javascript" src="<c:url value="/dwr/interface/playlistService.js"/>"></script>
     <script type="text/javascript" src="<c:url value="/dwr/util.js"/>"></script>
-    <script type="text/javascript" src="<c:url value="/script/jwplayer.js"/>"></script>     
+    <script type="text/javascript" src="<c:url value="/script/jwplayer.js"/>"></script>    
     <script type="text/javascript" src="<c:url value="/script/prototype.js"/>"></script>
     <script type="text/javascript" src="<c:url value="/script/scripts.js"/>"></script>
     <script type="text/javascript" src="<c:url value="/script/webfx/range.js"/>"></script>
@@ -58,7 +58,7 @@
         </c:if>
         }
     }
-
+    
     function createPlayer() {
         jwplayer('mediaplayer').setup({
            width: 340,
@@ -341,7 +341,7 @@
         var list = [{
             file: song.streamUrl,
             title: song.title,
-            provider: "sound"
+            provider: "sound"        
         }];
 
         if (song.duration != null) {
@@ -350,7 +350,7 @@
         
         if (song.format == "aac" || song.format == "m4a") {
             list[0].provider = "video";
-        }
+        }        
 
         jwplayer('mediaplayer').load(list);
         jwplayer('mediaplayer').play(true);
@@ -452,7 +452,7 @@
             </c:if>
             <c:if test="${model.player.web}">
                 <td style="width:340px; height:24px;padding-left:10px;padding-right:10px"><div id="mediaplayer">
-                	<p>Loading the player ...</p>
+                    <p>Loading the player ...</p>
                 </div></td>
             </c:if>
 

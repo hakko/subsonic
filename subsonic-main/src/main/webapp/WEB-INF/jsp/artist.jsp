@@ -3,7 +3,7 @@
 <%--@elvariable id="model" type="java.util.Map"--%>
 
 <html><head>
-	<%@ include file="head.jsp" %>
+	<%@ include file="head.jspf" %>
 	<link href="<c:url value="/style/shadow.css"/>" rel="stylesheet">
 	<script type="text/javascript" src="<c:url value="/script/jquery-1.7.2.min.js"/>"></script>
     <script type="text/javascript" src="<c:url value="/dwr/engine.js"/>"></script>
@@ -11,7 +11,7 @@
 	<script type="text/javascript" src="<c:url value="/dwr/interface/uiStarService.js"/>"></script>
 </head><body class="mainframe bgcolor1" onload="init()">
 
-<%@ include file="toggleStar.jsp" %>
+<%@ include file="toggleStar.jspf" %>
 
 <script type="text/javascript" language="javascript">
 
@@ -40,7 +40,7 @@
 		}
 	}
 
-<%@ include file="albumsHeader.jsp" %>
+<%@ include file="albumsHeader.jspf" %>
 
 	function toggleArtist() {
 		$('#bioArt').attr('width', 126 + 63 - $('#bioArt').attr('width'));
@@ -120,7 +120,7 @@ ${model.artistName}
 	</c:if>
 </h2>
 
-<%@ include file="albums.jsp" %>
+<%@ include file="albums.jspf" %>
 
 </div>
 
