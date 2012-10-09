@@ -12,12 +12,13 @@ import java.util.jar.JarFile;
 import java.util.zip.ZipEntry;
 
 import org.apache.commons.io.IOUtils;
-import org.mortbay.jetty.Server;
-import org.mortbay.jetty.security.Constraint;
-import org.mortbay.jetty.security.ConstraintMapping;
-import org.mortbay.jetty.security.SslSocketConnector;
-import org.mortbay.jetty.nio.SelectChannelConnector;
-import org.mortbay.jetty.webapp.WebAppContext;
+import org.eclipse.jetty.server.Server;
+import org.eclipse.jetty.util.security.Constraint;
+import org.eclipse.jetty.security.ConstraintMapping;
+import org.eclipse.jetty.security.ConstraintSecurityHandler;
+import org.eclipse.jetty.server.ssl.SslSocketConnector;
+import org.eclipse.jetty.server.nio.SelectChannelConnector;
+import org.eclipse.jetty.webapp.WebAppContext;
 
 /**
  * Responsible for deploying the Subsonic web app in
@@ -94,7 +95,8 @@ public class SubsonicDeployer implements SubsonicDeployerService {
             Server server = new Server();
             SelectChannelConnector connector = new SelectChannelConnector();
             connector.setMaxIdleTime(MAX_IDLE_TIME_MILLIS);
-            connector.setHeaderBufferSize(HEADER_BUFFER_SIZE);
+            connector.setRequestHeaderSize(HEADER_BUFFER_SIZE);
+            connector.setResponseHeaderSize(HEADER_BUFFER_SIZE);
             connector.setHost(getHost());
             connector.setPort(getPort());
             if (isHttpsEnabled()) {
@@ -105,7 +107,8 @@ public class SubsonicDeployer implements SubsonicDeployerService {
             if (isHttpsEnabled()) {
                 SslSocketConnector sslConnector = new SslSocketConnector();
                 sslConnector.setMaxIdleTime(MAX_IDLE_TIME_MILLIS);
-                sslConnector.setHeaderBufferSize(HEADER_BUFFER_SIZE);
+                sslConnector.setRequestHeaderSize(HEADER_BUFFER_SIZE);
+                sslConnector.setResponseHeaderSize(HEADER_BUFFER_SIZE);
                 sslConnector.setHost(getHost());
                 sslConnector.setPort(getHttpsPort());
                 sslConnector.setKeystore(System.getProperty("subsonic.ssl.keystore", getClass().getResource("/subsonic.keystore").toExternalForm()));
@@ -124,10 +127,11 @@ public class SubsonicDeployer implements SubsonicDeployerService {
                 constraint.setDataConstraint(Constraint.DC_CONFIDENTIAL);
                 constraintMapping.setPathSpec("/");
                 constraintMapping.setConstraint(constraint);
-                context.getSecurityHandler().setConstraintMappings(new ConstraintMapping[]{constraintMapping});
+                ConstraintSecurityHandler csh = (ConstraintSecurityHandler) context.getSecurityHandler();
+                csh.setConstraintMappings(new ConstraintMapping[]{constraintMapping});
             } 
 
-            server.addHandler(context);
+            server.setHandler(context);
             server.start();
 
             System.err.println("Subsonic running on: " + getUrl());
