@@ -6,9 +6,9 @@
     <script type="text/javascript" src="<c:url value="/dwr/interface/nowPlayingService.js"/>"></script>
     <script type="text/javascript" src="<c:url value="/dwr/interface/playlistService.js"/>"></script>
     <script type="text/javascript" src="<c:url value="/dwr/util.js"/>"></script>
+    <script type="text/javascript" src="<c:url value="/script/jwplayer.js"/>"></script>     
     <script type="text/javascript" src="<c:url value="/script/prototype.js"/>"></script>
     <script type="text/javascript" src="<c:url value="/script/scripts.js"/>"></script>
-    <script type="text/javascript" src="<c:url value="/script/swfobject.js"/>"></script>
     <script type="text/javascript" src="<c:url value="/script/webfx/range.js"/>"></script>
     <script type="text/javascript" src="<c:url value="/script/webfx/timer.js"/>"></script>
     <script type="text/javascript" src="<c:url value="/script/webfx/slider.js"/>"></script>
@@ -18,7 +18,6 @@
 <body class="bgcolor2 playlistframe" onload="init()">
 
 <script type="text/javascript" language="javascript">
-    var player = null;
     var songs = null;
     var currentAlbumUrl = null;
     var currentStreamUrl = null;
@@ -61,32 +60,30 @@
     }
 
     function createPlayer() {
-        var flashvars = {
-            backcolor:"<spring:theme code="backgroundColor"/>",
-            frontcolor:"<spring:theme code="textColor"/>",
-            id:"player1"
-        };
-        var params = {
-            allowfullscreen:"true",
-            allowscriptaccess:"always"
-        };
-        var attributes = {
-            id:"player1",
-            name:"player1"
-        };
-        swfobject.embedSWF("<c:url value="/flash/jw-player-5.10.swf"/>", "placeholder", "340", "24", "9.0.0", false, flashvars, params, attributes);
-    }
-
-    function playerReady(thePlayer) {
-        player = $("player1");
-        player.addModelListener("STATE", "stateListener");
-        getPlaylist();
-    }
-
-    function stateListener(obj) { // IDLE, BUFFERING, PLAYING, PAUSED, COMPLETED
-        if (obj.newstate == "COMPLETED") {
-            onNext(repeatEnabled);
-        }
+        jwplayer('mediaplayer').setup({
+           width: 340,
+           height: 24,
+           id: 'player1',
+           backcolor: "<spring:theme code="backgroundColor"/>",
+           frontcolor: "<spring:theme code="textColor"/>",
+           dock: false,
+           'controlbar.position': 'bottom',
+           'modes': [
+                {type: 'flash', src: "<c:url value="/flash/jw-player-5.10.swf"/>"},
+                {type: 'html5'},
+                {type: 'download'}
+            ]
+        });
+        jwplayer('mediaplayer').onReady(
+            function(event) {
+                getPlaylist();
+            }
+        );        
+        jwplayer('mediaplayer').onComplete(
+            function(event) {
+                onNext(repeatEnabled);
+            }
+        );
     }
 
     function getPlaylist() {
@@ -328,8 +325,7 @@
         }
         updateCurrentImage();
         if (songs.length == 0) {
-            player.sendEvent("LOAD", new Array());
-            player.sendEvent("STOP");
+            jwplayer('mediaplayer').stop();
         }
     }
 
@@ -341,22 +337,23 @@
         var song = songs[index];
         currentStreamUrl = song.streamUrl;
         updateCurrentImage();
-        var list = new Array();
-        list[0] = {
-            file:song.streamUrl,
-            title:song.title,
-            provider:"sound"
-        };
+        
+        var list = [{
+            file: song.streamUrl,
+            title: song.title,
+            provider: "sound"
+        }];
 
         if (song.duration != null) {
             list[0].duration = song.duration;
         }
+        
         if (song.format == "aac" || song.format == "m4a") {
             list[0].provider = "video";
         }
 
-        player.sendEvent("LOAD", list);
-        player.sendEvent("PLAY");
+        jwplayer('mediaplayer').load(list);
+        jwplayer('mediaplayer').play(true);
     }
 
     function updateCurrentImage() {
@@ -454,8 +451,8 @@
                 </select></td>
             </c:if>
             <c:if test="${model.player.web}">
-                <td style="width:340px; height:24px;padding-left:10px;padding-right:10px"><div id="placeholder">
-                    <a href="http://www.adobe.com/go/getflashplayer" target="_blank"><fmt:message key="playlist.getflash"/></a>
+                <td style="width:340px; height:24px;padding-left:10px;padding-right:10px"><div id="mediaplayer">
+                	<p>Loading the player ...</p>
                 </div></td>
             </c:if>
 
