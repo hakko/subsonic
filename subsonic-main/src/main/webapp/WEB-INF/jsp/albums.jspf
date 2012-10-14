@@ -79,8 +79,10 @@
 					</c:choose>
 				</a>
 				<a href="javascript:noop()" onclick="toggleAlbum(${i.count})">
-					<b><c:if test="${not empty album.artistName}">${album.artistName} - </c:if>${album.title}</b><c:if test="${album.year > 0}"> <em>(${album.year})</em></c:if><br>
+					<b><c:if test="${not empty album.artistName}">${album.artistName} - </c:if>${album.title}</b><c:if test="${album.year > 0}"> <em>(${album.year})</em></c:if>
 				</a>
+				<c:if test="${album.artistId != model.artistId}"> <a href="artist.view?id=${album.artistId}&albumId=${album.id}">&raquo;</a></c:if>
+				<br>
 			</div>
 			<div id="albtit${i.count}">
 				<c:import url="playAddDownload.jsp">
