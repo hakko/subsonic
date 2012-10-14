@@ -121,13 +121,6 @@
            overflowToDisk="false"
            diskPersistent="false"/>
 
-	<!-- EXTINCT -->
-    <cache name="childDirCache"
-           maxElementsInMemory="0"
-           eternal="false"
-           diskPersistent="false"
-           overflowToDisk="false"/>
-
     <cache name="coverArtCache"
            maxElementsInMemory="200"
            eternal="false"
@@ -141,13 +134,6 @@
            eternal="false"
            timeToIdleSeconds="172800"
            timeToLiveSeconds="172800"
-           overflowToDisk="false"/>
-
-	<!-- EXTINCT -->
-    <cache name="musicFolderCache"
-           maxElementsInMemory="0"
-           eternal="false"
-           diskPersistent="false"
            overflowToDisk="false"/>
 
     <cache name="chatCache"
