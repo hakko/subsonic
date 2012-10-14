@@ -77,8 +77,39 @@
 		<%@ include file="albums.jspf" %>
 	</c:if>
 
+	<c:if test="${fn:length(model.videoFiles) > 0}">
+		<ul style="list-style-type: none; margin-left: 5px; padding-left: 5px;">
+			<c:forEach items="${model.videoFiles}" var="file">
+			<li>
+				<c:if test="${model.user.downloadRole}">
+					<sub:url value="/download.view" var="downloadUrl"><sub:param name="id" value="[${file.id}]"/></sub:url>
+					<a href="${downloadUrl}"><img src="<spring:theme code="downloadImage"/>" alt="<fmt:message key="common.download"/>" title="<fmt:message key="common.download"/>"></a>
+				</c:if>
+				<c:if test="${model.user.streamRole}">
+					<sub:url value="/videoPlayer.view" var="videoUrl"><sub:param name="id" value="[${file.id}]"/></sub:url>
+					<a href="${videoUrl}">
+				</c:if>
+				${file.name}
+				<c:if test="${model.user.streamRole}"></a></c:if>
+			</li>
+			</c:forEach>
+		</ul>
+	</c:if>
+
+	<c:if test="${fn:length(model.imageFiles) > 1}">
+		<ul style="list-style-type: none; margin-left: 5px; padding-left: 5px;">
+			<c:forEach items="${model.imageFiles}" var="file">
+			<li>
+				<sub:url value="coverArt.view" var="coverArtUrl">
+					<sub:param name="path" value="${file.path}"/>
+				</sub:url>
+				<a href="${coverArtUrl}">${file.name}</a>
+			</li>
+			</c:forEach>
+		</ul>
+	</c:if>
+
 </c:otherwise>
 </c:choose>
-
 
 </body></html>

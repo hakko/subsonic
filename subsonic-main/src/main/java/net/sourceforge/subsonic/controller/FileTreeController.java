@@ -5,7 +5,6 @@ import static com.github.hakko.musiccabinet.service.library.LibraryUtil.set;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -15,6 +14,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import net.sourceforge.subsonic.Logger;
 import net.sourceforge.subsonic.domain.Album;
+import net.sourceforge.subsonic.domain.MediaFile;
 import net.sourceforge.subsonic.domain.User;
 import net.sourceforge.subsonic.domain.UserSettings;
 import net.sourceforge.subsonic.service.MediaFileService;
@@ -22,6 +22,7 @@ import net.sourceforge.subsonic.service.SearchService;
 import net.sourceforge.subsonic.service.SecurityService;
 import net.sourceforge.subsonic.service.SettingsService;
 
+import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.lang.math.NumberUtils;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.ParameterizableViewController;
@@ -31,7 +32,6 @@ import com.github.hakko.musiccabinet.domain.model.library.Directory;
 import com.github.hakko.musiccabinet.service.DirectoryBrowserService;
 import com.github.hakko.musiccabinet.service.LibraryBrowserService;
 import com.github.hakko.musiccabinet.service.StarService;
-import com.github.hakko.musiccabinet.service.library.LibraryUtil;
 
 /**
  * Controller for the file tree page.
@@ -110,6 +110,7 @@ public class FileTreeController extends ParameterizableViewController {
 
         if (id != -1) {
         	map.put("parentId", directoryBrowserService.getParentId(id));
+        	
         	List<Album> albums = mediaFileService.getAlbums(
         			directoryBrowserService.getAlbums(id, userSettings.isAlbumOrderAscending()));
         	if (albums.size() > 0) {
@@ -118,8 +119,26 @@ public class FileTreeController extends ParameterizableViewController {
         				userSettings.getLastFmUsername(), getAlbumIds(albums)));
         		map.put("visibility", userSettings.getMainVisibility());
         	}
+
+        	Directory dir = directoryBrowserService.getDirectory(id);
+        	List<String> filenames = directoryBrowserService.getNonAudioFiles(id);
+        	map.put("videoFiles", getMediaFiles(dir, filenames, settingsService.getVideoFileTypesAsArray()));
+        	map.put("imageFiles", getMediaFiles(dir, filenames, settingsService.getImageFileTypesAsArray()));
         }
         map.put("directories", directories);
+    }
+    
+    private List<MediaFile> getMediaFiles(Directory dir, List<String> filenames, String[] extensions) {
+    	List<MediaFile> mediaFiles = new ArrayList<>();
+    	
+    	for (String filename : filenames) {
+    		if (FilenameUtils.isExtension(filename, extensions)) {
+    			mediaFiles.add(mediaFileService.getNonIndexedMediaFile(
+    					dir.getPath() + File.separatorChar + filename));
+    		}
+    	}
+    	
+    	return mediaFiles;
     }
     
     private List<Integer> getAlbumIds(List<Album> albums) {
