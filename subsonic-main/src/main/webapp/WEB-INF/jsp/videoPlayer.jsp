@@ -4,8 +4,9 @@
 <head>
     <%@ include file="head.jspf" %>
 
+	<c:set var="backUrl"><%= request.getHeader("referer") %></c:set>
+	
     <sub:url value="videoPlayer.view" var="baseUrl"><sub:param name="id" value="${model.video.id}"/></sub:url>
-    <sub:url value="main.view" var="backUrl"><sub:param name="path" value="${model.video.parent.path}"/></sub:url>
 
     <sub:url value="/stream" var="streamUrl">
         <sub:param name="mfId" value="${model.video.id}"/>
@@ -26,7 +27,6 @@
             var flashvars = {
                 id:"player1",
                 skin:"<c:url value="/flash/whotube.zip"/>",
-//                plugins:"metaviewer-1",
                 screencolor:"000000",
                 controlbar:"over",
                 autostart:"false",
@@ -107,7 +107,6 @@
         }
 
         function popin() {
-            window.opener.location.href = "${baseUrl}&maxBitRate=" + maxBitRate + "&timeOffset=" + getPosition();
             window.close();
         }
 
