@@ -54,8 +54,12 @@ public class MediaFileService {
 		if (!mediaFileCache.isElementInMemory(trackId)) {
 			LOG.debug("media file not in memory, load meta data from db!");
 			loadMediaFiles(Arrays.asList(trackId));
+			if (!mediaFileCache.isElementInMemory(trackId)) {
+				// trackId might refer to a playing track/video that since have been removed
+				return null;
+			}
 		}
-    	return (MediaFile) mediaFileCache.get(trackId).getValue();
+		return (MediaFile) mediaFileCache.get(trackId).getValue();
     }
 
     public List<MediaFile> getMediaFiles(List<Integer> trackIds) {
@@ -88,6 +92,7 @@ public class MediaFileService {
     	mediaFile.getMetaData().setAlbumId(track.getMetaData().getAlbumId());
     	mediaFile.getMetaData().setArtist(track.getMetaData().getArtist());
     	mediaFile.getMetaData().setArtistId(track.getMetaData().getArtistId());
+    	mediaFile.getMetaData().setComposer(track.getMetaData().getComposer());
     	mediaFile.getMetaData().setBitRate((int) track.getMetaData().getBitrate());
     	mediaFile.getMetaData().setDiscNumber((int) track.getMetaData().getDiscNr());
     	mediaFile.getMetaData().setDuration((int) track.getMetaData().getDuration());
