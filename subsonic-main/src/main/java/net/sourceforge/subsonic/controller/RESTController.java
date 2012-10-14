@@ -258,7 +258,7 @@ public class RESTController extends MultiActionController {
     		String artistId = id.substring(ARTIST_RADIO_ID.length());
     		LOG.debug("artist radio for " + artistId);
     		getArtistRadio(toInt(artistId), request, response);
-    	} else if (id.startsWith(ARTIST_RADIO_ID)) {
+    	} else if (id.startsWith(TOP_TRACKS_ID)) {
     		String artistId = id.substring(TOP_TRACKS_ID.length());
     		LOG.debug("top tracks for " + artistId);
     		getTopTracks(toInt(artistId), request, response);
