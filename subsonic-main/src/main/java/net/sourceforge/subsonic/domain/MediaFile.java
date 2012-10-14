@@ -20,14 +20,11 @@ package net.sourceforge.subsonic.domain;
 
 import java.io.File;
 import java.io.FileFilter;
-import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
 import net.sourceforge.subsonic.Logger;
 import net.sourceforge.subsonic.service.MediaFileService;
@@ -35,7 +32,6 @@ import net.sourceforge.subsonic.service.ServiceLocator;
 import net.sourceforge.subsonic.service.SettingsService;
 import net.sourceforge.subsonic.service.metadata.MetaDataParser;
 import net.sourceforge.subsonic.util.FileUtil;
-import net.sourceforge.subsonic.util.StringUtil;
 
 import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.io.filefilter.DirectoryFileFilter;
@@ -43,7 +39,6 @@ import org.apache.commons.io.filefilter.FalseFileFilter;
 import org.apache.commons.io.filefilter.FileFileFilter;
 import org.apache.commons.io.filefilter.TrueFileFilter;
 import org.apache.commons.lang.builder.CompareToBuilder;
-import org.springframework.util.StringUtils;
 
 /**
  * Represents a file or directory containing music. Media files can be put in a
@@ -65,8 +60,7 @@ public class MediaFile implements Serializable, Comparable<MediaFile> {
 	private boolean isVideo;
 	private long lastModified;
 	private MetaData metaData;
-	private Set<String> excludes;
-
+	
 	/**
 	 * Preferred usage:
 	 * {@link MediaFileService#getmediaFile}.
@@ -79,12 +73,8 @@ public class MediaFile implements Serializable, Comparable<MediaFile> {
 		isFile = file.isFile();
 		isDirectory = file.isDirectory();
 		lastModified = file.lastModified();
-		String suffix = FilenameUtils.getExtension(file.getName())
-				.toLowerCase();
-		isVideo = isFile && isVideoFile(suffix);
+		isVideo = isFile && isVideoFile(file);
 
-		// added by MusicCabinet: force reading meta data.
-		// we want that cached for faster generation of playlists.
 		if (isFile) {
 			getMetaData();
 			LOG.debug("created file with id " + id + " from file " + file + ", metadata = " + metaData);
@@ -215,7 +205,7 @@ public class MediaFile implements Serializable, Comparable<MediaFile> {
 	 * @return The file suffix.
 	 */
 	public String getSuffix() {
-		return StringUtils.getFilenameExtension(getName());
+		return FilenameUtils.getExtension(getName());
 	}
 
 	/**
@@ -328,61 +318,29 @@ public class MediaFile implements Serializable, Comparable<MediaFile> {
 			return true;
 		}
 
-		String suffix = FilenameUtils.getExtension(file.getName())
-				.toLowerCase();
-		return isMediaFile(suffix) || isVideoFile(suffix);
+		return isMusicFile(file) || isVideoFile(file);
 	}
 
-	private static boolean isMediaFile(String suffix) {
-		for (String s : ServiceLocator.getSettingsService()
-				.getMediaFileTypesAsArray()) {
-			if (suffix.equals(s.toLowerCase())) {
-				return true;
-			}
-		}
-		return false;
+	private static boolean isMusicFile(File file) {
+		return FilenameUtils.isExtension(file.getName(), 
+				ServiceLocator.getSettingsService().getMusicFileTypesAsArray());
 	}
 
-	private static boolean isVideoFile(String suffix) {
-		for (String s : ServiceLocator.getSettingsService()
-				.getVideoFileTypesAsArray()) {
-			if (suffix.equals(s.toLowerCase())) {
-				return true;
-			}
-		}
-		return false;
+	private static boolean isVideoFile(File file) {
+		return FilenameUtils.isExtension(file.getName(), 
+				ServiceLocator.getSettingsService().getVideoFileTypesAsArray());
 	}
 
 	/**
-	 * Returns whether the given file is excluded, i.e., whether it is listed in
-	 * 'subsonic_exclude.txt' in the current directory.
-	 * 
 	 * @param file
 	 *            The child file in question.
 	 * @return Whether the child file is excluded.
 	 */
-	public boolean isExcluded(File file) throws IOException {
+	private boolean isExcluded(File file) throws IOException {
 
 		// Exclude all hidden files starting with a "." or "@eaDir" (thumbnail
 		// dir created on Synology devices).
-		if (file.getName().startsWith(".")
-				|| file.getName().startsWith("@eaDir")) {
-			return true;
-		}
-
-		if (excludes == null) {
-			excludes = new HashSet<String>();
-			File excludeFile = new File(this.file, "subsonic_exclude.txt");
-			if (excludeFile.exists()) {
-				String[] lines = StringUtil.readLines(new FileInputStream(
-						excludeFile));
-				for (String line : lines) {
-					excludes.add(line.toLowerCase());
-				}
-			}
-		}
-
-		return excludes.contains(file.getName().toLowerCase());
+		return (file.getName().startsWith(".") || file.getName().startsWith("@eaDir"));
 	}
 
 	public boolean equals(Object o) {
