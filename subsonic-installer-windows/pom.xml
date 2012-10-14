@@ -87,7 +87,7 @@
                                         <mkdir dir="${project.build.directory}"/>
                                         <exec executable="${nsis.home}/makensis">
                                             <arg value="${basedir}/src/main/nsis/subsonic.nsi"/>
-                                            <arg value="-XOutFile ${project.build.directory}/subsonic-${project.version}-setup.exe"/>
+                                            <arg value="-XOutFile ${project.build.directory}/subsonic-musiccabinet-${project.version}-setup.exe"/>
                                         </exec>
                                     </target>
                                 </configuration>
