@@ -131,13 +131,16 @@ public class RESTController extends MultiActionController {
     private PlaylistGeneratorService playlistGeneratorService;
     private ArtistRecommendationService artistRecommendationService;
     
-    private static final String GENRE_RADIO_ID = "GenreRadio_";
+    private static final String GENRE_RADIO_ID = "GR_";
     private static final String GENRE_RADIO_NAME = "Genre Radio";
 
-    private static final String ARTIST_RADIO_ID = "ArtistRadio_";
+    private static final String ARTIST_RADIO_ID = "AR_";
     private static final String ARTIST_RADIO_NAME = "Artist Radio";
 
-    private static final String RELATED_ARTISTS_ID = "RelatedArtists_";
+    private static final String TOP_TRACKS_ID = "TT_";
+    private static final String TOP_TRACKS_NAME = "Top Tracks";
+
+    private static final String RELATED_ARTISTS_ID = "RA_";
     private static final String RELATED_ARTISTS_NAME = "Related Artists";
 
     private Comparator<Track> trackComparator = new Comparator<Track>() {
@@ -255,6 +258,10 @@ public class RESTController extends MultiActionController {
     		String artistId = id.substring(ARTIST_RADIO_ID.length());
     		LOG.debug("artist radio for " + artistId);
     		getArtistRadio(toInt(artistId), request, response);
+    	} else if (id.startsWith(ARTIST_RADIO_ID)) {
+    		String artistId = id.substring(TOP_TRACKS_ID.length());
+    		LOG.debug("top tracks for " + artistId);
+    		getTopTracks(toInt(artistId), request, response);
     	} else if (id.startsWith(RELATED_ARTISTS_ID)) {
     		String artistId = id.substring(RELATED_ARTISTS_ID.length());
     		LOG.debug("related artists for " + artistId);
@@ -302,6 +309,12 @@ public class RESTController extends MultiActionController {
         		new Attribute("id", ARTIST_RADIO_ID + artistId),
         		new Attribute("parent", artistId),
         		new Attribute("title", ARTIST_RADIO_NAME),
+        		new Attribute("isDir", true));
+
+        builder.add("child", true, 
+        		new Attribute("id", TOP_TRACKS_ID + artistId),
+        		new Attribute("parent", artistId),
+        		new Attribute("title", TOP_TRACKS_NAME),
         		new Attribute("isDir", true));
 
         builder.add("child", true, 
@@ -438,6 +451,27 @@ public class RESTController extends MultiActionController {
         builder.add("directory", false,
                 new Attribute("id", ARTIST_RADIO_ID + artistId),
                 new Attribute("name", ARTIST_RADIO_NAME));
+
+        Player player = playerService.getPlayer(request, response);
+        addTracks(builder, new Album(null, -artistId, null), tracks, player);
+        
+        builder.endAll();
+        response.getWriter().print(builder);
+
+    }
+
+    private void getTopTracks(int artistId, HttpServletRequest request, HttpServletResponse response) throws Exception {
+    	LOG.debug("getTopTracks() for " + artistId);
+
+    	List<Integer> trackIds = playlistGeneratorService.getTopTracksForArtist(artistId, 
+    			settingsService.getArtistTopTracksTotalCount());
+        List<Track> tracks = trackIds.isEmpty() ? new ArrayList<Track>() : libraryBrowserService.getTracks(trackIds);
+        
+        XMLBuilder builder = createXMLBuilder(request, response, true);
+
+        builder.add("directory", false,
+                new Attribute("id", TOP_TRACKS_ID + artistId),
+                new Attribute("name", TOP_TRACKS_NAME));
 
         Player player = playerService.getPlayer(request, response);
         addTracks(builder, new Album(null, -artistId, null), tracks, player);
