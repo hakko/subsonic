@@ -29,8 +29,9 @@ import net.sourceforge.subsonic.domain.Theme;
 public class GeneralSettingsCommand {
 
     private String playlistFolder;
-    private String mediaFileTypes;
+    private String musicFileTypes;
     private String videoFileTypes;
+    private String imageFileTypes;
     private String index;
     private String ignoredArticles;
     private boolean gettingStartedEnabled;
@@ -52,12 +53,12 @@ public class GeneralSettingsCommand {
         this.playlistFolder = playlistFolder;
     }
 
-    public String getmediaFileTypes() {
-        return mediaFileTypes;
+    public String getMusicFileTypes() {
+        return musicFileTypes;
     }
 
-    public void setmediaFileTypes(String mediaFileTypes) {
-        this.mediaFileTypes = mediaFileTypes;
+    public void setMusicFileTypes(String musicFileTypes) {
+        this.musicFileTypes = musicFileTypes;
     }
 
     public String getVideoFileTypes() {
@@ -68,7 +69,15 @@ public class GeneralSettingsCommand {
         this.videoFileTypes = videoFileTypes;
     }
 
-    public String getIndex() {
+    public String getImageFileTypes() {
+		return imageFileTypes;
+	}
+
+	public void setImageFileTypes(String imageFileTypes) {
+		this.imageFileTypes = imageFileTypes;
+	}
+
+	public String getIndex() {
         return index;
     }
 

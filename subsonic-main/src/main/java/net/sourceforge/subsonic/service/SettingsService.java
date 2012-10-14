@@ -78,6 +78,7 @@ public class SettingsService {
     private static final String KEY_PLAYLIST_FOLDER = "PlaylistFolder";
     private static final String KEY_MUSIC_FILE_TYPES = "MediaFileTypes";
     private static final String KEY_VIDEO_FILE_TYPES = "VideoFileTypes";
+    private static final String KEY_IMAGE_FILE_TYPES = "ImageFileTypes";
     private static final String KEY_COVER_ART_LIMIT = "CoverArtLimit";
     private static final String KEY_WELCOME_TITLE = "WelcomeTitle";
     private static final String KEY_WELCOME_SUBTITLE = "WelcomeSubtitle";
@@ -135,6 +136,7 @@ public class SettingsService {
     private static final String DEFAULT_PLAYLIST_FOLDER = Util.getDefaultPlaylistFolder();
     private static final String DEFAULT_MUSIC_FILE_TYPES = "mp3 ogg oga aac m4a flac wav wma aif aiff ape mpc shn";
     private static final String DEFAULT_VIDEO_FILE_TYPES = "flv avi mpg mpeg mp4 m4v mkv mov wmv ogv divx m2ts";
+    private static final String DEFAULT_IMAGE_FILE_TYPES = "jpg jpeg png tiff gif";
     private static final int DEFAULT_COVER_ART_LIMIT = 30;
     private static final String DEFAULT_WELCOME_TITLE = "Welcome to Subsonic!";
     private static final String DEFAULT_WELCOME_SUBTITLE = null;
@@ -208,8 +210,9 @@ public class SettingsService {
     private AvatarDao avatarDao;
     private VersionService versionService;
 
-    private String[] cachedMediaFileTypesArray;
+    private String[] cachedMusicFileTypesArray;
     private String[] cachedVideoFileTypesArray;
+    private String[] cachedImageFileTypesArray;
 	private Map<String, UserSettings> cachedUserSettings = new HashMap<>();
 
 	private static File subsonicHome;
@@ -362,20 +365,20 @@ public class SettingsService {
         setProperty(KEY_PLAYLIST_FOLDER, playlistFolder);
     }
 
-    public String getMediaFileTypes() {
+    public String getMusicFileTypes() {
         return properties.getProperty(KEY_MUSIC_FILE_TYPES, DEFAULT_MUSIC_FILE_TYPES);
     }
 
     public synchronized void setMediaFileTypes(String fileTypes) {
         setProperty(KEY_MUSIC_FILE_TYPES, fileTypes);
-        cachedMediaFileTypesArray = null;
+        cachedMusicFileTypesArray = null;
     }
 
-    public synchronized String[] getMediaFileTypesAsArray() {
-        if (cachedMediaFileTypesArray == null) {
-            cachedMediaFileTypesArray = toStringArray(getMediaFileTypes());
+    public synchronized String[] getMusicFileTypesAsArray() {
+        if (cachedMusicFileTypesArray == null) {
+            cachedMusicFileTypesArray = toStringArray(getMusicFileTypes());
         }
-        return cachedMediaFileTypesArray;
+        return cachedMusicFileTypesArray;
     }
 
     public String getVideoFileTypes() {
@@ -392,6 +395,22 @@ public class SettingsService {
             cachedVideoFileTypesArray = toStringArray(getVideoFileTypes());
         }
         return cachedVideoFileTypesArray;
+    }
+
+    public String getImageFileTypes() {
+        return properties.getProperty(KEY_IMAGE_FILE_TYPES, DEFAULT_IMAGE_FILE_TYPES);
+    }
+
+    public synchronized void setImageFileTypes(String fileTypes) {
+        setProperty(KEY_IMAGE_FILE_TYPES, fileTypes);
+        cachedImageFileTypesArray = null;
+    }
+
+    public synchronized String[] getImageFileTypesAsArray() {
+        if (cachedImageFileTypesArray == null) {
+            cachedImageFileTypesArray = toStringArray(getImageFileTypes());
+        }
+        return cachedImageFileTypesArray;
     }
 
     public int getCoverArtLimit() {

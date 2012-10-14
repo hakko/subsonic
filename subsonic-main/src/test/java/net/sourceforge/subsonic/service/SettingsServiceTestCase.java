@@ -109,8 +109,8 @@ public class SettingsServiceTestCase extends TestCase {
         assertEquals("Wrong ignored articles.", "a the foo bar", ss.getIgnoredArticles());
         assertTrue("Wrong ignored articles array.", Arrays.equals(new String[] {"a", "the", "foo", "bar"}, ss.getIgnoredArticlesAsArray()));
         assertEquals("Wrong playlist folder.", "playlistFolder", ss.getPlaylistFolder());
-        assertEquals("Wrong music mask.", "mp3 ogg  aac", ss.getMediaFileTypes());
-        assertTrue("Wrong music mask array.", Arrays.equals(new String[] {"mp3", "ogg", "aac"}, ss.getMediaFileTypesAsArray()));
+        assertEquals("Wrong music mask.", "mp3 ogg  aac", ss.getMusicFileTypes());
+        assertTrue("Wrong music mask array.", Arrays.equals(new String[] {"mp3", "ogg", "aac"}, ss.getMusicFileTypesAsArray()));
         assertEquals("Wrong cover art limit.", 99, ss.getCoverArtLimit());
         assertEquals("Wrong welcome message.", "welcomeMessage", ss.getWelcomeMessage());
         assertEquals("Wrong login message.", "loginMessage", ss.getLoginMessage());
