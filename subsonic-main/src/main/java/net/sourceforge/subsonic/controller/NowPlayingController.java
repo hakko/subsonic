@@ -52,9 +52,9 @@ public class NowPlayingController extends AbstractController {
         List<TransferStatus> statuses = statusService.getStreamStatusesForPlayer(player);
 
         MediaFile current = statuses.isEmpty() ? null : mediaFileService.getMediaFile(statuses.get(0).getMediaFileId());
-
+        
         String url;
-        if (current != null) {
+        if (current != null && current.getId() >= 0) {
             url = "artist.view?id=" + current.getMetaData().getArtistId() +
                     "&albumId=" + current.getMetaData().getAlbumId() +
                     "&trackId=" + current.getId();
