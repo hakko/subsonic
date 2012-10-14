@@ -291,8 +291,9 @@ public class UserSettings {
     public static class Visibility {
         private int captionCutoff;
         private boolean isTrackNumberVisible;
-        private boolean isArtistVisible;
         private boolean isAlbumVisible;
+        private boolean isArtistVisible;
+        private boolean isComposerVisible;
         private boolean isGenreVisible;
         private boolean isYearVisible;
         private boolean isBitRateVisible;
@@ -316,14 +317,6 @@ public class UserSettings {
             isTrackNumberVisible = trackNumberVisible;
         }
 
-        public boolean isArtistVisible() {
-            return isArtistVisible;
-        }
-
-        public void setArtistVisible(boolean artistVisible) {
-            isArtistVisible = artistVisible;
-        }
-
         public boolean isAlbumVisible() {
             return isAlbumVisible;
         }
@@ -332,7 +325,23 @@ public class UserSettings {
             isAlbumVisible = albumVisible;
         }
 
-        public boolean isGenreVisible() {
+        public boolean isArtistVisible() {
+            return isArtistVisible;
+        }
+
+        public void setArtistVisible(boolean artistVisible) {
+            isArtistVisible = artistVisible;
+        }
+        
+        public boolean isComposerVisible() {
+			return isComposerVisible;
+		}
+
+		public void setComposerVisible(boolean isComposerVisible) {
+			this.isComposerVisible = isComposerVisible;
+		}
+
+		public boolean isGenreVisible() {
             return isGenreVisible;
         }
 

@@ -48,6 +48,7 @@ import net.sourceforge.subsonic.dao.schema.Schema46MusicCabinet0_6_82;
 import net.sourceforge.subsonic.dao.schema.Schema46MusicCabinet0_6_85;
 import net.sourceforge.subsonic.dao.schema.Schema46MusicCabinet0_7_04;
 import net.sourceforge.subsonic.dao.schema.Schema46MusicCabinet0_7_08;
+import net.sourceforge.subsonic.dao.schema.Schema46MusicCabinet0_7_12;
 import net.sourceforge.subsonic.service.SettingsService;
 
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -78,7 +79,8 @@ public class DaoHelper {
                                 new Schema46MusicCabinet0_6_82(),
                                 new Schema46MusicCabinet0_6_85(),
                                 new Schema46MusicCabinet0_7_04(),
-                                new Schema46MusicCabinet0_7_08()};
+                                new Schema46MusicCabinet0_7_08(),
+                                new Schema46MusicCabinet0_7_12()};
     
     private DataSource dataSource;
     private static boolean shutdownHookAdded;

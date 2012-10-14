@@ -280,6 +280,10 @@
                 dwr.util.setValue("artist" + id, truncate(song.artist));
                 $("artist" + id).title = song.artist;
             }
+            if ($("composer" + id)) {
+                dwr.util.setValue("composer" + id, truncate(song.composer));
+                $("composer" + id).title = song.composer;
+            }
             if ($("genre" + id)) {
                 dwr.util.setValue("genre" + id, song.genre);
             }
@@ -572,30 +576,15 @@
                 </c:choose>
             </td>
 
-            <c:if test="${model.visibility.albumVisible}">
-                <td style="padding-right:1.25em"><a id="albumUrl" target="main"><span id="album" class="detail">Album</span></a></td>
-            </c:if>
-            <c:if test="${model.visibility.artistVisible}">
-                <td style="padding-right:1.25em"><span id="artist" class="detail">Artist</span></td>
-            </c:if>
-            <c:if test="${model.visibility.genreVisible}">
-                <td style="padding-right:1.25em"><span id="genre" class="detail">Genre</span></td>
-            </c:if>
-            <c:if test="${model.visibility.yearVisible}">
-                <td style="padding-right:1.25em"><span id="year" class="detail">Year</span></td>
-            </c:if>
-            <c:if test="${model.visibility.formatVisible}">
-                <td style="padding-right:1.25em"><span id="format" class="detail">Format</span></td>
-            </c:if>
-            <c:if test="${model.visibility.fileSizeVisible}">
-                <td style="padding-right:1.25em;text-align:right;"><span id="fileSize" class="detail">Format</span></td>
-            </c:if>
-            <c:if test="${model.visibility.durationVisible}">
-                <td style="padding-right:1.25em;text-align:right;"><span id="duration" class="detail">Duration</span></td>
-            </c:if>
-            <c:if test="${model.visibility.bitRateVisible}">
-                <td style="padding-right:0.25em"><span id="bitRate" class="detail">Bit Rate</span></td>
-            </c:if>
+            <c:if test="${model.visibility.albumVisible}"><td style="padding-right:1.25em"><a id="albumUrl" target="main"><span id="album" class="detail">Album</span></a></td></c:if>
+            <c:if test="${model.visibility.artistVisible}"><td style="padding-right:1.25em"><span id="artist" class="detail">Artist</span></td></c:if>
+			<c:if test="${model.visibility.composerVisible}"><td style="padding-right:1.25em"><span id="composer" class="detail">Composer</span></td></c:if>
+            <c:if test="${model.visibility.genreVisible}"><td style="padding-right:1.25em"><span id="genre" class="detail">Genre</span></td></c:if>
+            <c:if test="${model.visibility.yearVisible}"><td style="padding-right:1.25em"><span id="year" class="detail">Year</span></td></c:if>
+            <c:if test="${model.visibility.formatVisible}"><td style="padding-right:1.25em"><span id="format" class="detail">Format</span></td></c:if>
+            <c:if test="${model.visibility.fileSizeVisible}"><td style="padding-right:1.25em;text-align:right;"><span id="fileSize" class="detail">Size</span></td></c:if>
+            <c:if test="${model.visibility.durationVisible}"><td style="padding-right:1.25em;text-align:right;"><span id="duration" class="detail">Duration</span></td></c:if>
+            <c:if test="${model.visibility.bitRateVisible}"><td style="padding-right:0.25em"><span id="bitRate" class="detail">Bit Rate</span></td></c:if>
         </tr>
     </tbody>
 </table>

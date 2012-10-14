@@ -49,7 +49,7 @@ public class UserDao extends AbstractDao {
             "default_home_songs, artist_grid_width, album_grid_layout, related_artists, recommended_artists, " +
     		"reluctant_artist_loading, only_album_artist_recommendations";
     private static final String USER_VISIBILITY_COLUMNS = "username, type, caption_cutoff, track_number, artist, " +
-            "album, genre, year, bit_rate, duration, format, file_size";
+            "album, composer, genre, year, bit_rate, duration, format, file_size";
 
     private static final Integer ROLE_ID_ADMIN = 1;
     private static final Integer ROLE_ID_DOWNLOAD = 2;
@@ -201,9 +201,9 @@ public class UserDao extends AbstractDao {
         for (int i = 0; i < 3; i++) {
         	Visibility v = visibilities[i];
             template.update(sql, new Object[]{settings.getUsername(), i, v.getCaptionCutoff(), 
-            		v.isTrackNumberVisible(), v.isArtistVisible(), v.isAlbumVisible(), v.isGenreVisible(),
-            		v.isYearVisible(), v.isBitRateVisible(), v.isDurationVisible(), v.isFormatVisible(), 
-            		v.isFileSizeVisible()});
+            		v.isTrackNumberVisible(), v.isArtistVisible(), v.isAlbumVisible(), v.isComposerVisible(),
+            		v.isGenreVisible(), v.isYearVisible(), v.isBitRateVisible(), 
+            		v.isDurationVisible(), v.isFormatVisible(), v.isFileSizeVisible()});
         }
     }
 
@@ -359,6 +359,7 @@ public class UserDao extends AbstractDao {
             visibility.setTrackNumberVisible(rs.getBoolean(col++));
             visibility.setArtistVisible(rs.getBoolean(col++));
             visibility.setAlbumVisible(rs.getBoolean(col++));
+            visibility.setComposerVisible(rs.getBoolean(col++));
             visibility.setGenreVisible(rs.getBoolean(col++));
             visibility.setYearVisible(rs.getBoolean(col++));
             visibility.setBitRateVisible(rs.getBoolean(col++));

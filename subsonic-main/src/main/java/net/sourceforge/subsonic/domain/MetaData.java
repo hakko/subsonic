@@ -16,6 +16,7 @@ public class MetaData implements Serializable {
 	private int artistId;
 	private String album;
 	private int albumId;
+	private String composer;
 	private String genre;
 	private String year;
 	private Integer bitRate;
@@ -80,6 +81,14 @@ public class MetaData implements Serializable {
 
 	public void setAlbumId(int albumId) {
 		this.albumId = albumId;
+	}
+
+	public String getComposer() {
+		return composer;
+	}
+
+	public void setComposer(String composer) {
+		this.composer = composer;
 	}
 
 	public String getGenre() {

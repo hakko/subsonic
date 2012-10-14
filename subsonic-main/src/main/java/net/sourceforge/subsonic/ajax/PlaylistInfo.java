@@ -72,6 +72,7 @@ public class PlaylistInfo {
         private final String title;
         private final String artist;
         private final String album;
+        private final String composer;
         private final String genre;
         private final String year;
         private final String bitRate;
@@ -83,13 +84,14 @@ public class PlaylistInfo {
         private final String albumUrl;
         private final String streamUrl;
 
-        public Entry(Integer trackNumber, String title, String artist, String album, String genre, String year,
+        public Entry(Integer trackNumber, String title, String artist, String album, String composer, String genre, String year,
                      String bitRate, Integer duration, String durationAsString, String format, String contentType, String fileSize,
                      String albumUrl, String streamUrl) {
             this.trackNumber = trackNumber;
             this.title = title;
             this.artist = artist;
             this.album = album;
+            this.composer = composer;
             this.genre = genre;
             this.year = year;
             this.bitRate = bitRate;
@@ -118,7 +120,11 @@ public class PlaylistInfo {
             return album;
         }
 
-        public String getGenre() {
+        public String getComposer() {
+			return composer;
+		}
+
+		public String getGenre() {
             return genre;
         }
 

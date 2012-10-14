@@ -384,9 +384,9 @@ public class PlaylistService {
 
             String format = formatFormat(player, file);
             entries.add(new PlaylistInfo.Entry(metaData.getTrackNumber(), metaData.getTitle(), metaData.getArtist(),
-                    metaData.getAlbum(), metaData.getGenre(), metaData.getYear(), formatBitRate(metaData),
-                    metaData.getDuration(), metaData.getDurationAsString(), format, formatContentType(format),
-                    formatFileSize(metaData.getFileSize(), locale), albumUrl, streamUrl));
+                    metaData.getAlbum(), metaData.getComposer(), metaData.getGenre(), metaData.getYear(), 
+                    formatBitRate(metaData), metaData.getDuration(), metaData.getDurationAsString(), format, 
+                    formatContentType(format), formatFileSize(metaData.getFileSize(), locale), albumUrl, streamUrl));
         }
         boolean isStopEnabled = playlist.getStatus() == Playlist.Status.PLAYING && !player.isExternalWithPlaylist();
         float gain = jukeboxService.getGain();
