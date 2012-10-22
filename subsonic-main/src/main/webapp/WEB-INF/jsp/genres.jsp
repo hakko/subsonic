@@ -58,6 +58,9 @@
 		<c:if test="${i.count > 1}">|</c:if>
 		<a href="${url}">${group.name}</a>
 	</c:forEach>
+	<c:if test="${empty model.topTagsOccurrences and empty model.lastFmGroups}">
+		<p>Please configure which genres to use <a href="tagSettings.view">here</a>.
+	</c:if>
 </c:if>
 
 </div>
