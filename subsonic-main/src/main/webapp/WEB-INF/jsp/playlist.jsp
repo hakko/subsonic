@@ -19,7 +19,8 @@
 
 <script type="text/javascript" language="javascript">
     var songs = null;
-    var currentAlbumUrl = null;
+    var currentArtistId = null;
+    var currentAlbumId = null;
     var currentStreamUrl = null;
     var startPlayer = false;
     var repeatEnabled = false;
@@ -48,9 +49,10 @@
     function nowPlayingCallback(nowPlayingInfo) {
         if (nowPlayingInfo != null && nowPlayingInfo.streamUrl != currentStreamUrl) {
             getPlaylist();
-            if (currentAlbumUrl != nowPlayingInfo.albumUrl && top.main.updateNowPlaying) {
+            if (currentArtistId != nowPlayingInfo.artistId && currentAlbumId != nowPlayingInfo.albumId && top.main.updateNowPlaying) {
                 top.main.location.replace("nowPlaying.view?");
-                currentAlbumUrl = nowPlayingInfo.albumUrl;
+                currentArtistId = nowPlayingInfo.artistId;
+				currentAlbumId = nowPlayingInfo.albumId;
             }
         <c:if test="${not model.player.web}">
             currentStreamUrl = nowPlayingInfo.streamUrl;
@@ -274,11 +276,12 @@
             if ($("album" + id)) {
                 dwr.util.setValue("album" + id, truncate(song.album));
                 $("album" + id).title = song.album;
-                $("albumUrl" + id).href = song.albumUrl;
+                $("albumUrl" + id).href = "artist.view?id=" + song.artistId + "&albumId=" + song.albumId;
             }
             if ($("artist" + id)) {
                 dwr.util.setValue("artist" + id, truncate(song.artist));
                 $("artist" + id).title = song.artist;
+                $("artistUrl" + id).href = "artist.view?id=" + song.artistId;
             }
             if ($("composer" + id)) {
                 dwr.util.setValue("composer" + id, truncate(song.composer));
@@ -577,7 +580,7 @@
             </td>
 
             <c:if test="${model.visibility.albumVisible}"><td style="padding-right:1.25em"><a id="albumUrl" target="main"><span id="album" class="detail">Album</span></a></td></c:if>
-            <c:if test="${model.visibility.artistVisible}"><td style="padding-right:1.25em"><span id="artist" class="detail">Artist</span></td></c:if>
+            <c:if test="${model.visibility.artistVisible}"><td style="padding-right:1.25em"><a id="artistUrl" target="main"><span id="artist" class="detail">Artist</span></a></td></c:if>
 			<c:if test="${model.visibility.composerVisible}"><td style="padding-right:1.25em"><span id="composer" class="detail">Composer</span></td></c:if>
             <c:if test="${model.visibility.genreVisible}"><td style="padding-right:1.25em"><span id="genre" class="detail">Genre</span></td></c:if>
             <c:if test="${model.visibility.yearVisible}"><td style="padding-right:1.25em"><span id="year" class="detail">Year</span></td></c:if>

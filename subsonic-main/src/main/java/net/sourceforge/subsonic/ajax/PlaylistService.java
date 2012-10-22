@@ -295,7 +295,7 @@ public class PlaylistService {
         player.getPlaylist().moveDown(index);
         return convert(request, player, false);
     }
-
+    
     public PlaylistInfo toggleRepeat() throws Exception {
         HttpServletRequest request = WebContextFactory.get().getHttpServletRequest();
         HttpServletResponse response = WebContextFactory.get().getHttpServletResponse();
@@ -371,22 +371,20 @@ public class PlaylistService {
         Playlist playlist = player.getPlaylist();
         for (MediaFile file : playlist.getFiles()) {
             MetaData metaData = file.getMetaData();
-            String albumUrl = url.replaceFirst("/dwr/.*", "/artist.view?id=" + metaData.getArtistId() 
-            		+ "&albumId=" + metaData.getAlbumId());
             String streamUrl = url.replaceFirst("/dwr/.*", "/stream?player=" + player.getId() + "&mfId=" + file.getId());
 
             // Rewrite URLs in case we're behind a proxy.
             if (settingsService.isRewriteUrlEnabled()) {
                 String referer = request.getHeader("referer");
-                albumUrl = StringUtil.rewriteUrl(albumUrl, referer);
                 streamUrl = StringUtil.rewriteUrl(streamUrl, referer);
             }
 
             String format = formatFormat(player, file);
             entries.add(new PlaylistInfo.Entry(metaData.getTrackNumber(), metaData.getTitle(), metaData.getArtist(),
-                    metaData.getAlbum(), metaData.getComposer(), metaData.getGenre(), metaData.getYear(), 
-                    formatBitRate(metaData), metaData.getDuration(), metaData.getDurationAsString(), format, 
-                    formatContentType(format), formatFileSize(metaData.getFileSize(), locale), albumUrl, streamUrl));
+            		metaData.getArtistId(), metaData.getAlbum(), metaData.getAlbumId(), metaData.getComposer(), 
+            		metaData.getGenre(), metaData.getYear(), formatBitRate(metaData), metaData.getDuration(), 
+            		metaData.getDurationAsString(), format, formatContentType(format), 
+            		formatFileSize(metaData.getFileSize(), locale), streamUrl));
         }
         boolean isStopEnabled = playlist.getStatus() == Playlist.Status.PLAYING && !player.isExternalWithPlaylist();
         float gain = jukeboxService.getGain();

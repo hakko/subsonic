@@ -76,6 +76,10 @@
     <table style="border-collapse:collapse">
         <c:forEach items="${command.albums}" var="album" varStatus="loopStatus">
 
+			<sub:url value="/artist.view" var="artistUrl">
+                <sub:param name="id" value="${album.artist.id}"/>
+            </sub:url>
+
             <sub:url value="/artist.view" var="albumUrl">
                 <sub:param name="id" value="${album.artist.id}"/>
                 <sub:param name="albumId" value="${album.id}"/>
@@ -87,7 +91,7 @@
                 </td>
 
                 <td ${loopStatus.count % 2 == 1 ? "class='bgcolor2'" : ""} style="padding-right:0.25em">
-                    <span class="detail">${album.artist.name}</span>
+                    <a href="${artistUrl}">${album.artist.name}</a>
                 </td>
             </tr>
 
@@ -103,6 +107,10 @@
     <h2><fmt:message key="search.hits.songs"/></h2>
     <table style="border-collapse:collapse">
         <c:forEach items="${command.songs}" var="track" varStatus="loopStatus">
+
+			<sub:url value="/artist.view" var="artistUrl">
+                <sub:param name="id" value="${album.artist.id}"/>
+            </sub:url>
 
             <sub:url value="/artist.view" var="albumUrl">
                 <sub:param name="id" value="${track.metaData.artistId}"/>
@@ -126,11 +134,11 @@
                 </td>
 
                 <td ${loopStatus.count % 2 == 1 ? "class='bgcolor2'" : ""} style="padding-right:1.25em">
-                    <a href="${albumUrl}"><span class="detail">${track.metaData.album}</span></a>
+                    <a href="${albumUrl}">${track.metaData.album}</a>
                 </td>
 
                 <td ${loopStatus.count % 2 == 1 ? "class='bgcolor2'" : ""} style="padding-right:0.25em">
-                    <span class="detail">${track.metaData.artist}</span>
+                    <a href="${artistUrl}">${track.metaData.artist}</a>
                 </td>
             </tr>
 
