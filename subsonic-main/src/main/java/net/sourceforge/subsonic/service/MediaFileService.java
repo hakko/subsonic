@@ -65,7 +65,10 @@ public class MediaFileService {
     public List<MediaFile> getMediaFiles(List<Integer> trackIds) {
     	List<MediaFile> mediaFiles = new ArrayList<>();
     	for (Integer trackId : trackIds) {
-    		mediaFiles.add(getMediaFile(trackId));
+    		MediaFile mediaFile = getMediaFile(trackId);
+    		if (mediaFile != null) {
+    			mediaFiles.add(mediaFile);
+    		}
     	}
     	return mediaFiles;
     }
