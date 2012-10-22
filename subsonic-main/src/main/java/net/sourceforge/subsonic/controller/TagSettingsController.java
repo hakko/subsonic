@@ -1,5 +1,7 @@
 package net.sourceforge.subsonic.controller;
 
+import static org.apache.commons.lang.StringUtils.isEmpty;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -40,10 +42,10 @@ public class TagSettingsController extends SimpleFormController {
         Map<String, String> tagCorrections = new HashMap<>();
         Set<String> topTags = new HashSet<>();
         for (TagOccurrence to : command.getAvailableTags()) {
-        	if (to.isUse() && to.getCorrectedTag().isEmpty()) {
+        	if (to.isUse() && isEmpty(to.getCorrectedTag())) {
         		topTags.add(to.getTag());
         	}
-        	if (!to.getCorrectedTag().isEmpty()) {
+        	if (!isEmpty(to.getCorrectedTag())) {
             	tagCorrections.put(to.getTag(), to.getCorrectedTag().toLowerCase());
         		topTags.add(to.getCorrectedTag());
         	}
