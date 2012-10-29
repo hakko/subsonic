@@ -39,6 +39,7 @@ public class GeneralSettingsCommand {
     private String welcomeSubtitle;
     private String welcomeMessage;
     private String loginMessage;
+    private String shareUrlPrefix;
     private String localeIndex;
     private String[] locales;
     private String themeIndex;
@@ -125,7 +126,15 @@ public class GeneralSettingsCommand {
         this.loginMessage = loginMessage;
     }
 
-    public String getLocaleIndex() {
+    public String getShareUrlPrefix() {
+		return shareUrlPrefix;
+	}
+
+	public void setShareUrlPrefix(String shareUrlPrefix) {
+		this.shareUrlPrefix = shareUrlPrefix;
+	}
+
+	public String getLocaleIndex() {
         return localeIndex;
     }
 

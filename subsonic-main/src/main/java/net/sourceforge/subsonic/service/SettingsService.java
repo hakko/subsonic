@@ -84,6 +84,7 @@ public class SettingsService {
     private static final String KEY_WELCOME_SUBTITLE = "WelcomeSubtitle";
     private static final String KEY_WELCOME_MESSAGE = "WelcomeMessage2";
     private static final String KEY_LOGIN_MESSAGE = "LoginMessage";
+    private static final String KEY_SHARE_URL_PREFIX = "ShareUrlPrefix";
     private static final String KEY_LOCALE_LANGUAGE = "LocaleLanguage";
     private static final String KEY_LOCALE_COUNTRY = "LocaleCountry";
     private static final String KEY_LOCALE_VARIANT = "LocaleVariant";
@@ -453,6 +454,14 @@ public class SettingsService {
         setProperty(KEY_LOGIN_MESSAGE, message);
     }
 
+    public String getShareUrlPrefix() {
+    	return StringUtils.trimToEmpty(properties.getProperty(KEY_SHARE_URL_PREFIX));
+    }
+    
+    public void setShareUrlPrefix(String shareUrlPrefix) {
+    	setProperty(KEY_SHARE_URL_PREFIX, shareUrlPrefix);
+    }
+    
     /**
      * Returns the number of days between automatic index creation, of -1 if automatic index
      * creation is disabled.

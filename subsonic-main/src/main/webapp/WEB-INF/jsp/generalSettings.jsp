@@ -132,6 +132,13 @@
                 <fmt:message key="main.wiki"/>
             </td>
         </tr>
+        <tr>
+            <td style="vertical-align:top;"><fmt:message key="generalsettings.shareurlprefix"/></td>
+            <td>
+                <form:input path="shareUrlPrefix" size="70"/>
+                <c:import url="helpToolTip.jsp"><c:param name="topic" value="shareurlprefix"/></c:import>
+            </td>
+        </tr>
 
         <tr>
             <td colspan="2" style="padding-top:1.5em">

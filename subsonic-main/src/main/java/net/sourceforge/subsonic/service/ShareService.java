@@ -29,6 +29,7 @@ import javax.servlet.http.HttpServletRequest;
 
 import org.apache.commons.lang.ObjectUtils;
 import org.apache.commons.lang.RandomStringUtils;
+import org.apache.commons.lang.StringUtils;
 
 import net.sourceforge.subsonic.Logger;
 import net.sourceforge.subsonic.dao.ShareDao;
@@ -105,13 +106,18 @@ public class ShareService {
     }
 
     public String getShareBaseUrl() {
-    	String host = settingsService.isUrlRedirectionEnabled() ?
-    			settingsService.getUrlRedirectFrom() + ".subsonic.org" :
-    			getCurrentIpAdress() + ":" + settingsService.getPort();
-        return "http://" + host + "/share/";
+    	String host;
+    	if (StringUtils.isNotEmpty(settingsService.getShareUrlPrefix())) {
+    		host = StringUtils.removeEnd(settingsService.getShareUrlPrefix(), "/");
+    	} else if (settingsService.isUrlRedirectionEnabled()) {
+    		host = "http://" + settingsService.getUrlRedirectFrom() + ".subsonic.org";
+    	} else {
+    		host = "http://" + getCurrentAddress() + ":" + settingsService.getPort();
+    	}
+        return host + "/share/";
     }
     
-    private String getCurrentIpAdress() {
+    private String getCurrentAddress() {
     	String host = "localhost";
     	try {
     		InetAddress localHost = InetAddress.getLocalHost();

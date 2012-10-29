@@ -48,6 +48,7 @@ public class GeneralSettingsController extends SimpleFormController {
         command.setWelcomeSubtitle(settingsService.getWelcomeSubtitle());
         command.setWelcomeMessage(settingsService.getWelcomeMessage());
         command.setLoginMessage(settingsService.getLoginMessage());
+        command.setShareUrlPrefix(settingsService.getShareUrlPrefix());
 
         Theme[] themes = settingsService.getAvailableThemes();
         command.setThemes(themes);
@@ -99,6 +100,7 @@ public class GeneralSettingsController extends SimpleFormController {
         settingsService.setWelcomeSubtitle(command.getWelcomeSubtitle());
         settingsService.setWelcomeMessage(command.getWelcomeMessage());
         settingsService.setLoginMessage(command.getLoginMessage());
+        settingsService.setShareUrlPrefix(command.getShareUrlPrefix());
         settingsService.setThemeId(theme.getId());
         settingsService.setLocale(locale);
         settingsService.save();
