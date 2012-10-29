@@ -25,7 +25,7 @@
             <td><input type="text" name="name[${folder.id}]" size="20" value="${folder.name}"/></td>
             <td><input type="text" name="path[${folder.id}]" size="40" value="${folder.path.path}"/></td>
             <td align="center" style="padding-left:1em"><input type="checkbox" ${folder.enabled ? "checked" : ""} name="enabled[${folder.id}]" class="checkbox"/></td>
-            <td align="center" style="padding-left:1em"><input type="checkbox" name="delete[${folder.id}]" class="checkbox"/></td>
+            <td align="center" style="padding-left:1em"><input type="checkbox" name="delete[${folder.id}]" class="checkbox" <c:if test="${model.indexBeingCreated}">disabled title="Media folders cannot be deleted during library scanning."</c:if>/></td>
         </tr>
     </c:forEach>
 

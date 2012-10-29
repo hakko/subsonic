@@ -54,6 +54,10 @@ public class MediaFolderSettingsController extends ParameterizableViewController
 
         Map<String, Object> map = new HashMap<String, Object>();
 
+        if (isDeleteMediaFolder(request) && libraryUpdateService.isIndexBeingCreated()) {
+            return new ModelAndView("musicCabinetUnavailable"); // not informative, but very rare
+        }
+        
         if (isFormSubmission(request)) {
             String error = handleParameters(request);
             map.put("error", error);
@@ -83,6 +87,15 @@ public class MediaFolderSettingsController extends ParameterizableViewController
         return "POST".equals(request.getMethod());
     }
 
+    private boolean isDeleteMediaFolder(HttpServletRequest request) {
+        for (MediaFolder mediaFolder : settingsService.getAllMediaFolders(true)) {
+            if (getParameter(request, "delete", mediaFolder.getId()) != null) {
+            	return true;
+            }
+        }
+        return false;
+    }
+    
     private String handleParameters(HttpServletRequest request) {
 
     	LOG.debug("handleParameters");
