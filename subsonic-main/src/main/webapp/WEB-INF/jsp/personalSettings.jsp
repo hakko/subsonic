@@ -46,6 +46,17 @@
                 <c:import url="helpToolTip.jsp"><c:param name="topic" value="theme"/></c:import>
             </td>
         </tr>
+
+        <tr>
+        	<td>Album sorting</td>
+        	<td>
+        		<form:select path="albumOrderByYear" cssStyle="width:15em">
+        			<form:option value="true" label="By year"/>
+        			<form:option value="false" label="By name"/>
+        		</form:select>
+                <c:import url="helpToolTip.jsp"><c:param name="topic" value="albumorderbyyear"/></c:import>
+            </td>
+        </tr>
         
         <tr>
         	<td>Album ordering</td>

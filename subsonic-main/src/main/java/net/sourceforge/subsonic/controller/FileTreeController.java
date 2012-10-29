@@ -111,8 +111,8 @@ public class FileTreeController extends ParameterizableViewController {
         if (id != -1) {
         	map.put("parentId", directoryBrowserService.getParentId(id));
         	
-        	List<Album> albums = mediaFileService.getAlbums(
-        			directoryBrowserService.getAlbums(id, userSettings.isAlbumOrderAscending()));
+        	List<Album> albums = mediaFileService.getAlbums(directoryBrowserService.getAlbums(id, 
+        			userSettings.isAlbumOrderByYear(), userSettings.isAlbumOrderAscending()));
         	if (albums.size() > 0) {
         		map.put("albums", albums);
         		map.put("isAlbumStarred", starService.getStarredAlbumsMask(

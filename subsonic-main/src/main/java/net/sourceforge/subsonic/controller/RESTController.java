@@ -280,10 +280,13 @@ public class RESTController extends MultiActionController {
         ArtistInfo artistInfo;
         List<net.sourceforge.subsonic.domain.Album> albums;
 
+    	UserSettings userSettings = settingsService.getUserSettings(request.getParameter("u"));
+
         try {
             artistId = ServletRequestUtils.getRequiredIntParameter(request, "id");
             artistInfo = artistInfoService.getArtistInfo(artistId);
-            albums = mediaFileService.getAlbums(libraryBrowserService.getAlbums(artistId, false), true);
+            albums = mediaFileService.getAlbums(libraryBrowserService.getAlbums(artistId, 
+            		userSettings.isAlbumOrderByYear(), userSettings.isAlbumOrderAscending()), true);
         } catch (Exception x) {
             LOG.warn("Error in REST API.", x);
             error(request, response, ErrorCode.GENERIC, getErrorMessage(x));

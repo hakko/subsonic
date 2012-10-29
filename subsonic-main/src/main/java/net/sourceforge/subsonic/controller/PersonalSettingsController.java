@@ -63,6 +63,7 @@ public class PersonalSettingsController extends SimpleFormController {
         command.setLastFmEnabled(userSettings.isLastFmEnabled());
         command.setLastFmUsername(userSettings.getLastFmUsername());
         command.setAlbumOrderAscending(userSettings.isAlbumOrderAscending());
+        command.setAlbumOrderByYear(userSettings.isAlbumOrderByYear());
         command.setDefaultHomeView(userSettings.getDefaultHomeView());
         command.setDefaultHomeArtists(userSettings.getDefaultHomeArtists());
         command.setDefaultHomeAlbums(userSettings.getDefaultHomeAlbums());
@@ -131,6 +132,7 @@ public class PersonalSettingsController extends SimpleFormController {
         settings.setSystemAvatarId(getSystemAvatarId(command));
         settings.setAvatarScheme(getAvatarScheme(command));
         settings.setAlbumOrderAscending(command.isAlbumOrderAscending());
+        settings.setAlbumOrderByYear(command.isAlbumOrderByYear());
         settings.setDefaultHomeView(command.getDefaultHomeView());
         settings.setDefaultHomeArtists(command.getDefaultHomeArtists());
         settings.setDefaultHomeAlbums(command.getDefaultHomeAlbums());

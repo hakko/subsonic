@@ -92,8 +92,8 @@ public class ArtistController extends ParameterizableViewController {
     }
 
     private void setAlbums(int artistId, UserSettings userSettings, Map<String, Object> map, String[] selectedAlbumIds) {
-        List<Album> albums = mediaFileService.getAlbums(
-        		libraryBrowserService.getAlbums(artistId, userSettings.isAlbumOrderAscending()));
+        List<Album> albums = mediaFileService.getAlbums(libraryBrowserService.getAlbums(artistId,
+        		userSettings.isAlbumOrderByYear(), userSettings.isAlbumOrderAscending()));
         List<Integer> albumIds = new ArrayList<>();
         List<Integer> trackIds = new ArrayList<>();
         

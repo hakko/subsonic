@@ -50,6 +50,7 @@ public class PersonalSettingsCommand {
     private boolean lastFmEnabled;
     private String lastFmUsername;
     private boolean albumOrderAscending;
+    private boolean albumOrderByYear;
     private String defaultHomeView;
     private short defaultHomeArtists;
     private short defaultHomeAlbums;
@@ -204,6 +205,14 @@ public class PersonalSettingsCommand {
 
 	public void setAlbumOrderAscending(boolean albumOrderingAscending) {
 		this.albumOrderAscending = albumOrderingAscending;
+	}
+
+	public boolean isAlbumOrderByYear() {
+		return albumOrderByYear;
+	}
+
+	public void setAlbumOrderByYear(boolean albumOrderByYear) {
+		this.albumOrderByYear = albumOrderByYear;
 	}
 
 	public String getDefaultHomeView() {

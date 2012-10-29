@@ -45,9 +45,9 @@ public class UserDao extends AbstractDao {
     private static final String USER_SETTINGS_COLUMNS = "username, locale, theme_id, " +
             "last_fm_enabled, last_fm_username, transcode_scheme, show_now_playing, " +
             "party_mode_enabled, now_playing_allowed, avatar_scheme, system_avatar_id, changed, show_chat, " +
-            "album_order_ascending, default_home_view, default_home_artists, default_home_albums, " +
-            "default_home_songs, artist_grid_width, album_grid_layout, related_artists, recommended_artists, " +
-    		"reluctant_artist_loading, only_album_artist_recommendations";
+            "album_order_ascending, album_order_by_year, default_home_view, default_home_artists, " +
+            "default_home_albums, default_home_songs, artist_grid_width, album_grid_layout, related_artists, " +
+            "recommended_artists, reluctant_artist_loading, only_album_artist_recommendations";
     private static final String USER_VISIBILITY_COLUMNS = "username, type, caption_cutoff, track_number, artist, " +
             "album, composer, genre, year, bit_rate, duration, format, file_size";
 
@@ -187,8 +187,9 @@ public class UserDao extends AbstractDao {
                 settings.getTranscodeScheme().name(), settings.isShowNowPlayingEnabled(),
                 settings.isPartyModeEnabled(), settings.isNowPlayingAllowed(),
                 settings.getAvatarScheme().name(), settings.getSystemAvatarId(), settings.getChanged(),
-                settings.isShowChatEnabled(), settings.isAlbumOrderAscending(), settings.getDefaultHomeView(), 
-                settings.getDefaultHomeArtists(), settings.getDefaultHomeAlbums(), settings.getDefaultHomeSongs(),
+                settings.isShowChatEnabled(), settings.isAlbumOrderAscending(), settings.isAlbumOrderByYear(),
+                settings.getDefaultHomeView(), settings.getDefaultHomeArtists(),
+                settings.getDefaultHomeAlbums(), settings.getDefaultHomeSongs(),
                 settings.getArtistGridWidth(), settings.isAlbumGridLayout(), settings.getRelatedArtists(), 
                 settings.getRecommendedArtists(), settings.isReluctantArtistLoading(), 
                 settings.isOnlyAlbumArtistRecommendations()});
@@ -335,6 +336,7 @@ public class UserDao extends AbstractDao {
             settings.setChanged(rs.getTimestamp(col++));
             settings.setShowChatEnabled(rs.getBoolean(col++));
             settings.setAlbumOrderAscending(rs.getBoolean(col++));
+            settings.setAlbumOrderByYear(rs.getBoolean(col++));
             settings.setDefaultHomeView(rs.getString(col++));
             settings.setDefaultHomeArtists(rs.getShort(col++));
             settings.setDefaultHomeAlbums(rs.getShort(col++));

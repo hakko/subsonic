@@ -43,6 +43,7 @@ public class UserSettings {
     private AvatarScheme avatarScheme = AvatarScheme.NONE;
     private Integer systemAvatarId;
     private boolean albumOrderAscending = true;
+    private boolean albumOrderByYear = true;
     private String defaultHomeView;
     private short defaultHomeArtists;
     private short defaultHomeAlbums;
@@ -187,7 +188,15 @@ public class UserSettings {
 		this.albumOrderAscending = albumOrderAscending;
 	}
 
-    public String getDefaultHomeView() {
+    public boolean isAlbumOrderByYear() {
+		return albumOrderByYear;
+	}
+
+	public void setAlbumOrderByYear(boolean albumOrderByYear) {
+		this.albumOrderByYear = albumOrderByYear;
+	}
+
+	public String getDefaultHomeView() {
 		return defaultHomeView;
 	}
 
