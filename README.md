@@ -21,7 +21,7 @@ You also need Java 7. Uninstalling Java 6 is a good idea, unless you don't expli
 Building
 --------
 
-The build process assumes that you have Java 7 or later and Maven installed, and that PostgreSQL is running.
+The build process assumes that you have Java 7 or later and Maven 2 installed, and that PostgreSQL is running.
 
     Clone git@github.com:hakko/musiccabinet.git to $workspace/musiccabinet
     Update your PostgreSQL password in $workspace/musiccabinet/musiccabinet-server/src/main/resources/local.jdbc.properties
@@ -29,9 +29,6 @@ The build process assumes that you have Java 7 or later and Maven installed, and
     mvn compile
     mvn exec:java -Dexec.mainClass=com.github.hakko.musiccabinet.service.DatabaseAdministrationService
     mvn install
-
-    Download http://dilerium.se/musiccabinet/dwr-3.0.0-rc1.jar (this is not available from public repos)
-    mvn install:install-file -Dfile=dwr-3.0.0-rc1.jar -DgroupId=org.directwebremoting -DartifactId=dwr -Dversion=3.0.0-rc1 -Dpackaging=jar
 
     Clone git@github.com:hakko/subsonic.git to $workspace/subsonic.
     cd $workspace/subsonic/subsonic-main
