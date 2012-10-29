@@ -109,7 +109,7 @@
         <c:forEach items="${command.songs}" var="track" varStatus="loopStatus">
 
 			<sub:url value="/artist.view" var="artistUrl">
-                <sub:param name="id" value="${album.artist.id}"/>
+                <sub:param name="id" value="${track.metaData.artistId}"/>
             </sub:url>
 
             <sub:url value="/artist.view" var="albumUrl">
