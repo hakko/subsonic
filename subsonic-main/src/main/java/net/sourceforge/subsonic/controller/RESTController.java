@@ -40,7 +40,6 @@ import javax.servlet.http.HttpServletResponse;
 import net.sourceforge.subsonic.Logger;
 import net.sourceforge.subsonic.ajax.ChatService;
 import net.sourceforge.subsonic.ajax.LyricsInfo;
-import net.sourceforge.subsonic.ajax.LyricsService;
 import net.sourceforge.subsonic.command.UserSettingsCommand;
 import net.sourceforge.subsonic.domain.MediaFile;
 import net.sourceforge.subsonic.domain.MediaFolder;
@@ -118,7 +117,6 @@ public class RESTController extends MultiActionController {
     private ShareService shareService;
     private PlaylistService playlistService;
     private ChatService chatService;
-    private LyricsService lyricsService;
     private net.sourceforge.subsonic.ajax.PlaylistService playlistControlService;
     private JukeboxService jukeboxService;
     private PodcastService podcastService;
@@ -806,24 +804,30 @@ public class RESTController extends MultiActionController {
         try {
             int size = ServletRequestUtils.getIntParameter(request, "size", 10);
             size = Math.max(0, Math.min(size, 500));
-            String genre = ServletRequestUtils.getStringParameter(request, "genre");
-            Integer fromYear = ServletRequestUtils.getIntParameter(request, "fromYear");
-            Integer toYear = ServletRequestUtils.getIntParameter(request, "toYear");
-            Integer mediaFolderId = ServletRequestUtils.getIntParameter(request, "musicFolderId");
 
-            // TODO : more parameters for selecting random tracks
-            
-            List<Integer> mediaFileIds = libraryBrowserService.getRandomTrackIds(size);
-            mediaFileService.loadMediaFiles(mediaFileIds);
-            List<MediaFile> mediaFiles = mediaFileService.getMediaFiles(mediaFileIds);
-            for (MediaFile mediaFile : mediaFiles) {
-                File coverArt = mediaFileService.getCoverArt(mediaFile);
-                AttributeSet attributes = createAttributesForMediaFile(player, coverArt, mediaFile);
-                builder.add("song", attributes, true);
+// 			TODO : more parameters for selecting random tracks
+//          String genre = ServletRequestUtils.getStringParameter(request, "genre");
+//          Integer fromYear = ServletRequestUtils.getIntParameter(request, "fromYear");
+//          Integer toYear = ServletRequestUtils.getIntParameter(request, "toYear");
+
+            int genreId = NumberUtils.toInt(request.getParameter("musicFolderId"));
+            LOG.debug("genreId = " + genreId);
+            if (genreId > 0) {
+            	String genre = tagService.getTopTags().get(genreId - 1);
+                LOG.debug("genre = " + genre);
+            	getGenreRadio(genre, request, response);
+            } else {
+            	List<Integer> mediaFileIds = libraryBrowserService.getRandomTrackIds(size);
+            	mediaFileService.loadMediaFiles(mediaFileIds);
+            	List<MediaFile> mediaFiles = mediaFileService.getMediaFiles(mediaFileIds);
+            	for (MediaFile mediaFile : mediaFiles) {
+            		File coverArt = mediaFileService.getCoverArt(mediaFile);
+            		AttributeSet attributes = createAttributesForMediaFile(player, coverArt, mediaFile);
+            		builder.add("song", attributes, true);
+            	}
+            	builder.endAll();
+            	response.getWriter().print(builder);
             }
-            
-            builder.endAll();
-            response.getWriter().print(builder);
         } catch (ServletRequestBindingException x) {
             error(request, response, ErrorCode.MISSING_PARAMETER, getErrorMessage(x));
         } catch (Exception x) {
@@ -1451,17 +1455,18 @@ public class RESTController extends MultiActionController {
         request = wrapRequest(request);
         String artist = request.getParameter("artist");
         String title = request.getParameter("title");
-        LyricsInfo lyrics = lyricsService.getLyrics(artist, title);
+        // TODO : look up track id by artist + title
+//        LyricsInfo lyrics = lyricsService.getLyrics(artist, title);
 
         XMLBuilder builder = createXMLBuilder(request, response, true);
         AttributeSet attributes = new AttributeSet();
-        if (lyrics.getArtist() != null) {
-            attributes.add("artist", lyrics.getArtist());
-        }
-        if (lyrics.getTitle() != null) {
-            attributes.add("title", lyrics.getTitle());
-        }
-        builder.add("lyrics", attributes, lyrics.getLyrics(), true);
+//        if (lyrics.getArtist() != null) {
+//            attributes.add("artist", lyrics.getArtist());
+//        }
+//        if (lyrics.getTitle() != null) {
+//            attributes.add("title", lyrics.getTitle());
+//        }
+        builder.add("lyrics", attributes, null, true);
 
         builder.endAll();
         response.getWriter().print(builder);
@@ -1624,10 +1629,6 @@ public class RESTController extends MultiActionController {
 
     public void setHomeController(HomeController homeController) {
         this.homeController = homeController;
-    }
-
-    public void setLyricsService(LyricsService lyricsService) {
-        this.lyricsService = lyricsService;
     }
 
     public void setPlaylistControlService(net.sourceforge.subsonic.ajax.PlaylistService playlistControlService) {
