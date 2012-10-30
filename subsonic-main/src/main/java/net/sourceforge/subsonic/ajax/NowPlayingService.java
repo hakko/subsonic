@@ -18,7 +18,6 @@
  */
 package net.sourceforge.subsonic.ajax;
 
-import static com.github.hakko.musiccabinet.configuration.CharSet.UTF8;
 import static java.util.Arrays.asList;
 import static net.sourceforge.subsonic.domain.AvatarScheme.CUSTOM;
 import static net.sourceforge.subsonic.util.StringUtil.toHtml;
@@ -26,7 +25,6 @@ import static net.sourceforge.subsonic.util.StringUtil.urlEncode;
 import static net.sourceforge.subsonic.util.StringUtil.utf8HexEncode;
 import static org.apache.commons.lang.StringUtils.abbreviate;
 
-import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -45,13 +43,10 @@ import net.sourceforge.subsonic.service.SettingsService;
 import net.sourceforge.subsonic.service.StatusService;
 import net.sourceforge.subsonic.util.StringUtil;
 
-import org.apache.commons.codec.net.URLCodec;
-import org.apache.commons.lang.StringEscapeUtils;
 import org.apache.commons.lang.StringUtils;
 import org.directwebremoting.WebContext;
 import org.directwebremoting.WebContextFactory;
 
-import com.github.hakko.musiccabinet.configuration.CharSet;
 import com.github.hakko.musiccabinet.domain.model.music.AlbumInfo;
 import com.github.hakko.musiccabinet.service.LibraryBrowserService;
 import com.github.hakko.musiccabinet.service.lastfm.AlbumInfoService;
