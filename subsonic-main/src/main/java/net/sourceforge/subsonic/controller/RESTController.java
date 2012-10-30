@@ -39,7 +39,6 @@ import javax.servlet.http.HttpServletResponse;
 
 import net.sourceforge.subsonic.Logger;
 import net.sourceforge.subsonic.ajax.ChatService;
-import net.sourceforge.subsonic.ajax.LyricsInfo;
 import net.sourceforge.subsonic.command.UserSettingsCommand;
 import net.sourceforge.subsonic.domain.MediaFile;
 import net.sourceforge.subsonic.domain.MediaFolder;
@@ -804,14 +803,15 @@ public class RESTController extends MultiActionController {
         try {
             int size = ServletRequestUtils.getIntParameter(request, "size", 10);
             size = Math.max(0, Math.min(size, 500));
-            String genre = ServletRequestUtils.getStringParameter(request, "genre");
+//            String genre = ServletRequestUtils.getStringParameter(request, "genre");
             Integer fromYear = ServletRequestUtils.getIntParameter(request, "fromYear");
             Integer toYear = ServletRequestUtils.getIntParameter(request, "toYear");
-            Integer mediaFolderId = ServletRequestUtils.getIntParameter(request, "musicFolderId");
-
-            // TODO : more parameters for selecting random tracks
+            int genreId = NumberUtils.toInt(request.getParameter("musicFolderId"));
+            LOG.debug("genreId = " + genreId);
+            String genre = genreId == 0 ? null : tagService.getTopTags().get(genreId - 1);
+            LOG.debug("genre = " + genre);
             
-            List<Integer> mediaFileIds = libraryBrowserService.getRandomTrackIds(size);
+            List<Integer> mediaFileIds = libraryBrowserService.getRandomTrackIds(size, fromYear, toYear, genre);
             mediaFileService.loadMediaFiles(mediaFileIds);
             List<MediaFile> mediaFiles = mediaFileService.getMediaFiles(mediaFileIds);
             for (MediaFile mediaFile : mediaFiles) {
