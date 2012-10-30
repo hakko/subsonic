@@ -804,30 +804,24 @@ public class RESTController extends MultiActionController {
         try {
             int size = ServletRequestUtils.getIntParameter(request, "size", 10);
             size = Math.max(0, Math.min(size, 500));
+            String genre = ServletRequestUtils.getStringParameter(request, "genre");
+            Integer fromYear = ServletRequestUtils.getIntParameter(request, "fromYear");
+            Integer toYear = ServletRequestUtils.getIntParameter(request, "toYear");
+            Integer mediaFolderId = ServletRequestUtils.getIntParameter(request, "musicFolderId");
 
-// 			TODO : more parameters for selecting random tracks
-//          String genre = ServletRequestUtils.getStringParameter(request, "genre");
-//          Integer fromYear = ServletRequestUtils.getIntParameter(request, "fromYear");
-//          Integer toYear = ServletRequestUtils.getIntParameter(request, "toYear");
-
-            int genreId = NumberUtils.toInt(request.getParameter("musicFolderId"));
-            LOG.debug("genreId = " + genreId);
-            if (genreId > 0) {
-            	String genre = tagService.getTopTags().get(genreId - 1);
-                LOG.debug("genre = " + genre);
-            	getGenreRadio(genre, request, response);
-            } else {
-            	List<Integer> mediaFileIds = libraryBrowserService.getRandomTrackIds(size);
-            	mediaFileService.loadMediaFiles(mediaFileIds);
-            	List<MediaFile> mediaFiles = mediaFileService.getMediaFiles(mediaFileIds);
-            	for (MediaFile mediaFile : mediaFiles) {
-            		File coverArt = mediaFileService.getCoverArt(mediaFile);
-            		AttributeSet attributes = createAttributesForMediaFile(player, coverArt, mediaFile);
-            		builder.add("song", attributes, true);
-            	}
-            	builder.endAll();
-            	response.getWriter().print(builder);
+            // TODO : more parameters for selecting random tracks
+            
+            List<Integer> mediaFileIds = libraryBrowserService.getRandomTrackIds(size);
+            mediaFileService.loadMediaFiles(mediaFileIds);
+            List<MediaFile> mediaFiles = mediaFileService.getMediaFiles(mediaFileIds);
+            for (MediaFile mediaFile : mediaFiles) {
+                File coverArt = mediaFileService.getCoverArt(mediaFile);
+                AttributeSet attributes = createAttributesForMediaFile(player, coverArt, mediaFile);
+                builder.add("song", attributes, true);
             }
+            
+            builder.endAll();
+            response.getWriter().print(builder);
         } catch (ServletRequestBindingException x) {
             error(request, response, ErrorCode.MISSING_PARAMETER, getErrorMessage(x));
         } catch (Exception x) {
