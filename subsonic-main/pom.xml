@@ -60,7 +60,6 @@
 					<artifactId>xerces</artifactId>
 				</exclusion>
 			</exclusions>
-			<scope>runtime</scope>
 		</dependency>
 
 		<dependency>
