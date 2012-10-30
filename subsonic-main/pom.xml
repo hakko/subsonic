@@ -16,7 +16,7 @@
 	<name>Subsonic Main</name>
 
 	<properties>
-		<version.musiccabinet>0.7.12</version.musiccabinet>
+		<version.musiccabinet>0.7.13</version.musiccabinet>
 		<version.commons-lang>2.5</version.commons-lang>
 		<version.joda-time>2.0</version.joda-time>
 		<version.c3p0>0.9.1.2</version.c3p0>
@@ -25,7 +25,7 @@
 		<version.woodstox>4.1.2</version.woodstox>
 		<version.junit>4.8.2</version.junit>
 		<version.mockito>1.9.0</version.mockito>
-        <version.jetty>8.1.7.v20120910</version.jetty>
+		<version.jetty>8.1.7.v20120910</version.jetty>
 		<version.springframework>3.1.0.RELEASE</version.springframework>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 	</properties>
@@ -201,22 +201,22 @@
 			<version>1.1.0</version>
 		</dependency>
 
+		<!-- net.sbbi:sbbi-upnplib:1.0.4 not available in trusted repositories, 
+			copied to src -->
+		<!-- org.wetorrent:weupnp:2009-10-16 not available in trusted repositories, 
+			copied to src -->
+		<!-- com.hoodcomputing:natpmp:0.1 taken from org.littleshoot:nat-pmp-0.1-SNAPSHOT -->
+
 		<dependency>
-			<groupId>net.sbbi</groupId>
-			<artifactId>sbbi-upnplib</artifactId>
-			<version>1.0.4</version>
+			<groupId>org.littleshoot</groupId>
+			<artifactId>nat-pmp</artifactId>
+			<version>0.1-SNAPSHOT</version>
 		</dependency>
 
 		<dependency>
-			<groupId>org.wetorrent</groupId>
-			<artifactId>weupnp</artifactId>
-			<version>2009-10-16</version>
-		</dependency>
-
-		<dependency>
-			<groupId>com.hoodcomputing</groupId>
-			<artifactId>natpmp</artifactId>
-			<version>0.1</version>
+			<groupId>org.json</groupId>
+			<artifactId>json</artifactId>
+			<version>20090211</version>
 		</dependency>
 
 		<dependency>
@@ -268,7 +268,7 @@
 			<artifactId>spring-security-config</artifactId>
 			<version>${version.springframework}</version>
 		</dependency>
-		
+
 		<dependency>
 			<groupId>org.eclipse.jetty</groupId>
 			<artifactId>jetty-servlets</artifactId>
@@ -394,6 +394,6 @@
 				</plugins>
 			</build>
 		</profile>
-   	</profiles>
+	</profiles>
 
 </project>
