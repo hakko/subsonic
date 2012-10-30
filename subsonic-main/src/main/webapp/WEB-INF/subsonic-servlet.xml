@@ -72,6 +72,7 @@
     </bean>
     <bean id="lyricsController" class="net.sourceforge.subsonic.controller.LyricsController">
         <property name="viewName" value="lyrics"/>
+        <property name="libraryBrowserService" ref="libraryBrowserService"/>
     </bean>
     <bean id="allmusicController" class="net.sourceforge.subsonic.controller.AllmusicController">
         <property name="viewName" value="allmusic"/>
@@ -395,7 +396,6 @@
         <property name="playlistService" ref="playlistService"/>
         <property name="playlistControlService" ref="ajaxPlaylistService"/>
         <property name="chatService" ref="ajaxChatService"/>
-        <property name="lyricsService" ref="ajaxLyricsService"/>
         <property name="podcastService" ref="podcastService"/>
         <property name="shareService" ref="shareService"/>
         <property name="downloadController" ref="downloadController"/>

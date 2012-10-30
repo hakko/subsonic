@@ -106,6 +106,7 @@ public class MediaFileService {
     	mediaFile.getMetaData().setTrackNumber((int) track.getMetaData().getTrackNr());
     	mediaFile.getMetaData().setVariableBitRate(track.getMetaData().isVbr());
     	mediaFile.getMetaData().setYear(toYear(track.getMetaData().getYear()));
+    	mediaFile.getMetaData().setHasLyrics(track.getMetaData().hasLyrics());
     	return mediaFile;
     }
     

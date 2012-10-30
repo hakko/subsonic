@@ -19,6 +19,7 @@ public class MetaData implements Serializable {
 	private String composer;
 	private String genre;
 	private String year;
+	private boolean hasLyrics;
 	private Integer bitRate;
 	private Boolean variableBitRate;
 	private Integer duration;
@@ -116,6 +117,14 @@ public class MetaData implements Serializable {
 
 	public void setYear(String year) {
 		this.year = year;
+	}
+
+	public boolean hasLyrics() {
+		return hasLyrics;
+	}
+
+	public void setHasLyrics(boolean hasLyrics) {
+		this.hasLyrics = hasLyrics;
 	}
 
 	public Integer getBitRate() {

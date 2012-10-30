@@ -48,9 +48,13 @@
 
                 html += "<tr><td class='detail' style='padding-right:1em'>" +
                         "<a title='" + nowPlaying[i].tooltip + "' target='main' href='" + nowPlaying[i].albumUrl + "'><em>" +
-                        nowPlaying[i].artist + "</em><br/>" + nowPlaying[i].title + "</a><br/>" +
-                        "<span class='forward'><a href='" + nowPlaying[i].lyricsUrl + "' onclick=\"return popupSize(this, 'lyrics', 430, 550)\">" +
-                        "<fmt:message key="main.lyrics"/>" + "</a></span></td><td style='padding-top:1em'>";
+                        nowPlaying[i].artist + "</em><br/>" + nowPlaying[i].title + "</a>";
+				
+				if (nowPlaying[i].lyricsUrl != null) {
+					html += "<br/><span class='forward'><a href='" + nowPlaying[i].lyricsUrl + "' onclick=\"return popupSize(this, 'lyrics', 500, 550)\">" +
+							"<fmt:message key="main.lyrics"/>" + "</a></span>";
+				}
+                html += "</td><td style='padding-top:1em'>";
 
                 if (nowPlaying[i].coverArtUrl != null) {
                     html += "<a rel='zoom' href='" + nowPlaying[i].coverArtZoomUrl + "'>" +

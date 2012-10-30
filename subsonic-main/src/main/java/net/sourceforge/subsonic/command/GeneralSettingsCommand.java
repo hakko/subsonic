@@ -40,6 +40,7 @@ public class GeneralSettingsCommand {
     private String welcomeMessage;
     private String loginMessage;
     private String shareUrlPrefix;
+    private String lyricsUrl;
     private String localeIndex;
     private String[] locales;
     private String themeIndex;
@@ -132,6 +133,14 @@ public class GeneralSettingsCommand {
 
 	public void setShareUrlPrefix(String shareUrlPrefix) {
 		this.shareUrlPrefix = shareUrlPrefix;
+	}
+
+	public String getLyricsUrl() {
+		return lyricsUrl;
+	}
+
+	public void setLyricsUrl(String lyricsUrl) {
+		this.lyricsUrl = lyricsUrl;
 	}
 
 	public String getLocaleIndex() {

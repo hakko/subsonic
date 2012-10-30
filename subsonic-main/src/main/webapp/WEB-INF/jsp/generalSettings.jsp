@@ -139,6 +139,13 @@
                 <c:import url="helpToolTip.jsp"><c:param name="topic" value="shareurlprefix"/></c:import>
             </td>
         </tr>
+        <tr>
+            <td style="vertical-align:top;"><fmt:message key="generalsettings.lyricsurl"/></td>
+            <td>
+                <form:input path="lyricsUrl" size="70"/>
+                <c:import url="helpToolTip.jsp"><c:param name="topic" value="lyricsurl"/></c:import>
+            </td>
+        </tr>
 
         <tr>
             <td colspan="2" style="padding-top:1.5em">

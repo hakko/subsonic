@@ -18,8 +18,11 @@
  */
 package net.sourceforge.subsonic.controller;
 
+import org.apache.commons.lang.math.NumberUtils;
 import org.springframework.web.servlet.mvc.ParameterizableViewController;
 import org.springframework.web.servlet.ModelAndView;
+
+import com.github.hakko.musiccabinet.service.LibraryBrowserService;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -33,14 +36,22 @@ import java.util.HashMap;
  */
 public class LyricsController extends ParameterizableViewController {
 
+	private LibraryBrowserService libraryBrowserService;
+	
     protected ModelAndView handleRequestInternal(HttpServletRequest request, HttpServletResponse response) throws Exception {
+        int mediaFileId = NumberUtils.toInt(request.getParameter("mfId"));
+        String lyrics = libraryBrowserService.getLyricsForTrack(mediaFileId);
+        
         Map<String, Object> map = new HashMap<String, Object>();
-
-        map.put("artist", request.getParameter("artist"));
-        map.put("song", request.getParameter("song"));
-
+        map.put("lyrics", lyrics);
+        
         ModelAndView result = super.handleRequestInternal(request, response);
         result.addObject("model", map);
         return result;
     }
+
+	public void setLibraryBrowserService(LibraryBrowserService libraryBrowserService) {
+		this.libraryBrowserService = libraryBrowserService;
+	}
+    
 }

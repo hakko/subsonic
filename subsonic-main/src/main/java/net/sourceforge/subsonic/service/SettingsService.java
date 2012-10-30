@@ -85,6 +85,7 @@ public class SettingsService {
     private static final String KEY_WELCOME_MESSAGE = "WelcomeMessage2";
     private static final String KEY_LOGIN_MESSAGE = "LoginMessage";
     private static final String KEY_SHARE_URL_PREFIX = "ShareUrlPrefix";
+    private static final String KEY_LYRICS_URL = "LyricsUrl";
     private static final String KEY_LOCALE_LANGUAGE = "LocaleLanguage";
     private static final String KEY_LOCALE_COUNTRY = "LocaleCountry";
     private static final String KEY_LOCALE_VARIANT = "LocaleVariant";
@@ -150,6 +151,7 @@ public class SettingsService {
             "\\\\ \\\\\n" +
             "To change or remove this message, log in with administrator rights and go to {link:Settings > General|generalSettings.view}.";
     private static final String DEFAULT_LOGIN_MESSAGE = null;
+    private static final String DEFAULT_LYRICS_URL = "http://google.com/search?q=\"$(artist)\"+\"$(song)\"+lyrics";
     private static final String DEFAULT_LOCALE_LANGUAGE = "en";
     private static final String DEFAULT_LOCALE_COUNTRY = "";
     private static final String DEFAULT_LOCALE_VARIANT = "";
@@ -460,6 +462,14 @@ public class SettingsService {
     
     public void setShareUrlPrefix(String shareUrlPrefix) {
     	setProperty(KEY_SHARE_URL_PREFIX, shareUrlPrefix);
+    }
+    
+    public String getLyricsUrl() {
+    	return properties.getProperty(KEY_LYRICS_URL, DEFAULT_LYRICS_URL);
+    }
+    
+    public void setLyricsUrl(String lyricsUrl) {
+    	setProperty(KEY_LYRICS_URL, lyricsUrl);
     }
     
     /**
