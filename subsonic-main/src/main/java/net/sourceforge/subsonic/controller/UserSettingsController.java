@@ -54,7 +54,7 @@ public class UserSettingsController extends SimpleFormController {
             command.setTranscodeSchemeName(userSettings.getTranscodeScheme().name());
 
         } else {
-            command.setNew(true);
+            command.setNewUser(true);
             command.setStreamRole(true);
             command.setSettingsRole(true);
         }
@@ -85,7 +85,7 @@ public class UserSettingsController extends SimpleFormController {
 
         if (command.isDelete()) {
             deleteUser(command);
-        } else if (command.isNew()) {
+        } else if (command.isNewUser()) {
             createUser(command);
         } else {
             updateUser(command);
@@ -139,7 +139,7 @@ public class UserSettingsController extends SimpleFormController {
         command.setUsers(securityService.getAllUsers());
         command.setDelete(false);
         command.setPasswordChange(false);
-        command.setNew(true);
+        command.setNewUser(true);
         command.setStreamRole(true);
         command.setSettingsRole(true);
         command.setPassword(null);

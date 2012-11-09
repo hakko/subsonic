@@ -45,7 +45,7 @@ public class UserSettingsCommand {
     private List<User> users;
     private boolean isAdmin;
     private boolean isPasswordChange;
-    private boolean isNew;
+    private boolean isNewUser;
     private boolean isDelete;
     private String password;
     private String confirmPassword;
@@ -178,12 +178,12 @@ public class UserSettingsCommand {
         isPasswordChange = passwordChange;
     }
 
-    public boolean isNew() {
-        return isNew;
+    public boolean isNewUser() {
+        return isNewUser;
     }
 
-    public void setNew(boolean isNew) {
-        this.isNew = isNew;
+    public void setNewUser(boolean isNewUser) {
+        this.isNewUser = isNewUser;
     }
 
     public boolean isDelete() {

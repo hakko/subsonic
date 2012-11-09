@@ -53,7 +53,7 @@ public class UserSettingsValidator implements Validator {
         String password = StringUtils.trimToNull(command.getPassword());
         String confirmPassword = command.getConfirmPassword();
 
-        if (command.isNew()) {
+        if (command.isNewUser()) {
             if (username == null || username.length() == 0) {
                 errors.rejectValue("username", "usersettings.nousername");
             } else if (securityService.getUserByName(username) != null) {
@@ -67,7 +67,7 @@ public class UserSettingsValidator implements Validator {
             }
         }
 
-        if ((command.isNew() || command.isPasswordChange()) && !command.isLdapAuthenticated()) {
+        if ((command.isNewUser() || command.isPasswordChange()) && !command.isLdapAuthenticated()) {
             if (password == null) {
                 errors.rejectValue("password", "usersettings.nopassword");
             } else if (!password.equals(confirmPassword)) {
