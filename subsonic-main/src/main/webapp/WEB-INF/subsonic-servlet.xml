@@ -37,6 +37,7 @@
         <property name="settingsService" ref="settingsService"/>
         <property name="mediaFileService" ref="mediaFileService"/>
         <property name="artistInfoService" ref="artistInfoService"/>
+    	<property name="artistTopTagsService" ref="artistTopTagsService"/>
         <property name="libraryBrowserService" ref="libraryBrowserService"/>
         <property name="starService" ref="starService"/>
     </bean>

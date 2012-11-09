@@ -95,6 +95,14 @@ ${model.artistName}
 						${model.artistInfoFirstSentence}&nbsp;<a href="javascript:noop()" onclick="toggleArtist()">(...)</a>
 					</div>
 				</div>
+				<div style="line-height: 1.8">
+					<c:forEach items="${model.topTags}" var="topTag" varStatus="i">
+						<sub:url var="url" value="genres.view">
+							<sub:param name="genre" value="${topTag.name}"/>
+						</sub:url>
+						<a href="${url}">${topTag.name}</a><c:if test="${i.count < fn:length(model.topTags)}">, </c:if>
+					</c:forEach>
+				</div>
 			</td>
 		</tr>
 	</table>

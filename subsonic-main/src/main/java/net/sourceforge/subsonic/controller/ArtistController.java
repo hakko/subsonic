@@ -46,6 +46,7 @@ import com.github.hakko.musiccabinet.exception.ApplicationException;
 import com.github.hakko.musiccabinet.service.LibraryBrowserService;
 import com.github.hakko.musiccabinet.service.StarService;
 import com.github.hakko.musiccabinet.service.lastfm.ArtistInfoService;
+import com.github.hakko.musiccabinet.service.lastfm.ArtistTopTagsService;
 
 /**
  * Controller for the artist page.
@@ -56,6 +57,7 @@ public class ArtistController extends ParameterizableViewController {
     private PlayerService playerService;
     private SettingsService settingsService;
 	private ArtistInfoService artistInfoService;
+	private ArtistTopTagsService artistTopTagsService;
 	private LibraryBrowserService libraryBrowserService;
 	private MediaFileService mediaFileService;
 	private StarService starService;
@@ -78,10 +80,9 @@ public class ArtistController extends ParameterizableViewController {
         setArtistInfo(artistId, map);
         setAlbums(artistId, userSettings, map, albumIds);
         
-        LOG.debug("trackId = " + request.getParameter("trackId"));
-        
         map.put("trackId", request.getParameter("trackId"));
         map.put("artistStarred", starService.isArtistStarred(userSettings.getLastFmUsername(), artistId));
+        map.put("topTags", artistTopTagsService.getTopTags(artistId, 3));
         map.put("visibility", userSettings.getMainVisibility());
         map.put("player", player);
         map.put("user", user);
@@ -166,6 +167,10 @@ public class ArtistController extends ParameterizableViewController {
 
 	public void setArtistInfoService(ArtistInfoService artistInfoService) {
 		this.artistInfoService = artistInfoService;
+	}
+
+	public void setArtistTopTagsService(ArtistTopTagsService artistTopTagsService) {
+		this.artistTopTagsService = artistTopTagsService;
 	}
 
 	public void setLibraryBrowserService(LibraryBrowserService libraryBrowserService) {
