@@ -146,16 +146,16 @@
             </td>
         </tr>
 
-        <c:set var="class" value=""/>
+        <c:set var="cssClass" value=""/>
 
         <c:forEach items="${channel.value}" var="episode" varStatus="j">
 
             <c:choose>
-                <c:when test="${empty class}">
-                    <c:set var="class" value="class='bgcolor2'"/>
+                <c:when test="${empty cssClass}">
+                    <c:set var="cssClass" value="class='bgcolor2'"/>
                 </c:when>
                 <c:otherwise>
-                    <c:set var="class" value=""/>
+                    <c:set var="cssClass" value=""/>
                 </c:otherwise>
             </c:choose>
             <tr title="channel${i.index}" id="episodeRow${episodeCount}" style="margin:0;padding:0;border:0;display:${channelExpanded ? "table-row" : "none"}">
@@ -164,7 +164,7 @@
 
                 <c:choose>
                     <c:when test="${empty episode.path}">
-                        <td ${class} colspan="3"/>
+                        <td ${cssClass} colspan="3"/>
                     </c:when>
                     <c:otherwise>
                         <c:import url="playAddDownload.jsp">
@@ -185,7 +185,7 @@
                 </sub:url>
 
 
-                <td ${class} style="padding-left:0.6em">
+                <td ${cssClass} style="padding-left:0.6em">
                     <span title="${episode.title}">
                         <c:choose>
                             <c:when test="${empty episode.path}">
@@ -198,15 +198,15 @@
                     </span>
                 </td>
 
-                <td ${class} style="padding-left:1.5em">
+                <td ${cssClass} style="padding-left:1.5em">
                     <span class="detail">${episode.duration}</span>
                 </td>
 
-                <td ${class} style="padding-left:1.5em">
+                <td ${cssClass} style="padding-left:1.5em">
                     <span class="detail"><fmt:formatDate value="${episode.publishDate}" dateStyle="medium"/></span>
                 </td>
 
-                <td ${class} style="padding-left:1.5em;text-align:center">
+                <td ${cssClass} style="padding-left:1.5em;text-align:center">
                     <span class="detail">
                     <c:choose>
                         <c:when test="${episode.status eq 'DOWNLOADING'}">
@@ -219,7 +219,7 @@
                     </span>
                 </td>
 
-                <td ${class} style="padding-left:1.5em">
+                <td ${cssClass} style="padding-left:1.5em">
                     <c:choose>
                         <c:when test="${episode.status eq 'ERROR'}">
                             <span class="detail warning" title="${episode.errorMessage}"><str:truncateNicely upper="100">${episode.errorMessage}</str:truncateNicely></span>

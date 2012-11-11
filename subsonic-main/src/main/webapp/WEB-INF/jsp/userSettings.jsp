@@ -141,7 +141,7 @@
     </c:if>
 
     <c:choose>
-        <c:when test="${command.new}">
+        <c:when test="${command.newUser}">
 
             <table class="indent">
                 <tr>
