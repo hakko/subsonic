@@ -47,16 +47,16 @@
 		if (width <=  0) {
 			element.parent().remove();
 			$("#genres").append("<option>" + genre + "</option>");
-			return;
+		} else {
+			bar.width(width);
 		}
-		bar.width(width);
 		uiTagService.tagArtist(${model.artistId}, "${model.artistName}", genre, width / 5, diff > 0);
 	}
 
 	$(document).ready(function() {
 
 		<c:forEach items="${model.topTags}" var="tag">
-			add('${tag.name}', ${tag.count} - (${tag.count} % 5));
+			add("${tag.name}", ${tag.count} - (${tag.count} % 5));
 		</c:forEach>
 		
 		$("#add").click(function() {
