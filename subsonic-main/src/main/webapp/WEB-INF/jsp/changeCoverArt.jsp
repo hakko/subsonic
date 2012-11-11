@@ -150,7 +150,7 @@
 <h1><fmt:message key="changecoverart.title"/></h1>
 <form action="javascript:search()">
     <table class="indent"><tr>
-        <td><input id="query" name="query" size="70" type="text" value="${model.artist} ${model.album}" onclick="select()"/></td>
+        <td><input id="query" name="query" size="70" type="text" value='"${model.artist}" "${model.album}"'/></td>
         <td style="padding-left:0.5em"><input type="submit" value="<fmt:message key="changecoverart.search"/>"/></td>
     </tr></table>
 </form>
@@ -159,7 +159,7 @@
     <table><tr>
         <input id="id" type="hidden" name="id" value="${model.id}"/>
         <td><label for="url"><fmt:message key="changecoverart.address"/></label></td>
-        <td style="padding-left:0.5em"><input type="text" name="url" size="50" id="url" value="http://" onclick="select()"/></td>
+        <td style="padding-left:0.5em"><input type="text" name="url" size="50" id="url" value="http://"/></td>
         <td style="padding-left:0.5em"><input type="submit" value="<fmt:message key="common.ok"/>"></td>
     </tr></table>
 </form>
