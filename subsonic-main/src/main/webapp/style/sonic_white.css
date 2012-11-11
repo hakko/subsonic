@@ -18,13 +18,16 @@
     color: #696969;
 }
 
+.bgcolor3 {
+    background-color: #D2D2D2;
+}
+
 /* Background colour for selected header, log etc. */
 .headerSelected {
     color: #696969;
     background-color: #FFFFFF;
     border: 1px solid #696969;
 }
-
 
 /* The primary foreground color (black). */
 body {

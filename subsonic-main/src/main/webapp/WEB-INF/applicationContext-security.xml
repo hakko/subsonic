@@ -55,6 +55,7 @@
 		<intercept-url pattern="/createShare.view" access="hasRole('ROLE_SHARE')" />
 
 		<intercept-url pattern="/changeCoverArt.view" access="hasRole('ROLE_COVERART')" />
+		<intercept-url pattern="/artistGenres.view"	access="hasRole('ROLE_COVERART')"/>
 		<intercept-url pattern="/editTags.view" access="hasRole('ROLE_COVERART')" />
 		<intercept-url pattern="/editArtist.view" access="hasRole('ROLE_COVERART')" />
 

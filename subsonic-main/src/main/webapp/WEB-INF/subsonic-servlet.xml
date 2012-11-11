@@ -41,6 +41,15 @@
         <property name="libraryBrowserService" ref="libraryBrowserService"/>
         <property name="starService" ref="starService"/>
     </bean>
+    <bean id="artistGenresController" class="net.sourceforge.subsonic.controller.ArtistGenresController">
+        <property name="viewName" value="artistGenres"/>
+        <property name="securityService" ref="securityService"/>
+        <property name="settingsService" ref="settingsService"/>
+        <property name="artistInfoService" ref="artistInfoService"/>
+    	<property name="artistTopTagsService" ref="artistTopTagsService"/>
+        <property name="starService" ref="starService"/>
+        <property name="tagService" ref="tagService"/>
+    </bean>
     <bean id="albumController" class="net.sourceforge.subsonic.controller.AlbumController">
         <property name="securityService" ref="securityService"/>
         <property name="settingsService" ref="settingsService"/>
@@ -436,6 +445,7 @@
             <props>
                 <prop key="/main.view">mainController</prop>
                 <prop key="/artist.view">artistController</prop>
+                <prop key="/artistGenres.view">artistGenresController</prop>
                 <prop key="/album.view">albumController</prop>
                 <prop key="/help.view">helpController</prop>
                 <prop key="/lyrics.view">lyricsController</prop>

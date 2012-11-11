@@ -40,6 +40,10 @@
             <param name="beanName" value="ajaxUIStarService"/>
         </create>
 
+        <create creator="spring" javascript="uiTagService">
+            <param name="beanName" value="ajaxUITagService"/>
+        </create>
+
         <convert converter="bean" match="net.sourceforge.subsonic.ajax.NetworkStatus"/>
         <convert converter="bean" match="net.sourceforge.subsonic.ajax.NowPlayingInfo"/>
         <convert converter="bean" match="net.sourceforge.subsonic.ajax.PlaylistInfo"/>
@@ -51,6 +55,7 @@
         <convert converter="bean" match="net.sourceforge.subsonic.ajax.ChatService$Messages"/>
         <convert converter="bean" match="net.sourceforge.subsonic.ajax.LibraryStatus"/>
         <convert converter="bean" match="net.sourceforge.subsonic.ajax.UIStarService"/>
+        <convert converter="bean" match="net.sourceforge.subsonic.ajax.UITagService"/>
 
     </allow>
 </dwr>

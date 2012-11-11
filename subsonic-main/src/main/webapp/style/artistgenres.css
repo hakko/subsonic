@@ -1,0 +1,20 @@
+.popularity {
+	position: relative;
+	width: 500px;
+	padding: 3px;
+	float: right;
+}
+
+.bar {
+	height: 20px;
+
+	-moz-box-shadow: 2px 2px 1px #888;
+	-webkit-box-shadow: 2px 2px 1px #888;
+	box-shadow: 2px 2px 1px #888;
+
+}
+
+.genre {
+	position: absolute;
+	top: 3px;
+}

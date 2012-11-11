@@ -230,6 +230,12 @@
         <property name="starService" ref="starService"/>
     </bean>
 
+    <bean id="ajaxUITagService" class="net.sourceforge.subsonic.ajax.UITagService">
+        <property name="securityService" ref="securityService"/>
+        <property name="settingsService" ref="settingsService"/>
+        <property name="tagUpdateService" ref="tagUpdateService"/>
+    </bean>
+
 
 	<!-- MUSICCABINET copy/paste (propertyConfigurer is Subsonic specific) -->
 	<bean id="propertyConfigurer"

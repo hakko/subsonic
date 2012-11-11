@@ -19,6 +19,10 @@
     color: #8C8C8C;
 }
 
+.bgcolor3 {
+    background-color: #2C2C2C;
+}
+
 /* Background colour for selected header, log etc. */
 .headerSelected {
     color: #8C8C8C;
