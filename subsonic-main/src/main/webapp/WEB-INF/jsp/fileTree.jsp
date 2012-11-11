@@ -82,7 +82,7 @@
 			<c:forEach items="${model.videoFiles}" var="file">
 			<li>
 				<c:if test="${model.user.downloadRole}">
-					<sub:url value="/download.view" var="downloadUrl"><sub:param name="id" value="[${file.id}]"/></sub:url>
+					<sub:url value="/download.view" var="downloadUrl"><sub:param name="id" value="[${file.id}]"/><sub:param name="name" value="${file.name}"/></sub:url>
 					<a href="${downloadUrl}"><img src="<spring:theme code="downloadImage"/>" alt="<fmt:message key="common.download"/>" title="<fmt:message key="common.download"/>"></a>
 				</c:if>
 				<c:if test="${model.user.streamRole}">

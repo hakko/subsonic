@@ -102,6 +102,9 @@ ${model.artistName}
 						</sub:url>
 						<a href="${url}">${topTag.name}</a><c:if test="${i.count < fn:length(model.topTags)}">, </c:if>
 					</c:forEach>
+					<c:if test="${fn:length(model.topTags) > 0}">
+						<a href="artistGenres.view?id=${model.artistId}">&raquo;</a>
+					</c:if>
 				</div>
 			</td>
 		</tr>

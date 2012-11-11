@@ -7,10 +7,11 @@ PARAMETERS
   playEnabled: Whether the current user is allowed to play songs (default true).
   addEnabled: Whether the current user is allowed to add songs to the playlist (default true).
   downloadEnabled: Whether the current user is allowed to download songs (default false).
+  downloadName: Preferred name of download zip (optional)
   asTable: Whether to put the images in td tags.
 --%>
 
-<sub:url value="/download.view" var="downloadUrl"><sub:param name="id" value="${param.id}"/></sub:url>
+<sub:url value="/download.view" var="downloadUrl"><sub:param name="id" value="${param.id}"/><sub:param name="name" value="${param.downloadName}"/></sub:url>
 <c:if test="${empty param.starDisabled}">
     <c:if test="${param.asTable}"><td></c:if>
     <a href="#" onclick="toggleStar('t', ${param.starId}, '#starImage${param.starId}'); return false;">

@@ -23,6 +23,7 @@
 					<c:param name="enqueueEnabled" value="${model.user.streamRole}"/>
 					<c:param name="addEnabled" value="${model.user.streamRole}"/>
 					<c:param name="downloadEnabled" value="${model.user.downloadRole}"/>
+					<c:param name="downloadName" value="${not empty model.artistName ? model.artistName : album.artistName} - ${album.title}"/>
 					<c:param name="asTable" value="false"/>
 				</c:import>
 
@@ -92,6 +93,7 @@
 					<c:param name="enqueueEnabled" value="${model.user.streamRole}"/>
 					<c:param name="addEnabled" value="${model.user.streamRole}"/>
 					<c:param name="downloadEnabled" value="${model.user.downloadRole}"/>
+					<c:param name="downloadName" value="${not empty model.artistName ? model.artistName : album.artistName} - ${album.title}"/>
 					<c:param name="asTable" value="false"/>
 				</c:import>
 			</div>

@@ -18,6 +18,7 @@
  */
 package net.sourceforge.subsonic.controller;
 
+import static org.apache.commons.lang.StringUtils.defaultIfEmpty;
 import static org.apache.commons.lang.StringUtils.removeEnd;
 import static org.apache.commons.lang.StringUtils.removeStart;
 import static org.apache.commons.lang.StringUtils.split;
@@ -96,6 +97,7 @@ public class DownloadController implements Controller, LastModified {
 
         String playlistName = request.getParameter("playlist");
         String playerId = request.getParameter("player");
+        String preferredName = request.getParameter("name");
 
         TransferStatus status = null;
         try {
@@ -117,7 +119,7 @@ public class DownloadController implements Controller, LastModified {
                 LOG.debug("download id param = " + request.getParameter("id"));
                 List<Integer> mediaFileIds = getMediaFileIds(request.getParameter("id"));
                 LOG.debug("ids = " + mediaFileIds);
-            	downloadFiles(response, status, mediaFileIds);
+            	downloadFiles(response, status, mediaFileIds, preferredName);
             }
 
         } catch (Throwable t) {
@@ -180,8 +182,8 @@ public class DownloadController implements Controller, LastModified {
      * @param indexes  Only download files with these indexes within the directory.
      * @throws IOException If an I/O error occurs.
      */
-    private void downloadFiles(HttpServletResponse response, TransferStatus status, List<Integer> mediaFileIds) throws IOException {
-        String zipFileName = "subsonic" + new Random().nextInt(10000) + ".zip";
+    private void downloadFiles(HttpServletResponse response, TransferStatus status, List<Integer> mediaFileIds, String preferredName) throws IOException {
+        String zipFileName = defaultIfEmpty(preferredName, "subsonic" + new Random().nextInt(10000)) + ".zip";
         LOG.info("Starting to download '" + zipFileName + "' to " + status.getPlayer());
 
         response.setContentType("application/x-download");
