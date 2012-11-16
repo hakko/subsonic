@@ -21,7 +21,7 @@ You also need Java 7. Uninstalling Java 6 is a good idea, unless you don't expli
 Building
 --------
 
-The build process assumes that you have Java 7 or later and Maven 2 installed, and that PostgreSQL is running.
+The build process assumes that you have Java 7 or later and Maven 3 installed, and that PostgreSQL is running.
 
     Clone git@github.com:hakko/musiccabinet.git to $workspace/musiccabinet
     Update your PostgreSQL password in $workspace/musiccabinet/musiccabinet-server/src/main/resources/local.jdbc.properties
@@ -32,22 +32,28 @@ The build process assumes that you have Java 7 or later and Maven 2 installed, a
 
     Clone git@github.com:hakko/subsonic.git to $workspace/subsonic.
     cd $workspace/subsonic/subsonic-main
-    mvn package
+    mvn install
     cd $workspace/subsonic/subsonic-booter
+    mvn install
+
+    cd $workspace/subsonic/subsonic-installer-standalone
     mvn package
 
+To also build a .war files that runs on a Tomcat server, execute:
+
+    cd $workspace/subsonic/subsonic-main
+    mvn -P tomcat package
+
+If a test case fails during build, please report and re-run with mvn -fn as a workaround.
 
 Installation
 ------------
 
-Installation assumes that you have previously installed Subsonic from http://subsonic.org.
+1. If you're already running Subsonic: stop your service, and backup your settings. (Just in case.)
+2. Go to $workspace/subsonic/subsonic-installer-standalone/target.
+3. Unzip subsonic-installer-standalone.zip to preferred install directory.
+4. In the install directory, tweak and run the subsonic.sh script to start your new server.
 
-1. Stop your Subsonic service
-2. Make a backup of current settings, just in case
-3. Use the subsonic.war file from $workspace/subsonic/subsonic-main/target/subsonic.war, and replace your current one.
-4. Use the subsonic-booter-jar-with-dependencies.jar file from $workspace/subsonic/subsonic-booter/target/subsonic-booter-jar-with-dependencies.jar, and replace your current one.
-5. Start your Subsonic service
-
-Log in to Subsonic as usual and click the "Configure MusicCabinet" link (the header). It should be pretty self-explanatory from there.
+Log in to Subsonic as usual (localhost:4040) and click the "Configure MusicCabinet" link (the header). It should be pretty self-explanatory from there.
 
 Please note that the initial import of data from last.fm will take a while, roughly 30 minutes per 10.000 tracks. You can follow the progress meanwhile but MusicCabinet features won't work until it's finished.
