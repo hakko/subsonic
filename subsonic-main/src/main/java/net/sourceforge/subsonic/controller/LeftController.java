@@ -110,6 +110,7 @@ public class LeftController extends ParameterizableViewController implements Las
         map.put("player", playerService.getPlayer(request, response));
         map.put("radios", settingsService.getAllInternetRadios());
         map.put("uploadRole", user.isUploadRole());
+        map.put("adminRole", user.isAdminRole());
         String tag = defaultString(request.getParameter("tag"), "");
         boolean hasArtists = libraryBrowserService.hasArtists();
         String method = request.getParameter("method");

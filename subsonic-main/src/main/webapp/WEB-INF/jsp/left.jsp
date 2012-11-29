@@ -135,8 +135,10 @@
 </c:if>
 
 <c:if test="${empty model.filebased}">
-	<div style="height:2em"></div>
-	<hr><c:if test="${model.uploadRole}"><a target="main" href="more.view">Upload new music.</a><br></c:if><a href="left.view?method=file">File-based browsing.</a>
+	<div style="height:2em"></div><hr>
+	<c:if test="${model.uploadRole}"><a target="main" href="more.view">Upload new music</a><br></c:if>
+	<c:if test="${model.adminRole}"><a target="main" href="missingAlbums.view">Missing albums</a><br></c:if>
+	<a href="left.view?method=file">File-based browsing</a>
 </c:if>
 
 <div style="height:5em"></div>

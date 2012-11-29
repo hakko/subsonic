@@ -284,6 +284,13 @@
 
 	<!--  SERVICES -->
 
+	<bean id="musicBrainzService" class="com.github.hakko.musiccabinet.service.MusicBrainzService">
+		<property name="musicBrainzArtistDao" ref="musicBrainzArtistDao"/>
+		<property name="musicBrainzAlbumDao" ref="musicBrainzAlbumDao"/>
+		<property name="artistQueryClient" ref="artistQueryClient"/>
+		<property name="releaseClient" ref="releaseClient"/>
+	</bean>
+
 	<bean id="directoryBrowserService" class="com.github.hakko.musiccabinet.service.DirectoryBrowserService">
 		<property name="directoryBrowserDao" ref="directoryBrowserDao"/>
 		<property name="libraryPresenceDao" ref="libraryPresenceDao"/>
@@ -543,6 +550,15 @@
 		<property name="webserviceHistoryService" ref="webserviceHistoryService"/>
 		<property name="throttleService" ref="throttleService"/>
 	</bean>
+	
+	<!-- MUSICBRAINZ WS CLIENTS -->
+	<bean id="artistQueryClient" class="com.github.hakko.musiccabinet.ws.musicbrainz.ArtistQueryClient">
+		<property name="webserviceHistoryService" ref="webserviceHistoryService"/>
+	</bean>	
+
+	<bean id="releaseClient" class="com.github.hakko.musiccabinet.ws.musicbrainz.ReleaseClient">
+		<property name="webserviceHistoryService" ref="webserviceHistoryService"/>
+	</bean>	
 
 
 	<!--  DAOs  -->
@@ -646,6 +662,14 @@
 	</bean>
 
 	<bean id="groupWeeklyArtistChartDao" class="com.github.hakko.musiccabinet.dao.jdbc.JdbcGroupWeeklyArtistChartDao">
+		<property name="dataSource" ref="dataSource"/>
+	</bean>
+
+	<bean id="musicBrainzArtistDao" class="com.github.hakko.musiccabinet.dao.jdbc.JdbcMusicBrainzArtistDao">
+		<property name="dataSource" ref="dataSource"/>
+	</bean>
+
+	<bean id="musicBrainzAlbumDao" class="com.github.hakko.musiccabinet.dao.jdbc.JdbcMusicBrainzAlbumDao">
 		<property name="dataSource" ref="dataSource"/>
 	</bean>
 	

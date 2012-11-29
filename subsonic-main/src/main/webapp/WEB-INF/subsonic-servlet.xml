@@ -322,6 +322,16 @@
         <property name="formView" value="editArtist"/>
     	<property name="artistInfoService" ref="artistInfoService"/>
     </bean>
+    <bean id="missingAlbumsController" class="net.sourceforge.subsonic.controller.MissingAlbumsController">
+        <property name="viewName" value="missingAlbums"/>
+        <property name="musicBrainzService" ref="musicBrainzService"/>
+    </bean>
+    <bean id="missingAlbumsSearchController" class="net.sourceforge.subsonic.controller.MissingAlbumsSearchController">
+        <property name="viewName" value="missingAlbumsSearch"/>
+        <property name="musicBrainzService" ref="musicBrainzService"/>
+        <property name="securityService" ref="securityService"/>
+        <property name="settingsService" ref="settingsService"/>
+    </bean>
     <bean id="playlistController" class="net.sourceforge.subsonic.controller.PlaylistController">
         <property name="viewName" value="playlist"/>
         <property name="playerService" ref="playerService"/>
@@ -497,6 +507,8 @@
                 <prop key="/tagSettings.view">tagSettingsController</prop>
                 <prop key="/groupSettings.view">groupSettingsController</prop>
                 <prop key="/editArtist.view">editArtistController</prop>
+                <prop key="/missingAlbums.view">missingAlbumsController</prop>
+                <prop key="/missingAlbumsSearch.view">missingAlbumsSearchController</prop>
                 <prop key="/playlist.view">playlistController</prop>
                 <prop key="/xspfPlaylist.view">xspfPlaylistController</prop>
                 <prop key="/coverArt.view">coverArtController</prop>
