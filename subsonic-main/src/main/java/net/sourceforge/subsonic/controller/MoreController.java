@@ -47,7 +47,7 @@ public class MoreController extends ParameterizableViewController {
         Map<String, Object> map = new HashMap<String, Object>();
 
         String uploadDirectory = null;
-        List<MediaFolder> mediaFolders = settingsService.getAllMediaFolders();
+        List<MediaFolder> mediaFolders = settingsService.getIndexedMediaFolders();
         if (mediaFolders.size() > 0) {
             uploadDirectory = new File(mediaFolders.get(0).getPath(), "Incoming").getPath();
         }

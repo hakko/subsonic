@@ -912,8 +912,8 @@ public class SettingsService {
      *
      * @return Possibly empty list of all music folders.
      */
-    public List<MediaFolder> getAllMediaFolders() {
-        return getAllMediaFolders(false);
+    public List<MediaFolder> getIndexedMediaFolders() {
+        return mediaFolderDao.getIndexedMediaFolders();
     }
 
     /**
@@ -922,33 +922,14 @@ public class SettingsService {
      * @param includeAll Whether non-existing and disabled folders should be included.
      * @return Possibly empty list of all music folders.
      */
-    public List<MediaFolder> getAllMediaFolders(boolean includeAll) {
-        List<MediaFolder> all = mediaFolderDao.getAllMediaFolders();
-        List<MediaFolder> result = new ArrayList<MediaFolder>(all.size());
-        for (MediaFolder folder : all) {
-            if (includeAll || folder.isEnabled() && folder.getPath().exists()) {
-                result.add(folder);
-            }
-        }
-        return result;
+    public List<MediaFolder> getAllMediaFolders() {
+        return mediaFolderDao.getAllMediaFolders();
     }
 
-    /**
-     * Returns the music folder with the given ID.
-     *
-     * @param id The ID.
-     * @return The music folder with the given ID, or <code>null</code> if not found.
-     */
-    public MediaFolder getMediaFolderById(Integer id) {
-        List<MediaFolder> all = getAllMediaFolders();
-        for (MediaFolder folder : all) {
-            if (id.equals(folder.getId())) {
-                return folder;
-            }
-        }
-        return null;
+    public List<MediaFolder> getNonIndexedMediaFolders() {
+        return mediaFolderDao.getNonIndexedMediaFolders();
     }
-
+    
     /**
      * Creates a new music folder.
      *

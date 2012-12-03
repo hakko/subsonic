@@ -954,7 +954,7 @@ public class RESTController extends MultiActionController {
 
         String filePathLower = filePath.toLowerCase();
 
-        List<MediaFolder> mediaFolders = settingsService.getAllMediaFolders();
+        List<MediaFolder> mediaFolders = settingsService.getIndexedMediaFolders();
         for (MediaFolder mediaFolder : mediaFolders) {
             String folderPath = mediaFolder.getPath().getPath();
             folderPath = folderPath.replace('\\', '/');

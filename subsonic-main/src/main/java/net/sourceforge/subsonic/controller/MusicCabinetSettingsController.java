@@ -108,7 +108,7 @@ public class MusicCabinetSettingsController extends SimpleFormController {
 
     private List<String> getMediaFolderNames() {
 		List<String> mediaFolderNames = new ArrayList<String>();
-		for (MediaFolder mediaFolder : settingsService.getAllMediaFolders()) {
+		for (MediaFolder mediaFolder : settingsService.getIndexedMediaFolders()) {
 			mediaFolderNames.add(mediaFolder.getName());
 		}
 		return mediaFolderNames;

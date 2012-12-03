@@ -85,16 +85,6 @@
 	</c:forEach>
 </c:if>
 
-<c:if test="${not empty model.mediaFolders}">
-	<h2 class="bgcolor1">Media folders</h2>
-	<c:forEach items="${model.mediaFolders}" var="mediaFolder">
-		<p class="dense" style="padding-left:0.5em">
-			<sub:url value="main.view" var="mainUrl"><sub:param name="path" value="${mediaFolder.path}"/></sub:url>
-			<a target="main" href="${mainUrl}">${mediaFolder.name}</a>
-		</p>
-	</c:forEach>
-</c:if>
-
 <c:if test="${not empty model.indexes or not empty model.currentTag}">
 	<h2 class="bgcolor1">Artists</h2>
 	<c:if test="${not empty model.tags}">
@@ -132,6 +122,16 @@
 	</c:forEach>
 	</c:forEach>
 	<a name="bottom"></a>
+</c:if>
+
+<c:if test="${not empty model.mediaFolders}">
+	<h2 class="bgcolor1">Media folders</h2>
+	<c:forEach items="${model.mediaFolders}" var="mediaFolder">
+		<p class="dense" style="padding-left:0.5em">
+			<sub:url value="main.view" var="mainUrl"><sub:param name="path" value="${mediaFolder.path}"/></sub:url>
+			<a target="main" href="${mainUrl}">${mediaFolder.name}</a>
+		</p>
+	</c:forEach>
 </c:if>
 
 <c:if test="${empty model.filebased}">

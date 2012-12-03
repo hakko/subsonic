@@ -19,7 +19,6 @@
 package net.sourceforge.subsonic.domain;
 
 import java.io.File;
-import java.io.Serializable;
 import java.util.Date;
 
 /**
@@ -28,12 +27,12 @@ import java.util.Date;
  * @author Sindre Mehus
  * @version $Revision: 1.1 $ $Date: 2005/11/27 14:32:05 $
  */
-public class MediaFolder implements Serializable {
+public class MediaFolder {
 
     private Integer id;
     private File path;
     private String name;
-    private boolean isEnabled;
+    private boolean isIndexed;
     private Date changed;
 
     /**
@@ -42,14 +41,14 @@ public class MediaFolder implements Serializable {
      * @param id      The system-generated ID.
      * @param path    The path of the music folder.
      * @param name    The user-defined name.
-     * @param enabled Whether the folder is enabled.
+     * @param indexed Whether the folder is indexed.
      * @param changed When the corresponding database entry was last changed.
      */
-    public MediaFolder(Integer id, File path, String name, boolean enabled, Date changed) {
+    public MediaFolder(Integer id, File path, String name, boolean indexed, Date changed) {
         this.id = id;
         this.path = path;
         this.name = name;
-        isEnabled = enabled;
+        isIndexed = indexed;
         this.changed = changed;
     }
 
@@ -115,17 +114,17 @@ public class MediaFolder implements Serializable {
      *
      * @return Whether the folder is enabled.
      */
-    public boolean isEnabled() {
-        return isEnabled;
+    public boolean isIndexed() {
+        return isIndexed;
     }
 
     /**
      * Sets whether the folder is enabled.
      *
-     * @param enabled Whether the folder is enabled.
+     * @param indexed Whether the folder is indexed.
      */
-    public void setEnabled(boolean enabled) {
-        isEnabled = enabled;
+    public void setIndexed(boolean indexed) {
+        isIndexed = indexed;
     }
 
     /**

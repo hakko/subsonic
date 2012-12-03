@@ -44,7 +44,7 @@ public class TopController extends ParameterizableViewController {
     protected ModelAndView handleRequestInternal(HttpServletRequest request, HttpServletResponse response) throws Exception {
         Map<String, Object> map = new HashMap<String, Object>();
 
-        List<MediaFolder> allMediaFolders = settingsService.getAllMediaFolders();
+        List<MediaFolder> allMediaFolders = settingsService.getIndexedMediaFolders();
         User user = securityService.getCurrentUser(request);
 
         map.put("user", user);

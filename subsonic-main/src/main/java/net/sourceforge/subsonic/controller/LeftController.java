@@ -141,6 +141,7 @@ public class LeftController extends ParameterizableViewController implements Las
             map.put("currentTag", tag);
             map.put("statistics", statistics);
             map.put("statisticsBytes", StringUtil.formatBytes(statistics.getTotalLengthInBytes(), locale));
+            map.put("mediaFolders", settingsService.getNonIndexedMediaFolders());
         } else {
     		map.put("filebased", true);
         	List<MediaFolder> mediaFolders = settingsService.getAllMediaFolders();

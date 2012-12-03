@@ -69,7 +69,7 @@ public class SearchService {
          */
 		deleteOldIndexFiles(); // TODO : remove after reaching version 0.8 or so
 		updateSearchServices();
-		List<MediaFolder> mediaFolders = settingsService.getAllMediaFolders();
+		List<MediaFolder> mediaFolders = settingsService.getIndexedMediaFolders();
 		Set<String> paths = new HashSet<>();
 		for (int i = 0; i < mediaFolders.size(); i++) {
 			paths.add(mediaFolders.get(i).getPath().getPath());

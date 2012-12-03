@@ -36,7 +36,7 @@ import net.sourceforge.subsonic.domain.MediaFolder;
 public class MediaFolderDao extends AbstractDao {
 
     private static final Logger LOG = Logger.getLogger(MediaFolderDao.class);
-    private static final String COLUMNS = "id, path, name, enabled, changed";
+    private static final String COLUMNS = "id, path, name, indexed, changed";
     private final MediaFolderRowMapper rowMapper = new MediaFolderRowMapper();
 
     /**
@@ -48,6 +48,16 @@ public class MediaFolderDao extends AbstractDao {
         String sql = "select " + COLUMNS + " from music_folder";
         return query(sql, rowMapper);
     }
+    
+    public List<MediaFolder> getIndexedMediaFolders() {
+        String sql = "select " + COLUMNS + " from music_folder where indexed";
+        return query(sql, rowMapper);
+    }
+
+    public List<MediaFolder> getNonIndexedMediaFolders() {
+        String sql = "select " + COLUMNS + " from music_folder where not indexed";
+        return query(sql, rowMapper);
+    }
 
     /**
      * Creates a new music folder.
@@ -56,7 +66,7 @@ public class MediaFolderDao extends AbstractDao {
      */
     public void createMediaFolder(MediaFolder mediaFolder) {
         String sql = "insert into music_folder (" + COLUMNS + ") values (null, ?, ?, ?, ?)";
-        update(sql, mediaFolder.getPath(), mediaFolder.getName(), mediaFolder.isEnabled(), mediaFolder.getChanged());
+        update(sql, mediaFolder.getPath(), mediaFolder.getName(), mediaFolder.isIndexed(), mediaFolder.getChanged());
         LOG.info("Created music folder " + mediaFolder.getPath());
     }
 
@@ -77,9 +87,9 @@ public class MediaFolderDao extends AbstractDao {
      * @param mediaFolder The music folder to update.
      */
     public void updateMediaFolder(MediaFolder mediaFolder) {
-        String sql = "update music_folder set path=?, name=?, enabled=?, changed=? where id=?";
+        String sql = "update music_folder set path=?, name=?, indexed=?, changed=? where id=?";
         update(sql, mediaFolder.getPath().getPath(), mediaFolder.getName(),
-                mediaFolder.isEnabled(), mediaFolder.getChanged(), mediaFolder.getId());
+                mediaFolder.isIndexed(), mediaFolder.getChanged(), mediaFolder.getId());
     }
 
     private static class MediaFolderRowMapper implements ParameterizedRowMapper<MediaFolder> {

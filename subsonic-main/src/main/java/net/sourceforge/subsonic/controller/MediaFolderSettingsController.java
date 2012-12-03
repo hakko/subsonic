@@ -68,7 +68,7 @@ public class MediaFolderSettingsController extends ParameterizableViewController
         }
 
         ModelAndView result = super.handleRequestInternal(request, response);
-        map.put("mediaFolders", settingsService.getAllMediaFolders(true));
+        map.put("mediaFolders", settingsService.getAllMediaFolders());
         map.put("indexBeingCreated", libraryUpdateService.isIndexBeingCreated());
         map.put("databaseAvailable", dbAdmService.isRDBMSRunning()
 				&& dbAdmService.isPasswordCorrect(settingsService.getMusicCabinetJDBCPassword())
@@ -88,7 +88,7 @@ public class MediaFolderSettingsController extends ParameterizableViewController
     }
 
     private boolean isDeleteMediaFolder(HttpServletRequest request) {
-        for (MediaFolder mediaFolder : settingsService.getAllMediaFolders(true)) {
+        for (MediaFolder mediaFolder : settingsService.getAllMediaFolders()) {
             if (getParameter(request, "delete", mediaFolder.getId()) != null) {
             	return true;
             }
@@ -97,32 +97,37 @@ public class MediaFolderSettingsController extends ParameterizableViewController
     }
     
     private String handleParameters(HttpServletRequest request) {
-
-    	LOG.debug("handleParameters");
     	
     	Set<String> deletedPaths = new HashSet<>();
     	
-        for (MediaFolder mediaFolder : settingsService.getAllMediaFolders(true)) {
+        for (MediaFolder mediaFolder : settingsService.getAllMediaFolders()) {
             Integer id = mediaFolder.getId();
 
             String path = getParameter(request, "path", id);
             String name = getParameter(request, "name", id);
-            boolean enabled = getParameter(request, "enabled", id) != null;
+            boolean indexed = getParameter(request, "indexed", id) != null;
             boolean delete = getParameter(request, "delete", id) != null;
+
+            LOG.debug(String.format("Folder %d (%s): indexed %b, delete %b", id, path, indexed, delete));
 
             if (delete) {
                 settingsService.deleteMediaFolder(id);
-                deletedPaths.add(path);
+                if (mediaFolder.isIndexed()) {
+                	deletedPaths.add(path);
+                }
             } else if (path == null) {
                 return "mediaFoldersettings.nopath";
             } else {
+            	if (!indexed && mediaFolder.isIndexed()) {
+    	        	deletedPaths.add(path);
+            	}
                 File file = new File(path);
                 if (name == null) {
                     name = file.getName();
                 }
                 mediaFolder.setName(name);
                 mediaFolder.setPath(file);
-                mediaFolder.setEnabled(enabled);
+                mediaFolder.setIndexed(indexed);
                 mediaFolder.setChanged(new Date());
                 settingsService.updateMediaFolder(mediaFolder);
             }
@@ -135,7 +140,7 @@ public class MediaFolderSettingsController extends ParameterizableViewController
         
         String name = StringUtils.trimToNull(request.getParameter("name"));
         String path = StringUtils.trimToNull(request.getParameter("path"));
-        boolean enabled = StringUtils.trimToNull(request.getParameter("enabled")) != null;
+        boolean indexed = StringUtils.trimToNull(request.getParameter("indexed")) != null;
 
         if (name != null || path != null) {
             if (path == null) {
@@ -145,7 +150,7 @@ public class MediaFolderSettingsController extends ParameterizableViewController
             if (name == null) {
                 name = file.getName();
             }
-            settingsService.createMediaFolder(new MediaFolder(file, name, enabled, new Date()));
+            settingsService.createMediaFolder(new MediaFolder(file, name, indexed, new Date()));
         }
 
         settingsService.setSettingsChanged();
