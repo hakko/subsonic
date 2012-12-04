@@ -32,7 +32,7 @@ public class MediaFolderDaoTestCase extends DaoTestCaseBase {
 
         mediaFolder.setPath(new File("newPath"));
         mediaFolder.setName("newName");
-        mediaFolder.setEnabled(false);
+        mediaFolder.setIndexed(false);
         mediaFolder.setChanged(new Date(234234L));
         mediaFolderDao.updateMediaFolder(mediaFolder);
 
@@ -59,7 +59,7 @@ public class MediaFolderDaoTestCase extends DaoTestCaseBase {
     private void assertMediaFolderEquals(MediaFolder expected, MediaFolder actual) {
         assertEquals("Wrong name.", expected.getName(), actual.getName());
         assertEquals("Wrong path.", expected.getPath(), actual.getPath());
-        assertEquals("Wrong enabled state.", expected.isEnabled(), actual.isEnabled());
+        assertEquals("Wrong indexed state.", expected.isIndexed(), actual.isIndexed());
         assertEquals("Wrong changed date.", expected.getChanged(), actual.getChanged());
     }
 
