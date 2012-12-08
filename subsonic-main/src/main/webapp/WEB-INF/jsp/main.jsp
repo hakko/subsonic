@@ -27,6 +27,11 @@
 	<br/>
 
 	<c:if test="${fn:length(model.files) > 0}">
+		<h2>
+			<a href="javascript:noop()" onclick="top.playlist.onPlay(${model.trackIds}, 'P');">Play all</a> |
+			<a href="javascript:noop()" onclick="top.playlist.onPlay(${model.trackIds}, 'E');">Enqueue all</a> |
+			<a href="javascript:noop()" onclick="top.playlist.onPlay(${model.trackIds}, 'A');">Add all</a>
+		</h2>
 		<table style="border-collapse:collapse;white-space:nowrap">
 			<c:forEach items="${model.files}" var="file" varStatus="loopStatus">
 				<tr>

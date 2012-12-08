@@ -21,6 +21,7 @@ package net.sourceforge.subsonic.controller;
 import static org.apache.commons.io.filefilter.DirectoryFileFilter.DIRECTORY;
 import static org.apache.commons.io.filefilter.FileFileFilter.FILE;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -59,11 +60,17 @@ public class MainController extends ParameterizableViewController {
         MediaFile dir = mediaFileService.getNonIndexedMediaFile(path);
         List<MediaFile> subDirectories = dir.getChildren(DIRECTORY);
         List<MediaFile> files = dir.getChildren(FILE);
+        List<Integer> trackIds = new ArrayList<>(files.size());
+
+        for (MediaFile file : files) {
+        	trackIds.add(file.getId());
+        }
         
         map.put("player", player);
         map.put("dir", dir);
         map.put("subDirectories", subDirectories);
         map.put("files", files);
+        map.put("trackIds", trackIds);
         map.put("user", securityService.getCurrentUser(request));
 
         ModelAndView result = super.handleRequestInternal(request, response);
