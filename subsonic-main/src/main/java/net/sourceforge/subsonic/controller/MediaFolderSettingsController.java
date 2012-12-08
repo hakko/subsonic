@@ -18,6 +18,8 @@
  */
 package net.sourceforge.subsonic.controller;
 
+import static org.apache.commons.lang.StringUtils.defaultIfEmpty;
+import static org.apache.commons.lang.StringUtils.trimToNull;
 import net.sourceforge.subsonic.Logger;
 import net.sourceforge.subsonic.service.*;
 import net.sourceforge.subsonic.domain.*;
@@ -35,7 +37,7 @@ import java.util.*;
 import java.io.*;
 
 /**
- * Controller for the page used to administrate the set of music folders.
+ * Controller for the page used to administrate the set of media folders.
  *
  * @author Sindre Mehus
  */
@@ -43,6 +45,7 @@ public class MediaFolderSettingsController extends ParameterizableViewController
 
     private SettingsService settingsService;
     private SearchService searchService;
+    private MediaFolderService mediaFolderService;
     private LibraryBrowserService libraryBrowserService;
     private LibraryUpdateService libraryUpdateService;
     private DatabaseAdministrationService dbAdmService;
@@ -59,16 +62,19 @@ public class MediaFolderSettingsController extends ParameterizableViewController
         }
         
         if (isFormSubmission(request)) {
-            String error = handleParameters(request);
-            map.put("error", error);
-            if (error == null) {
+        	if (!arePathParametersValid(request)) {
+                map.put("error", "mediaFoldersettings.nopath");
+        	} else {
+        		updateMediaFoldersFromRequest(request);
+        		addNewMediaFolderFromRequest(request);
+                settingsService.setSettingsChanged();
             	map.put("hasArtists", libraryBrowserService.hasArtists());
                 map.put("reload", true);
-            }
+        	}
         }
 
         ModelAndView result = super.handleRequestInternal(request, response);
-        map.put("mediaFolders", settingsService.getAllMediaFolders());
+        map.put("mediaFolders", mediaFolderService.getAllMediaFolders());
         map.put("indexBeingCreated", libraryUpdateService.isIndexBeingCreated());
         map.put("databaseAvailable", dbAdmService.isRDBMSRunning()
 				&& dbAdmService.isPasswordCorrect(settingsService.getMusicCabinetJDBCPassword())
@@ -88,7 +94,7 @@ public class MediaFolderSettingsController extends ParameterizableViewController
     }
 
     private boolean isDeleteMediaFolder(HttpServletRequest request) {
-        for (MediaFolder mediaFolder : settingsService.getAllMediaFolders()) {
+        for (MediaFolder mediaFolder : mediaFolderService.getAllMediaFolders()) {
             if (getParameter(request, "delete", mediaFolder.getId()) != null) {
             	return true;
             }
@@ -96,68 +102,76 @@ public class MediaFolderSettingsController extends ParameterizableViewController
         return false;
     }
     
-    private String handleParameters(HttpServletRequest request) {
-    	
+    private boolean arePathParametersValid(HttpServletRequest request) {
+        for (MediaFolder mediaFolder : mediaFolderService.getAllMediaFolders()) {
+            Integer id = mediaFolder.getId();
+            if (getParameter(request, "path", id) == null) {
+            	return false;
+            }
+        }
+
+        String name = trimToNull(request.getParameter("name"));
+        String path = trimToNull(request.getParameter("path"));
+        if (name != null && path == null) {
+        	return false;
+        }
+        
+        return true;
+    }
+    
+    private void updateMediaFoldersFromRequest(HttpServletRequest request) {
     	Set<String> deletedPaths = new HashSet<>();
     	
-        for (MediaFolder mediaFolder : settingsService.getAllMediaFolders()) {
+        for (MediaFolder mediaFolder : mediaFolderService.getAllMediaFolders()) {
             Integer id = mediaFolder.getId();
 
-            String path = getParameter(request, "path", id);
-            String name = getParameter(request, "name", id);
-            boolean indexed = getParameter(request, "indexed", id) != null;
-            boolean delete = getParameter(request, "delete", id) != null;
-
-            LOG.debug(String.format("Folder %d (%s): indexed %b, delete %b", id, path, indexed, delete));
-
-            if (delete) {
-                settingsService.deleteMediaFolder(id);
-                if (mediaFolder.isIndexed()) {
+            if (getParameter(request, "delete", id) != null) {
+            	mediaFolderService.deleteMediaFolder(id);
+            	String path = mediaFolder.getPath().getAbsolutePath();
+                if (mediaFolder.isIndexed() && !hasIndexedParentFolder(path)) {
                 	deletedPaths.add(path);
                 }
-            } else if (path == null) {
-                return "mediaFoldersettings.nopath";
             } else {
-            	if (!indexed && mediaFolder.isIndexed()) {
+                String path = getParameter(request, "path", id);
+                String name = getParameter(request, "name", id);
+                boolean indexed = getParameter(request, "indexed", id) != null;
+                
+            	if (mediaFolder.isIndexed() && !indexed) {
     	        	deletedPaths.add(path);
             	}
                 File file = new File(path);
-                if (name == null) {
-                    name = file.getName();
-                }
-                mediaFolder.setName(name);
-                mediaFolder.setPath(file);
-                mediaFolder.setIndexed(indexed);
-                mediaFolder.setChanged(new Date());
-                settingsService.updateMediaFolder(mediaFolder);
+                mediaFolderService.updateMediaFolder(new MediaFolder(mediaFolder.getId(), 
+                		file, defaultIfEmpty(name, file.getName()), indexed, new Date()));
             }
         }
 
         LOG.debug("deleted paths: " + deletedPaths);
         if (!deletedPaths.isEmpty() && libraryBrowserService.hasArtists()) {
+        	setChildFoldersToNonIndexed(deletedPaths);
         	searchService.deleteMediaFolders(deletedPaths);
         }
-        
-        String name = StringUtils.trimToNull(request.getParameter("name"));
-        String path = StringUtils.trimToNull(request.getParameter("path"));
-        boolean indexed = StringUtils.trimToNull(request.getParameter("indexed")) != null;
-
-        if (name != null || path != null) {
-            if (path == null) {
-                return "mediaFoldersettings.nopath";
-            }
-            File file = new File(path);
-            if (name == null) {
-                name = file.getName();
-            }
-            settingsService.createMediaFolder(new MediaFolder(file, name, indexed, new Date()));
-        }
-
-        settingsService.setSettingsChanged();
-        
-        return null;
     }
 
+    private boolean hasIndexedParentFolder(String folder) {
+    	return mediaFolderService.hasIndexedParentFolder(folder);
+    }
+    
+    private void setChildFoldersToNonIndexed(Set<String> deletedPaths) {
+    	mediaFolderService.setChildFoldersToNonIndexed(deletedPaths);
+    }
+
+    private void addNewMediaFolderFromRequest(HttpServletRequest request) {
+        String name = trimToNull(request.getParameter("name"));
+        String path = trimToNull(request.getParameter("path"));
+        boolean indexed = trimToNull(request.getParameter("indexed")) != null;
+
+        if (name != null || path != null) {
+            File file = new File(path);
+            mediaFolderService.createMediaFolder(
+            		new MediaFolder(file, defaultIfEmpty(name, file.getName()), indexed, new Date()));
+        }
+    }
+    
     private String getParameter(HttpServletRequest request, String name, Integer id) {
         return StringUtils.trimToNull(request.getParameter(name + "[" + id + "]"));
     }
@@ -165,6 +179,10 @@ public class MediaFolderSettingsController extends ParameterizableViewController
     public void setSettingsService(SettingsService settingsService) {
         this.settingsService = settingsService;
     }
+
+	public void setMediaFolderService(MediaFolderService mediaFolderService) {
+		this.mediaFolderService = mediaFolderService;
+	}
 
 	public void setSearchService(SearchService searchService) {
 		this.searchService = searchService;
