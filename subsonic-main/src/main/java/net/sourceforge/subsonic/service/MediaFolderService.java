@@ -92,4 +92,10 @@ public class MediaFolderService {
     	mediaFolderDao.setChildFoldersToNonIndexed(paths);
     }
 
+    // Spring setters
+    
+	public void setMediaFolderDao(MediaFolderDao mediaFolderDao) {
+		this.mediaFolderDao = mediaFolderDao;
+	}
+
 }

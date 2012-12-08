@@ -84,7 +84,7 @@
 
     <bean id="securityService" class="net.sourceforge.subsonic.service.SecurityService">
         <property name="settingsService" ref="settingsService"/>
-        <property name="mediaFileService" ref="mediaFileService"/>
+        <property name="mediaFolderService" ref="mediaFolderService"/>
         <property name="userDao" ref="userDao"/>
         <property name="userCache" ref="userCache"/>
         <property name="passwordEncoder" ref="passwordEncoder"/>
