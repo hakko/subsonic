@@ -34,10 +34,6 @@ import net.sourceforge.subsonic.service.metadata.MetaDataParser;
 import net.sourceforge.subsonic.util.FileUtil;
 
 import org.apache.commons.io.FilenameUtils;
-import org.apache.commons.io.filefilter.DirectoryFileFilter;
-import org.apache.commons.io.filefilter.FalseFileFilter;
-import org.apache.commons.io.filefilter.FileFileFilter;
-import org.apache.commons.io.filefilter.TrueFileFilter;
 import org.apache.commons.lang.builder.CompareToBuilder;
 
 /**
@@ -264,26 +260,10 @@ public class MediaFile implements Serializable, Comparable<MediaFile> {
 	 *            Whether files should be included in the result.
 	 * @param includeDirectories
 	 *            Whether directories should be included in the result.
-	 * @param sort
-	 *            Whether to sort files in the same directory. @return All
-	 *            children music files.
 	 * @throws IOException
 	 *             If an I/O error occurs.
 	 */
-	public List<MediaFile> getChildren(boolean includeFiles,
-			boolean includeDirectories, boolean sort) throws IOException {
-
-		FileFilter filter;
-		if (includeFiles && includeDirectories) {
-			filter = TrueFileFilter.INSTANCE;
-		} else if (includeFiles) {
-			filter = FileFileFilter.FILE;
-		} else if (includeDirectories) {
-			filter = DirectoryFileFilter.DIRECTORY;
-		} else {
-			filter = FalseFileFilter.INSTANCE;
-		}
-
+	public List<MediaFile> getChildren(FileFilter filter) throws IOException {
 		File[] children = FileUtil.listFiles(file, filter);
 		List<MediaFile> result = new ArrayList<MediaFile>(children.length);
 
@@ -297,9 +277,7 @@ public class MediaFile implements Serializable, Comparable<MediaFile> {
 			}
 		}
 		
-		if (sort) {
-			Collections.sort(result);
-		}
+		Collections.sort(result);
 
 		return result;
 	}

@@ -18,6 +18,9 @@
  */
 package net.sourceforge.subsonic.controller;
 
+import static org.apache.commons.io.filefilter.DirectoryFileFilter.DIRECTORY;
+import static org.apache.commons.io.filefilter.FileFileFilter.FILE;
+
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -54,8 +57,8 @@ public class MainController extends ParameterizableViewController {
         
         String path = request.getParameter("path");
         MediaFile dir = mediaFileService.getNonIndexedMediaFile(path);
-        List<MediaFile> subDirectories = dir.getChildren(false, true, true);
-        List<MediaFile> files = dir.getChildren(true, false, true);
+        List<MediaFile> subDirectories = dir.getChildren(DIRECTORY);
+        List<MediaFile> files = dir.getChildren(FILE);
         
         map.put("player", player);
         map.put("dir", dir);
