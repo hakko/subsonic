@@ -218,7 +218,7 @@ public class MediaFile implements Serializable, Comparable<MediaFile> {
 	 * 
 	 * @return Meta data (artist, album, title etc) for this music file.
 	 */
-	public synchronized MetaData getMetaData() {
+	public MetaData getMetaData() {
 		if (metaData == null) {
 			MetaDataParser parser = ServiceLocator.getMetaDataParserFactory()
 					.getParser(this);
