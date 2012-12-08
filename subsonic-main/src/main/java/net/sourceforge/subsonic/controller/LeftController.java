@@ -37,6 +37,7 @@ import net.sourceforge.subsonic.domain.MediaFolder;
 import net.sourceforge.subsonic.domain.User;
 import net.sourceforge.subsonic.domain.UserSettings;
 import net.sourceforge.subsonic.service.ArtistIndexService;
+import net.sourceforge.subsonic.service.MediaFolderService;
 import net.sourceforge.subsonic.service.PlayerService;
 import net.sourceforge.subsonic.service.SecurityService;
 import net.sourceforge.subsonic.service.SettingsService;
@@ -64,6 +65,7 @@ public class LeftController extends ParameterizableViewController implements Las
     private SecurityService securityService;
     private PlayerService playerService;
     private ArtistIndexService artistIndexService;
+    private MediaFolderService mediaFolderService;
     
     private LibraryBrowserService libraryBrowserService;
     private LibraryUpdateService libraryUpdateService;
@@ -141,10 +143,10 @@ public class LeftController extends ParameterizableViewController implements Las
             map.put("currentTag", tag);
             map.put("statistics", statistics);
             map.put("statisticsBytes", StringUtil.formatBytes(statistics.getTotalLengthInBytes(), locale));
-            map.put("mediaFolders", settingsService.getNonIndexedMediaFolders());
+            map.put("mediaFolders", mediaFolderService.getNonIndexedMediaFolders());
         } else {
     		map.put("filebased", true);
-        	List<MediaFolder> mediaFolders = settingsService.getAllMediaFolders();
+        	List<MediaFolder> mediaFolders = mediaFolderService.getAllMediaFolders();
         	if (mediaFolders.size() > 0) {
     			map.put("indexing", libraryUpdateService.isIndexBeingCreated());
         		map.put("mediaFolders", mediaFolders);
@@ -173,6 +175,10 @@ public class LeftController extends ParameterizableViewController implements Las
 
 	public void setArtistIndexService(ArtistIndexService artistIndexService) {
 		this.artistIndexService = artistIndexService;
+	}
+
+	public void setMediaFolderService(MediaFolderService mediaFolderService) {
+		this.mediaFolderService = mediaFolderService;
 	}
 
 	public void setLibraryBrowserService(LibraryBrowserService libraryBrowserService) {

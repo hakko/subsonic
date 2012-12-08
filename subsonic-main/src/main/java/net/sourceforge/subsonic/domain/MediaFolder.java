@@ -57,11 +57,11 @@ public class MediaFolder {
      *
      * @param path    The path of the music folder.
      * @param name    The user-defined name.
-     * @param enabled Whether the folder is enabled.
+     * @param indexed Whether the folder is indexed.
      * @param changed When the corresponding database entry was last changed.
      */
-    public MediaFolder(File path, String name, boolean enabled, Date changed) {
-        this(null, path, name, enabled, changed);
+    public MediaFolder(File path, String name, boolean indexed, Date changed) {
+        this(null, path, name, indexed, changed);
     }
 
     /**

@@ -54,6 +54,7 @@ public class SecurityService implements InitializingBean, UserDetailsService {
 
     private UserDao userDao;
     private SettingsService settingsService;
+    private MediaFolderService mediaFolderService;
     private Ehcache userCache;
 
     private PasswordEncoder passwordEncoder;
@@ -245,7 +246,7 @@ public class SecurityService implements InitializingBean, UserDetailsService {
      * @return Whether the given file is located in one of the music folders.
      */
     private boolean isInMediaFolder(File file) {
-        List<MediaFolder> folders = settingsService.getAllMediaFolders();
+        List<MediaFolder> folders = mediaFolderService.getAllMediaFolders();
         String path = file.getPath();
         for (MediaFolder folder : folders) {
             if (isFileInFolder(path, folder.getPath().getPath())) {
@@ -303,7 +304,11 @@ public class SecurityService implements InitializingBean, UserDetailsService {
         this.settingsService = settingsService;
     }
 
-    public void setUserDao(UserDao userDao) {
+    public void setMediaFolderService(MediaFolderService mediaFolderService) {
+		this.mediaFolderService = mediaFolderService;
+	}
+
+	public void setUserDao(UserDao userDao) {
         this.userDao = userDao;
     }
 

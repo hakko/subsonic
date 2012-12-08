@@ -27,8 +27,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import net.sourceforge.subsonic.domain.MediaFolder;
+import net.sourceforge.subsonic.service.MediaFolderService;
 import net.sourceforge.subsonic.service.SecurityService;
-import net.sourceforge.subsonic.service.SettingsService;
 
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.ParameterizableViewController;
@@ -40,14 +40,14 @@ import org.springframework.web.servlet.mvc.ParameterizableViewController;
  */
 public class MoreController extends ParameterizableViewController {
 
-    private SettingsService settingsService;
     private SecurityService securityService;
+    private MediaFolderService mediaFolderService;
 
     protected ModelAndView handleRequestInternal(HttpServletRequest request, HttpServletResponse response) throws Exception {
         Map<String, Object> map = new HashMap<String, Object>();
 
         String uploadDirectory = null;
-        List<MediaFolder> mediaFolders = settingsService.getIndexedMediaFolders();
+        List<MediaFolder> mediaFolders = mediaFolderService.getIndexedMediaFolders();
         if (mediaFolders.size() > 0) {
             uploadDirectory = new File(mediaFolders.get(0).getPath(), "Incoming").getPath();
         }
@@ -59,11 +59,11 @@ public class MoreController extends ParameterizableViewController {
         return result;
     }
 
-    public void setSettingsService(SettingsService settingsService) {
-        this.settingsService = settingsService;
-    }
+    public void setMediaFolderService(MediaFolderService mediaFolderService) {
+		this.mediaFolderService = mediaFolderService;
+	}
 
-    public void setSecurityService(SecurityService securityService) {
+	public void setSecurityService(SecurityService securityService) {
         this.securityService = securityService;
     }
 

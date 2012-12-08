@@ -58,6 +58,7 @@ import net.sourceforge.subsonic.service.ArtistIndexService;
 import net.sourceforge.subsonic.service.AudioScrobblerService;
 import net.sourceforge.subsonic.service.JukeboxService;
 import net.sourceforge.subsonic.service.MediaFileService;
+import net.sourceforge.subsonic.service.MediaFolderService;
 import net.sourceforge.subsonic.service.PlayerService;
 import net.sourceforge.subsonic.service.PlaylistService;
 import net.sourceforge.subsonic.service.PodcastService;
@@ -104,6 +105,7 @@ public class RESTController extends MultiActionController {
 
     private SettingsService settingsService;
     private SecurityService securityService;
+    private MediaFolderService mediaFolderService;
     private PlayerService playerService;
     private MediaFileService mediaFileService;
     private TranscodingService transcodingService;
@@ -956,7 +958,7 @@ public class RESTController extends MultiActionController {
 
         String filePathLower = filePath.toLowerCase();
 
-        List<MediaFolder> mediaFolders = settingsService.getIndexedMediaFolders();
+        List<MediaFolder> mediaFolders = mediaFolderService.getIndexedMediaFolders();
         for (MediaFolder mediaFolder : mediaFolders) {
             String folderPath = mediaFolder.getPath().getPath();
             folderPath = folderPath.replace('\\', '/');
@@ -1579,11 +1581,15 @@ public class RESTController extends MultiActionController {
         this.securityService = securityService;
     }
 
-    public void setPlayerService(PlayerService playerService) {
+    public void setMediaFolderService(MediaFolderService mediaFolderService) {
+		this.mediaFolderService = mediaFolderService;
+	}
+
+	public void setPlayerService(PlayerService playerService) {
         this.playerService = playerService;
     }
 
-    public void setmediaFileService(MediaFileService mediaFileService) {
+    public void setMediaFileService(MediaFileService mediaFileService) {
         this.mediaFileService = mediaFileService;
     }
 

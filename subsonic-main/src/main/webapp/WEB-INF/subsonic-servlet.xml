@@ -9,6 +9,7 @@
         <property name="securityService" ref="securityService"/>
         <property name="settingsService" ref="settingsService"/>
         <property name="playerService" ref="playerService"/>
+        <property name="mediaFolderService" ref="mediaFolderService"/>
         <property name="libraryBrowserService" ref="libraryBrowserService"/>
         <property name="libraryUpdateService" ref="libraryUpdateService"/>
         <property name="libraryStatusService" ref="ajaxLibraryStatusService"/>
@@ -60,6 +61,7 @@
         <property name="viewName" value="top"/>
         <property name="settingsService" ref="settingsService"/>
         <property name="securityService" ref="securityService"/>
+        <property name="mediaFolderService" ref="mediaFolderService"/>
     </bean>
     <bean id="helpController" class="net.sourceforge.subsonic.controller.HelpController">
         <property name="viewName" value="help"/>
@@ -68,7 +70,7 @@
     </bean>
     <bean id="moreController" class="net.sourceforge.subsonic.controller.MoreController">
         <property name="viewName" value="more"/>
-        <property name="settingsService" ref="settingsService"/>
+        <property name="mediaFolderService" ref="mediaFolderService"/>
         <property name="securityService" ref="securityService"/>
     </bean>
     <bean id="uploadController" class="net.sourceforge.subsonic.controller.UploadController">
@@ -163,6 +165,7 @@
         <property name="viewName" value="mediaFolderSettings"/>
         <property name="settingsService" ref="settingsService"/>
         <property name="searchService" ref="searchService"/>
+        <property name="mediaFolderService" ref="mediaFolderService"/>
         <property name="libraryBrowserService" ref="libraryBrowserService"/>
         <property name="libraryUpdateService" ref="libraryUpdateService"/>
         <property name="databaseAdministrationService" ref="databaseAdministrationService"/>
@@ -207,6 +210,7 @@
         <property name="playlistGeneratorService" ref="playlistGeneratorService"/>
         <property name="settingsService" ref="settingsService"/>
         <property name="searchService" ref="searchService"/>
+        <property name="mediaFolderService" ref="mediaFolderService"/>
         <property name="libraryUpdateService" ref="libraryUpdateService"/>
     </bean>
     <bean id="generalSettingsController" class="net.sourceforge.subsonic.controller.GeneralSettingsController">

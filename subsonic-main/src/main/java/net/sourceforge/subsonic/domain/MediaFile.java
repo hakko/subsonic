@@ -28,8 +28,8 @@ import java.util.List;
 
 import net.sourceforge.subsonic.Logger;
 import net.sourceforge.subsonic.service.MediaFileService;
+import net.sourceforge.subsonic.service.MediaFolderService;
 import net.sourceforge.subsonic.service.ServiceLocator;
-import net.sourceforge.subsonic.service.SettingsService;
 import net.sourceforge.subsonic.service.metadata.MetaDataParser;
 import net.sourceforge.subsonic.util.FileUtil;
 
@@ -134,8 +134,8 @@ public class MediaFile implements Serializable, Comparable<MediaFile> {
 	 * @return Whether this music file is one of the root music folders.
 	 */
 	public boolean isRoot() {
-		SettingsService settings = ServiceLocator.getSettingsService();
-		List<MediaFolder> folders = settings.getAllMediaFolders();
+		MediaFolderService mediaFolderSettings = ServiceLocator.getMediaFolderService();
+		List<MediaFolder> folders = mediaFolderSettings.getAllMediaFolders();
 		for (MediaFolder folder : folders) {
 			if (file.equals(folder.getPath())) {
 				return true;

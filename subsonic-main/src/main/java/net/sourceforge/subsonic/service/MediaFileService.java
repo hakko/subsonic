@@ -209,7 +209,7 @@ public class MediaFileService {
      * This method is invoked automatically by Spring.
      */
     public void init() {
-        ServiceLocator.setmediaFileService(this);
+        ServiceLocator.setMediaFileService(this);
     }
 
     public void setSettingsService(SettingsService settingsService) {

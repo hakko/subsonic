@@ -50,11 +50,9 @@ import org.apache.http.params.HttpConnectionParams;
 import net.sourceforge.subsonic.Logger;
 import net.sourceforge.subsonic.dao.AvatarDao;
 import net.sourceforge.subsonic.dao.InternetRadioDao;
-import net.sourceforge.subsonic.dao.MediaFolderDao;
 import net.sourceforge.subsonic.dao.UserDao;
 import net.sourceforge.subsonic.domain.Avatar;
 import net.sourceforge.subsonic.domain.InternetRadio;
-import net.sourceforge.subsonic.domain.MediaFolder;
 import net.sourceforge.subsonic.domain.Theme;
 import net.sourceforge.subsonic.domain.User;
 import net.sourceforge.subsonic.domain.UserSettings;
@@ -208,7 +206,6 @@ public class SettingsService {
     private List<Theme> themes;
     private List<Locale> locales;
     private InternetRadioDao internetRadioDao;
-    private MediaFolderDao mediaFolderDao;
     private UserDao userDao;
     private AvatarDao avatarDao;
     private VersionService versionService;
@@ -907,56 +904,6 @@ public class SettingsService {
         return "Subsonic";
     }
 
-    /**
-     * Returns all music folders. Non-existing and disabled folders are not included.
-     *
-     * @return Possibly empty list of all music folders.
-     */
-    public List<MediaFolder> getIndexedMediaFolders() {
-        return mediaFolderDao.getIndexedMediaFolders();
-    }
-
-    /**
-     * Returns all music folders.
-     *
-     * @param includeAll Whether non-existing and disabled folders should be included.
-     * @return Possibly empty list of all music folders.
-     */
-    public List<MediaFolder> getAllMediaFolders() {
-        return mediaFolderDao.getAllMediaFolders();
-    }
-
-    public List<MediaFolder> getNonIndexedMediaFolders() {
-        return mediaFolderDao.getNonIndexedMediaFolders();
-    }
-    
-    /**
-     * Creates a new music folder.
-     *
-     * @param mediaFolder The music folder to create.
-     */
-    public void createMediaFolder(MediaFolder mediaFolder) {
-        mediaFolderDao.createMediaFolder(mediaFolder);
-    }
-
-    /**
-     * Deletes the music folder with the given ID.
-     *
-     * @param id The ID of the music folder to delete.
-     */
-    public void deleteMediaFolder(Integer id) {
-        mediaFolderDao.deleteMediaFolder(id);
-    }
-
-    /**
-     * Updates the given music folder.
-     *
-     * @param mediaFolder The music folder to update.
-     */
-    public void updateMediaFolder(MediaFolder mediaFolder) {
-        mediaFolderDao.updateMediaFolder(mediaFolder);
-    }
-
     public List<String> getAllLastFmUsers() {
     	return userDao.getAllLastFmUsers();
     }
@@ -1226,10 +1173,6 @@ public class SettingsService {
 
     public void setInternetRadioDao(InternetRadioDao internetRadioDao) {
         this.internetRadioDao = internetRadioDao;
-    }
-
-    public void setMediaFolderDao(MediaFolderDao mediaFolderDao) {
-        this.mediaFolderDao = mediaFolderDao;
     }
 
     public void setUserDao(UserDao userDao) {

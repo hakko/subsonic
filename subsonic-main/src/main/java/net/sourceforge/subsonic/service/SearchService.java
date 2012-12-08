@@ -47,6 +47,7 @@ public class SearchService {
     private static final Logger LOG = Logger.getLogger(SearchService.class);
 
     private Timer timer;
+    private MediaFolderService mediaFolderService;
     private SettingsService settingsService;
 
     private ScrobbledTracksService scrobbledTracksService;
@@ -69,7 +70,7 @@ public class SearchService {
          */
 		deleteOldIndexFiles(); // TODO : remove after reaching version 0.8 or so
 		updateSearchServices();
-		List<MediaFolder> mediaFolders = settingsService.getIndexedMediaFolders();
+		List<MediaFolder> mediaFolders = mediaFolderService.getIndexedMediaFolders();
 		Set<String> paths = new HashSet<>();
 		for (int i = 0; i < mediaFolders.size(); i++) {
 			paths.add(mediaFolders.get(i).getPath().getPath());
@@ -195,6 +196,10 @@ public class SearchService {
         this.settingsService = settingsService;
     }
 	
+	public void setMediaFolderService(MediaFolderService mediaFolderService) {
+		this.mediaFolderService = mediaFolderService;
+	}
+
 	public void setScrobbledTracksService(ScrobbledTracksService scrobbledTracksService) {
 		this.scrobbledTracksService = scrobbledTracksService;
 	}

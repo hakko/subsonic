@@ -18,10 +18,13 @@
  */
 package net.sourceforge.subsonic.dao;
 
+import static java.io.File.separator;
+
 import java.io.File;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.List;
+import java.util.Set;
 
 import org.springframework.jdbc.core.simple.ParameterizedRowMapper;
 
@@ -29,7 +32,7 @@ import net.sourceforge.subsonic.Logger;
 import net.sourceforge.subsonic.domain.MediaFolder;
 
 /**
- * Provides database services for music folders.
+ * Provides database services for media folders.
  *
  * @author Sindre Mehus
  */
@@ -40,9 +43,9 @@ public class MediaFolderDao extends AbstractDao {
     private final MediaFolderRowMapper rowMapper = new MediaFolderRowMapper();
 
     /**
-     * Returns all music folders.
+     * Returns all media folders.
      *
-     * @return Possibly empty list of all music folders.
+     * @return Possibly empty list of all media folders.
      */
     public List<MediaFolder> getAllMediaFolders() {
         String sql = "select " + COLUMNS + " from music_folder";
@@ -60,36 +63,55 @@ public class MediaFolderDao extends AbstractDao {
     }
 
     /**
-     * Creates a new music folder.
+     * Creates a new media folder.
      *
-     * @param mediaFolder The music folder to create.
+     * @param mediaFolder The media folder to create.
      */
     public void createMediaFolder(MediaFolder mediaFolder) {
         String sql = "insert into music_folder (" + COLUMNS + ") values (null, ?, ?, ?, ?)";
         update(sql, mediaFolder.getPath(), mediaFolder.getName(), mediaFolder.isIndexed(), mediaFolder.getChanged());
-        LOG.info("Created music folder " + mediaFolder.getPath());
+        LOG.info("Created media folder " + mediaFolder.getPath());
     }
 
     /**
-     * Deletes the music folder with the given ID.
+     * Updates the given media folder.
      *
-     * @param id The music folder ID.
-     */
-    public void deleteMediaFolder(Integer id) {
-        String sql = "delete from music_folder where id=?";
-        update(sql, id);
-        LOG.info("Deleted music folder with ID " + id);
-    }
-
-    /**
-     * Updates the given music folder.
-     *
-     * @param mediaFolder The music folder to update.
+     * @param mediaFolder The media folder to update.
      */
     public void updateMediaFolder(MediaFolder mediaFolder) {
         String sql = "update music_folder set path=?, name=?, indexed=?, changed=? where id=?";
         update(sql, mediaFolder.getPath().getPath(), mediaFolder.getName(),
                 mediaFolder.isIndexed(), mediaFolder.getChanged(), mediaFolder.getId());
+    }
+
+    /**
+     * Deletes the media folder with the given ID.
+     *
+     * @param id The media folder ID.
+     */
+    public void deleteMediaFolder(Integer id) {
+        String sql = "delete from music_folder where id=?";
+        update(sql, id);
+        LOG.info("Deleted media folder with ID " + id);
+    }
+
+    public boolean hasIndexedParentFolder(String folder) {
+    	List<String> paths = getJdbcTemplate().queryForList(
+    			"select path from music_folder where indexed", String.class);
+    	for (String path : paths) {
+    		if ((path.endsWith(separator) && folder.startsWith(path)) ||
+    			(!path.endsWith(separator) && folder.startsWith(path + separator))) {
+    			return true;
+    		}
+    	}
+    	return false;
+    }
+    
+    public void setChildFoldersToNonIndexed(Set<String> paths) {
+    	for (String path : paths) {
+        	update("update music_folder set indexed = false where indexed and path like ?", 
+        			(path.endsWith(separator) ? path : (path + separator)) + "%");
+    	}
     }
 
     private static class MediaFolderRowMapper implements ParameterizedRowMapper<MediaFolder> {

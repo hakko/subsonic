@@ -7,6 +7,7 @@ import javax.servlet.http.HttpServletRequest;
 
 import net.sourceforge.subsonic.command.MusicCabinetSettingsCommand;
 import net.sourceforge.subsonic.domain.MediaFolder;
+import net.sourceforge.subsonic.service.MediaFolderService;
 import net.sourceforge.subsonic.service.SearchService;
 import net.sourceforge.subsonic.service.SettingsService;
 
@@ -28,6 +29,7 @@ public class MusicCabinetSettingsController extends SimpleFormController {
     
     private SettingsService settingsService;
     private SearchService searchService;
+    private MediaFolderService mediaFolderService;
     private LibraryUpdateService libraryUpdateService;
     
     protected Object formBackingObject(HttpServletRequest request) throws Exception {
@@ -108,7 +110,7 @@ public class MusicCabinetSettingsController extends SimpleFormController {
 
     private List<String> getMediaFolderNames() {
 		List<String> mediaFolderNames = new ArrayList<String>();
-		for (MediaFolder mediaFolder : settingsService.getIndexedMediaFolders()) {
+		for (MediaFolder mediaFolder : mediaFolderService.getIndexedMediaFolders()) {
 			mediaFolderNames.add(mediaFolder.getName());
 		}
 		return mediaFolderNames;
@@ -131,6 +133,10 @@ public class MusicCabinetSettingsController extends SimpleFormController {
     public void setSearchService(SearchService searchService) {
     	this.searchService = searchService;
     }
+
+	public void setMediaFolderService(MediaFolderService mediaFolderService) {
+		this.mediaFolderService = mediaFolderService;
+	}
 
 	public void setLibraryUpdateService(LibraryUpdateService libraryUpdateService) {
 		this.libraryUpdateService = libraryUpdateService;

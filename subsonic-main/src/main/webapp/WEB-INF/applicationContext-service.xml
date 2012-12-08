@@ -84,6 +84,7 @@
 
     <bean id="securityService" class="net.sourceforge.subsonic.service.SecurityService">
         <property name="settingsService" ref="settingsService"/>
+        <property name="mediaFileService" ref="mediaFileService"/>
         <property name="userDao" ref="userDao"/>
         <property name="userCache" ref="userCache"/>
         <property name="passwordEncoder" ref="passwordEncoder"/>
@@ -92,14 +93,18 @@
 
     <bean id="settingsService" class="net.sourceforge.subsonic.service.SettingsService" init-method="init">
         <property name="internetRadioDao" ref="internetRadioDao"/>
-        <property name="mediaFolderDao" ref="mediaFolderDao"/>
         <property name="userDao" ref="userDao"/>
         <property name="avatarDao" ref="avatarDao"/>
         <property name="versionService" ref="versionService"/>
     </bean>
 
+    <bean id="mediaFolderService" class="net.sourceforge.subsonic.service.MediaFolderService" init-method="init">
+        <property name="mediaFolderDao" ref="mediaFolderDao"/>
+    </bean>
+
     <bean id="searchService" class="net.sourceforge.subsonic.service.SearchService" init-method="schedule">
         <property name="settingsService" ref="settingsService"/>
+        <property name="mediaFolderService" ref="mediaFolderService"/>
         <property name="libraryUpdateService" ref="libraryUpdateService"/>
         <property name="libraryStatusService" ref="ajaxLibraryStatusService"/>
         <property name="libraryScannerService" ref="libraryScannerService"/>

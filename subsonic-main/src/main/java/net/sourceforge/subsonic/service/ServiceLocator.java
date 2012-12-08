@@ -28,6 +28,7 @@ import net.sourceforge.subsonic.service.metadata.MetaDataParserFactory;
 public class ServiceLocator {
 
     private static SettingsService settingsService;
+    private static MediaFolderService mediaFolderService;
     private static MediaFileService mediaFileService;
     private static MetaDataParserFactory metaDataParserFactory;
 
@@ -46,7 +47,7 @@ public class ServiceLocator {
         return mediaFileService;
     }
 
-    public static void setmediaFileService(MediaFileService mediaFileService) {
+    public static void setMediaFileService(MediaFileService mediaFileService) {
         ServiceLocator.mediaFileService = mediaFileService;
     }
 
@@ -57,5 +58,14 @@ public class ServiceLocator {
     public static void setMetaDataParserFactory(MetaDataParserFactory metaDataParserFactory) {
         ServiceLocator.metaDataParserFactory = metaDataParserFactory;
     }
+
+	public static MediaFolderService getMediaFolderService() {
+		return mediaFolderService;
+	}
+
+	public static void setMediaFolderService(MediaFolderService mediaFolderService) {
+		ServiceLocator.mediaFolderService = mediaFolderService;
+	}
+    
 }
 

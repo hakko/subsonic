@@ -20,6 +20,7 @@ package net.sourceforge.subsonic.controller;
 
 import net.sourceforge.subsonic.domain.MediaFolder;
 import net.sourceforge.subsonic.domain.User;
+import net.sourceforge.subsonic.service.MediaFolderService;
 import net.sourceforge.subsonic.service.SecurityService;
 import net.sourceforge.subsonic.service.SettingsService;
 import org.springframework.web.servlet.ModelAndView;
@@ -40,11 +41,12 @@ public class TopController extends ParameterizableViewController {
 
     private SettingsService settingsService;
     private SecurityService securityService;
+    private MediaFolderService mediaFolderService;
     
     protected ModelAndView handleRequestInternal(HttpServletRequest request, HttpServletResponse response) throws Exception {
         Map<String, Object> map = new HashMap<String, Object>();
 
-        List<MediaFolder> allMediaFolders = settingsService.getIndexedMediaFolders();
+        List<MediaFolder> allMediaFolders = mediaFolderService.getIndexedMediaFolders();
         User user = securityService.getCurrentUser(request);
 
         map.put("user", user);
@@ -64,5 +66,9 @@ public class TopController extends ParameterizableViewController {
     public void setSecurityService(SecurityService securityService) {
         this.securityService = securityService;
     }
+
+	public void setMediaFolderService(MediaFolderService mediaFolderService) {
+		this.mediaFolderService = mediaFolderService;
+	}
 
 }
