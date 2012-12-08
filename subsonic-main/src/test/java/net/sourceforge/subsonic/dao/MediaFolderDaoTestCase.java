@@ -75,6 +75,7 @@ public class MediaFolderDaoTestCase extends DaoTestCaseBase {
     	mediaFolderDao.createMediaFolder(new MediaFolder(new File(ROOT + "c"), "c", false, new Date()));
     	
     	assertTrue(mediaFolderDao.hasIndexedParentFolder(ROOT + "b" + SEP + "x"));
+    	assertFalse(mediaFolderDao.hasIndexedParentFolder(ROOT + "b"));
     	assertFalse(mediaFolderDao.hasIndexedParentFolder(ROOT + "bbb"));
     	assertFalse(mediaFolderDao.hasIndexedParentFolder(ROOT + "c" + SEP + "y"));
     	assertFalse(mediaFolderDao.hasIndexedParentFolder(ROOT));
