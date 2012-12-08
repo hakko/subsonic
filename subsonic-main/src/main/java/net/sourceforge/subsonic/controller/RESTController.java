@@ -18,6 +18,7 @@
  */
 package net.sourceforge.subsonic.controller;
 
+import static java.lang.Math.max;
 import static net.sourceforge.subsonic.security.RESTRequestParameterProcessingFilter.decrypt;
 import static org.apache.commons.lang.math.NumberUtils.toInt;
 
@@ -398,6 +399,7 @@ public class RESTController extends MultiActionController {
             attributes.add(new Attribute("artist", track.getMetaData().getArtist()));
             attributes.add(new Attribute("isDir", false));
             attributes.add(new Attribute("track", track.getMetaData().getTrackNr()));
+            attributes.add(new Attribute("discNumber", max(track.getMetaData().getDiscNr(), 1)));
             attributes.add(new Attribute("year", track.getMetaData().getYear()));
             attributes.add(new Attribute("coverArt", StringUtil.utf8HexEncode(album.getCoverArtPath())));
             attributes.add(new Attribute("size", track.getMetaData().getSize()));
@@ -416,7 +418,7 @@ public class RESTController extends MultiActionController {
             builder.add("child", attributes, true);
         }
     }
-    
+
     private void getGenreRadio(String genre, HttpServletRequest request, HttpServletResponse response) throws Exception {
     	LOG.debug("getGenreRadio() for " + genre);
 
