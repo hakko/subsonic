@@ -18,7 +18,14 @@
  */
 package net.sourceforge.subsonic.controller;
 
+import static java.util.Arrays.asList;
+import static org.apache.commons.lang.ArrayUtils.isEmpty;
+import static org.apache.commons.lang.ArrayUtils.isNotEmpty;
+import static org.apache.commons.lang.StringUtils.upperCase;
+import static org.apache.commons.lang.math.NumberUtils.toInt;
+
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -37,6 +44,8 @@ import net.sourceforge.subsonic.service.SecurityService;
 import net.sourceforge.subsonic.service.SettingsService;
 import net.sourceforge.subsonic.util.Util;
 
+import org.apache.commons.lang.ArrayUtils;
+import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang.math.NumberUtils;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.ParameterizableViewController;
@@ -77,9 +86,9 @@ public class ArtistController extends ParameterizableViewController {
         User user = securityService.getCurrentUser(request);
         UserSettings userSettings = settingsService.getUserSettings(user.getUsername());
 
-        setArtistInfo(artistId, map);
-        setAlbums(artistId, userSettings, map, albumIds);
-        
+        boolean variousArtists = isVariousArtists(setArtistInfo(artistId, map));
+        setAlbums(artistId, variousArtists, userSettings, map, albumIds);
+
         map.put("trackId", request.getParameter("trackId"));
         map.put("artistStarred", starService.isArtistStarred(userSettings.getLastFmUsername(), artistId));
         map.put("topTags", artistTopTagsService.getTopTags(artistId, 3));
@@ -92,8 +101,12 @@ public class ArtistController extends ParameterizableViewController {
         return result;
     }
 
-    private void setAlbums(int artistId, UserSettings userSettings, Map<String, Object> map, String[] selectedAlbumIds) {
-        List<Album> albums = mediaFileService.getAlbums(libraryBrowserService.getAlbums(artistId,
+    private void setAlbums(int artistId, boolean variousArtists, UserSettings userSettings, 
+    		Map<String, Object> map, String[] selectedAlbumIds) {
+        List<Album> albums = mediaFileService.getAlbums(
+        		variousArtists && isNotEmpty(selectedAlbumIds) ?
+        		asList(libraryBrowserService.getAlbum(toInt(selectedAlbumIds[0]))) :
+        		libraryBrowserService.getAlbums(artistId,
         		userSettings.isAlbumOrderByYear(), userSettings.isAlbumOrderAscending()));
         List<Integer> albumIds = new ArrayList<>();
         List<Integer> trackIds = new ArrayList<>();
@@ -129,11 +142,11 @@ public class ArtistController extends ParameterizableViewController {
         map.put("coverArtSize", 87);
 	}
 
-	private void setArtistInfo(int artistId, Map<String, Object> map) throws ApplicationException {
+	private ArtistInfo setArtistInfo(int artistId, Map<String, Object> map) throws ApplicationException {
         ArtistInfo artistInfo = artistInfoService.getArtistInfo(artistId);
         map.put("artistId", artistId);
         map.put("artistName", artistInfo.getArtist().getName());
-        map.put("isInSearchIndex", artistInfo.isInSearchIndex());
+        map.put("isInSearchIndex", artistInfo.isInSearchIndex() && !isVariousArtists(artistInfo));
         if (artistInfo.getLargeImageUrl() != null && artistInfo.getBioSummary() != null) {
         	map.put("artistInfo", Util.square(artistInfo));
         	boolean insideTag = false;
@@ -149,7 +162,13 @@ public class ArtistController extends ParameterizableViewController {
         		}
         	}
         }
+        return artistInfo;
     }
+	
+	private boolean isVariousArtists(ArtistInfo artistInfo) {
+		String artistName = upperCase(artistInfo.getArtist().getName());
+		return "VARIOUS ARTISTS".equals(artistName) || "VA".equals(artistName);
+	}
     
     // Spring setters
 
