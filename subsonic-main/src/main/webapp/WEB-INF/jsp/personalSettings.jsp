@@ -184,6 +184,16 @@
             </td>
         </tr>
         
+        <tr>
+            <td>Use Various Artists shortlist</td>
+            <td>
+                <form:select path="useVariousArtistsShortlist">
+                    <form:option value="false" label="No"/>
+                    <form:option value="true" label="Yes"/>
+                </form:select>
+                <c:import url="helpToolTip.jsp"><c:param name="topic" value="usevariousartistsshortlist"/></c:import>
+            </td>
+        </tr>
     </table>
 
     <table class="indent">

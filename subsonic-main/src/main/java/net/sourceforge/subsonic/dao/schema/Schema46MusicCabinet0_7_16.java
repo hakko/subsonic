@@ -52,6 +52,16 @@ public class Schema46MusicCabinet0_7_16 extends Schema {
             }
         }
 
+        if (template.queryForInt("select count(*) from version where version = 33") == 0) {
+            LOG.info("Updating database schema to version 33.");
+            template.execute("insert into version values (33)");
+
+            if (!columnExists(template, "various_artists_shortlist", "user_settings")) {
+                LOG.info("Database column 'user_settings.various_artists_shortlist' not found. Creating it.");
+                template.execute("alter table user_settings add various_artists_shortlist boolean default false not null");
+                LOG.info("Database column 'user_settings.various_artists_shortlist' was added successfully.");
+            }
+        }
     }
 
 }

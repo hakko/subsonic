@@ -54,6 +54,7 @@ public class UserSettings {
     private short recommendedArtists;
     private boolean reluctantArtistLoading;
     private boolean onlyAlbumArtistRecommendations;
+    private boolean useVariousArtistShortlist;
     private Date changed = new Date();
 
     public UserSettings(String username) {
@@ -274,6 +275,14 @@ public class UserSettings {
 
 	public void setOnlyAlbumArtistRecommendations(boolean onlyAlbumArtistRecommendations) {
 		this.onlyAlbumArtistRecommendations = onlyAlbumArtistRecommendations;
+	}
+
+	public boolean isUseVariousArtistShortlist() {
+		return useVariousArtistShortlist;
+	}
+
+	public void setUseVariousArtistShortlist(boolean useVariousArtistShortlist) {
+		this.useVariousArtistShortlist = useVariousArtistShortlist;
 	}
 
 	/**
