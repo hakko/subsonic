@@ -124,6 +124,16 @@
 	<a name="bottom"></a>
 </c:if>
 
+<c:if test="${not empty model.variousArtistsAlbums}">
+	<h2 class="bgcolor1">Various Artists</h2>
+	<c:forEach items="${model.variousArtistsAlbums}" var="album">
+		<p class="dense" style="padding-left:0.5em">
+			<sub:url value="artist.view" var="albumUrl"><sub:param name="id" value="${album.artist.id}"/><sub:param name="albumId" value="${album.id}"/></sub:url>
+			<a target="main" href="${albumUrl}">${album.name}</a>
+		</p>
+	</c:forEach>
+</c:if>
+
 <c:if test="${not empty model.mediaFolders}">
 	<h2 class="bgcolor1">Media folders</h2>
 	<c:forEach items="${model.mediaFolders}" var="mediaFolder">

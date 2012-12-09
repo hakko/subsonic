@@ -134,6 +134,9 @@ public class LeftController extends ParameterizableViewController implements Las
                 	libraryBrowserService.getArtists(tag, 25);
             	map.put("indexes", artistIndexService.getIndexedArtists(artists));
             }
+            if (userSettings.isUseVariousArtistShortlist()) {
+                map.put("variousArtistsAlbums", libraryBrowserService.getVariousArtistsAlbums());
+            }
             LibraryStatistics statistics = libraryBrowserService.getStatistics();
             Locale locale = RequestContextUtils.getLocale(request);
             List<String> tags = new ArrayList<>();
