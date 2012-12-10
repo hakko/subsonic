@@ -283,6 +283,17 @@
         <property name="securityService" ref="securityService"/>
         <property name="settingsService" ref="settingsService"/>
     </bean>
+    <bean id="artistDetailsController" class="net.sourceforge.subsonic.controller.ArtistDetailsController">
+    	<property name="viewName" value="artistDetails"/>
+    	<property name="artistInfoService" ref="artistInfoService"/>
+    	<property name="artistTopTagsService" ref="artistTopTagsService"/>
+    	<property name="musicBrainzService" ref="musicBrainzService"/>
+        <property name="artistTopTracksService" ref="artistTopTracksService"/>
+    	<property name="mediaFileService" ref="mediaFileService"/>
+    	<property name="securityService" ref="securityService"/>
+    	<property name="settingsService" ref="settingsService"/>
+    	<property name="starService" ref="starService"/>
+    </bean>
     <bean id="radioController" class="net.sourceforge.subsonic.controller.RadioController">
     	<property name="viewName" value="radio"/>
     	<property name="tagService" ref="tagService"/>
@@ -436,6 +447,7 @@
         <property name="tagService" ref="tagService"/>
         <property name="playlistGeneratorService" ref="playlistGeneratorService"/>
         <property name="artistRecommendationService" ref="artistRecommendationService"/>
+        <property name="mediaFolderService" ref="mediaFolderService"/>
     </bean>
     <bean id="dbController" class="net.sourceforge.subsonic.controller.DBController">
         <property name="viewName" value="db"/>
@@ -511,6 +523,7 @@
                 <prop key="/tagSettings.view">tagSettingsController</prop>
                 <prop key="/groupSettings.view">groupSettingsController</prop>
                 <prop key="/editArtist.view">editArtistController</prop>
+                <prop key="/artistDetails.view">artistDetailsController</prop>
                 <prop key="/missingAlbums.view">missingAlbumsController</prop>
                 <prop key="/missingAlbumsSearch.view">missingAlbumsSearchController</prop>
                 <prop key="/playlist.view">playlistController</prop>

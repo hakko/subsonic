@@ -123,6 +123,8 @@ ${model.artistName}
 	<c:if test="${model.isInSearchIndex}">
 		<sub:url value="related.view" var="relatedUrl"><sub:param name="id" value="${model.artistId}"/></sub:url>
 		| <a href="${relatedUrl}">Related artists</a>
+		<sub:url value="artistDetails.view" var="detailsUrl"><sub:param name="id" value="${model.artistId}"/></sub:url>
+		| <a href="${detailsUrl}">Details</a>
 	</c:if>
 
 	<c:if test="${model.user.coverArtRole and not empty model.artistInfo}">
