@@ -24,7 +24,6 @@ import org.springframework.web.servlet.mvc.ParameterizableViewController;
 
 import com.github.hakko.musiccabinet.domain.model.aggr.ArtistRecommendation;
 import com.github.hakko.musiccabinet.domain.model.music.ArtistInfo;
-import com.github.hakko.musiccabinet.exception.ApplicationException;
 import com.github.hakko.musiccabinet.service.ArtistRecommendationService;
 import com.github.hakko.musiccabinet.service.lastfm.ArtistInfoService;
 
@@ -35,41 +34,37 @@ import com.github.hakko.musiccabinet.service.lastfm.ArtistInfoService;
  */
 public class RelatedController extends ParameterizableViewController {
 
-	private ArtistRecommendationService recommendationService;
-	private ArtistInfoService artistInfoService;
-	private SecurityService securityService;
-	private SettingsService settingsService;
-	
+    private ArtistRecommendationService recommendationService;
+    private ArtistInfoService artistInfoService;
+    private SecurityService securityService;
+    private SettingsService settingsService;
+
     protected ModelAndView handleRequestInternal(HttpServletRequest request, HttpServletResponse response) throws Exception {
 
         User user = securityService.getCurrentUser(request);
         UserSettings userSettings = settingsService.getUserSettings(user.getUsername());
-    	
+
         int id = NumberUtils.toInt(request.getParameter("id"));
         Map<String, Object> map = new HashMap<String, Object>();
         boolean onlyAlbumArtists = userSettings.isOnlyAlbumArtistRecommendations();
 
-        try {
-        	ArtistInfo artistInfo = Util.square(artistInfoService.getArtistInfo(id));
-        	List<ArtistRecommendation> artistsInLibrary = Util.square(recommendationService.
-        			getRelatedArtistsInLibrary(id, userSettings.getRelatedArtists(), onlyAlbumArtists));
-        	List<String> namesNotInLibrary = recommendationService.
-        			getRelatedArtistsNotInLibrary(id, userSettings.getRecommendedArtists(), onlyAlbumArtists);
+        ArtistInfo artistInfo = Util.square(artistInfoService.getArtistInfo(id));
+        List<ArtistRecommendation> artistsInLibrary = Util.square(recommendationService.
+                getRelatedArtistsInLibrary(id, userSettings.getRelatedArtists(), onlyAlbumArtists));
+        List<String> namesNotInLibrary = recommendationService.
+                getRelatedArtistsNotInLibrary(id, userSettings.getRecommendedArtists(), onlyAlbumArtists);
 
-        	List<ArtistLink> artistsNotInLibrary = new ArrayList<>();
-        	for (String name : namesNotInLibrary) {
-        		artistsNotInLibrary.add(new ArtistLink(name, encode(name, ENCODING_UTF8)));
-        	}
-
-        	map.put("id", id);
-            map.put("artist", artistInfo.getArtist().getName());
-            map.put("artistInfo", artistInfo);
-            map.put("artists", artistsInLibrary);
-    		map.put("artistGridWidth", userSettings.getArtistGridWidth());
-            map.put("artistsNotInLibrary", artistsNotInLibrary);
-        } catch (ApplicationException e) {
-            return new ModelAndView("musicCabinetUnavailable");
+        List<ArtistLink> artistsNotInLibrary = new ArrayList<>();
+        for (String name : namesNotInLibrary) {
+            artistsNotInLibrary.add(new ArtistLink(name, encode(name, ENCODING_UTF8)));
         }
+
+        map.put("id", id);
+        map.put("artist", artistInfo.getArtist().getName());
+        map.put("artistInfo", artistInfo);
+        map.put("artists", artistsInLibrary);
+        map.put("artistGridWidth", userSettings.getArtistGridWidth());
+        map.put("artistsNotInLibrary", artistsNotInLibrary);
 
         ModelAndView result = super.handleRequestInternal(request, response);
         result.addObject("model", map);
@@ -78,20 +73,20 @@ public class RelatedController extends ParameterizableViewController {
     
     // Spring setters
     
-	public void setArtistRecommendationService(ArtistRecommendationService recommendationService) {
-		this.recommendationService = recommendationService;
-	}
+    public void setArtistRecommendationService(ArtistRecommendationService recommendationService) {
+        this.recommendationService = recommendationService;
+    }
 
-	public void setArtistInfoService(ArtistInfoService artistInfoService) {
-		this.artistInfoService = artistInfoService;
-	}
+    public void setArtistInfoService(ArtistInfoService artistInfoService) {
+        this.artistInfoService = artistInfoService;
+    }
 
-	public void setSecurityService(SecurityService securityService) {
-		this.securityService = securityService;
-	}
+    public void setSecurityService(SecurityService securityService) {
+        this.securityService = securityService;
+    }
 
-	public void setSettingsService(SettingsService settingsService) {
-		this.settingsService = settingsService;
-	}
-	
+    public void setSettingsService(SettingsService settingsService) {
+        this.settingsService = settingsService;
+    }
+
 }
