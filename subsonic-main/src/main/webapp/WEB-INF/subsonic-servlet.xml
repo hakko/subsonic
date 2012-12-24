@@ -86,9 +86,6 @@
         <property name="viewName" value="lyrics"/>
         <property name="libraryBrowserService" ref="libraryBrowserService"/>
     </bean>
-    <bean id="allmusicController" class="net.sourceforge.subsonic.controller.AllmusicController">
-        <property name="viewName" value="allmusic"/>
-    </bean>
     <bean id="podcastController" class="net.sourceforge.subsonic.controller.PodcastController">
         <property name="viewName" value="podcast"/>
         <property name="playlistService" ref="playlistService"/>
@@ -513,7 +510,6 @@
                 <prop key="/avatarUpload.view">avatarUploadController</prop>
                 <prop key="/userSettings.view">userSettingsController</prop>
                 <prop key="/passwordSettings.view">passwordSettingsController</prop>
-                <prop key="/allmusic.view">allmusicController</prop>
                 <prop key="/home.view">homeController</prop>
                 <prop key="/editTags.view">editTagsController</prop>
                 <prop key="/radio.view">radioController</prop>
