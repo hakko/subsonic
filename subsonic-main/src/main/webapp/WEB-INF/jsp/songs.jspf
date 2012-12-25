@@ -2,6 +2,8 @@
 	<c:set var="cutoff" value="${model.visibility.captionCutoff}"/>
 <c:forEach items="${model.mediaFiles}" var="mediaFile" varStatus="loopStatus" >
 
+<c:if test="${mediaFile.metaData.discNumber gt 1 and mediaFile.metaData.trackNumber eq 1 and not empty model.albumView}"><tr style="height:10px"><td></td></tr></c:if>
+
 <span class="detailSelected">
 <tr style="margin:0;padding:0;border:0">
 	<c:import url="playAddDownload.jsp">
