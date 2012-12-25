@@ -13,7 +13,6 @@
 <fmt:message key="top.status" var="status"/>
 <fmt:message key="top.podcast" var="podcast"/>
 <fmt:message key="top.help" var="help"/>
-<fmt:message key="top.search" var="search"/>
 
 <table style="margin:0"><tr valign="middle">
     <td class="logo" style="padding-right:2em"><a href="help.view?" target="main"><img src="<spring:theme code="logoImage"/>" title="${help}" alt=""></a></td>
@@ -68,7 +67,7 @@
             <td style="padding-left:1em">
                 <form method="post" action="search.view" target="main" name="searchForm">
                     <table><tr>
-                        <td><input type="text" name="query" id="query" size="28" value="${search}" onclick="select();"></td>
+                        <td><input type="text" name="query" id="query" size="28"></td>
                         <td><a href="javascript:document.searchForm.submit()"><img src="<spring:theme code="searchImage"/>" alt="${search}" title="${search}"></a></td>
                     </tr></table>
                 </form>

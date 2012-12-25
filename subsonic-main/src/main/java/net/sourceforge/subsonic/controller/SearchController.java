@@ -35,6 +35,7 @@ import org.apache.commons.lang.StringUtils;
 import org.springframework.validation.BindException;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.SimpleFormController;
+import org.springframework.web.servlet.view.RedirectView;
 
 import com.github.hakko.musiccabinet.domain.model.music.Track;
 import com.github.hakko.musiccabinet.service.LibraryUpdateService;
@@ -48,14 +49,16 @@ import com.github.hakko.musiccabinet.service.StarService;
  */
 public class SearchController extends SimpleFormController {
 
-    private static final int MATCH_COUNT = 25;
-
     private SecurityService securityService;
     private SettingsService settingsService;
     private PlayerService playerService;
     private LibraryUpdateService libraryUpdateService;
     private NameSearchService nameSearchService;
     private StarService starService;
+
+    private static final int ARTIST_COUNT = 5;
+    private static final int ALBUM_COUNT = 5;
+    private static final int TRACK_COUNT = 15;
     
     @Override
     protected Object formBackingObject(HttpServletRequest request) throws Exception {
@@ -74,12 +77,14 @@ public class SearchController extends SimpleFormController {
 
         String any = StringUtils.trimToNull(command.getQuery());
 
-        if (any != null) {
+        if (any == null) {
+            return new ModelAndView(new RedirectView("advancedSearch.view"));
+        } else {
 
             if (libraryUpdateService.isIndexCreated()) {
-                command.setArtists(nameSearchService.getArtists(any, 0, MATCH_COUNT).getResults());
-                command.setAlbums(nameSearchService.getAlbums(any, 0, MATCH_COUNT).getResults());
-                command.setSongs(nameSearchService.getTracks(any, 0, MATCH_COUNT).getResults());
+                command.setArtists(nameSearchService.getArtists(any, 0, ARTIST_COUNT).getResults());
+                command.setAlbums(nameSearchService.getAlbums(any, 0, ALBUM_COUNT).getResults());
+                command.setSongs(nameSearchService.getTracks(any, 0, TRACK_COUNT).getResults());
                 command.setIsTrackStarred(starService.getStarredTracksMask(userSettings.getLastFmUsername(), 
                 		getTrackIds(command.getSongs())));
 
