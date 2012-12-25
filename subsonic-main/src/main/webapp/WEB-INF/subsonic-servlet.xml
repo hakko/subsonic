@@ -142,6 +142,20 @@
         <property name="nameSearchService" ref="nameSearchService"/>
         <property name="starService" ref="starService"/>
     </bean>
+    <bean id="advancedSearchController" class="net.sourceforge.subsonic.controller.AdvancedSearchController">
+        <property name="viewName" value="advancedSearch"/>
+        <property name="nameSearchService" ref="nameSearchService"/>
+        <property name="tagService" ref="tagService"/>
+        <property name="mediaFolderService" ref="mediaFolderService"/>
+    </bean>
+    <bean id="advancedSearchResultController" class="net.sourceforge.subsonic.controller.AdvancedSearchResultController">
+        <property name="viewName" value="advancedSearchResult"/>
+        <property name="nameSearchService" ref="nameSearchService"/>
+        <property name="securityService" ref="securityService"/>
+        <property name="settingsService" ref="settingsService"/>
+        <property name="mediaFileService" ref="mediaFileService"/>
+        <property name="starService" ref="starService"/>
+    </bean>
     <bean id="settingsController" class="net.sourceforge.subsonic.controller.SettingsController">
         <property name="securityService" ref="securityService"/>
     </bean>
@@ -493,6 +507,8 @@
                 <prop key="/videoPlayer.view">videoPlayerController</prop>
                 <prop key="/nowPlaying.view">nowPlayingController</prop>
                 <prop key="/search.view">searchController</prop>
+                <prop key="/advancedSearch.view">advancedSearchController</prop>
+                <prop key="/advancedSearchResult.view">advancedSearchResultController</prop>
                 <prop key="/settings.view">settingsController</prop>
                 <prop key="/playerSettings.view">playerSettingsController</prop>
                 <prop key="/shareSettings.view">shareSettingsController</prop>
