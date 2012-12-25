@@ -193,10 +193,10 @@
 				<% for (int i = 1; i < 20; i++) { %><option><%=i%></option><% } %>
 			</td>
 		</tr>
-		<tr id="Only_starred_by_user" style="display:none">
+		<tr id="Only_starred_tracks" style="display:none">
 			<td>Only starred tracks</td>
 			<td>
-				<select value="onlyStarredByUser">
+				<select name="onlyStarredByUser">
 					<option value="false">No</option>
 					<option value="true">Yes</option>
 				</select>
