@@ -48,17 +48,17 @@ public class MediaFolderDao extends AbstractDao {
      * @return Possibly empty list of all media folders.
      */
     public List<MediaFolder> getAllMediaFolders() {
-        String sql = "select " + COLUMNS + " from music_folder";
+        String sql = "select " + COLUMNS + " from music_folder order by upper(name)";
         return query(sql, rowMapper);
     }
     
     public List<MediaFolder> getIndexedMediaFolders() {
-        String sql = "select " + COLUMNS + " from music_folder where indexed";
+        String sql = "select " + COLUMNS + " from music_folder where indexed order by upper(name)";
         return query(sql, rowMapper);
     }
 
     public List<MediaFolder> getNonIndexedMediaFolders() {
-        String sql = "select " + COLUMNS + " from music_folder where not indexed";
+        String sql = "select " + COLUMNS + " from music_folder where not indexed order by upper(name)";
         return query(sql, rowMapper);
     }
 
