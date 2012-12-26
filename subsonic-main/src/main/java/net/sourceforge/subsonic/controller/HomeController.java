@@ -190,11 +190,12 @@ public class HomeController extends ParameterizableViewController {
 
     private List<ArtistRecommendation> getArtists(String listType, String lastFmUsername, 
     		int offset, int limit, String query, UserSettings userSettings) {
+    	boolean onlyAlbumArtists = userSettings.isOnlyAlbumArtistRecommendations();
     	switch (listType) {
-    	case "recent": return libraryBrowserService.getRecentlyPlayedArtists(lastFmUsername, offset, limit, query); 
+    	case "recent": return libraryBrowserService.getRecentlyPlayedArtists(lastFmUsername, onlyAlbumArtists, offset, limit, query);
     	case "frequent": return libraryBrowserService.getMostPlayedArtists(lastFmUsername, offset, limit, query);
     	case "starred": return libraryBrowserService.getStarredArtists(lastFmUsername, offset, limit, query);
-    	case "random": return libraryBrowserService.getRandomArtists(limit);
+    	case "random": return libraryBrowserService.getRandomArtists(onlyAlbumArtists, limit);
     	case "recommended": return artistRecommendationService.getRecommendedArtistsInLibrary(
     			lastFmUsername, offset, limit, userSettings.isOnlyAlbumArtistRecommendations());
     	}
