@@ -140,32 +140,32 @@ public class TranscodingService {
     }
 
     /**
-     * Returns whether transcoding is required for the given music file and player combination.
+     * Returns whether transcoding is required for the given media file and player combination.
      *
-     * @param mediaFile The music file.
+     * @param mediaFile The media file.
      * @param player    The player.
      * @return Whether transcoding  will be performed if invoking the
      *         {@link #getTranscodedInputStream} method with the same arguments.
      */
     public boolean isTranscodingRequired(MediaFile mediaFile, Player player) {
-        return getTranscoding(mediaFile, player, null) != null;
+        return getTranscoding(mediaFile, player, null, false) != null;
     }
 
     /**
-     * Returns the suffix for the given player and music file, taking transcodings into account.
+     * Returns the suffix for the given player and media file, taking transcodings into account.
      *
      * @param player                The player in question.
-     * @param file                  The music player.
+     * @param file                  The media file.
      * @param preferredTargetFormat Used to select among multiple applicable transcodings. May be {@code null}.
      * @return The file suffix, e.g., "mp3".
      */
     public String getSuffix(Player player, MediaFile file, String preferredTargetFormat) {
-        Transcoding transcoding = getTranscoding(file, player, preferredTargetFormat);
+        Transcoding transcoding = getTranscoding(file, player, preferredTargetFormat, false);
         return transcoding != null ? transcoding.getTargetFormat() : file.getSuffix();
     }
 
     /**
-     * Creates parameters for a possibly transcoded or downsampled input stream for the given music file and player combination.
+     * Creates parameters for a possibly transcoded or downsampled input stream for the given media file and player combination.
      * <p/>
      * A transcoding is applied if it is applicable for the format of the given file, and is activated for the
      * given player.
@@ -175,7 +175,7 @@ public class TranscodingService {
      * <p/>
      * Otherwise, a normal input stream to the original file is returned.
      *
-     * @param mediaFile                The music file.
+     * @param mediaFile                The media file.
      * @param player                   The player.
      * @param maxBitRate               Overrides the per-player and per-user bitrate limit. May be {@code null}.
      * @param preferredTargetFormat    Used to select among multiple applicable transcodings. May be {@code null}.
@@ -192,7 +192,8 @@ public class TranscodingService {
             maxBitRate = transcodeScheme.getMaxBitRate();
         }
 
-        Transcoding transcoding = getTranscoding(mediaFile, player, preferredTargetFormat);
+        boolean hls = videoTranscodingSettings != null && videoTranscodingSettings.isHls();
+        Transcoding transcoding = getTranscoding(mediaFile, player, preferredTargetFormat, hls);
         if (transcoding != null) {
             parameters.setTranscoding(transcoding);
             if (maxBitRate == null) {
@@ -211,7 +212,7 @@ public class TranscodingService {
     }
 
     /**
-     * Returns a possibly transcoded or downsampled input stream for the given music file and player combination.
+     * Returns a possibly transcoded or downsampled input stream for the given media file and player combination.
      * <p/>
      * A transcoding is applied if it is applicable for the format of the given file, and is activated for the
      * given player.
@@ -237,10 +238,10 @@ public class TranscodingService {
             }
 
         } catch (Exception x) {
-            LOG.warn("Failed to transcode " + parameters.getmediaFile() + ". Using original.", x);
+            LOG.warn("Failed to transcode " + parameters.getMediaFile() + ". Using original.", x);
         }
 
-        return new FileInputStream(parameters.getmediaFile().getFile());
+        return new FileInputStream(parameters.getMediaFile().getFile());
     }
 
 
@@ -258,7 +259,7 @@ public class TranscodingService {
     }
 
     /**
-     * Returns an input stream by applying the given transcoding to the given music file.
+     * Returns an input stream by applying the given transcoding to the given media file.
      *
      * @param parameters Transcoding parameters.
      * @return The transcoded input stream.
@@ -270,7 +271,7 @@ public class TranscodingService {
         Transcoding transcoding = parameters.getTranscoding();
         Integer maxBitRate = parameters.getMaxBitRate();
         VideoTranscodingSettings videoTranscodingSettings = parameters.getVideoTranscodingSettings();
-        MediaFile mediaFile = parameters.getmediaFile();
+        MediaFile mediaFile = parameters.getMediaFile();
 
         TranscodeInputStream in = createTranscodeInputStream(transcoding.getStep1(), maxBitRate, videoTranscodingSettings, mediaFile, null);
 
@@ -290,21 +291,22 @@ public class TranscodingService {
      * This includes the following:
      * <ul>
      * <li>Splitting the command line string to an array.</li>
-     * <li>Replacing occurrences of "%s" with the path of the given music file.</li>
-     * <li>Replacing occurrences of "%t" with the title of the given music file.</li>
-     * <li>Replacing occurrences of "%l" with the album name of the given music file.</li>
-     * <li>Replacing occurrences of "%a" with the artist name of the given music file.</li>
-     * <li>Replacing occurrcences of "%b" with the max bitrate.</li>
-     * <li>Replacing occurrcences of "%o" with the video time offset (used for scrubbing).</li>
-     * <li>Replacing occurrcences of "%w" with the video image width.</li>
-     * <li>Replacing occurrcences of "%h" with the video image height.</li>
+     * <li>Replacing occurrences of "%s" with the path of the given media file.</li>
+     * <li>Replacing occurrences of "%t" with the title of the given media file.</li>
+     * <li>Replacing occurrences of "%l" with the album name of the given media file.</li>
+     * <li>Replacing occurrences of "%a" with the artist name of the given media file.</li>
+     * <li>Replacing occurrences of "%b" with the max bitrate.</li>
+     * <li>Replacing occurrences of "%o" with the video time offset (used for scrubbing).</li>
+     * <li>Replacing occurrences of "%d" with the video duration (used for HLS).</li>
+     * <li>Replacing occurrences of "%w" with the video image width.</li>
+     * <li>Replacing occurrences of "%h" with the video image height.</li>
      * <li>Prepending the path of the transcoder directory if the transcoder is found there.</li>
      * </ul>
      *
      * @param command                  The command line string.
      * @param maxBitRate               The maximum bitrate to use. May not be {@code null}.
      * @param videoTranscodingSettings Parameters used when transcoding video. May be {@code null}.
-     * @param mediaFile                The music file to use when replacing "%s" etc.
+     * @param mediaFile                The media file to use when replacing "%s" etc.
      * @param in                       Data to feed to the process.  May be {@code null}.
      * @return The newly created input stream.
      */
@@ -347,6 +349,9 @@ public class TranscodingService {
             if (cmd.contains("%o") && videoTranscodingSettings != null) {
                 cmd = cmd.replace("%o", String.valueOf(videoTranscodingSettings.getTimeOffset()));
             }
+            if (cmd.contains("%d") && videoTranscodingSettings != null) {
+                cmd = cmd.replace("%d", String.valueOf(videoTranscodingSettings.getDuration()));
+            }
             if (cmd.contains("%w") && videoTranscodingSettings != null) {
                 cmd = cmd.replace("%w", String.valueOf(videoTranscodingSettings.getWidth()));
             }
@@ -378,7 +383,11 @@ public class TranscodingService {
      * Returns an applicable transcoding for the given file and player, or <code>null</code> if no
      * transcoding should be done.
      */
-    private Transcoding getTranscoding(MediaFile mediaFile, Player player, String preferredTargetFormat) {
+    private Transcoding getTranscoding(MediaFile mediaFile, Player player, String preferredTargetFormat, boolean hls) {
+
+        if (hls) {
+            return new Transcoding(null, "hls", mediaFile.getSuffix(), "ts", settingsService.getHlsCommand(), null, null, true);
+        }
 
         List<Transcoding> applicableTranscodings = new LinkedList<Transcoding>();
         String suffix = mediaFile.getSuffix();
@@ -407,7 +416,7 @@ public class TranscodingService {
     }
 
     /**
-     * Returns a downsampled input stream to the music file.
+     * Returns a downsampled input stream to the media file.
      *
      * @param parameters Downsample parameters.
      * @throws IOException If an I/O error occurs.
@@ -415,7 +424,7 @@ public class TranscodingService {
     private InputStream createDownsampledInputStream(Parameters parameters) throws IOException {
         String command = settingsService.getDownsamplingCommand();
         return createTranscodeInputStream(command, parameters.getMaxBitRate(), parameters.getVideoTranscodingSettings(),
-                parameters.getmediaFile(), null);
+                parameters.getMediaFile(), null);
     }
 
     /**
@@ -516,7 +525,7 @@ public class TranscodingService {
             return transcoding;
         }
 
-        public MediaFile getmediaFile() {
+        public MediaFile getMediaFile() {
             return mediaFile;
         }
 

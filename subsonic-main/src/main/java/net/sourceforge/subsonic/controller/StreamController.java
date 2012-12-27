@@ -40,7 +40,6 @@ import org.springframework.web.servlet.mvc.Controller;
 import net.sourceforge.subsonic.Logger;
 import net.sourceforge.subsonic.domain.MediaFile;
 import net.sourceforge.subsonic.domain.Player;
-import net.sourceforge.subsonic.domain.PlayerTechnology;
 import net.sourceforge.subsonic.domain.Playlist;
 import net.sourceforge.subsonic.domain.TransferStatus;
 import net.sourceforge.subsonic.domain.User;
@@ -132,14 +131,15 @@ public class StreamController implements Controller {
                 player.setPlaylist(playlist);
 
                 if (!file.isVideo()) {
-                    response.setHeader("ETag", "" + mediaFileId);
+                    response.setIntHeader("ETag", mediaFileId);
                     response.setHeader("Accept-Ranges", "bytes");
                 }
 
                 TranscodingService.Parameters parameters = transcodingService.getParameters(file, player, maxBitRate, preferredTargetFormat, videoTranscodingSettings);
                 long fileLength = getFileLength(parameters);
                 boolean isConversion = parameters.isDownsample() || parameters.isTranscode();
-                boolean isWebPlayer = player.getTechnology() == PlayerTechnology.WEB;
+                boolean estimateContentLength = ServletRequestUtils.getBooleanParameter(request, "estimateContentLength", false);
+                boolean isHls = ServletRequestUtils.getBooleanParameter(request, "hls", false);
 
                 range = getRange(request, file);
                 if (range != null) {
@@ -149,16 +149,24 @@ public class StreamController implements Controller {
                     long firstBytePos = range.getMinimumLong();
                     long lastBytePos = fileLength - 1;
                     response.setHeader("Content-Range", "bytes " + firstBytePos + "-" + lastBytePos + "/" + fileLength);
-                } else if (!isConversion || !isWebPlayer) {
+                } else if (!isHls && (!isConversion || estimateContentLength)) {
                     Util.setContentLength(response, fileLength);
                 }
 
-                String transcodedSuffix = transcodingService.getSuffix(player, file, preferredTargetFormat);
-                response.setContentType(StringUtil.getMimeType(transcodedSuffix));
+                if (isHls) {
+                    response.setContentType(StringUtil.getMimeType("ts")); // HLS is always MPEG TS.
+                } else {
+                	String transcodedSuffix = transcodingService.getSuffix(player, file, preferredTargetFormat);
+                	response.setContentType(StringUtil.getMimeType(transcodedSuffix));
+                }
 
-                if (file.isVideo()) {
+                if (file.isVideo() || isHls) {
                     videoTranscodingSettings = createVideoTranscodingSettings(file, request);
                 }
+            }
+
+            if (request.getMethod().equals("HEAD")) {
+                return null;
             }
 
             Playlist playlist = player.getPlaylist();
@@ -233,7 +241,7 @@ public class StreamController implements Controller {
     }
 
     private long getFileLength(TranscodingService.Parameters parameters) {
-        MediaFile file = parameters.getmediaFile();
+        MediaFile file = parameters.getMediaFile();
 
         if (!parameters.isDownsample() && !parameters.isTranscode()) {
             return file.length();
@@ -300,13 +308,16 @@ public class StreamController implements Controller {
         Integer existingHeight = file.getMetaData().getHeight();
         Integer maxBitRate = ServletRequestUtils.getIntParameter(request, "maxBitRate");
         int timeOffset = ServletRequestUtils.getIntParameter(request, "timeOffset", 0);
+        int defaultDuration = file.getMetaData().getDuration() == null ? Integer.MAX_VALUE : file.getMetaData().getDuration() - timeOffset;
+        int duration = ServletRequestUtils.getIntParameter(request, "duration", defaultDuration);
+        boolean hls = ServletRequestUtils.getBooleanParameter(request, "hls", false);
 
         Dimension dim = getRequestedVideoSize(request.getParameter("size"));
         if (dim == null) {
             dim = getSuitableVideoSize(existingWidth, existingHeight, maxBitRate);
         }
 
-        return new VideoTranscodingSettings(dim.width, dim.height, timeOffset);
+        return new VideoTranscodingSettings(dim.width, dim.height, timeOffset, duration, hls);
     }
 
     protected Dimension getRequestedVideoSize(String sizeSpec) {
