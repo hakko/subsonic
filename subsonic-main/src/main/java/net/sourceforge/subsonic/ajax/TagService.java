@@ -64,10 +64,12 @@ public class TagService {
      * @return "UPDATED" if the new tags were updated, "SKIPPED" if no update was necessary.
      *         Otherwise the error message is returned.
      */
-    public String setTags(int id, String track, String artist, String album, String title, String year, String genre) {
+    public String setTags(int id, String track, String artist, String albumArtist, String composer, String album, String title, String year, String genre) {
 
         track = StringUtils.trimToNull(track);
         artist = StringUtils.trimToNull(artist);
+        albumArtist = StringUtils.trimToNull(albumArtist);
+        composer = StringUtils.trimToNull(composer);
         album = StringUtils.trimToNull(album);
         title = StringUtils.trimToNull(title);
         year = StringUtils.trimToNull(year);
@@ -93,6 +95,8 @@ public class TagService {
 
             MetaData existingMetaData = file.getMetaData();
             if (StringUtils.equals(artist, existingMetaData.getArtist()) &&
+        		StringUtils.equals(albumArtist, existingMetaData.getAlbumArtist()) &&
+        		StringUtils.equals(composer, existingMetaData.getComposer()) &&
                 StringUtils.equals(album, existingMetaData.getAlbum()) &&
                 StringUtils.equals(title, existingMetaData.getTitle()) &&
                 StringUtils.equals(year, existingMetaData.getYear()) &&
@@ -103,6 +107,8 @@ public class TagService {
 
             MetaData newMetaData = new MetaData();
             newMetaData.setArtist(artist);
+            newMetaData.setAlbumArtist(albumArtist);
+            newMetaData.setComposer(composer);
             newMetaData.setAlbum(album);
             newMetaData.setTitle(title);
             newMetaData.setYear(year);

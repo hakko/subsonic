@@ -22,7 +22,6 @@ import static org.apache.commons.lang.StringUtils.removeEnd;
 import static org.apache.commons.lang.StringUtils.removeStart;
 import static org.apache.commons.lang.StringUtils.split;
 import static org.apache.commons.lang.math.NumberUtils.toInt;
-import net.sourceforge.subsonic.Logger;
 import net.sourceforge.subsonic.domain.*;
 import net.sourceforge.subsonic.service.*;
 import net.sourceforge.subsonic.service.metadata.JaudiotaggerParser;
@@ -41,8 +40,6 @@ import java.util.*;
 public class EditTagsController extends ParameterizableViewController {
 
     private MediaFileService mediaFileService;
-
-    private final static Logger LOG = Logger.getLogger(EditTagsController.class);
     
     protected ModelAndView handleRequestInternal(HttpServletRequest request, HttpServletResponse response) throws Exception {
 
@@ -54,6 +51,8 @@ public class EditTagsController extends ParameterizableViewController {
         if (!files.isEmpty()) {
             MetaData metaData = files.get(0).getMetaData();
             map.put("defaultArtist", metaData.getArtist());
+            map.put("defaultAlbumArtist", metaData.getAlbumArtist());
+            map.put("defaultComposer", metaData.getComposer());
             map.put("defaultAlbum", metaData.getAlbum());
             map.put("defaultYear", metaData.getYear());
             map.put("defaultGenre", metaData.getGenre());
@@ -96,17 +95,19 @@ public class EditTagsController extends ParameterizableViewController {
         song.setTitle(metaData.getTitle());
         song.setSuggestedTitle(mf.getNameWithoutSuffix());
         song.setArtist(metaData.getArtist());
+        song.setAlbumArtist(metaData.getAlbumArtist());
+        song.setComposer(metaData.getComposer());
         song.setAlbum(metaData.getAlbum());
         song.setYear(metaData.getYear());
         song.setGenre(metaData.getGenre());
         return song;
     }
 
-    public void setmediaFileService(MediaFileService mediaFileService) {
+    public void setMediaFileService(MediaFileService mediaFileService) {
         this.mediaFileService = mediaFileService;
     }
 
-    /**
+	/**
      * Contains information about a single song.
      */
     public static class Song {
@@ -117,6 +118,8 @@ public class EditTagsController extends ParameterizableViewController {
         private String suggestedTitle;
         private String title;
         private String artist;
+        private String albumArtist;
+        private String composer;
         private String album;
         private String year;
         private String genre;
@@ -177,7 +180,23 @@ public class EditTagsController extends ParameterizableViewController {
             this.artist = artist;
         }
 
-        public String getAlbum() {
+        public String getAlbumArtist() {
+			return albumArtist;
+		}
+
+		public void setAlbumArtist(String albumArtist) {
+			this.albumArtist = albumArtist;
+		}
+
+		public String getComposer() {
+			return composer;
+		}
+
+		public void setComposer(String composer) {
+			this.composer = composer;
+		}
+
+		public String getAlbum() {
             return album;
         }
 
@@ -206,7 +225,8 @@ public class EditTagsController extends ParameterizableViewController {
 			return "Song [id=" + id + ", fileName=" + fileName
 					+ ", suggestedTrack=" + suggestedTrack + ", track=" + track
 					+ ", suggestedTitle=" + suggestedTitle + ", title=" + title
-					+ ", artist=" + artist + ", album=" + album + ", year="
+					+ ", artist=" + artist + ", album artist=" + albumArtist
+					+ ", composer=" + composer + ", album=" + album + ", year="
 					+ year + ", genre=" + genre + "]";
 		}
         

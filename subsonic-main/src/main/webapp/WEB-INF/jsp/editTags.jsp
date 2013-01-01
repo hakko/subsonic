@@ -17,6 +17,18 @@
             dwr.util.setValue("artist" + i, artist);
         }
     }
+    function setAlbumArtist() {
+        var albumartist = dwr.util.getValue("albumArtistAll");
+        for (i = 0; i < fileCount; i++) {
+            dwr.util.setValue("albumArtist" + i, albumartist);
+        }
+    }
+    function setComposer() {
+        var composer = dwr.util.getValue("composerAll");
+        for (i = 0; i < fileCount; i++) {
+            dwr.util.setValue("composer" + i, composer);
+        }
+    }
     function setAlbum() {
         var album = dwr.util.getValue("albumAll");
         for (i = 0; i < fileCount; i++) {
@@ -71,13 +83,15 @@
     function updateNextTag() {
         var id = dwr.util.getValue("id" + index);
         var artist = dwr.util.getValue("artist" + index);
+        var albumartist = dwr.util.getValue("albumArtist" + index);
+        var composer = dwr.util.getValue("composer" + index);
         var track = dwr.util.getValue("track" + index);
         var album = dwr.util.getValue("album" + index);
         var title = dwr.util.getValue("title" + index);
         var year = dwr.util.getValue("year" + index);
         var genre = dwr.util.getValue("genre" + index);
         dwr.util.setValue("status" + index, "<fmt:message key="edittags.working"/>");
-        tagService.setTags(id, track, artist, album, title, year, genre, setTagsCallback);
+        tagService.setTags(id, track, artist, albumartist, composer, album, title, year, genre, setTagsCallback);
     }
     function setTagsCallback(result) {
         var message;
@@ -96,7 +110,6 @@
         if (index < fileCount) {
             updateNextTag();
         } else {
-			tagService.scanUpdatedFolders();
             document.getElementById("save").disabled = false;
         }
     }
@@ -115,6 +128,8 @@
         <th class="ruleTableHeader"><fmt:message key="edittags.track"/></th>
         <th class="ruleTableHeader"><fmt:message key="edittags.songtitle"/></th>
         <th class="ruleTableHeader"><fmt:message key="edittags.artist"/></th>
+        <th class="ruleTableHeader"><fmt:message key="edittags.albumartist"/></th>
+        <th class="ruleTableHeader"><fmt:message key="edittags.composer"/></th>
         <th class="ruleTableHeader"><fmt:message key="edittags.album"/></th>
         <th class="ruleTableHeader"><fmt:message key="edittags.year"/></th>
         <th class="ruleTableHeader"><fmt:message key="edittags.genre"/></th>
@@ -127,6 +142,8 @@
         <th class="ruleTableHeader"><a href="javascript:suggestTitle()"><fmt:message key="edittags.suggest"/></a> |
             <a href="javascript:resetTitle()"><fmt:message key="edittags.reset"/></a></th>
         <th class="ruleTableHeader" style="white-space: nowrap"><input type="text" name="artistAll" size="15" onkeypress="dwr.util.onReturn(event, setArtist)" value="${model.defaultArtist}"/>&nbsp;<a href="javascript:setArtist()"><fmt:message key="edittags.set"/></a></th>
+        <th class="ruleTableHeader" style="white-space: nowrap"><input type="text" name="albumArtistAll" size="15" onkeypress="dwr.util.onReturn(event, setAlbumArtist)" value="${model.defaultAlbumArtist}"/>&nbsp;<a href="javascript:setAlbumArtist()"><fmt:message key="edittags.set"/></a></th>
+        <th class="ruleTableHeader" style="white-space: nowrap"><input type="text" name="composerAll" size="15" onkeypress="dwr.util.onReturn(event, setComposer)" value="${model.defaultComposer}"/>&nbsp;<a href="javascript:setComposer()"><fmt:message key="edittags.set"/></a></th>		
         <th class="ruleTableHeader" style="white-space: nowrap"><input type="text" name="albumAll" size="15" onkeypress="dwr.util.onReturn(event, setAlbum)" value="${model.defaultAlbum}"/>&nbsp;<a href="javascript:setAlbum()"><fmt:message key="edittags.set"/></a></th>
         <th class="ruleTableHeader" style="white-space: nowrap"><input type="text" name="yearAll" size="5" onkeypress="dwr.util.onReturn(event, setYear)" value="${model.defaultYear}"/>&nbsp;<a href="javascript:setYear()"><fmt:message key="edittags.set"/></a></th>
         <th class="ruleTableHeader" style="white-space: nowrap">
@@ -154,16 +171,16 @@
             <td class="ruleTableCell"><input type="text" size="5" name="track${loopStatus.count - 1}" value="${song.track}"/></td>
             <td class="ruleTableCell"><input type="text" size="30" name="title${loopStatus.count - 1}" value="${song.title}"/></td>
             <td class="ruleTableCell"><input type="text" size="15" name="artist${loopStatus.count - 1}" value="${song.artist}"/></td>
+            <td class="ruleTableCell"><input type="text" size="15" name="albumArtist${loopStatus.count - 1}" value="${song.albumArtist}"/></td>
+            <td class="ruleTableCell"><input type="text" size="15" name="composer${loopStatus.count - 1}" value="${song.composer}"/></td>
             <td class="ruleTableCell"><input type="text" size="15" name="album${loopStatus.count - 1}" value="${song.album}"/></td>
             <td class="ruleTableCell"><input type="text" size="5"  name="year${loopStatus.count - 1}" value="${song.year}"/></td>
             <td class="ruleTableCell"><input type="text" name="genre${loopStatus.count - 1}" value="${song.genre}" style="width:7em"/></td>
             <td class="ruleTableCell"><div id="status${loopStatus.count - 1}"/></td>
 	</tr>
 	</c:forEach>
-
 	
 </table>
-
 
 <p><input type="submit" id="save" value="<fmt:message key="common.save"/>" onclick="javascript:updateTags()"/></p>
 <div class="warning" id="errors"/>

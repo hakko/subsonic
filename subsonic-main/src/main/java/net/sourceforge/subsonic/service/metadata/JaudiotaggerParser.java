@@ -186,11 +186,13 @@ public class JaudiotaggerParser extends MetaDataParser {
             Tag tag = audioFile.getTagOrCreateAndSetDefault();
 
             tag.setField(FieldKey.ARTIST, StringUtils.trimToEmpty(metaData.getArtist()));
+            tag.setField(FieldKey.ALBUM_ARTIST, StringUtils.trimToEmpty(metaData.getAlbumArtist()));
+            tag.setField(FieldKey.COMPOSER, StringUtils.trimToEmpty(metaData.getComposer()));
             tag.setField(FieldKey.ALBUM, StringUtils.trimToEmpty(metaData.getAlbum()));
             tag.setField(FieldKey.TITLE, StringUtils.trimToEmpty(metaData.getTitle()));
             tag.setField(FieldKey.YEAR, StringUtils.trimToEmpty(metaData.getYear()));
             tag.setField(FieldKey.GENRE, StringUtils.trimToEmpty(metaData.getGenre()));
-
+            
             Integer track = metaData.getTrackNumber();
             if (track == null) {
                 tag.deleteField(FieldKey.TRACK);

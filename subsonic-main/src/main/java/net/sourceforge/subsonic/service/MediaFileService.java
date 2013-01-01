@@ -31,6 +31,7 @@ import net.sourceforge.subsonic.Logger;
 import net.sourceforge.subsonic.domain.Album;
 import net.sourceforge.subsonic.domain.MediaFile;
 
+import com.github.hakko.musiccabinet.domain.model.library.MetaData;
 import com.github.hakko.musiccabinet.domain.model.music.Track;
 import com.github.hakko.musiccabinet.service.LibraryBrowserService;
 
@@ -90,23 +91,26 @@ public class MediaFileService {
     
     public static MediaFile getMediaFile(Track track) {
     	MediaFile mediaFile = new MediaFile(track.getId());
-    	mediaFile.setFile(new File(track.getMetaData().getPath()));
-    	mediaFile.getMetaData().setAlbum(track.getMetaData().getAlbum());
-    	mediaFile.getMetaData().setAlbumId(track.getMetaData().getAlbumId());
-    	mediaFile.getMetaData().setArtist(track.getMetaData().getArtist());
-    	mediaFile.getMetaData().setArtistId(track.getMetaData().getArtistId());
-    	mediaFile.getMetaData().setComposer(track.getMetaData().getComposer());
-    	mediaFile.getMetaData().setBitRate((int) track.getMetaData().getBitrate());
-    	mediaFile.getMetaData().setDiscNumber((int) track.getMetaData().getDiscNr());
-    	mediaFile.getMetaData().setDuration((int) track.getMetaData().getDuration());
-    	mediaFile.getMetaData().setFileSize((long) track.getMetaData().getSize());
-    	mediaFile.getMetaData().setFormat(track.getMetaData().getMediaType().getFilesuffix().toLowerCase());
-    	mediaFile.getMetaData().setGenre(track.getMetaData().getGenre());
+    	MetaData md = track.getMetaData();
+    	mediaFile.getMetaData();
+    	mediaFile.setFile(new File(md.getPath()));
+    	mediaFile.getMetaData().setAlbum(md.getAlbum());
+    	mediaFile.getMetaData().setAlbumId(md.getAlbumId());
+    	mediaFile.getMetaData().setArtist(md.getArtist());
+    	mediaFile.getMetaData().setArtistId(md.getArtistId());
+    	mediaFile.getMetaData().setAlbumArtist(md.getAlbumArtist());
+    	mediaFile.getMetaData().setComposer(md.getComposer());
+    	mediaFile.getMetaData().setBitRate((int) md.getBitrate());
+    	mediaFile.getMetaData().setDiscNumber((int) md.getDiscNr());
+    	mediaFile.getMetaData().setDuration((int) md.getDuration());
+    	mediaFile.getMetaData().setFileSize((long) md.getSize());
+    	mediaFile.getMetaData().setFormat(md.getMediaType().getFilesuffix().toLowerCase());
+    	mediaFile.getMetaData().setGenre(md.getGenre());
     	mediaFile.getMetaData().setTitle(track.getName());
-    	mediaFile.getMetaData().setTrackNumber((int) track.getMetaData().getTrackNr());
-    	mediaFile.getMetaData().setVariableBitRate(track.getMetaData().isVbr());
-    	mediaFile.getMetaData().setYear(toYear(track.getMetaData().getYear()));
-    	mediaFile.getMetaData().setHasLyrics(track.getMetaData().hasLyrics());
+    	mediaFile.getMetaData().setTrackNumber((int) md.getTrackNr());
+    	mediaFile.getMetaData().setVariableBitRate(md.isVbr());
+    	mediaFile.getMetaData().setYear(toYear(md.getYear()));
+    	mediaFile.getMetaData().setHasLyrics(md.hasLyrics());
     	return mediaFile;
     }
     
