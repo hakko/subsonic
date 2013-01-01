@@ -20,9 +20,6 @@ package net.sourceforge.subsonic.service.metadata;
 
 import static org.apache.commons.lang.StringUtils.defaultIfEmpty;
 
-import org.apache.commons.lang.StringUtils;
-
-import net.sourceforge.subsonic.*;
 import net.sourceforge.subsonic.domain.MediaFile;
 import net.sourceforge.subsonic.domain.MetaData;
 
@@ -32,7 +29,6 @@ import net.sourceforge.subsonic.domain.MetaData;
  * @author Sindre Mehus
  */
 public abstract class MetaDataParser {
-    private static final Logger LOG = Logger.getLogger(MetaDataParser.class);
 
     /**
      * Parses meta data for the given music file.

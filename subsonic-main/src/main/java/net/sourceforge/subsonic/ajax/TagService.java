@@ -91,8 +91,7 @@ public class TagService {
                 return "Tag editing of " + StringUtil.getSuffix(file.getName()) + " files is not supported.";
             }
 
-            MetaData existingMetaData = parser.getRawMetaData(file);
-
+            MetaData existingMetaData = file.getMetaData();
             if (StringUtils.equals(artist, existingMetaData.getArtist()) &&
                 StringUtils.equals(album, existingMetaData.getAlbum()) &&
                 StringUtils.equals(title, existingMetaData.getTitle()) &&
