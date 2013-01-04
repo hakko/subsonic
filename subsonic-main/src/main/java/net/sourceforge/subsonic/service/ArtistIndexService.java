@@ -6,7 +6,8 @@ import static org.apache.commons.lang.StringUtils.split;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
-import java.util.HashMap;
+import java.util.Iterator;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.SortedMap;
@@ -27,23 +28,12 @@ public class ArtistIndexService {
 	
 	private static final Logger LOG = Logger.getLogger(ArtistIndexService.class);
 	
-    public SortedMap<String, List<Artist>> getIndexedArtists(List<Artist> artists) {
+    public Map<String, List<Artist>> getIndexedArtists(List<Artist> artists) {
 
-    	long ms;
-    	
-    	ms = -System.currentTimeMillis();
         setArtistSortName(artists, split(settingsService.getIgnoredArticles().toUpperCase()));
-        log(ms + System.currentTimeMillis(), "sort name");
-        
-    	ms = -System.currentTimeMillis();
         Map<Character, String> letterIndex = createIndexesFromExpression(settingsService.getIndexString().toUpperCase());
-        log(ms + System.currentTimeMillis(), "create indexes");
+        Map<String, List<Artist>> artistIndex = createArtistIndex(letterIndex, artists);
 
-    	ms = -System.currentTimeMillis();
-        SortedMap<String, List<Artist>> artistIndex = createArtistIndex(letterIndex, artists);
-        log(ms + System.currentTimeMillis(), "create artist index");
-
-        ms = -System.currentTimeMillis();
         for (String index : artistIndex.keySet()) {
         	Collections.sort(artistIndex.get(index), new Comparator<Artist>() {
 				@Override
@@ -52,7 +42,6 @@ public class ArtistIndexService {
 				}
 			});
         }
-        log(ms + System.currentTimeMillis(), "sort artists");
         
         return artistIndex;
     }
@@ -67,10 +56,6 @@ public class ArtistIndexService {
     	}
     	LOG.debug(artistIndex);
     	return artistIndex;
-    }
-    
-    private void log(long millis, String desc) {
-    	LOG.debug("artist index job " + desc + " took " + millis + " ms");
     }
 
     protected void setArtistSortName(List<Artist> artists, String[] ignoredArticles) {
@@ -92,7 +77,7 @@ public class ArtistIndexService {
      * @return A list of music indexes.
      */
     protected Map<Character, String> createIndexesFromExpression(String expr) {
-    	Map<Character, String> index = new HashMap<>();
+    	Map<Character, String> index = new LinkedHashMap<>();
     	
     	String[] expressions = StringUtils.split(expr, ' ');
     	for (String expression : expressions) {
@@ -108,23 +93,29 @@ public class ArtistIndexService {
             	}
             }
     	}
-    	index.put(HASH_CHAR, HASH_STR);
+    	if (!index.containsKey(HASH_CHAR)) {
+    		index.put(HASH_CHAR, HASH_STR);
+    	}
 
         return index;
     }
     
-    protected SortedMap<String, List<Artist>> createArtistIndex(Map<Character, String> letterIndex, List<Artist> artists) {
-    	SortedMap<String, List<Artist>> map = new TreeMap<>(getIndexComparator());
+    protected Map<String, List<Artist>> createArtistIndex(Map<Character, String> letterIndex, List<Artist> artists) {
+    	Map<String, List<Artist>> map = new LinkedHashMap<>();
+    	for (String index : letterIndex.values()) {
+    		map.put(index, new ArrayList<Artist>());
+    	}
     	for (Artist artist : artists) {
     		char firstLetter = toUpperCase(artist.getSortName().charAt(0));
     		if (!letterIndex.containsKey(firstLetter)) {
     			firstLetter = HASH_CHAR;
     		}
-    		String index = letterIndex.get(firstLetter);
-    		if (!map.containsKey(index)) {
-    			map.put(index, new ArrayList<Artist>());
+    		map.get(letterIndex.get(firstLetter)).add(artist);
+    	}
+    	for (Iterator<String> it = map.keySet().iterator(); it.hasNext();) {
+    		if (map.get(it.next()).isEmpty()) {
+    			it.remove();
     		}
-    		map.get(index).add(artist);
     	}
     	
     	return map;

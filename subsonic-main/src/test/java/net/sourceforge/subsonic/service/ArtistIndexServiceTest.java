@@ -4,9 +4,9 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.SortedMap;
 
 import org.junit.Assert;
 import org.junit.Test;
@@ -68,7 +68,7 @@ public class ArtistIndexServiceTest {
 			artist.setSortName(artist.getName());
 		}
 		
-		SortedMap<String, List<Artist>> artistIndex = 
+		Map<String, List<Artist>> artistIndex = 
 				artistIndexService.createArtistIndex(letterIndex, artists);
 		
 		Assert.assertEquals(2, artistIndex.keySet().size());
@@ -95,6 +95,25 @@ public class ArtistIndexServiceTest {
 		Assert.assertEquals("B", index.get(1));
 		Assert.assertEquals("C", index.get(2));
 		Assert.assertEquals("#", index.get(3));
+	}
+
+	@Test
+	public void indexesAreOrderedAccordingToExpression() {
+		Map<Character, String> letterIndex = artistIndexService.createIndexesFromExpression(
+				"A B C # OtherLetters(DEFGHIJKLMNOPQRSTUVWXYZ)");
+		Artist a, c, s, o, hash;
+		List<Artist> artists = Arrays.asList(a = new Artist("A.A. Bondy"), c = new Artist("Cat Power"),
+				s = new Artist("Swans"), o = new Artist("of Montreal"), hash = new Artist("16 Horsepower"));
+		artistIndexService.setArtistSortName(artists, new String[]{"of"});
+		Map<String, List<Artist>> artistIndex = artistIndexService.createArtistIndex(letterIndex, artists);
+
+		Map<String, List<Artist>> expectedIndex = new LinkedHashMap<>();
+		expectedIndex.put("A", Arrays.asList(a));
+		expectedIndex.put("C", Arrays.asList(c));
+		expectedIndex.put("#", Arrays.asList(hash));
+		expectedIndex.put("OtherLetters", Arrays.asList(s, o));
+		
+		Assert.assertEquals(expectedIndex, artistIndex);
 	}
 
 }
