@@ -3,3 +3,5 @@
 # Themes by Thomas Bruce Dyrud
 sonic_black "Sonic (Black)"
 sonic_white "Sonic (White)"
+musiccabinet_black "MusicCabinet (Black)"
+musiccabinet_white "MusicCabinet (White)"

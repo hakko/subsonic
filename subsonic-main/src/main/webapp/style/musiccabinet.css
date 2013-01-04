@@ -1,92 +1,85 @@
-/*
- * CSS styleshet for default theme.
- *
- * Note that attributes that are typically changed by theme authors are
- * placed at the top.
-  *
- * Author: Sindre Mehus
- */
-
-/* The primary background color (light blue). */
+/* The primary background colour. */
 .bgcolor1 {
-    background-color: #EFEFEF;
+    background-color: #e7e7e7;
 }
 
-/* The secondary background color (darker blue). */
+/* The secondary background colour, light blue, primary theme colour. */
 .bgcolor2, .ruleTableHeader, .log {
-    background-color: #DEE3E7
+    background-color: #e7e7e7;
+    color: #696969;
 }
 
-/* Put stuff here if you need to customize any of the frames. */
-.mainframe {
-}
-.topframe {
-}
-.leftframe {
-}
-.rightframe {
-}
-.playlistframe {
-}
-
-/* Background color for selected header. */
+/* Background colour for selected header, log etc. */
 .headerSelected {
-    background-color: lightyellow;
+    color: #696969;
+    background-color: #e7e7e7;
 }
 
-/* Background color for form controls (use default). */
-input, select {
-}
-
-/* Hover color for form controls (use default). */
-input:hover, select:hover {
-}
 
 /* The primary foreground color (black). */
 body {
-    color: black;
+    color: #696969;
+    background-color: #DDDDDD;
 }
 
-/* The secondary foreground color used for h1, details etc (gray). */
+/* The secondary foreground colour used for h1, details etc. */
 h1, .detail {
     color: #696969;
 }
 
-/* Foreground color used for h2, bold and tr. */
+/* Foreground colour used for h2, bold and tr. */
 h2, b, tr {
+    color: #696969;
+}
+
+/* Table sizing */
+table {
+    margin: 0 0 0 0;
+}
+
+/* Main frame image & colour */
+.mainframe {
+    background-color: #e7e7e7;
+}
+
+/* Back image */
+.back {
+    background-image:url( "../icons/musiccabinet/back.png" );
+}
+
+/* Forward image */
+.forward {
+    background-image:url( "../icons/musiccabinet/forward.png" );
+}
+
+
+/* Link colour */
+a:link, a:active, a:visited, a:link *, a:active *, a:visited * {
     color: #333333;
 }
 
-/* Link color */
-a:link, a:active, a:visited, a:link *, a:active *, a:visited * {
-    color: #006699
-}
-
-/* Link hover color */
+/* Link hover colour */
 a:hover, a:hover * {
     text-decoration: underline;
-    color: #DD6900
+    color: #696969;
 }
 
-/* Color for warning messages. */
+/* Colour for warning messages. */
 .warning {
-    color: red;
+    color: #e7238b;
+}
+
+html {
+    background-color: transparent;
+}
+
+label, p {
+	color: #696969;
 }
 
 /* Simple dark border. */
 .border1, .ruleTableHeader, .ruleTableCell, .headerSelected, .log {
     border: 1px solid black;
-}
-
-/* Scrollbar colors (supported on IE and Opera) */
-body {
-    scrollbar-face-color: #DEE3E7;
-    scrollbar-highlight-color: #FFFFFF;
-    scrollbar-shadow-color: #DEE3E7;
-    scrollbar-3dlight-color: #D1D7DC;
-    scrollbar-arrow-color: #006699;
-    scrollbar-track-color: #EFEFEF;
-    scrollbar-darkshadow-color: #98AAB1;
 }
 
 /* Font 1 */
@@ -146,7 +139,21 @@ form {
 }
 
 input, select, textarea {
-    font-size: 9pt;
+  background-color: #eeeeee;
+  background-image: -webkit-gradient(linear, left top, left bottom, color-stop(0%, #eeeeee), color-stop(100%, #cccccc));
+  background-image: -webkit-linear-gradient(top, #eeeeee, #cccccc);
+  background-image: -moz-linear-gradient(top, #eeeeee, #cccccc);
+  background-image: -ms-linear-gradient(top, #eeeeee, #cccccc);
+  background-image: -o-linear-gradient(top, #eeeeee, #cccccc);
+  background-image: linear-gradient(top, #eeeeee, #cccccc);
+  border: 1px solid #ccc;
+  border-bottom: 1px solid #bbb;
+  border-radius: 3px;
+  color: #666;
+  font: bold 12px/1 "Lucida Grande", "Lucida Sans Unicode", "Lucida Sans", Geneva, Verdana, sans-serif;
+  padding: 4px;
+  text-align: left;
+  text-shadow: 0 1px 0 #eee;
 }
 
 label {
@@ -206,8 +213,9 @@ img {
 .back, .forward {
     background-position:center left;
     background-repeat:no-repeat;
-    padding-left: 16px;
+    padding-left: 24px;
     line-height: 16px;
+	font-weight: bold;
 }
 
 .back {

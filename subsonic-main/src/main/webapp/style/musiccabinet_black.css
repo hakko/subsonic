@@ -1,0 +1,86 @@
+/*
+ * CSS styleshet for the "Sonic Black" theme.
+ *
+ * Author: Thomas Bruce Dyrud (thomasbrucedyrud[at]gmail.com)
+ * Modified By: G M Slater (occurrencesinrain[at]cox.net)
+ *
+ */
+
+@import "sonic.css";
+
+/* The primary background colour. */
+.bgcolor1 {
+    background-color: #000000;
+}
+
+/* The secondary background colour, light blue, primary theme colour. */
+.bgcolor2, .ruleTableHeader, .log {
+    background-color: #000000;
+    color: #8C8C8C;
+}
+
+.bgcolor3 {
+    background-color: #2C2C2C;
+}
+
+/* Background colour for selected header, log etc. */
+.headerSelected {
+    color: #8C8C8C;
+    background-color: #000000;
+    border: 1px solid #8C8C8C;
+}
+
+
+/* The primary foreground color (black). */
+body {
+    color: #8C8C8C;
+    background-color: #2C2C2C;
+}
+
+/* The secondary foreground colour used for h1, details etc. */
+h1, .detail {
+    color: #98ce11;
+}
+
+/* Foreground colour used for h2, bold and tr. */
+h2, b, tr {
+    color: #8C8C8C;
+}
+
+/* Main frame image & colour */
+.mainframe {
+    background-color: #000000;
+}
+
+/* Back image */
+.back {
+    background-image:url( "../icons/musiccabinet_black/back.png" );
+}
+
+/* Forward image */
+.forward {
+    background-image:url( "../icons/musiccabinet_black/forward.png" );
+}
+
+a {
+	outline:0px; 
+}
+
+/* Link colour */
+a:link, a:active, a:visited, a:link *, a:active *, a:visited * {
+    color: #8C8C8C;
+}
+
+/* Link hover colour */
+a:hover, a:hover * {
+    color: #98ce11;
+}
+
+/* Colour for warning messages. */
+.warning {
+    color: #596A86;
+}
+
+label, p {
+	color: #8C8C8C;
+}
