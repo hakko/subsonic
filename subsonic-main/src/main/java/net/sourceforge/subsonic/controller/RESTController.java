@@ -37,7 +37,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import java.util.SortedMap;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletRequestWrapper;
@@ -241,7 +240,7 @@ public class RESTController extends MultiActionController {
         		new Attribute("id", MEDIA_FOLDERS_ID + "-1"));
         
         if (libraryBrowserService.hasArtists()) {
-        	SortedMap<String, List<Artist>> indexedArtists = 
+        	Map<String, List<Artist>> indexedArtists = 
         			artistIndexService.getIndexedArtists(genre == null ?
         				libraryBrowserService.getArtists() :
         				libraryBrowserService.getArtists(genre, 25));
