@@ -161,6 +161,9 @@
 
 	<c:forEach items="${model.songs}" var="song" varStatus="loopStatus">
 	<tr>
+	  <td colspan="10" class="ruleTableCell" title="${song.fileName}"><str:truncateNicely lower="25" upper="25" var="fileName">${song.fileName}</str:truncateNicely> ${fileName}</td>
+	  </tr>
+	<tr>
             <str:truncateNicely lower="25" upper="25" var="fileName">${song.fileName}</str:truncateNicely>
             <input type="hidden" name="id${loopStatus.count - 1}" value="${song.id}"/>
             <input type="hidden" name="suggestedTitle${loopStatus.count - 1}" value="${song.suggestedTitle}"/>
