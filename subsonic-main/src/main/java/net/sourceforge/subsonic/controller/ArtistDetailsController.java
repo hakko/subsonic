@@ -18,6 +18,9 @@
  */
 package net.sourceforge.subsonic.controller;
 
+import static org.apache.commons.lang.StringUtils.replace;
+import static org.apache.commons.lang.StringUtils.trim;
+
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -25,7 +28,6 @@ import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import net.sourceforge.subsonic.Logger;
 import net.sourceforge.subsonic.domain.Album;
 import net.sourceforge.subsonic.domain.User;
 import net.sourceforge.subsonic.domain.UserSettings;
@@ -34,7 +36,6 @@ import net.sourceforge.subsonic.service.SecurityService;
 import net.sourceforge.subsonic.service.SettingsService;
 import net.sourceforge.subsonic.util.Util;
 
-import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang.math.NumberUtils;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.ParameterizableViewController;
@@ -61,8 +62,6 @@ public class ArtistDetailsController extends ParameterizableViewController {
 	private SettingsService settingsService;
 	private StarService starService;
 	
-	private static final Logger LOG = Logger.getLogger(ArtistDetailsController.class);
-	
 	private static final String LICENSE = "User-contributed text is available under the Creative Commons By-SA License and may also be available under the GNU FDL.";
 	
     @Override
@@ -75,7 +74,7 @@ public class ArtistDetailsController extends ParameterizableViewController {
         UserSettings userSettings = settingsService.getUserSettings(user.getUsername());
 
         ArtistInfo artistInfo = artistInfoService.getDetailedArtistInfo(artistId);
-        artistInfo.setBioContent(StringUtils.replace(artistInfo.getBioContent(), LICENSE, ""));
+        artistInfo.setBioContent(trim(replace(artistInfo.getBioContent(), LICENSE, "")));
         boolean artistStarred = starService.isArtistStarred(userSettings.getLastFmUsername(), artistId);
         List<Album> albums = mediaFileService.getAlbums(musicBrainzService.getDiscography(artistId,
         		userSettings.isAlbumOrderByYear(), userSettings.isAlbumOrderAscending()));
