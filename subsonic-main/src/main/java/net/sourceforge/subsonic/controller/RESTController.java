@@ -204,6 +204,8 @@ public class RESTController extends MultiActionController {
         builder.add("musicFolders", false);
 
         int id = 0;
+        builder.add("musicFolder", true, 
+        		new Attribute("id", id), new Attribute("name", "All genres"));
         for (String tag : tagService.getTopTags()) {
             AttributeSet attributes = new AttributeSet();
             attributes.add("id", ++id);
