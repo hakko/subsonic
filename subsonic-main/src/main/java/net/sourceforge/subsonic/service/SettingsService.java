@@ -1063,10 +1063,10 @@ public class SettingsService {
         // Sonic white happens to be the only theme with icons for genre browser/radio,
         // so change everybody's theme to it the first time we run MusicCabinet.
         if (properties.getProperty(KEY_MUSICCABINET_FIRST_INVOCATION) == null) {
-        	setThemeId("sonic_white");
+        	setThemeId("musiccabinet_white");
         	for (User user : userDao.getAllUsers()) {
                 UserSettings settings = getUserSettings(user.getUsername());
-                settings.setThemeId("sonic_white");
+                settings.setThemeId("musiccabinet_white");
                 settings.setChanged(new Date());
                 updateUserSettings(settings);
         	}
