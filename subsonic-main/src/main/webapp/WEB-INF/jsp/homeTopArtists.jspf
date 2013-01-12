@@ -17,7 +17,6 @@
 
     </c:forTokens>
 </h3>
-<c:if test="${empty model.lastFmUser}">You haven't yet added your Last.fm username <a href="personalSettings.view">here</a>.</c:if>
 <c:if test="${not empty model.lastFmUser and empty model.artists}">No artists found! Please update the search index <a href="searchSettings.view">here</a>.</c:if>
 <c:if test="${not empty model.artists}">
 <%@ include file="homeArtists.jspf" %>

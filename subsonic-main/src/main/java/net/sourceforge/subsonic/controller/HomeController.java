@@ -125,6 +125,7 @@ public class HomeController extends ParameterizableViewController {
         map.put("listType", listType);
         map.put("listGroup", listGroup);
         map.put("user", user);
+		map.put("lastFmUser", userSettings.getLastFmUsername());
         
         ModelAndView result = super.handleRequestInternal(request, response);
         result.addObject("model", map);
@@ -144,7 +145,6 @@ public class HomeController extends ParameterizableViewController {
     		if (!isEmpty(lastFmUsername)) {
     			List<ArtistRecommendation> topArtists = Util.square(userTopArtistsService.getUserTopArtists(
     					new LastFmUser(lastFmUsername), period, 0, 25));
-    			map.put("lastFmUser", lastFmUsername);
     			map.put("artists", topArtists);
     		}
     	} else {

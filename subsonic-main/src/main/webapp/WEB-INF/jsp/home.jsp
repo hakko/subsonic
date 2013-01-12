@@ -29,6 +29,14 @@
     <h2>${model.welcomeSubtitle}</h2>
 </c:if>
 
+<c:if test="${model.isIndexBeingCreated}">
+    <p class="warning"><fmt:message key="home.scan"/></p>
+</c:if>
+
+<c:if test="${empty model.lastFmUser}">
+	Last.fm scrobbling not configured! For full statistics and personal music recommendations, <a href="lastFmSettings.view">click here</a>.
+</c:if>
+
 <h2>
     <c:forTokens items="newest recent frequent starred topartists random recommended" delims=" " var="cat" varStatus="loopStatus">
         <c:if test="${loopStatus.count > 1}">&nbsp;|&nbsp;</c:if>
@@ -47,10 +55,6 @@
 
     </c:forTokens>
 </h2>
-
-<c:if test="${model.isIndexBeingCreated}">
-    <p class="warning"><fmt:message key="home.scan"/></p>
-</c:if>
 
 <c:if test="${not model.listType eq 'topartists'}"><h2><fmt:message key="home.${model.listType}.text"/></h2></c:if>
 
