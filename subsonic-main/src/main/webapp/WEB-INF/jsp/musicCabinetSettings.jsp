@@ -83,6 +83,20 @@
             </td>
            </tr>
            <tr>
+            <td>Radio, minimum song length (seconds)</td>
+            <td>
+             <form:input path="radioMinimumSongLength" size="5"/>
+             <c:import url="helpToolTip.jsp"><c:param name="topic" value="radiominimumsonglength"/></c:import>
+            </td>
+           </tr>
+           <tr>
+            <td>Radio, maximum song length (seconds)</td>
+            <td>
+             <form:input path="radioMaximumSongLength" size="5"/>
+             <c:import url="helpToolTip.jsp"><c:param name="topic" value="radiomaximumsonglength"/></c:import>
+            </td>
+           </tr>
+           <tr>
             <td>Related artists sampler, songs per artist</td>
             <td>
              <form:input path="relatedArtistsSamplerArtistCount" size="5"/>

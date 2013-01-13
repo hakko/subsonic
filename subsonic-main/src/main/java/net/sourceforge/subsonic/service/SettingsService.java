@@ -130,6 +130,8 @@ public class SettingsService {
     private static final String KEY_MUSICCABINET_GENRE_RADIO_TOTAL_COUNT = "MusicCabinetGenreRadioTotalCount";
     private static final String KEY_MUSICCABINET_RELATED_ARTISTS_SAMPLER_ARTIST_COUNT = "MusicCabinetRelatedArtistsSamplerArtistCount";
     private static final String KEY_MUSICCABINET_PREFER_LAST_FM_ARTWORK = "MusicCabinetPreferLastFmArtwork";
+    private static final String KEY_MUSICCABINET_RADIO_MINIMUM_SONG_LENGTH = "MusicCabinetRadioMinimumSongLength";
+    private static final String KEY_MUSICCABINET_RADIO_MAXIMUM_SONG_LENGTH = "MusicCabinetRadioMaximumSongLength";
     
     // Default values.
     private static final String DEFAULT_INDEX_STRING = "A B C D E F G H I J K L M N O P Q R S T U V W X-Z(XYZ)";
@@ -194,6 +196,8 @@ public class SettingsService {
     private static final int DEFAULT_MUSICCABINET_GENRE_RADIO_TOTAL_COUNT = 25;
     private static final int DEFAULT_MUSICCABINET_RELATED_ARTISTS_SAMPLER_ARTIST_COUNT = 3;
     private static final boolean DEFAULT_MUSICCABINET_PREFER_LAST_FM_ARTWORK = true;
+    private static final int DEFAULT_MUSICCABINET_RADIO_MINIMUM_SONG_LENGTH = 45;
+    private static final int DEFAULT_MUSICCABINET_RADIO_MAXIMUM_SONG_LENGTH = 600;
     
     // Array of obsolete keys.  Used to clean property file.
     private static final List<String> OBSOLETE_KEYS = Arrays.asList("PortForwardingPublicPort", "PortForwardingLocalPort", 
@@ -1283,6 +1287,24 @@ public class SettingsService {
     
     public void setPreferLastFmArtwork(boolean preferLastFmArtwork) {
     	setBoolean(KEY_MUSICCABINET_PREFER_LAST_FM_ARTWORK, preferLastFmArtwork);
+    }
+
+    public int getRadioMinimumSongLength() {
+    	return getInt(KEY_MUSICCABINET_RADIO_MINIMUM_SONG_LENGTH,
+    			DEFAULT_MUSICCABINET_RADIO_MINIMUM_SONG_LENGTH);
+    }
+
+    public void setRadioMinimumSongLength(int minLength) {
+    	setInt(KEY_MUSICCABINET_RADIO_MINIMUM_SONG_LENGTH, minLength);
+    }
+
+    public int getRadioMaximumSongLength() {
+    	return getInt(KEY_MUSICCABINET_RADIO_MAXIMUM_SONG_LENGTH,
+    			DEFAULT_MUSICCABINET_RADIO_MAXIMUM_SONG_LENGTH);
+    }
+
+    public void setRadioMaximumSongLength(int maxLength) {
+    	setInt(KEY_MUSICCABINET_RADIO_MAXIMUM_SONG_LENGTH, maxLength);
     }
 
 }

@@ -1,16 +1,20 @@
 package net.sourceforge.subsonic.controller;
 
+import static java.lang.String.format;
+
 import java.util.ArrayList;
 import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
 
+import net.sourceforge.subsonic.Logger;
 import net.sourceforge.subsonic.command.MusicCabinetSettingsCommand;
 import net.sourceforge.subsonic.domain.MediaFolder;
 import net.sourceforge.subsonic.service.MediaFolderService;
 import net.sourceforge.subsonic.service.SearchService;
 import net.sourceforge.subsonic.service.SettingsService;
 
+import org.springframework.beans.factory.InitializingBean;
 import org.springframework.web.servlet.mvc.SimpleFormController;
 
 import com.github.hakko.musiccabinet.service.DatabaseAdministrationService;
@@ -22,8 +26,10 @@ import com.github.hakko.musiccabinet.service.PlaylistGeneratorService;
  *
  * @author hakko / MusicCabinet
  */
-public class MusicCabinetSettingsController extends SimpleFormController {
+public class MusicCabinetSettingsController extends SimpleFormController implements InitializingBean {
 
+	private Logger LOG = Logger.getLogger(this.getClass());
+	
     private DatabaseAdministrationService dbAdmService;
     private PlaylistGeneratorService playlistService;
     
@@ -57,6 +63,8 @@ public class MusicCabinetSettingsController extends SimpleFormController {
         command.setArtistTopTracksTotalCount(settingsService.getArtistTopTracksTotalCount());
         command.setGenreRadioArtistCount(settingsService.getGenreRadioArtistCount());
         command.setGenreRadioTotalCount(settingsService.getGenreRadioTotalCount());
+        command.setRadioMinimumSongLength(settingsService.getRadioMinimumSongLength());
+        command.setRadioMaximumSongLength(settingsService.getRadioMaximumSongLength());
         command.setRelatedArtistsSamplerArtistCount(settingsService.getRelatedArtistsSamplerArtistCount());
         command.setPreferLastFmArtwork(settingsService.isPreferLastFmArtwork());
         
@@ -105,7 +113,13 @@ public class MusicCabinetSettingsController extends SimpleFormController {
         settingsService.setGenreRadioTotalCount(command.getGenreRadioTotalCount());
         settingsService.setRelatedArtistsSamplerArtistCount(command.getRelatedArtistsSamplerArtistCount());
         settingsService.setPreferLastFmArtwork(command.isPreferLastFmArtwork());
+        settingsService.setRadioMinimumSongLength(command.getRadioMinimumSongLength());
+        settingsService.setRadioMaximumSongLength(command.getRadioMaximumSongLength());
         settingsService.save();
+
+        playlistService.setAllowedTrackLengthInterval(
+				settingsService.getRadioMinimumSongLength(),
+				settingsService.getRadioMaximumSongLength());
     }
 
     private List<String> getMediaFolderNames() {
@@ -115,6 +129,16 @@ public class MusicCabinetSettingsController extends SimpleFormController {
 		}
 		return mediaFolderNames;
     }
+
+	@Override
+	public void afterPropertiesSet() throws Exception {
+		LOG.debug(format("afterPropertiesSet(), set interval (%d, %d)",
+				settingsService.getRadioMinimumSongLength(),
+				settingsService.getRadioMaximumSongLength()));
+		playlistService.setAllowedTrackLengthInterval(
+				settingsService.getRadioMinimumSongLength(),
+				settingsService.getRadioMaximumSongLength());
+	}
     
     // Spring setters
     
@@ -141,5 +165,5 @@ public class MusicCabinetSettingsController extends SimpleFormController {
 	public void setLibraryUpdateService(LibraryUpdateService libraryUpdateService) {
 		this.libraryUpdateService = libraryUpdateService;
 	}
-    
+   
 }

@@ -32,6 +32,8 @@ public class MusicCabinetSettingsCommand {
 	private int artistTopTracksTotalCount;
 	private int genreRadioArtistCount;
 	private int genreRadioTotalCount;
+	private int radioMinimumSongLength;
+	private int radioMaximumSongLength;
 	private int relatedArtistsSamplerArtistCount;
 	private boolean preferLastFmArtwork;
 	
@@ -169,6 +171,22 @@ public class MusicCabinetSettingsCommand {
 
 	public void setGenreRadioTotalCount(int genreRadioTotalCount) {
 		this.genreRadioTotalCount = genreRadioTotalCount;
+	}
+
+	public int getRadioMinimumSongLength() {
+		return radioMinimumSongLength;
+	}
+
+	public void setRadioMinimumSongLength(int radioMinimumSongLength) {
+		this.radioMinimumSongLength = radioMinimumSongLength;
+	}
+
+	public int getRadioMaximumSongLength() {
+		return radioMaximumSongLength;
+	}
+
+	public void setRadioMaximumSongLength(int radioMaximumSongLength) {
+		this.radioMaximumSongLength = radioMaximumSongLength;
 	}
 
 	public int getRelatedArtistsSamplerArtistCount() {
