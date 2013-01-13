@@ -1047,7 +1047,7 @@ public class RESTController extends MultiActionController {
             }
         }
 
-        return null;
+        return filePath;
     }
 
     public ModelAndView download(HttpServletRequest request, HttpServletResponse response) throws Exception {
