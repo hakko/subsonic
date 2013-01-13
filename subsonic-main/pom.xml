@@ -16,7 +16,7 @@
 	<name>Subsonic Main</name>
 
 	<properties>
-		<version.musiccabinet>0.7.18</version.musiccabinet>
+		<version.musiccabinet>0.7.19</version.musiccabinet>
 		<version.commons-lang>2.5</version.commons-lang>
 		<version.joda-time>2.0</version.joda-time>
 		<version.c3p0>0.9.1.2</version.c3p0>
