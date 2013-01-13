@@ -84,6 +84,12 @@ public class StreamController implements Controller {
         User user = securityService.getUserByName(player.getUsername());
 
         try {
+        	
+        	if (user == null) {
+        		LOG.warn("No user associated with " + player);
+                response.sendError(HttpServletResponse.SC_FORBIDDEN, "No such user: " + player.getUsername());
+                return null;
+        	}
 
             if (!user.isStreamRole()) {
                 response.sendError(HttpServletResponse.SC_FORBIDDEN, "Streaming is forbidden for user " + user.getUsername());
