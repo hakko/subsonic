@@ -23,3 +23,19 @@
 <c:if test="${model.listGroup eq 'Songs'}"><%@ include file="homeSongs.jspf" %></c:if>
 <c:if test="${model.listGroup eq 'Albums'}"><%@ include file="homeAlbums.jspf" %></c:if>
 <c:if test="${model.listGroup eq 'Artists'}"><%@ include file="homeArtists.jspf" %></c:if>
+
+<c:if test="${model.listType ne 'random'}">
+	<sub:url var="url" value="home.view">
+		<sub:param name="listType" value="${model.listType}"/>
+		<sub:param name="listGroup" value="${model.listGroup}"/>
+		<c:if test="${model.listUsers eq 'current'}">
+			<c:set var="target">For everyone</c:set>
+			<sub:param name="listUsers" value="all"/>
+		</c:if>
+		<c:if test="${model.listUsers eq 'all'}">
+			<c:set var="target">For me</c:set>
+			<sub:param name="listUsers" value="current"/>
+		</c:if>
+	</sub:url>
+	<div class="forward"><a href="${url}">${target}</a></div>	
+</c:if>

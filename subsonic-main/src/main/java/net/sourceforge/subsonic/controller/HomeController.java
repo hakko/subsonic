@@ -89,8 +89,11 @@ public class HomeController extends ParameterizableViewController {
         
         String listType = request.getParameter("listType");
         String listGroup = request.getParameter("listGroup");
+        String listUsers = StringUtils.defaultIfEmpty(request.getParameter("listUsers"),
+        		userSettings.isViewStatsForAllUsers() ? "all" : "current");
     	String query = StringUtils.trimToNull(request.getParameter("query"));
     	int page = "random".equals(listType) ? 0 : toInt(request.getParameter("page"), 0);
+    	String lastFmUsername = "current".equals(listUsers) ? userSettings.getLastFmUsername() : null;
 
     	if (listType == null) {
             String defaultHomeView = userSettings.getDefaultHomeView();
@@ -111,11 +114,11 @@ public class HomeController extends ParameterizableViewController {
         }
 
         if ("topartists".equals(listType) || "recommended".equals(listType) || "Artists".equals(listGroup)) {
-        	setArtists(listType, listGroup, query, page, userSettings, map);
+        	setArtists(listType, listGroup, query, page, userSettings, lastFmUsername, map);
         } else if ("newest".equals(listType) || "Albums".equals(listGroup)) {
-        	setAlbums(listType, query, page, userSettings, map);
+        	setAlbums(listType, query, page, userSettings, lastFmUsername, map);
         } else if ("Songs".equals(listGroup)) {
-        	setSongs(listType, query, page, userSettings, map);
+        	setSongs(listType, query, page, userSettings, lastFmUsername, map);
         }
 
         map.put("welcomeTitle", settingsService.getWelcomeTitle());
@@ -124,6 +127,7 @@ public class HomeController extends ParameterizableViewController {
         map.put("isIndexCreated", libraryUpdateService.isIndexCreated());
         map.put("listType", listType);
         map.put("listGroup", listGroup);
+        map.put("listUsers", listUsers);
         map.put("user", user);
 		map.put("lastFmUser", userSettings.getLastFmUsername());
         
@@ -133,8 +137,8 @@ public class HomeController extends ParameterizableViewController {
         return result;
     }
 
-    private void setArtists(String listType, String listGroup, String query, int page, UserSettings userSettings, Map<String, Object> map) {
-    	String lastFmUsername = userSettings.getLastFmUsername();
+    private void setArtists(String listType, String listGroup, String query, int page, 
+    		UserSettings userSettings, String lastFmUsername, Map<String, Object> map) {
     	if ("topartists".equals(listType)) {
     		Period period = Period.THREE_MONTHS;
     		for (Period p : Period.values()) {
@@ -202,8 +206,8 @@ public class HomeController extends ParameterizableViewController {
     	return null;
     }
     
-    private void setAlbums(String listType, String query, int page, UserSettings userSettings, Map<String, Object> map) {
-    	String lastFmUsername = userSettings.getLastFmUsername();
+    private void setAlbums(String listType, String query, int page, 
+    		UserSettings userSettings, String lastFmUsername, Map<String, Object> map) {
     	final int ALBUMS = userSettings.getDefaultHomeAlbums();
     	int offset = page * ALBUMS, limit = ALBUMS + 1;
 
@@ -241,8 +245,8 @@ public class HomeController extends ParameterizableViewController {
     	return null;
     }
 
-    private void setSongs(String listType, String query, int page, UserSettings userSettings, Map<String, Object> map) {
-    	String lastFmUsername = userSettings.getLastFmUsername();
+    private void setSongs(String listType, String query, int page, 
+    		UserSettings userSettings, String lastFmUsername, Map<String, Object> map) {
     	final int SONGS = userSettings.getDefaultHomeSongs();
     	int offset = page * SONGS, limit = SONGS + 1;
 
