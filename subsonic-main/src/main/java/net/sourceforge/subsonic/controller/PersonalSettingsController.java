@@ -75,6 +75,7 @@ public class PersonalSettingsController extends SimpleFormController {
         command.setOnlyAlbumArtistRecommendations(userSettings.isOnlyAlbumArtistRecommendations());
         command.setReluctantArtistLoading(userSettings.isReluctantArtistLoading());
         command.setUseVariousArtistsShortlist(userSettings.isUseVariousArtistShortlist());
+        command.setViewStatsForAllUsers(userSettings.isViewStatsForAllUsers());
         
         Locale currentLocale = userSettings.getLocale();
         Locale[] locales = settingsService.getAvailableLocales();
@@ -145,6 +146,7 @@ public class PersonalSettingsController extends SimpleFormController {
         settings.setReluctantArtistLoading(command.isReluctantArtistLoading());
         settings.setOnlyAlbumArtistRecommendations(command.isOnlyAlbumArtistRecommendations());
         settings.setUseVariousArtistShortlist(command.isUseVariousArtistsShortlist());
+        settings.setViewStatsForAllUsers(command.isViewStatsForAllUsers());
         
         settings.setChanged(new Date());
         settingsService.updateUserSettings(settings);

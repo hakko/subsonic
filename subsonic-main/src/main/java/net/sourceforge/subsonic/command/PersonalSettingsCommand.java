@@ -62,6 +62,7 @@ public class PersonalSettingsCommand {
     private boolean reluctantArtistLoading;
     private boolean onlyAlbumArtistRecommendations;
     private boolean useVariousArtistsShortlist;
+    private boolean viewStatsForAllUsers;
     private boolean isReloadNeeded;
     
     public User getUser() {
@@ -302,6 +303,14 @@ public class PersonalSettingsCommand {
 
 	public void setUseVariousArtistsShortlist(boolean useVariousArtistsShortlist) {
 		this.useVariousArtistsShortlist = useVariousArtistsShortlist;
+	}
+
+	public boolean isViewStatsForAllUsers() {
+		return viewStatsForAllUsers;
+	}
+
+	public void setViewStatsForAllUsers(boolean viewStatsForAllUsers) {
+		this.viewStatsForAllUsers = viewStatsForAllUsers;
 	}
 
 	public boolean isReloadNeeded() {

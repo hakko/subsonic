@@ -95,6 +95,17 @@
                 <c:import url="helpToolTip.jsp"><c:param name="topic" value="defaulthomeview"/></c:import>
             </td>
         </tr>
+		
+        <tr>
+            <td>Default home statistics</td>
+            <td>
+                <form:select path="viewStatsForAllUsers" cssStyle="width:15em">
+                    <form:option value="false" label="Show only my activity"/>
+                    <form:option value="true" label="Show activity for all users"/>
+                </form:select>
+                <c:import url="helpToolTip.jsp"><c:param name="topic" value="viewstatsforallusers"/></c:import>
+            </td>
+        </tr>
 
         <tr>
         	<td>Default home artists</td>
