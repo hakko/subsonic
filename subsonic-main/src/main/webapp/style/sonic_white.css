@@ -81,5 +81,23 @@ a:hover, a:hover * {
 
 label, p {
 	color: #696969;
-}or: #696969;
+}
+
+::-webkit-scrollbar {
+    width: 12px;
+    height: 12px;
+}
+::-webkit-scrollbar-track {
+    -webkit-box-shadow: inset 0 0 2px rgba(0,0,0,0.2);
+    -webkit-border-radius: 10px;
+    border-radius: 10px;
+}
+::-webkit-scrollbar-thumb {
+    -webkit-border-radius: 10px;
+    border-radius: 10px;
+    background: rgba(200, 200, 200, 0.4);
+    -webkit-box-shadow: inset 0 0 2px rgba(0,0,0,0.2);
+}
+::-webkit-scrollbar-thumb:window-inactive {
+    background: rgba(200, 200, 200, 0.2);
 }
