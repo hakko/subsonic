@@ -5,3 +5,5 @@ sonic_black "Sonic (Black)"
 sonic_white "Sonic (White)"
 musiccabinet_black "MusicCabinet (Black)"
 musiccabinet_white "MusicCabinet (White)"
+# Darksub theme, courtesy of Don Pearson edited by Chicoray adapted for musiccabinet by rouge
+darksub "darksub"
