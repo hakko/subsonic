@@ -42,6 +42,7 @@ public class PodcastEpisode {
     private Long bytesDownloaded;
     private PodcastStatus status;
     private String errorMessage;
+    private int mediaFileId;
 
     public PodcastEpisode(Integer id, Integer channelId, String url, String path, String title,
                           String description, Date publishDate, String duration, Long length, Long bytesDownloaded,
@@ -160,4 +161,13 @@ public class PodcastEpisode {
     public void setErrorMessage(String errorMessage) {
         this.errorMessage = errorMessage;
     }
+
+	public int getMediaFileId() {
+		return mediaFileId;
+	}
+
+	public void setMediaFileId(int mediaFileId) {
+		this.mediaFileId = mediaFileId;
+	}
+
 }

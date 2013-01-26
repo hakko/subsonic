@@ -96,6 +96,7 @@
         <property name="podcastService" ref="podcastService"/>
         <property name="securityService" ref="securityService"/>
         <property name="settingsService" ref="settingsService"/>
+        <property name="mediaFileService" ref="mediaFileService"/>
     </bean>
     <bean id="podcastReceiverAdminController"
           class="net.sourceforge.subsonic.controller.PodcastReceiverAdminController">

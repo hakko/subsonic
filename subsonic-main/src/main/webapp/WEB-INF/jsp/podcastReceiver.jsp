@@ -125,7 +125,7 @@
                 <input type="checkbox" class="checkbox" id="channelExpanded${i.index}" value="${channel.key.id}" style="display:none"
                        <c:if test="${channelExpanded}">checked="checked"</c:if>/>
             </td>
-            <td colspan="6" style="padding-left:0.25em;padding-top:1em">
+            <td colspan="7" style="padding-left:0.25em;padding-top:1em">
                 <a href="javascript:toggleEpisodes(${i.index})">
                     <span title="${title}"><b><str:truncateNicely upper="40">${title}</str:truncateNicely></b></span>
                     (${fn:length(channel.value)})
@@ -164,12 +164,14 @@
 
                 <c:choose>
                     <c:when test="${empty episode.path}">
-                        <td ${cssClass} colspan="3"/>
+                        <td ${cssClass} colspan="4"/>
                     </c:when>
                     <c:otherwise>
                         <c:import url="playAddDownload.jsp">
-                            <c:param name="path" value="${episode.path}"/>
+                            <c:param name="id" value="[${episode.mediaFileId}]"/>
+							<c:param name="starDisabled" value="true"/>
                             <c:param name="playEnabled" value="${model.user.streamRole and not model.partyMode}"/>
+                            <c:param name="enqueueEnabled" value="${model.user.streamRole and not model.partyMode}"/>
                             <c:param name="addEnabled" value="${model.user.streamRole and not model.partyMode}"/>
                             <c:param name="downloadEnabled" value="false"/>
                             <c:param name="asTable" value="true"/>
@@ -179,11 +181,9 @@
 
                 <c:set var="episodeCount" value="${episodeCount + 1}"/>
 
-
                 <sub:url value="main.view" var="mainUrl">
                     <sub:param name="path" value="${episode.path}"/>
                 </sub:url>
-
 
                 <td ${cssClass} style="padding-left:0.6em">
                     <span title="${episode.title}">

@@ -26,17 +26,19 @@ import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.springframework.web.servlet.ModelAndView;
-import org.springframework.web.servlet.mvc.ParameterizableViewController;
-
+import net.sourceforge.subsonic.domain.MediaFile;
 import net.sourceforge.subsonic.domain.PodcastChannel;
 import net.sourceforge.subsonic.domain.PodcastEpisode;
 import net.sourceforge.subsonic.domain.User;
 import net.sourceforge.subsonic.domain.UserSettings;
+import net.sourceforge.subsonic.service.MediaFileService;
 import net.sourceforge.subsonic.service.PodcastService;
 import net.sourceforge.subsonic.service.SecurityService;
 import net.sourceforge.subsonic.service.SettingsService;
 import net.sourceforge.subsonic.util.StringUtil;
+
+import org.springframework.web.servlet.ModelAndView;
+import org.springframework.web.servlet.mvc.ParameterizableViewController;
 
 /**
  * Controller for the "Podcast receiver" page.
@@ -48,6 +50,7 @@ public class PodcastReceiverController extends ParameterizableViewController {
     private PodcastService podcastService;
     private SecurityService securityService;
     private SettingsService settingsService;
+    private MediaFileService mediaFileService;
 
     @Override
     protected ModelAndView handleRequestInternal(HttpServletRequest request, HttpServletResponse response) throws Exception {
@@ -60,6 +63,7 @@ public class PodcastReceiverController extends ParameterizableViewController {
         for (PodcastChannel channel : podcastService.getAllChannels()) {
             channels.put(channel, podcastService.getEpisodes(channel.getId(), false));
         }
+        addMediaFileIds(channels);
 
         User user = securityService.getCurrentUser(request);
         UserSettings userSettings = settingsService.getUserSettings(user.getUsername());
@@ -71,7 +75,18 @@ public class PodcastReceiverController extends ParameterizableViewController {
         return result;
     }
 
-    public void setPodcastService(PodcastService podcastService) {
+    private void addMediaFileIds(Map<PodcastChannel, List<PodcastEpisode>> channels) {
+    	for (PodcastChannel channel : channels.keySet()) {
+    		for (PodcastEpisode episode : channels.get(channel)) {
+    			if (episode.getPath() != null) {
+    				MediaFile mf = mediaFileService.getNonIndexedMediaFile(episode.getPath());
+    				episode.setMediaFileId(mf.getId());
+    			}
+    		}
+    	}
+	}
+
+	public void setPodcastService(PodcastService podcastService) {
         this.podcastService = podcastService;
     }
 
@@ -82,4 +97,9 @@ public class PodcastReceiverController extends ParameterizableViewController {
     public void setSettingsService(SettingsService settingsService) {
         this.settingsService = settingsService;
     }
+
+	public void setMediaFileService(MediaFileService mediaFileService) {
+		this.mediaFileService = mediaFileService;
+	}
+
 }
