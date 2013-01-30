@@ -1,0 +1,15 @@
+/*
+ * CSS styleshet Playericons theme.
+ *
+ */
+
+/* Player images */
+
+a#rewind1      {background-image:url("../icons/buttonPlayer/red/rewind1.png");background-position: 0px 0px; background-repeat:no-repeat; height: 24px; width: 23px; display:block;text-indent: -9999px;}
+a#forward1    {background-image:url("../icons/buttonPlayer/red/forward1.png");background-position: 0px 0px; background-repeat:no-repeat; height: 24px; width: 23px; display:block;text-indent: -9999px;}
+a#clear1        {background-image:url("../icons/buttonPlayer/red/clear1.png");background-position: 0px 0px; background-repeat:no-repeat; height: 24px; width: 23px; display:block;text-indent: -9999px;}
+a#shuffle      {background-image:url("../icons/buttonPlayer/red/shuffle.png");background-position: 0px 0px; background-repeat:no-repeat; height: 24px; width: 23px; display:block;text-indent: -9999px;}
+a#repeat_on   {background-image:url("../icons/buttonPlayer/red/repeat_on.png");background-position: 0px 0px; background-repeat:no-repeat; height: 24px; width: 23px; display:block;text-indent: -9999px;}
+a#repeat_off {background-image:url("../icons/buttonPlayer/red/repeat_off.png");background-position: 0px 0px; background-repeat:no-repeat; height: 24px; width: 23px; display:block;text-indent: -9999px;}
+a#undo            {background-image:url("../icons/buttonPlayer/red/undo.png");background-position: 0px 0px; background-repeat:no-repeat; height: 24px; width: 23px; display:block;text-indent: -9999px;}
+a#settings1   {background-image:url("../icons/buttonPlayer/red/settings1.png");background-position: 0px 0px; background-repeat:no-repeat; height: 24px; width: 23px; display:block;text-indent: -9999px;} 

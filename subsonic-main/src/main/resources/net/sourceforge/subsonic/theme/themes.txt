@@ -1,9 +1,10 @@
 # List of available themes.
 
 # Themes by Thomas Bruce Dyrud
-sonic_black "Sonic (Black)"
-sonic_white "Sonic (White)"
-musiccabinet_black "MusicCabinet (Black)"
-musiccabinet_white "MusicCabinet (White)"
 # Darksub theme, courtesy of Don Pearson edited by Chicoray adapted for musiccabinet by rouge
 darksub "darksub"
+musiccabinet_black "MusicCabinet (Black)"
+musiccabinet_white "MusicCabinet (White)"
+sigelsonic "Sigelsonic"
+sonic_black "Sonic (Black)"
+sonic_white "Sonic (White)"

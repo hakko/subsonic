@@ -1,0 +1,413 @@
+/*
+ * CSS styleshet for the sigelsonic (red/black) theme.
+ * Author: sigel (sigel[at]sigelnet.com)
+ *
+ * Originally Based on DarkSub by Thomas Bruce Dyrud (thomasbrucedyrud[at]gmail.com)
+ */
+
+@import "sigelsonic_default.css";
+
+@import "playericonsRed.css";
+
+@import "jquery.mCustomScrollbarRed.css";
+
+@import "sigelsonic/jquery-ui-1.9.2.custom.css";
+
+@import url(http://fonts.googleapis.com/css?family=Fjalla+One);
+
+
+*,html{outline: 0;}
+
+body {
+    background: #000;
+    color: #cdcdcd;
+    font-size: 11px;
+ /*    text-shadow: 1px 1px 0 #111; */
+}
+.mainframe {
+	background-color: #000;
+	background-image:url("../icons/sigelsonic/background.jpg");
+	background-repeat:no-repeat;
+	background-position: middle right;
+	background-attachment: fixed;
+}
+
+.mainframe.bgcolor1 h2 a{
+}
+
+.mainframe.bgcolor1 .headerSelected{
+   background: none repeat scroll 0 0 #9e0000;
+   border: 1px solid #260000;
+   -webkit-border-radius: 4px;
+   -moz-border-radius: 4px;
+   border-radius: 4px;
+   padding: 5px 10px;
+}
+.mainframe.bgcolor1 .detail+.detail{
+	font-size:0.9em;
+}
+.mainframe.bgcolor1 .detail+.detail em{
+	font-style: normal;
+}
+.mainframe.bgcolor1 .detail+.detail+.detail{
+	color: #cdcdcd;
+	font-weight: bold;
+}
+.bgcolor2, .ruleTableHeader, .log {
+    background: #000;
+    border: none!important;
+}
+.bgcolor2.topframe{
+	background: #000 url('../icons/sigelsonic/topbg.png');
+	height: 69px;	
+	border-bottom:1px solid #282828;
+	margin: 0 !important;
+	padding: 0 10px;
+}
+h1,.mainframe h1 a, .albumComment {
+	color: #c40101;
+	text-shadow: 1px 1px #080808;
+}
+.detail {
+	color: #FFF;
+	text-shadow: 1px 1px #080808;
+}
+h1,.mainframe h1 a{
+	font-size: 1.3rem;
+	margin: 15px 0 0;
+	font-family: 'Fjalla One', Arial, serif; font-weight: 400;
+}
+h1 img,.mainframe h1 img{
+	margin: -5px 0 0;
+}
+h2, b, tr {
+	color: #cdcdcd;
+}
+.detailchat:first-child {
+	color: #9f0000;
+}
+.detailchat:last-child {
+	color: #666;
+}
+.detailwrap {
+	color: #CCC;
+}
+.rightframe #nowPlaying h2{
+	font-size: 14px;
+	color: #9f0000;
+	padding-bottom: 8px;
+}
+.rightframe #nowPlaying table{
+	width: 200px;
+	overflow: hidden;
+	background-image:url("../icons/sigelsonic/trans.png");
+	-webkit-border-radius: 6px;
+	-moz-border-radius: 6px;
+	border-radius: 6px;
+}
+.rightframe #nowPlaying td.detail b{
+	display: block;
+	font-size:11px;
+	color: #9f0000;
+	text-align: left;
+	width: 155px;
+	padding:2px 0 0 6px;
+	overflow: hidden;
+}
+.rightframe #nowPlaying td.detail img{
+	width: 30px;
+	float: left;
+}
+.rightframe #nowPlaying td.detail{
+	text-align: left;
+	padding-right: 3px!important;
+}
+.rightframe #nowPlaying td.detail a{
+	font-weight: bold;
+	display: block;
+	width: 150px;
+	overflow: hidden;
+	float: left;
+	padding: 4px;
+}
+.rightframe #nowPlaying td.detail a em{
+	font-style: normal;
+	font-weight: normal;
+	font-size: 0.9em;
+}
+.rightframe #nowPlaying td.detail .forward{
+	clear: both;
+	float: left;
+	border-bottom: 1px dashed #333;
+	width: 90%;
+}
+.rightframe #nowPlaying td.detail .forward a{
+	font-weight: normal;
+	font-size: 0.9em;
+	display: inline;
+	width: auto;
+	clear: both;
+}
+.rightframe .detail{
+	color: #666;
+}
+.rightframe .detail+.detail{
+	font-size: 0.9em;
+	color: #555;
+}
+.rightframe .detail+.detail+span {
+	display: block;
+	color: #fefefe;
+}
+
+.rightframe.bgcolor1 {
+ 	background-color: #000;
+    background-image:url("../icons/sigelsonic/chatbg.jpg");
+	background-repeat: no-repeat;
+	background-position: top left;
+}
+
+.leftframe {
+	background-color: #000;
+	background-image:url("../icons/sigelsonic/sidebg.jpg");
+	background-repeat: repeat-y;	
+}
+.leftframe th h2{
+	font-size: 14px;
+}
+.leftframe th a img{
+/*	display:none; */
+}
+.leftframe p.dense{
+	clear: both;
+	padding: 4px;
+	border-bottom: 1px dashed #1D1D1D;
+	text-shadow: 2px 2px #080808;
+}
+.leftframe p.dense:last-child{
+	border: none;
+}
+
+.leftframe p.dense a:hover{
+	color: #cb0202;
+}
+
+.leftframe p.dense img{
+	margin:-5px 5px 0 -5px;
+}
+.leftframe .bgcolor1{
+background-image: linear-gradient(bottom, #141314 0%, #292829 56%, #383638 78%);
+background-image: -o-linear-gradient(bottom, #141314 0%, #292829 56%, #383638 78%);
+background-image: -moz-linear-gradient(bottom, #141314 0%, #292829 56%, #383638 78%);
+background-image: -webkit-linear-gradient(bottom, #141314 0%, #292829 56%, #383638 78%);
+background-image: -ms-linear-gradient(bottom, #141314 0%, #292829 56%, #383638 78%);
+background-image: -webkit-gradient(
+	linear,
+	left bottom,
+	left top,
+	color-stop(0, #141314),
+	color-stop(0.56, #292829),
+	color-stop(0.78, #383638)
+);
+padding: 4px;
+}
+.leftframe .bgcolor2{
+/*	display: none; */
+}
+.leftframe .bgcolor1 h2{
+ color: red;
+}
+.leftframe #anchor_list a {
+	font-weight: bold;
+	padding: 1px;
+	margin: 1px;
+}
+.leftframe #anchor_list a:hover {
+	background-color: #111;
+	-webkit-border-radius: 3px;
+	-moz-border-radius: 3px;
+	border-radius: 3px;
+	
+}
+table {
+    margin: 0;
+}
+.back {
+    background-image: url("../icons/sigelsonic/back.png");
+}
+.forward, .forwardright {
+    background-image: url("../icons/sigelsonic/forward.png");
+}
+a, a:link, a:active, a:visited, a:link *, a:active *, a:visited * {
+    color: #f8f8f8;
+    outline: 0;
+}
+a:hover, a:hover * {
+    color: #cb0202;
+    text-decoration: none;
+}
+.warning {
+    color: #ff1818;
+}
+html {
+    background-color: transparent;
+}
+label, p {
+    color: #A4A4A4;
+}
+input, select {
+	background: none repeat scroll 0 0 #b3b3b3;
+    border: 1px solid #797979;
+    border-radius: 4px;
+    color: #333333 !important;
+    font-size: 9pt;	
+    padding: 4px;
+	opacity:0.9;
+	filter:alpha(opacity=90); /* For IE8 and earlier */
+}
+input[type=button],input[type=submit]{
+	color: #dfdfdf !important;
+	text-shadow: 1px 1px 1px #111;
+	padding: 4px 11px;
+	font-size:1.2em;
+}
+input[type=button]{
+	background: #7d7e7d; /* Old browsers */
+	background: -moz-linear-gradient(top, #7d7e7d 0%, #4c4c4c 50%, #3d3d3d 53%, #2b2b2b 100%); /* FF3.6+ */
+	background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#7d7e7d), color-stop(50%,#4c4c4c), color-stop(53%,#3d3d3d), color-stop(100%,#2b2b2b)); /* Chrome,Safari4+ */
+	background: -webkit-linear-gradient(top, #7d7e7d 0%,#4c4c4c 50%,#3d3d3d 53%,#2b2b2b 100%); /* Chrome10+,Safari5.1+ */
+	background: -o-linear-gradient(top, #7d7e7d 0%,#4c4c4c 50%,#3d3d3d 53%,#2b2b2b 100%); /* Opera 11.10+ */
+	background: -ms-linear-gradient(top, #7d7e7d 0%,#4c4c4c 50%,#3d3d3d 53%,#2b2b2b 100%); /* IE10+ */
+	background: linear-gradient(top, #7d7e7d 0%,#4c4c4c 50%,#3d3d3d 53%,#2b2b2b 100%); /* W3C */
+	border: 1px solid #111;
+}
+input[type=submit]{
+	background: #a90101; /* Old browsers */
+	background: -moz-linear-gradient(top, #a90101 0%, #9f0000 50%, #910101 53%, #770000 100%); /* FF3.6+ */
+	background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#a90101), color-stop(50%,#9f0000), color-stop(53%,#910101), color-stop(100%,#770000)); /* Chrome,Safari4+ */
+	background: -webkit-linear-gradient(top, #a90101 0%,#9f0000 50%,#910101 53%,#770000 100%); /* Chrome10+,Safari5.1+ */
+	background: -o-linear-gradient(top, #a90101 0%,#9f0000 50%,#910101 53%,#770000 100%); /* Opera 11.10+ */
+	background: -ms-linear-gradient(top, #a90101 0%,#9f0000 50%,#910101 53%,#770000 100%); /* IE10+ */
+	background: linear-gradient(top, #a90101 0%,#9f0000 50%,#910101 53%,#770000 100%); /* W3C */
+	border: 1px solid #540101;
+}
+.bgcolor2, .bgcolor2 div.bgcolor2{
+/*	position: relative!important; */
+}
+
+.detailmini {
+
+}
+
+.detailcolor {
+    color: #cb0202;
+	font-weight: bold;
+}
+.detailcolordark {
+    color: #8f8d8d;
+}
+
+.ruleTableCellDB {
+    white-space: nowrap;
+    font-size: 7pt;
+    margin: 1px;
+    padding: 2px;
+}
+
+img.starSong {
+    margin-right: 3px;
+}
+
+::-webkit-scrollbar {
+width: 10px;
+height: 10px;
+}
+
+::-webkit-scrollbar-track-piece  {
+background-color: #333;
+}
+
+::-webkit-scrollbar-thumb:vertical {
+height: 30px;
+background-color: #5A5A5A;
+}
+
+::-webkit-scrollbar-thumb:horizontal {
+width: 30px;
+background-color: #5A5A5A;
+}
+
+.innerbox {
+	border: 2px solid #e4e4e4;
+	-webkit-border-radius: 3px;
+	-moz-border-radius: 3px;
+	border-radius: 3px;
+	width: 100%;
+	opacity:0.9;
+	filter:alpha(opacity=90); /* For IE8 and earlier */
+	-moz-box-shadow:    0px 0px 5px 2px #000;
+    -webkit-box-shadow: 0px 0px 5px 2px #000;
+    box-shadow:         0px 0px 5px 2px #000;
+}
+
+.innerbox:hover {
+	opacity:0.75;
+	filter:alpha(opacity=75); /* For IE8 and earlier */
+	border: 2px solid #a10200;
+}
+
+.logo {
+	float: left;
+	margin-right: 5px;
+}
+
+.content_main .bgcolor2 {
+	background-color:#121212;
+	opacity:0.75;
+	filter:alpha(opacity=75); /* For IE8 and earlier */
+}
+
+.content_playqueue {
+	background-color: #000;
+	background-image:url("../icons/sigelsonic/listbg.jpg");
+	background-repeat: repeat-x;
+}
+
+#playlistBody .bgcolor1 {
+	background-color:#121212;
+	opacity:0.75;
+	filter:alpha(opacity=75); /* For IE8 and earlier */
+}
+#playlistBody .bgcolor1:first-child {
+	background:none;
+}
+#playlistBody .bgcolor2 {
+	background:none;
+}
+
+span.off {
+    background: #FFF !important;
+}
+
+span.on {
+    background: #9b0200 !important;
+}
+
+span.off:hover {
+    background: #c32523 !important;
+}
+
+#container .centered .bgcolor2 {
+	-webkit-border-radius: 8px;
+	-moz-border-radius: 8px;
+	border-radius: 8px;
+}
+
+#statistics {
+	-webkit-border-radius: 4px;
+	-moz-border-radius: 4px;
+	border-radius: 4px;
+	background-color: #242424;
+	padding: 6px;
+	color: #df3333;
+}
