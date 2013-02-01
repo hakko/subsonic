@@ -45,7 +45,7 @@ Before you can use the new features, some configuration needs to be done.<br>
     <tr>
         <td style="font-size:26pt;padding:20pt">3</td>
         <td>
-            <div style="font-size:14pt;padding-top:20pt"><a href="personalSettings.view#lastFmLink">Set up a last.fm account &raquo;</a></div>
+            <div style="font-size:14pt;padding-top:20pt"><a href="lastFmSettings.view">Set up a last.fm account &raquo;</a></div>
             <div style="padding-top:5pt">MusicCabinet heavily depends on information fetched from last.fm. To get personal music recommendations, keep track of play statistics, starred songs and much more, you need a last.fm account. It's free and anonymous.</div>
         </td>
     </tr>
