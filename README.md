@@ -54,6 +54,6 @@ Installation
 3. Unzip subsonic-installer-standalone.zip to preferred install directory.
 4. In the install directory, tweak and run the subsonic.sh script to start your new server.
 
-Log in to Subsonic as usual (localhost:4040) and click the "Configure MusicCabinet" link (the header). It should be pretty self-explanatory from there.
+Log in to Subsonic as usual (localhost:4040, as admin/admin) and click the "Configure MusicCabinet" link (the header). It should be pretty self-explanatory from there.
 
 Please note that the initial import of data from last.fm will take a while, roughly 30 minutes per 10.000 tracks. You can follow the progress meanwhile but MusicCabinet features won't work until it's finished.
