@@ -31,7 +31,7 @@ The build process assumes that you have Java 7 or later and Maven 3 installed, a
     mvn install
 
     Clone git@github.com:hakko/subsonic.git to $workspace/subsonic.
-    cd $workspace/subsonic/subsonic-main
+    cd $workspace/subsonic
     mvn install
     cd $workspace/subsonic/subsonic-booter
     mvn install
@@ -39,7 +39,7 @@ The build process assumes that you have Java 7 or later and Maven 3 installed, a
     cd $workspace/subsonic/subsonic-installer-standalone
     mvn package
 
-To also build a .war files that runs on a Tomcat server, execute:
+To also build a .war file that runs on a Tomcat server, execute:
 
     cd $workspace/subsonic/subsonic-main
     mvn -P tomcat package
