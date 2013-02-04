@@ -1,0 +1,482 @@
+@import url('http://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800');
+
+/*
+ * CSS styleshet for the "Rolleshark" theme. Based on Sonic White. Inspired by Grooveshark.
+ *
+ * Author: Roni "Rolle" Laukkarinen (roni.laukkarinen[at]gmail.com)
+ *
+ */
+
+@import "sonic.css";
+
+a, a:link, a:visited, a img, input[type=submit] {
+    -webkit-transition: all 0.22s ease-out;
+    -moz-transition: all 0.22s ease-out;
+    -o-transition: all 0.22s ease-out;
+}
+
+a:hover, a:hover img {
+	-ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=100)";
+	filter: alpha(opacity=100);
+    -moz-opacity: 1;
+    -khtml-opacity: 1;
+    opacity: 1 !important;
+}
+
+/* The primary background colour. */
+.bgcolor1 {
+    background-color: #FFFFFF;
+}
+
+/* The secondary background colour, light blue, primary theme colour. */
+.bgcolor2, .ruleTableHeader, .log {
+    background-color: #ffffff;
+    color: #444444;
+}
+
+.topframe table table a, .topframe table table a img {
+	-ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=70)";
+	filter: alpha(opacity=70);
+    -moz-opacity: 0.7;
+    -khtml-opacity: 0.7;
+    opacity: 0.7;
+}
+
+body.topframe {
+background-color: #303030;
+border-bottom: solid 1px #111;
+z-index: 400;
+background-color: #2c2c2c;
+background-image: -moz-linear-gradient(top, #333333, #222222);
+background-image: -ms-linear-gradient(top, #333333, #222222);
+background-image: -webkit-gradient(linear, 0 0, 0 100%, from(#333333), to(#222222));
+background-image: -webkit-linear-gradient(top, #333333, #222222);
+background-image: -o-linear-gradient(top, #333333, #222222);
+background-image: linear-gradient(top, #333333, #222222);
+background-repeat: repeat-x;
+filter: progid:DXImageTransform.Microsoft.Gradient(startColorstr='#333333', endColorstr='#222222', GradientType=0);
+-webkit-box-shadow: 0px 1px 2px 0px rgba(0, 0, 0, 0.25);
+-moz-box-shadow: 0px 1px 2px 0px rgba(0, 0, 0, 0.25);
+box-shadow: 0px 1px 2px 0px rgba(0, 0, 0, 0.25);
+overflow:hidden;
+}
+
+.topframe form img {
+display:none;
+}
+
+.topframe a, .topframe a:link, .topframe a:visited {
+color:#bbbbbb;
+text-decoration:none;
+font-weight:400;
+}
+
+/*.topframe table table td:nth-child(1) br,
+.topframe table table td:nth-child(2) br,
+.topframe table table td:nth-child(3) br,
+.topframe table table td:nth-child(4) br,
+.topframe table table td:nth-child(5) br,
+.topframe table table td:nth-child(6) br,
+.topframe table table td:nth-child(7) br,
+.topframe table table td:nth-child(8) br,
+.topframe table table td:nth-child(9) br
+{
+display:none;
+}*/
+
+.topframe table table img {
+margin-bottom:10px;
+}
+
+.topframe table table td:last-child img {
+margin-bottom:0 !important;
+}
+.topframe table table {
+height:42px;
+overflow:hidden;
+table-layout:fixed;
+display:block;
+}
+
+.topframe a:hover {
+color:#ffffff;
+}
+
+.topframe #query {
+background:url(../icons/rolleshark/search.png) no-repeat 295px 7px #fff;
+position: relative;
+display: block;
+width: 284px;
+height: 28px;
+padding: 0 22px 0 12px;
+margin: 0;
+border: solid 1px #111;
+-webkit-border-radius: 15px;
+-moz-border-radius: 15px;
+border-radius: 15px;
+-webkit-box-shadow: 0 1px 0 0 #242424,inset 0 1px 0 0 #b1b1b1;
+-moz-box-shadow: 0 1px 0 0 #242424,inset 0 1px 0 0 #b1b1b1;
+box-shadow: 0 1px 0 0 #242424,inset 0 1px 0 0 #b1b1b1;
+}
+
+/*.topframe table table td img {
+border: solid 1px #111;
+border-right: 0;
+padding: 0;
+margin: 0;
+color: #bbb;
+line-height: 28px;
+background-color: #404040;
+background-image: -moz-linear-gradient(top, #444444, #3b3b3b);
+background-image: -ms-linear-gradient(top, #444444, #3b3b3b);
+background-image: -webkit-gradient(linear, 0 0, 0 100%, from(#444444), to(#3b3b3b));
+background-image: -webkit-linear-gradient(top, #444444, #3b3b3b);
+background-image: -o-linear-gradient(top, #444444, #3b3b3b);
+background-image: linear-gradient(top, #444444, #3b3b3b);
+background-repeat: repeat-x;
+filter: progid:DXImageTransform.Microsoft.Gradient(startColorstr='#444444', endColorstr='#3b3b3b', GradientType=0);
+-webkit-box-shadow: 0 1px 0 0 #303030,inset 0 1px 0 0 #4e4e4e;
+-moz-box-shadow: 0 1px 0 0 #303030,inset 0 1px 0 0 #4e4e4e;
+box-shadow: 0 1px 0 0 #303030,inset 0 1px 0 0 #4e4e4e;
+}*/
+
+.bgcolor3 {
+    background-color: #D2D2D2;
+}
+
+/* Background colour for selected header, log etc. */
+.headerSelected {
+    color: #696969;
+    background-color: #FFFFFF;
+    border: 1px solid #696969;
+}
+
+/* The primary foreground color (black). */
+body {
+    color: #696969;
+    background-color: #DDDDDD;
+}
+
+/* The secondary foreground colour used for h1, details etc. */
+h1, .detail {
+    color: #696969;
+}
+
+/* Foreground colour used for h2, bold and tr. */
+h2, b, tr {
+    color: #696969;
+}
+
+/* Main frame image & colour */
+.mainframe {
+    background-color: #FFFFFF;
+}
+
+/* Back image */
+.back {
+    background-image:url( "../icons/rolleshark/back.png" );
+}
+
+/* Forward image */
+.forward {
+    background-image:url( "../icons/rolleshark/forward.png" );
+}
+
+a {
+	outline:0px; 
+}
+
+/* Link colour */
+a:link, a:active, a:visited, a:link *, a:active *, a:visited * {
+    color: #333333;
+}
+
+/* Link hover colour */
+a:hover, a:hover * {
+    color: #DD2915;
+text-decoration:none;
+}
+
+/* Colour for warning messages. */
+.warning {
+    color: #e7238b;
+}
+
+label, p {
+	color: #696969;
+}
+
+::-webkit-scrollbar {
+    width: 12px;
+    height: 12px;
+}
+::-webkit-scrollbar-track {
+    -webkit-box-shadow: inset 0 0 2px rgba(0,0,0,0.2);
+    -webkit-border-radius: 10px;
+    border-radius: 10px;
+}
+::-webkit-scrollbar-thumb {
+    -webkit-border-radius: 10px;
+    border-radius: 10px;
+    background: rgba(200, 200, 200, 0.4);
+    -webkit-box-shadow: inset 0 0 2px rgba(0,0,0,0.2);
+}
+::-webkit-scrollbar-thumb:window-inactive {
+    background: rgba(200, 200, 200, 0.2);
+}
+
+.outerpair2 #bioArt {
+box-shadow:none !important;
+-webkit-box-shadow:none !important;
+padding: 5px !important;
+background: #fff;
+border: solid 1px #ccc !important;
+width:90px !important;
+margin:-9px 0 0 -9px;
+left:0;
+top:0;
+height:90px !important;
+z-index:100 !important;
+position:relative;
+display:block;
+}
+
+.shadowbox, .outerpair1 {
+background:none !important;
+}
+
+.mainframe .detailSelected, .mainframe .detail {
+padding:0 15px;
+}
+.mainframe .detail em {
+font-style:normal !important;
+font-weight:600;
+}
+.outerpair1 {
+padding:10px 10px 0 10px;
+}
+
+/* jewel case: */
+
+/*
+.outerpair2 {
+background: url(../icons/rolleshark/jewel.png) 0 0 no-repeat !important;
+width: 90px;
+height: 82px;
+}
+.innerbox img {
+width: 72px;
+height: 72px;
+top: 3px;
+left: 12px;
+}
+*/
+
+/* compact disk */
+
+.outerpair2 {
+background: url(../icons/rolleshark/cd.png) 0 0 no-repeat !important;
+width: 86px;
+height: 86px;
+}
+.innerbox img {
+width: 82px;
+height: 82px;
+top: 0px;
+left: 0px;
+}
+
+/* jewel case: hover */
+
+/*
+.outerpair1:hover .outerpair2 {
+background: url(../icons/rolleshark/jewel.png) 0 0 no-repeat !important;
+width: 90px;
+height: 82px;
+}
+.outerpair1:hover .innerbox img {
+width: 72px;
+height: 72px;
+top: 3px;
+left: 12px;
+}
+*/
+
+/* vinyl: hover */
+
+/*
+.outerpair1:hover .outerpair2 {
+background: url(../icons/rolleshark/vinyl.png) 0 0 no-repeat !important;
+width: 96px;
+height: 76px;
+}
+.outerpair1:hover .innerbox img {
+width: 72px;
+height: 72px;
+top: 1px;
+left: 2px;
+}
+*/
+
+.outerpair2 {
+display: block;
+position: relative;
+text-indent: -1000em;
+-webkit-transition: none !important;
+-moz-transition: none !important;
+-o-transition: none !important;
+}
+
+.innerbox img {
+margin: 0;
+padding: 0;
+z-index: -10;
+position: absolute;
+-webkit-transition: none !important;
+-moz-transition: none !important;
+-o-transition: none !important;
+}
+
+.mainframe #query, .mainframe form:first-child img, .mainframe form[name=searchForm] {
+display:none;
+}
+
+.headerSelected {
+background:#666;
+padding:3px 8px;
+border-radius:5px;
+-moz-border-radius:5px;
+-khtml-border-radius:5px;
+-o-border-radius:5px;
+-webkit-border-radius:5px;
+border:0;
+}
+
+.headerSelected, .headerSelected a {
+color:#ffffff !important;
+}
+
+body.leftframe {
+background:url(../icons/rolleshark/bg.gif);
+}
+
+select {
+padding: 3px;
+-webkit-border-radius: 4px;
+-moz-border-radius: 4px;
+border-radius: 4px;
+-webkit-box-shadow: 0 3px 0 #ccc, 0 -1px #fff inset;
+-moz-box-shadow: 0 3px 0 #ccc, 0 -1px #fff inset;
+box-shadow: 0 3px 0 #ccc, 0 -1px #fff inset;
+background: #f2f2f2;
+color: #888;
+border: none;
+outline: none;
+display: inline-block;
+-webkit-appearance: none;
+-moz-appearance: none;
+appearance: none;
+cursor: pointer;
+}
+
+.leftframe select {
+margin:0 0 20px 0;
+}
+
+.mainframe div.bgcolor2 {
+background-color: #303030;
+border-bottom: solid 1px #111;
+z-index: 400;
+background-color: #2c2c2c;
+background-image: -moz-linear-gradient(top, #333333, #222222);
+background-image: -ms-linear-gradient(top, #333333, #222222);
+background-image: -webkit-gradient(linear, 0 0, 0 100%, from(#333333), to(#222222));
+background-image: -webkit-linear-gradient(top, #333333, #222222);
+background-image: -o-linear-gradient(top, #333333, #222222);
+background-image: linear-gradient(top, #333333, #222222);
+background-repeat: repeat-x;
+filter: progid:DXImageTransform.Microsoft.Gradient(startColorstr='#333333', endColorstr='#222222', GradientType=0);
+-webkit-box-shadow: 0px 1px 2px 0px rgba(0, 0, 0, 0.25);
+-moz-box-shadow: 0px 1px 2px 0px rgba(0, 0, 0, 0.25);
+box-shadow: 0px 1px 2px 0px rgba(0, 0, 0, 0.25);
+}
+
+div.bgcolor2 img {
+display:block !important;
+}
+
+input[type=password],input[type=text], textarea {
+    font-family:"Open Sans",arial;
+    display: block;    
+    border-style: solid;    
+    border-width: 1px;    
+    border-color: #dedede;    
+    margin-bottom: 20px;    
+    font-size: 1.2em;    
+    padding: 11px 15px;    
+    width: 90%;    
+    color: #777;    
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1) inset;    
+    -moz-box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1) inset;    
+    -webkit-box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1) inset;    
+    transition: border 0.15s linear 0s, box-shadow 0.15s linear 0s, color 0.15s linear 0s;    
+    -webkit-transition: border 0.15s linear 0s, box-shadow 0.15s linear 0s, color 0.15s linear 0s;    
+    -moz-transition: border 0.15s linear 0s, box-shadow 0.15s linear 0s, color 0.15s linear 0s;    
+    -o-transition: border 0.15s linear 0s, box-shadow 0.15s linear 0s, color 0.15s linear 0s;    
+}
+
+input[type=password]:focus,input[type=text]:focus, textarea:focus {
+    color: #333;    
+    border-color: #d11226;    
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1) inset, 0 0 8px #d11226;    
+    -moz-box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1) inset, 0 0 8px #d11226;    
+    -webkit-box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1) inset, 0 0 8px #d11226;    
+    outline: 0 none; 
+}
+
+input[type=submit], input[type=button] {
+    width: auto;
+    color: #ffffff;
+    font-size: 14px;
+    font-family:"Open Sans", Helvetica, Arial, sans-serif;
+    font-weight: bold;
+    padding: 10px 20px;
+    text-align: center;
+    background: #DD2915;
+    -webkit-border-radius: 3px;
+    -moz-border-radius: 3px;
+    -o-border-radius: 3px;
+    -ms-border-radius: 3px;
+    -khtml-border-radius: 3px;
+    border-radius: 3px;
+    -moz-box-shadow: inset 0 0 30px 0px rgba(0, 0, 0, 0.15);
+    -webkit-box-shadow: inset 0 0 30px 0px rgba(0, 0, 0, 0.15);
+    box-shadow: inset 0 0 30px 0px rgba(0, 0, 0, 0.15);
+    border: none;
+    cursor: pointer;
+    -webkit-transition: background .1s linear;
+    -moz-transition: background .1s linear;
+    -o-transition: background .1s linear;
+    -ms-transition: background .1s linear;
+    transition: background .1s linear;
+    -webkit-transform: translateZ(0);
+    outline: 0;
+}
+
+input[type=button]:hover, input[type=button]:active,input[type=submit]:hover, input[type=submit]:active {
+    color: #fff;
+    background: #EE7F18;
+    -moz-box-shadow: inset 0 0 0 0 rgba(0, 0, 0, 0);
+    -webkit-box-shadow: inset 0 0 0 0 rgba(0, 0, 0, 0);
+    box-shadow: inset 0 0 0 0 rgba(0, 0, 0, 0);
+}
+
+span.on, span.off {
+    text-shadow:none !important;
+    font-weight:700 !important;
+    font-size:14px;
+}
+
+.mainframe div form input[type=button] {
+    margin:20px 0;
+}
