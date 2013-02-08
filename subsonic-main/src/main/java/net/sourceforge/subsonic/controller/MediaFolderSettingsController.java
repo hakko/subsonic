@@ -76,6 +76,7 @@ public class MediaFolderSettingsController extends ParameterizableViewController
         ModelAndView result = super.handleRequestInternal(request, response);
         map.put("mediaFolders", mediaFolderService.getAllMediaFolders());
         map.put("indexBeingCreated", libraryUpdateService.isIndexBeingCreated());
+        map.put("filesMissingMetadata", libraryBrowserService.getFilesMissingMetadata());
         map.put("databaseAvailable", dbAdmService.isRDBMSRunning()
 				&& dbAdmService.isPasswordCorrect(settingsService.getMusicCabinetJDBCPassword())
 				&& dbAdmService.isDatabaseUpdated());

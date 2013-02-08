@@ -61,11 +61,24 @@
 
 <c:if test="${model.databaseAvailable and not model.indexBeingCreated}">
 <div style="padding-top:30px">
-	<div class="forward"><b>Scan media folders</b></div>
+	<h2>Scan media folders</h2>
 		<a href="searchSettings.view?update=offline">Offline scan</a> | 
 		<a href="searchSettings.view?update=normal">Normal scan</a> | 
 		<a href="searchSettings.view?update=full">Full scan</a>
 		<c:import url="helpToolTip.jsp"><c:param name="topic" value="searchsettingsscan"/></c:import>
+</div>
+</c:if>
+
+<c:if test="${fn:length(model.filesMissingMetadata) > 0}">
+<div style="padding-top:30px">
+	<h2>Files lacking tags</h2>
+	These files lack either artist or track tag, and are ignored by MusicCabinet.
+	<c:import url="helpToolTip.jsp"><c:param name="topic" value="filesmissingmetadata"/></c:import>
+	<ul>
+	<c:forEach items="${model.filesMissingMetadata}" var="file">
+		<li>${file}</li>
+	</c:forEach>
+	</ul>
 </div>
 </c:if>
 
