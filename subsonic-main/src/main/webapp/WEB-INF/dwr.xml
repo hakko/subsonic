@@ -49,8 +49,6 @@
         <convert converter="bean" match="net.sourceforge.subsonic.ajax.PlaylistInfo"/>
         <convert converter="bean" match="net.sourceforge.subsonic.ajax.PlaylistInfo$Entry"/>
         <convert converter="bean" match="net.sourceforge.subsonic.ajax.UploadInfo"/>
-        <convert converter="bean" match="net.sourceforge.subsonic.ajax.LyricsInfo"/>
-        <convert converter="bean" match="net.sourceforge.subsonic.ajax.CoverArtInfo"/>
         <convert converter="bean" match="net.sourceforge.subsonic.ajax.ChatService$Message"/>
         <convert converter="bean" match="net.sourceforge.subsonic.ajax.ChatService$Messages"/>
         <convert converter="bean" match="net.sourceforge.subsonic.ajax.LibraryStatus"/>
