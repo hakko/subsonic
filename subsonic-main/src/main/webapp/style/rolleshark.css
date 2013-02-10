@@ -480,3 +480,49 @@ span.on, span.off {
 .mainframe div form input[type=button] {
     margin:20px 0;
 }
+
+
+.rightframe, .leftframe {
+overflow-x:hidden;
+}
+
+.rightframe {
+padding:0 0 0 5px;
+}
+
+.rightframe #nowPlaying a[rel=zoom] {
+background: url(../icons/rolleshark/jewel.png) 0 0 no-repeat !important;
+width: 90px;
+height: 82px;
+margin:0 6px 0 0;
+}
+
+.rightframe #nowPlaying a[rel=zoom] img {
+width: 72px;
+height: 72px;
+top: 3px;
+left: 12px;
+}
+
+.rightframe #nowPlaying a[rel=zoom] {
+display: block;
+position: relative;
+text-indent: -1000em;
+-webkit-transition: none !important;
+-moz-transition: none !important;
+-o-transition: none !important;
+}
+
+.rightframe #nowPlaying a[rel=zoom] img {
+margin: 0;
+padding: 0;
+z-index: -10;
+position: absolute;
+-webkit-transition: none !important;
+-moz-transition: none !important;
+-o-transition: none !important;
+}
+
+.rightframe .detail, .rightframe .detailselected {
+white-space: normal;
+}
