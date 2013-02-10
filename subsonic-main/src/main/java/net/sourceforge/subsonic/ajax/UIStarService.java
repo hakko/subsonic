@@ -26,6 +26,7 @@ import net.sourceforge.subsonic.service.SettingsService;
 import org.directwebremoting.WebContext;
 import org.directwebremoting.WebContextFactory;
 
+import com.github.hakko.musiccabinet.exception.ApplicationException;
 import com.github.hakko.musiccabinet.service.StarService;
 
 /**
@@ -42,33 +43,35 @@ public class UIStarService {
     private StarService starService;
     
     public void starArtist(int artistId) {
-    	LOG.debug("star artist " + artistId);
     	starService.starArtist(getUser(), artistId);
     }
 
     public void unstarArtist(int artistId) {
-    	LOG.debug("unstar artist " + artistId);
     	starService.unstarArtist(getUser(), artistId);
     }
 
     public void starAlbum(int albumId) {
-    	LOG.debug("star album " + albumId);
     	starService.starAlbum(getUser(), albumId);
     }
 
     public void unstarAlbum(int albumId) {
-    	LOG.debug("unstar album " + albumId);
     	starService.unstarAlbum(getUser(), albumId);
     }
 
     public void starTrack(int trackId) {
-    	System.out.println("star track " + trackId);
-    	starService.starTrack(getUser(), trackId);
+    	try {
+			starService.starTrack(getUser(), trackId);
+		} catch (ApplicationException e) {
+			LOG.warn("Could not post starred track as loved song on last.fm!", e);
+		}
     }
 
     public void unstarTrack(int trackId) {
-    	System.out.println("unstar track " + trackId);
-    	starService.unstarTrack(getUser(), trackId);
+    	try {
+			starService.unstarTrack(getUser(), trackId);
+		} catch (ApplicationException e) {
+			LOG.warn("Could not post unstarred track as unloved song on last.fm!", e);
+		}
     }
 
     private String getUser() {
