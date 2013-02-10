@@ -37,9 +37,7 @@ import net.sourceforge.subsonic.domain.MediaFolder;
 
 import com.github.hakko.musiccabinet.domain.model.library.LastFmUser;
 import com.github.hakko.musiccabinet.service.LibraryUpdateService;
-import com.github.hakko.musiccabinet.service.lastfm.ScrobbledTracksService;
-import com.github.hakko.musiccabinet.service.lastfm.UserRecommendedArtistsService;
-import com.github.hakko.musiccabinet.service.lastfm.UserTopArtistsService;
+import com.github.hakko.musiccabinet.service.lastfm.LastFmSettingsService;
 import com.github.hakko.musiccabinet.service.library.LibraryScannerService;
 
 public class SearchService {
@@ -50,12 +48,10 @@ public class SearchService {
     private MediaFolderService mediaFolderService;
     private SettingsService settingsService;
 
-    private ScrobbledTracksService scrobbledTracksService;
-    private UserTopArtistsService userTopArtistsService;
-    private UserRecommendedArtistsService userRecommendedArtistsService;
     private LibraryUpdateService libraryUpdateService;
     private LibraryScannerService libraryScannerService;
     private LibraryStatusService libraryStatusService;
+    private LastFmSettingsService lastFmSettingsService;
 
     /**
      * Generates the search index.  If the index already exists it will be
@@ -120,7 +116,7 @@ public class SearchService {
     private void updateSearchServices() {
     	String lastFmUser = settingsService.getMusicCabinetLastFMUsername();
     	if (lastFmUser.length() > 0) {
-        	scrobbledTracksService.setLastFMUsername(lastFmUser);
+    		lastFmSettingsService.setLastFmUsername(lastFmUser);
     	}
     	List<String> lastFmUsers = settingsService.getAllLastFmUsers();
     	if (lastFmUsers.size() > 0) {
@@ -129,8 +125,7 @@ public class SearchService {
     			users.add(new LastFmUser(user));
     		}
     		LOG.debug("Found users " + users);
-    		userTopArtistsService.setUsers(users);
-    		userRecommendedArtistsService.setUsers(users);
+    		lastFmSettingsService.setLastFmUsers(users);
     	}
     }
     
@@ -200,18 +195,6 @@ public class SearchService {
 		this.mediaFolderService = mediaFolderService;
 	}
 
-	public void setScrobbledTracksService(ScrobbledTracksService scrobbledTracksService) {
-		this.scrobbledTracksService = scrobbledTracksService;
-	}
-	
-	public void setUserTopArtistsService(UserTopArtistsService userTopArtistsService) {
-		this.userTopArtistsService = userTopArtistsService;
-	}
-
-	public void setUserRecommendedArtistsService(UserRecommendedArtistsService userRecommendedArtistsService) {
-		this.userRecommendedArtistsService = userRecommendedArtistsService;
-	}
-
 	public void setLibraryUpdateService(LibraryUpdateService libraryUpdateService) {
 		this.libraryUpdateService = libraryUpdateService;
 	}
@@ -222,6 +205,10 @@ public class SearchService {
 
 	public void setLibraryStatusService(LibraryStatusService libraryStatusService) {
 		this.libraryStatusService = libraryStatusService;
+	}
+
+	public void setLastFmSettingsService(LastFmSettingsService lastFmSettingsService) {
+		this.lastFmSettingsService = lastFmSettingsService;
 	}
 
 }

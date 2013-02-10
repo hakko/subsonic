@@ -108,9 +108,7 @@
         <property name="libraryUpdateService" ref="libraryUpdateService"/>
         <property name="libraryStatusService" ref="ajaxLibraryStatusService"/>
         <property name="libraryScannerService" ref="libraryScannerService"/>
-        <property name="scrobbledTracksService" ref="scrobbledTracksService"/>
-        <property name="userTopArtistsService" ref="userTopArtistsService"/>
-        <property name="userRecommendedArtistsService" ref="userRecommendedArtistsService"/>
+        <property name="lastFmSettingsService" ref="lastFmSettingsService"/>
     </bean>
 
     <bean id="networkService" class="net.sourceforge.subsonic.service.NetworkService" init-method="init">
@@ -244,22 +242,17 @@
 
 	<!-- MUSICCABINET copy/paste (propertyConfigurer is Subsonic specific) -->
 	<bean id="propertyConfigurer"
-		class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer"
-		depends-on="settingsService">
+		class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
 		<!-- This allows for overriding any property found in property file
 		     by setting a corresponding system.property variable.
+		     Default behavior is using test database, to use production database,
+		     do System.setProperty("jdbc.url", "prod url") or run JVM with -D.
 		-->
 		<property name="systemPropertiesModeName" value="SYSTEM_PROPERTIES_MODE_OVERRIDE"/>
-		<property name="properties">
-			<props>
-				<prop key="musiccabinet.jdbc.driverClassName">org.postgresql.Driver</prop>
-				<prop key="musiccabinet.jdbc.url">jdbc:postgresql://localhost:5432/musiccabinet</prop>
-				<prop key="musiccabinet.jdbc.initialurl">jdbc:postgresql://localhost:5432/template1</prop>
-				<prop key="musiccabinet.jdbc.username">postgres</prop>
-			</props>
+		<property name="location">
+			<value>classpath:local.jdbc.properties</value>
 		</property>
 	</bean>
-
 
 	<!-- TASK EXECUTOR -->
 
@@ -305,6 +298,10 @@
 		<property name="lastFmDao" ref="lastFmDao"/>
 		<property name="starDao" ref="starDao"/>
 		<property name="musicDao" ref="musicDao"/>
+		<property name="libraryBrowserDao" ref="libraryBrowserDao"/>
+		<property name="lastFmSettingsService" ref="lastFmSettingsService"/>
+		<property name="trackLoveClient" ref="trackLoveClient"/>
+		<property name="trackUnLoveClient" ref="trackUnLoveClient"/>
 	</bean>
 
 	<bean id="lastFmService" class="com.github.hakko.musiccabinet.service.LastFmService">
@@ -366,10 +363,14 @@
 	<bean id="throttleService" class="com.github.hakko.musiccabinet.service.lastfm.ThrottleService">
 	</bean>
 
+	<bean id="lastFmSettingsService" class="com.github.hakko.musiccabinet.service.lastfm.LastFmSettingsService">
+	</bean>
+
 	<bean id="artistInfoService" class="com.github.hakko.musiccabinet.service.lastfm.ArtistInfoService">
 		<property name="artistInfoClient" ref="artistInfoClient"/>
 		<property name="artistInfoDao" ref="artistInfoDao"/>
 		<property name="webserviceHistoryService" ref="webserviceHistoryService"/>
+		<property name="lastFmSettingsService" ref="lastFmSettingsService"/>
 	</bean>	
 
 	<bean id="albumInfoService" class="com.github.hakko.musiccabinet.service.lastfm.AlbumInfoService">
@@ -399,24 +400,36 @@
 	<bean id="scrobbledTracksService" class="com.github.hakko.musiccabinet.service.lastfm.ScrobbledTracksService">
 		<property name="scrobbledTracksClient" ref="scrobbledTracksClient"/>
 		<property name="trackPlayCountDao" ref="trackPlayCountDao"/>
+		<property name="lastFmSettingsService" ref="lastFmSettingsService"/>
 	</bean>
 
 	<bean id="tagInfoService" class="com.github.hakko.musiccabinet.service.lastfm.TagInfoService">
 		<property name="tagInfoClient" ref="tagInfoClient"/>
 		<property name="tagInfoDao" ref="tagInfoDao"/>
 		<property name="tagDao" ref="tagDao"/>
+		<property name="lastFmSettingsService" ref="lastFmSettingsService"/>
 	</bean>
 
 	<bean id="userTopArtistsService" class="com.github.hakko.musiccabinet.service.lastfm.UserTopArtistsService">
 		<property name="userTopArtistsClient" ref="userTopArtistsClient"/>
 		<property name="userTopArtistsDao" ref="userTopArtistsDao"/>
 		<property name="webserviceHistoryService" ref="webserviceHistoryService"/>
+		<property name="lastFmSettingsService" ref="lastFmSettingsService"/>
 	</bean>
 
 	<bean id="userRecommendedArtistsService" class="com.github.hakko.musiccabinet.service.lastfm.UserRecommendedArtistsService">
 		<property name="userRecommendedArtistsClient" ref="userRecommendedArtistsClient"/>
 		<property name="userRecommendedArtistsDao" ref="userRecommendedArtistsDao"/>
 		<property name="webserviceHistoryService" ref="webserviceHistoryService"/>
+		<property name="lastFmSettingsService" ref="lastFmSettingsService"/>
+	</bean>
+
+	<bean id="userLovedTracksService" class="com.github.hakko.musiccabinet.service.lastfm.UserLovedTracksService">
+		<property name="userLovedTracksClient" ref="userLovedTracksClient"/>
+		<property name="userLovedTracksDao" ref="userLovedTracksDao"/>
+		<property name="webserviceHistoryService" ref="webserviceHistoryService"/>
+		<property name="lastFmSettingsService" ref="lastFmSettingsService"/>
+		<property name="trackLoveClient" ref="trackLoveClient"/>
 	</bean>
 
 	<bean id="groupWeeklyArtistChartService" class="com.github.hakko.musiccabinet.service.lastfm.GroupWeeklyArtistChartService">
@@ -488,6 +501,9 @@
 	
 	
 	<!--  LAST.FM WS CLIENTS -->
+	<bean id="trackLoveClient" class="com.github.hakko.musiccabinet.ws.lastfm.TrackLoveClient"/>
+	<bean id="trackUnLoveClient" class="com.github.hakko.musiccabinet.ws.lastfm.TrackUnLoveClient"/>
+
 	<bean id="updateNowPlayingClient" class="com.github.hakko.musiccabinet.ws.lastfm.UpdateNowPlayingClient"/>
 
 	<bean id="scrobbleClient" class="com.github.hakko.musiccabinet.ws.lastfm.ScrobbleClient"/>
@@ -546,6 +562,11 @@
 		<property name="webserviceHistoryService" ref="webserviceHistoryService"/>
 		<property name="throttleService" ref="throttleService"/>
 		<property name="lastFmDao" ref="lastFmDao"/>
+	</bean>
+
+	<bean id="userLovedTracksClient" class="com.github.hakko.musiccabinet.ws.lastfm.UserLovedTracksClient">
+		<property name="webserviceHistoryService" ref="webserviceHistoryService"/>
+		<property name="throttleService" ref="throttleService"/>
 	</bean>
 
 	<bean id="groupWeeklyArtistChartClient" class="com.github.hakko.musiccabinet.ws.lastfm.GroupWeeklyArtistChartClient">
@@ -664,6 +685,10 @@
 	</bean>
 
 	<bean id="userRecommendedArtistsDao" class="com.github.hakko.musiccabinet.dao.jdbc.JdbcUserRecommendedArtistsDao">
+		<property name="dataSource" ref="dataSource"/>
+	</bean>
+
+	<bean id="userLovedTracksDao" class="com.github.hakko.musiccabinet.dao.jdbc.JdbcUserLovedTracksDao">
 		<property name="dataSource" ref="dataSource"/>
 	</bean>
 
