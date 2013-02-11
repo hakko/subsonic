@@ -31,7 +31,7 @@ The build process assumes that you have Java 7 or later and Maven 3 installed, a
     mvn install
 
     Clone git@github.com:hakko/subsonic.git to $workspace/subsonic.
-    cd $workspace/subsonic/subsonic-main
+    cd $workspace/subsonic
     mvn install
     cd $workspace/subsonic/subsonic-booter
     mvn install
@@ -39,7 +39,7 @@ The build process assumes that you have Java 7 or later and Maven 3 installed, a
     cd $workspace/subsonic/subsonic-installer-standalone
     mvn package
 
-To also build a .war files that runs on a Tomcat server, execute:
+To also build a .war file that runs on a Tomcat server, execute:
 
     cd $workspace/subsonic/subsonic-main
     mvn -P tomcat package
@@ -54,6 +54,6 @@ Installation
 3. Unzip subsonic-installer-standalone.zip to preferred install directory.
 4. In the install directory, tweak and run the subsonic.sh script to start your new server.
 
-Log in to Subsonic as usual (localhost:4040) and click the "Configure MusicCabinet" link (the header). It should be pretty self-explanatory from there.
+Log in to Subsonic as usual (localhost:4040, as admin/admin) and click the "Configure MusicCabinet" link (the header). It should be pretty self-explanatory from there.
 
 Please note that the initial import of data from last.fm will take a while, roughly 30 minutes per 10.000 tracks. You can follow the progress meanwhile but MusicCabinet features won't work until it's finished.
