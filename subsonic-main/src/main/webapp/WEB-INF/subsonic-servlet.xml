@@ -222,6 +222,7 @@
         <property name="playlistGeneratorService" ref="playlistGeneratorService"/>
 		<property name="webserviceHistoryService" ref="webserviceHistoryService"/>
         <property name="settingsService" ref="settingsService"/>
+        <property name="lastFmSettingsService" ref="lastFmSettingsService"/>
         <property name="searchService" ref="searchService"/>
         <property name="mediaFolderService" ref="mediaFolderService"/>
         <property name="libraryUpdateService" ref="libraryUpdateService"/>

@@ -24,6 +24,7 @@ import org.springframework.web.servlet.mvc.SimpleFormController;
 import com.github.hakko.musiccabinet.service.DatabaseAdministrationService;
 import com.github.hakko.musiccabinet.service.LibraryUpdateService;
 import com.github.hakko.musiccabinet.service.PlaylistGeneratorService;
+import com.github.hakko.musiccabinet.service.lastfm.LastFmSettingsService;
 import com.github.hakko.musiccabinet.service.lastfm.WebserviceHistoryService;
 
 /**
@@ -39,6 +40,7 @@ public class MusicCabinetSettingsController extends SimpleFormController impleme
     private PlaylistGeneratorService playlistService;
     
     private SettingsService settingsService;
+    private LastFmSettingsService lastFmSettingsService;
     private SearchService searchService;
     private MediaFolderService mediaFolderService;
     private LibraryUpdateService libraryUpdateService;
@@ -76,6 +78,7 @@ public class MusicCabinetSettingsController extends SimpleFormController impleme
         command.setLastFmLanguage(settingsService.getLastFmLanguage());
         command.setAvailableLanguages(getAvailableLanguages());
         command.setClearLanguageSpecificContent(false);
+        command.setSyncStarredAndLovedTracks(settingsService.isSyncStarredAndLovedTracks());
         
         return command;
     }
@@ -138,6 +141,7 @@ public class MusicCabinetSettingsController extends SimpleFormController impleme
         settingsService.setRadioMinimumSongLength(command.getRadioMinimumSongLength());
         settingsService.setRadioMaximumSongLength(command.getRadioMaximumSongLength());
         settingsService.setLastFmLanguage(command.getLastFmLanguage());
+        settingsService.setSyncStarredAndLovedTracks(command.isSyncStarredAndLovedTracks());
         settingsService.save();
 
         playlistService.setAllowedTrackLengthInterval(
@@ -161,6 +165,8 @@ public class MusicCabinetSettingsController extends SimpleFormController impleme
 		playlistService.setAllowedTrackLengthInterval(
 				settingsService.getRadioMinimumSongLength(),
 				settingsService.getRadioMaximumSongLength());
+		lastFmSettingsService.setSyncStarredAndLovedTracks(
+				settingsService.isSyncStarredAndLovedTracks());
 	}
     
     // Spring setters
@@ -177,7 +183,11 @@ public class MusicCabinetSettingsController extends SimpleFormController impleme
     	this.settingsService = settingsService;
     }
  
-    public void setSearchService(SearchService searchService) {
+    public void setLastFmSettingsService(LastFmSettingsService lastFmSettingsService) {
+		this.lastFmSettingsService = lastFmSettingsService;
+	}
+
+	public void setSearchService(SearchService searchService) {
     	this.searchService = searchService;
     }
 

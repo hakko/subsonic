@@ -40,6 +40,7 @@ public class MusicCabinetSettingsCommand {
 	private String lastFmLanguage;
 	private Map<String, String> availableLanguages;
 	private boolean clearLanguageSpecificContent;
+	private boolean syncStarredAndLovedTracks;
 	
 	public boolean isDatabaseRunning() {
 		return isDatabaseRunning;
@@ -231,6 +232,14 @@ public class MusicCabinetSettingsCommand {
 
 	public void setClearLanguageSpecificContent(boolean clearLanguageSpecificContent) {
 		this.clearLanguageSpecificContent = clearLanguageSpecificContent;
+	}
+
+	public boolean isSyncStarredAndLovedTracks() {
+		return syncStarredAndLovedTracks;
+	}
+
+	public void setSyncStarredAndLovedTracks(boolean syncStarredAndLovedTracks) {
+		this.syncStarredAndLovedTracks = syncStarredAndLovedTracks;
 	}
 
 }

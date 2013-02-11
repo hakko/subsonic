@@ -134,6 +134,16 @@
              <c:import url="helpToolTip.jsp"><c:param name="topic" value="clearlanguagespecificcontent"/></c:import>
             </td>
            </tr>
+           <tr>
+            <td>Sync starred and loved tracks</td>
+            <td>
+               <form:select path="syncStarredAndLovedTracks">
+                <form:option value="true" label="Yes"/>
+                <form:option value="false" label="No"/>
+               </form:select>
+             <c:import url="helpToolTip.jsp"><c:param name="topic" value="syncstarredandlovedtracks"/></c:import>
+            </td>
+           </tr>
           </table>
           <input type="submit" value="Save" style="margin-right:0.3em"/>
           <br/><br/><br/>

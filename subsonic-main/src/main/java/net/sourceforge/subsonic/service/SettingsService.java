@@ -133,6 +133,7 @@ public class SettingsService {
     private static final String KEY_MUSICCABINET_RADIO_MINIMUM_SONG_LENGTH = "MusicCabinetRadioMinimumSongLength";
     private static final String KEY_MUSICCABINET_RADIO_MAXIMUM_SONG_LENGTH = "MusicCabinetRadioMaximumSongLength";
     private static final String KEY_MUSICCABINET_LAST_FM_LANGUAGE = "MusicCabinetLastFmLanguage";
+    private static final String KEY_MUSICCABINET_SYNC_STARRED_AND_LOVED_TRACKS = "MusicCabinetSyncStarredAndLovedTracks";
     
     // Default values.
     private static final String DEFAULT_INDEX_STRING = "A B C D E F G H I J K L M N O P Q R S T U V W X-Z(XYZ)";
@@ -200,6 +201,7 @@ public class SettingsService {
     private static final int DEFAULT_MUSICCABINET_RADIO_MINIMUM_SONG_LENGTH = 45;
     private static final int DEFAULT_MUSICCABINET_RADIO_MAXIMUM_SONG_LENGTH = 600;
     private static final String DEFAULT_MUSICCABINET_LAST_FM_LANGUAGE = Locale.ENGLISH.getLanguage();
+    private static final boolean DEFAULT_MUSICCABINET_SYNC_STARRED_AND_LOVED_TRACKS = true;
     
     // Array of obsolete keys.  Used to clean property file.
     private static final List<String> OBSOLETE_KEYS = Arrays.asList("PortForwardingPublicPort", "PortForwardingLocalPort", 
@@ -1316,6 +1318,15 @@ public class SettingsService {
 
     public void setLastFmLanguage(String language) {
     	setProperty(KEY_MUSICCABINET_LAST_FM_LANGUAGE, language);
+    }
+
+    public boolean isSyncStarredAndLovedTracks() {
+    	return getBoolean(KEY_MUSICCABINET_SYNC_STARRED_AND_LOVED_TRACKS,
+    			DEFAULT_MUSICCABINET_SYNC_STARRED_AND_LOVED_TRACKS);
+    }
+
+    public void setSyncStarredAndLovedTracks(boolean syncStarredAndLovedTracks) {
+    	setBoolean(KEY_MUSICCABINET_SYNC_STARRED_AND_LOVED_TRACKS, syncStarredAndLovedTracks);
     }
 
 }
