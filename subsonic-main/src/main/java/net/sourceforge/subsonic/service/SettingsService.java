@@ -132,6 +132,7 @@ public class SettingsService {
     private static final String KEY_MUSICCABINET_PREFER_LAST_FM_ARTWORK = "MusicCabinetPreferLastFmArtwork";
     private static final String KEY_MUSICCABINET_RADIO_MINIMUM_SONG_LENGTH = "MusicCabinetRadioMinimumSongLength";
     private static final String KEY_MUSICCABINET_RADIO_MAXIMUM_SONG_LENGTH = "MusicCabinetRadioMaximumSongLength";
+    private static final String KEY_MUSICCABINET_LAST_FM_LANGUAGE = "MusicCabinetLastFmLanguage";
     
     // Default values.
     private static final String DEFAULT_INDEX_STRING = "A B C D E F G H I J K L M N O P Q R S T U V W X-Z(XYZ)";
@@ -198,6 +199,7 @@ public class SettingsService {
     private static final boolean DEFAULT_MUSICCABINET_PREFER_LAST_FM_ARTWORK = true;
     private static final int DEFAULT_MUSICCABINET_RADIO_MINIMUM_SONG_LENGTH = 45;
     private static final int DEFAULT_MUSICCABINET_RADIO_MAXIMUM_SONG_LENGTH = 600;
+    private static final String DEFAULT_MUSICCABINET_LAST_FM_LANGUAGE = Locale.ENGLISH.getLanguage();
     
     // Array of obsolete keys.  Used to clean property file.
     private static final List<String> OBSOLETE_KEYS = Arrays.asList("PortForwardingPublicPort", "PortForwardingLocalPort", 
@@ -1305,6 +1307,15 @@ public class SettingsService {
 
     public void setRadioMaximumSongLength(int maxLength) {
     	setInt(KEY_MUSICCABINET_RADIO_MAXIMUM_SONG_LENGTH, maxLength);
+    }
+
+    public String getLastFmLanguage() {
+    	return properties.getProperty(KEY_MUSICCABINET_LAST_FM_LANGUAGE,
+    			DEFAULT_MUSICCABINET_LAST_FM_LANGUAGE);
+    }
+
+    public void setLastFmLanguage(String language) {
+    	setProperty(KEY_MUSICCABINET_LAST_FM_LANGUAGE, language);
     }
 
 }

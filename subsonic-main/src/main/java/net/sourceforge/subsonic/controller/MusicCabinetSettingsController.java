@@ -1,9 +1,13 @@
 package net.sourceforge.subsonic.controller;
 
 import static java.lang.String.format;
+import static java.util.Locale.ENGLISH;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
+import java.util.Map;
+import java.util.TreeMap;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -20,6 +24,7 @@ import org.springframework.web.servlet.mvc.SimpleFormController;
 import com.github.hakko.musiccabinet.service.DatabaseAdministrationService;
 import com.github.hakko.musiccabinet.service.LibraryUpdateService;
 import com.github.hakko.musiccabinet.service.PlaylistGeneratorService;
+import com.github.hakko.musiccabinet.service.lastfm.WebserviceHistoryService;
 
 /**
  * Controller for the MusicCabinet settings page.
@@ -37,6 +42,7 @@ public class MusicCabinetSettingsController extends SimpleFormController impleme
     private SearchService searchService;
     private MediaFolderService mediaFolderService;
     private LibraryUpdateService libraryUpdateService;
+    private WebserviceHistoryService webserviceHistoryService;
     
     protected Object formBackingObject(HttpServletRequest request) throws Exception {
         MusicCabinetSettingsCommand command = new MusicCabinetSettingsCommand();
@@ -67,10 +73,21 @@ public class MusicCabinetSettingsController extends SimpleFormController impleme
         command.setRadioMaximumSongLength(settingsService.getRadioMaximumSongLength());
         command.setRelatedArtistsSamplerArtistCount(settingsService.getRelatedArtistsSamplerArtistCount());
         command.setPreferLastFmArtwork(settingsService.isPreferLastFmArtwork());
+        command.setLastFmLanguage(settingsService.getLastFmLanguage());
+        command.setAvailableLanguages(getAvailableLanguages());
+        command.setClearLanguageSpecificContent(false);
         
         return command;
     }
-    
+
+    private Map<String, String> getAvailableLanguages() {
+    	Map<String, String> languages = new TreeMap<>();
+		for (Locale locale : Locale.getAvailableLocales()) {
+			languages.put(locale.getDisplayLanguage(ENGLISH), locale.getLanguage());
+		}
+		return languages;
+    }
+
     protected void doSubmitAction(Object comm) throws Exception {
         MusicCabinetSettingsCommand command = (MusicCabinetSettingsCommand) comm;
 
@@ -105,6 +122,11 @@ public class MusicCabinetSettingsController extends SimpleFormController impleme
         		command.setPasswordAttemptWrong(true);
         	}
         }
+
+        if (command.isClearLanguageSpecificContent()) {
+        	LOG.debug("clear language specific content");
+        	webserviceHistoryService.clearLanguageSpecificInvocations();
+        }
         
         settingsService.setArtistRadioArtistCount(command.getArtistRadioArtistCount());
         settingsService.setArtistRadioTotalCount(command.getArtistRadioTotalCount());
@@ -115,6 +137,7 @@ public class MusicCabinetSettingsController extends SimpleFormController impleme
         settingsService.setPreferLastFmArtwork(command.isPreferLastFmArtwork());
         settingsService.setRadioMinimumSongLength(command.getRadioMinimumSongLength());
         settingsService.setRadioMaximumSongLength(command.getRadioMaximumSongLength());
+        settingsService.setLastFmLanguage(command.getLastFmLanguage());
         settingsService.save();
 
         playlistService.setAllowedTrackLengthInterval(
@@ -150,7 +173,7 @@ public class MusicCabinetSettingsController extends SimpleFormController impleme
     	this.playlistService = playlistService;
     }
 
-    public void setSettingsService(SettingsService settingsService) {
+	public void setSettingsService(SettingsService settingsService) {
     	this.settingsService = settingsService;
     }
  
@@ -164,6 +187,10 @@ public class MusicCabinetSettingsController extends SimpleFormController impleme
 
 	public void setLibraryUpdateService(LibraryUpdateService libraryUpdateService) {
 		this.libraryUpdateService = libraryUpdateService;
+	}
+
+	public void setWebserviceHistoryService(WebserviceHistoryService webserviceHistoryService) {
+		this.webserviceHistoryService = webserviceHistoryService;
 	}
    
 }

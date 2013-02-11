@@ -113,6 +113,27 @@
              <c:import url="helpToolTip.jsp"><c:param name="topic" value="preferlastfmartwork"/></c:import>
             </td>
            </tr>
+           <tr>
+            <td>Biography and tag info language</td>
+            <td>
+				<select name="lastFmLanguage">
+					<c:forEach items="${command.availableLanguages}" var="language">
+						<option value="${language.value}" <c:if test="${language.value eq command.lastFmLanguage}">selected</c:if>>${language.key}</option>
+					</c:forEach>
+				</select>
+             <c:import url="helpToolTip.jsp"><c:param name="topic" value="lastfmlanguage"/></c:import>
+            </td>
+           </tr>
+           <tr>
+            <td>Clear language specific content</td>
+            <td>
+               <form:select path="clearLanguageSpecificContent">
+                <form:option value="false" label="No"/>
+                <form:option value="true" label="Yes"/>
+               </form:select>
+             <c:import url="helpToolTip.jsp"><c:param name="topic" value="clearlanguagespecificcontent"/></c:import>
+            </td>
+           </tr>
           </table>
           <input type="submit" value="Save" style="margin-right:0.3em"/>
           <br/><br/><br/>

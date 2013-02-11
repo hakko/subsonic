@@ -220,6 +220,7 @@
         <property name="formView" value="musicCabinetSettings"/>
         <property name="databaseAdministrationService" ref="databaseAdministrationService"/>
         <property name="playlistGeneratorService" ref="playlistGeneratorService"/>
+		<property name="webserviceHistoryService" ref="webserviceHistoryService"/>
         <property name="settingsService" ref="settingsService"/>
         <property name="searchService" ref="searchService"/>
         <property name="mediaFolderService" ref="mediaFolderService"/>

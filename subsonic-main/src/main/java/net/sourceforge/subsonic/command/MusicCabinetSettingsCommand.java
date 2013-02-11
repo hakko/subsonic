@@ -1,6 +1,7 @@
 package net.sourceforge.subsonic.command;
 
 import java.util.List;
+import java.util.Map;
 
 import com.github.hakko.musiccabinet.domain.model.aggr.SearchIndexUpdateProgress;
 
@@ -36,6 +37,9 @@ public class MusicCabinetSettingsCommand {
 	private int radioMaximumSongLength;
 	private int relatedArtistsSamplerArtistCount;
 	private boolean preferLastFmArtwork;
+	private String lastFmLanguage;
+	private Map<String, String> availableLanguages;
+	private boolean clearLanguageSpecificContent;
 	
 	public boolean isDatabaseRunning() {
 		return isDatabaseRunning;
@@ -203,6 +207,30 @@ public class MusicCabinetSettingsCommand {
 
 	public void setPreferLastFmArtwork(boolean preferLastFmArtwork) {
 		this.preferLastFmArtwork = preferLastFmArtwork;
+	}
+
+	public String getLastFmLanguage() {
+		return lastFmLanguage;
+	}
+
+	public void setLastFmLanguage(String lastFmLanguage) {
+		this.lastFmLanguage = lastFmLanguage;
+	}
+
+	public Map<String, String> getAvailableLanguages() {
+		return availableLanguages;
+	}
+
+	public void setAvailableLanguages(Map<String, String> availableLanguages) {
+		this.availableLanguages = availableLanguages;
+	}
+
+	public boolean isClearLanguageSpecificContent() {
+		return clearLanguageSpecificContent;
+	}
+
+	public void setClearLanguageSpecificContent(boolean clearLanguageSpecificContent) {
+		this.clearLanguageSpecificContent = clearLanguageSpecificContent;
 	}
 
 }
