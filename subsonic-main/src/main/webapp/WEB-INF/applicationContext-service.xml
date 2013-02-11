@@ -242,15 +242,19 @@
 
 	<!-- MUSICCABINET copy/paste (propertyConfigurer is Subsonic specific) -->
 	<bean id="propertyConfigurer"
-		class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
+		class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer"
+		depends-on="settingsService">
 		<!-- This allows for overriding any property found in property file
 		     by setting a corresponding system.property variable.
-		     Default behavior is using test database, to use production database,
-		     do System.setProperty("jdbc.url", "prod url") or run JVM with -D.
 		-->
 		<property name="systemPropertiesModeName" value="SYSTEM_PROPERTIES_MODE_OVERRIDE"/>
-		<property name="location">
-			<value>classpath:local.jdbc.properties</value>
+		<property name="properties">
+			<props>
+				<prop key="musiccabinet.jdbc.driverClassName">org.postgresql.Driver</prop>
+				<prop key="musiccabinet.jdbc.url">jdbc:postgresql://localhost:5432/musiccabinet</prop>
+				<prop key="musiccabinet.jdbc.initialurl">jdbc:postgresql://localhost:5432/template1</prop>
+				<prop key="musiccabinet.jdbc.username">postgres</prop>
+			</props>
 		</property>
 	</bean>
 
@@ -495,6 +499,7 @@
         <property name="tagTopArtistsService" ref="tagTopArtistsService"/>
         <property name="userTopArtistsService" ref="userTopArtistsService"/>
         <property name="userRecommendedArtistsService" ref="userRecommendedArtistsService"/>
+        <property name="userLovedTracksService" ref="userLovedTracksService"/>
         <property name="searchIndexUpdateExecutorService" ref="searchIndexUpdateExecutorService"/>
         <property name="searchIndexUpdateSettingsService" ref="searchIndexUpdateSettingsService"/>
 	</bean>
