@@ -1541,18 +1541,14 @@ public class RESTController extends MultiActionController {
         request = wrapRequest(request);
         String artist = request.getParameter("artist");
         String title = request.getParameter("title");
-        // TODO : look up track id by artist + title
-//        LyricsInfo lyrics = lyricsService.getLyrics(artist, title);
+        String lyrics = libraryBrowserService.getLyricsForTrack(artist, title);
 
         XMLBuilder builder = createXMLBuilder(request, response, true);
         AttributeSet attributes = new AttributeSet();
-//        if (lyrics.getArtist() != null) {
-//            attributes.add("artist", lyrics.getArtist());
-//        }
-//        if (lyrics.getTitle() != null) {
-//            attributes.add("title", lyrics.getTitle());
-//        }
-        builder.add("lyrics", attributes, null, true);
+
+        attributes.add("artist", artist);
+        attributes.add("title", title);
+        builder.add("lyrics", attributes, lyrics, true);
 
         builder.endAll();
         response.getWriter().print(builder);
