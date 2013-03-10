@@ -18,9 +18,6 @@
  */
 package net.sourceforge.subsonic.controller;
 
-import static org.apache.commons.lang.StringUtils.replace;
-import static org.apache.commons.lang.StringUtils.trim;
-
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -62,8 +59,6 @@ public class ArtistDetailsController extends ParameterizableViewController {
 	private SettingsService settingsService;
 	private StarService starService;
 	
-	private static final String LICENSE = "User-contributed text is available under the Creative Commons By-SA License and may also be available under the GNU FDL.";
-	
     @Override
     protected ModelAndView handleRequestInternal(HttpServletRequest request, HttpServletResponse response) throws Exception {
         Map<String, Object> map = new HashMap<String, Object>();
@@ -74,7 +69,6 @@ public class ArtistDetailsController extends ParameterizableViewController {
         UserSettings userSettings = settingsService.getUserSettings(user.getUsername());
 
         ArtistInfo artistInfo = artistInfoService.getDetailedArtistInfo(artistId);
-        artistInfo.setBioContent(trim(replace(artistInfo.getBioContent(), LICENSE, "")));
         boolean artistStarred = starService.isArtistStarred(userSettings.getLastFmUsername(), artistId);
         List<Album> albums = mediaFileService.getAlbums(musicBrainzService.getDiscography(artistId,
         		userSettings.isAlbumOrderByYear(), userSettings.isAlbumOrderAscending()));
