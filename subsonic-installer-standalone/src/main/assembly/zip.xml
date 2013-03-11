@@ -15,9 +15,15 @@
 	<dependencySets>
 		<dependencySet>
 			<outputDirectory>subsonic-installer-standalone</outputDirectory>
-			<outputFileNameMapping>${artifact.artifactId}.${artifact.extension}</outputFileNameMapping>
+			<outputFileNameMapping>subsonic.war</outputFileNameMapping>
 			<includes>
 				<include>net.sourceforge.subsonic:subsonic-main:war</include>
+			</includes>
+		</dependencySet>
+		<dependencySet>
+			<outputDirectory>subsonic-installer-standalone</outputDirectory>
+			<outputFileNameMapping>subsonic-booter-jar-with-dependencies.jar</outputFileNameMapping>
+			<includes>
 				<include>net.sourceforge.subsonic:subsonic-booter:jar</include>
 			</includes>
 		</dependencySet>

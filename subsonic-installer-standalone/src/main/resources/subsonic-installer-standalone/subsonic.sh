@@ -120,10 +120,10 @@ ${JAVA} -Xmx${SUBSONIC_MAX_MEMORY}m \
   -Dsubsonic.defaultPodcastFolder=${SUBSONIC_DEFAULT_PODCAST_FOLDER} \
   -Dsubsonic.defaultPlaylistFolder=${SUBSONIC_DEFAULT_PLAYLIST_FOLDER} \
   -Dmusiccabinet.log.fileName=${SUBSONIC_HOME}/musiccabinet.log \
-  -Dsubsonic.war=subsonic-main.war \
+  -Dsubsonic.war=subsonic.war \
   -Djava.awt.headless=true \
   -verbose:gc \
-  -jar subsonic-booter.jar > ${LOG} 2>&1 &
+  -jar subsonic-booter-jar-with-dependencies.jar > ${LOG} 2>&1 &
 
 # Write pid to pidfile if it is defined.
 if [ $SUBSONIC_PIDFILE ]; then
