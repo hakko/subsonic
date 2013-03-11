@@ -119,6 +119,7 @@ ${JAVA} -Xmx${SUBSONIC_MAX_MEMORY}m \
   -Dsubsonic.defaultMusicFolder=${SUBSONIC_DEFAULT_MUSIC_FOLDER} \
   -Dsubsonic.defaultPodcastFolder=${SUBSONIC_DEFAULT_PODCAST_FOLDER} \
   -Dsubsonic.defaultPlaylistFolder=${SUBSONIC_DEFAULT_PLAYLIST_FOLDER} \
+  -Dmusiccabinet.log.fileName=${SUBSONIC_HOME}/musiccabinet.log \
   -Dsubsonic.war=subsonic-main.war \
   -Djava.awt.headless=true \
   -verbose:gc \
@@ -132,4 +133,3 @@ fi
 if [ $quiet = 0 ]; then
     echo Started Subsonic [PID $!, ${LOG}]
 fi
-
