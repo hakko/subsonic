@@ -18,16 +18,16 @@
  */
 package net.sourceforge.subsonic.domain;
 
-import net.sourceforge.subsonic.Logger;
-
-import org.apache.commons.lang.StringUtils;
-
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
+
+import net.sourceforge.subsonic.Logger;
+
+import org.apache.commons.lang.StringUtils;
 
 /**
  * A playlist is a list of music files that are associated to a remote player.
@@ -44,9 +44,9 @@ public class Playlist {
     public static final String PLAY = "P";
     public static final String ENQUEUE = "E";
     public static final String ADD = "A";
-    
+
     private static final Logger LOG = Logger.getLogger(Playlist.class);
-    
+
     /**
      * The index of the current song, or -1 is the end of the playlist is reached.
      * Note that both the index and the playlist size can be zero.
@@ -60,9 +60,9 @@ public class Playlist {
     private int indexBackup;
 
     public Playlist() {
-    	
+
     }
-    
+
     /**
      * Returns the user-defined name of the playlist.
      *
@@ -177,7 +177,7 @@ public class Playlist {
         this.index = Math.max(0, Math.min(index, size() - 1));
         setStatus(Status.PLAYING);
     }
-    
+
     public synchronized void setIndex(MediaFile mediaFile) {
     	this.index = files.indexOf(mediaFile);
     }
@@ -266,6 +266,7 @@ public class Playlist {
         MediaFile currentFile = getCurrentFile();
 
         Comparator<MediaFile> comparator = new Comparator<MediaFile>() {
+            @Override
             public int compare(MediaFile a, MediaFile b) {
                 switch (sortOrder) {
                     case TRACK:
@@ -408,7 +409,7 @@ public class Playlist {
         filesBackup = new ArrayList<MediaFile>(files);
         indexBackup = index;
     }
-    
+
     /**
      * Playlist status.
      */
@@ -425,7 +426,8 @@ public class Playlist {
         ARTIST,
         ALBUM
     }
-    
+
+    @Override
     public String toString() {
     	StringBuilder sb = new StringBuilder();
     	sb.append("Playlist " + hashCode() + ":");
