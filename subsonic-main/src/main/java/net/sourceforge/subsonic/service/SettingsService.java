@@ -38,15 +38,6 @@ import java.util.Map;
 import java.util.Properties;
 import java.util.StringTokenizer;
 
-import org.apache.commons.io.IOUtils;
-import org.apache.commons.lang.StringUtils;
-import org.apache.http.client.HttpClient;
-import org.apache.http.client.ResponseHandler;
-import org.apache.http.client.methods.HttpGet;
-import org.apache.http.impl.client.BasicResponseHandler;
-import org.apache.http.impl.client.DefaultHttpClient;
-import org.apache.http.params.HttpConnectionParams;
-
 import net.sourceforge.subsonic.Logger;
 import net.sourceforge.subsonic.dao.AvatarDao;
 import net.sourceforge.subsonic.dao.InternetRadioDao;
@@ -58,6 +49,15 @@ import net.sourceforge.subsonic.domain.User;
 import net.sourceforge.subsonic.domain.UserSettings;
 import net.sourceforge.subsonic.util.StringUtil;
 import net.sourceforge.subsonic.util.Util;
+
+import org.apache.commons.io.IOUtils;
+import org.apache.commons.lang.StringUtils;
+import org.apache.http.client.HttpClient;
+import org.apache.http.client.ResponseHandler;
+import org.apache.http.client.methods.HttpGet;
+import org.apache.http.impl.client.BasicResponseHandler;
+import org.apache.http.impl.client.DefaultHttpClient;
+import org.apache.http.params.HttpConnectionParams;
 
 /**
  * Provides persistent storage of application settings and preferences.
@@ -134,10 +134,10 @@ public class SettingsService {
     private static final String KEY_MUSICCABINET_RADIO_MAXIMUM_SONG_LENGTH = "MusicCabinetRadioMaximumSongLength";
     private static final String KEY_MUSICCABINET_LAST_FM_LANGUAGE = "MusicCabinetLastFmLanguage";
     private static final String KEY_MUSICCABINET_SYNC_STARRED_AND_LOVED_TRACKS = "MusicCabinetSyncStarredAndLovedTracks";
-    
+
     // Default values.
-    private static final String DEFAULT_INDEX_STRING = "A B C D E F G H I J K L M N O P Q R S T U V W X-Z(XYZ)";
-    private static final String DEFAULT_IGNORED_ARTICLES = "The El La Los Las Le Les";
+    public static final String DEFAULT_INDEX_STRING = "A B C D E F G H I J K L M N O P Q R S T U V W X-Z(XYZ)";
+    public static final String DEFAULT_IGNORED_ARTICLES = "The El La Los Las Le Les";
     private static final String DEFAULT_PLAYLIST_FOLDER = Util.getDefaultPlaylistFolder();
     private static final String DEFAULT_MUSIC_FILE_TYPES = "mp3 ogg oga aac m4a flac wav wma aif aiff ape mpc shn";
     private static final String DEFAULT_VIDEO_FILE_TYPES = "flv avi mpg mpeg mp4 m4v mkv mov wmv ogv divx m2ts";
@@ -202,9 +202,9 @@ public class SettingsService {
     private static final int DEFAULT_MUSICCABINET_RADIO_MAXIMUM_SONG_LENGTH = 600;
     private static final String DEFAULT_MUSICCABINET_LAST_FM_LANGUAGE = Locale.ENGLISH.getLanguage();
     private static final boolean DEFAULT_MUSICCABINET_SYNC_STARRED_AND_LOVED_TRACKS = true;
-    
+
     // Array of obsolete keys.  Used to clean property file.
-    private static final List<String> OBSOLETE_KEYS = Arrays.asList("PortForwardingPublicPort", "PortForwardingLocalPort", 
+    private static final List<String> OBSOLETE_KEYS = Arrays.asList("PortForwardingPublicPort", "PortForwardingLocalPort",
     		"DownsamplingCommand", "AutoCoverBatch", "MusicMask", "VideoMask", "CoverArtMask", "Shortcuts", "CoverArtFileTypes");
 
     private static final String LOCALES_FILE = "/net/sourceforge/subsonic/i18n/locales.txt";
@@ -254,7 +254,7 @@ public class SettingsService {
         }
 
         save(false);
-        
+
         System.setProperty("musiccabinet.jdbc.password", getMusicCabinetJDBCPassword());
     }
 
@@ -466,19 +466,19 @@ public class SettingsService {
     public String getShareUrlPrefix() {
     	return StringUtils.trimToEmpty(properties.getProperty(KEY_SHARE_URL_PREFIX));
     }
-    
+
     public void setShareUrlPrefix(String shareUrlPrefix) {
     	setProperty(KEY_SHARE_URL_PREFIX, shareUrlPrefix);
     }
-    
+
     public String getLyricsUrl() {
     	return properties.getProperty(KEY_LYRICS_URL, DEFAULT_LYRICS_URL);
     }
-    
+
     public void setLyricsUrl(String lyricsUrl) {
     	setProperty(KEY_LYRICS_URL, lyricsUrl);
     }
-    
+
     /**
      * Returns the number of days between automatic index creation, of -1 if automatic index
      * creation is disabled.
@@ -800,7 +800,7 @@ public class SettingsService {
     public long getSettingsChanged() {
         return Long.parseLong(properties.getProperty(KEY_SETTINGS_CHANGED, String.valueOf(DEFAULT_SETTINGS_CHANGED)));
     }
-    
+
     public void setSettingsChanged() {
     	properties.setProperty(KEY_SETTINGS_CHANGED, String.valueOf(System.currentTimeMillis()));
     }
@@ -925,7 +925,7 @@ public class SettingsService {
     public List<String> getAllLastFmUsers() {
     	return userDao.getAllLastFmUsers();
     }
-    
+
     /**
      * Returns all internet radio stations. Disabled stations are not returned.
      *
@@ -1017,11 +1017,11 @@ public class SettingsService {
     	UserSettings userSettings = getUserSettings(username);
     	return userSettings.isLastFmEnabled() ? userSettings.getLastFmUsername() : null;
     }
-    
+
     public void clearUserSettingsCache(String username) {
     	cachedUserSettings.remove(username);
     }
-    
+
     private UserSettings createDefaultUserSettings(String username) {
         UserSettings settings = new UserSettings(username);
         settings.setShowNowPlayingEnabled(true);
@@ -1084,7 +1084,7 @@ public class SettingsService {
         	save(true);
         }
     }
-    
+
     /**
      * Updates settings for the given username.
      *
@@ -1205,11 +1205,11 @@ public class SettingsService {
     public void setVersionService(VersionService versionService) {
         this.versionService = versionService;
     }
-    
+
     public String getMusicCabinetLastFMUsername() {
     	return properties.getProperty(KEY_MUSICCABINET_LASTFM_USERNAME, "");
     }
-    
+
     public void setMusicCabinetLastFMUsername(String username) {
     	properties.setProperty(KEY_MUSICCABINET_LASTFM_USERNAME, username);
     }
@@ -1225,70 +1225,71 @@ public class SettingsService {
     	}
     	return password;
     }
-    
+
     public void setMusicCabinetJDBCPassword(String password) {
     	// storing the password hex-encoded obviously isn't "safe", but better than clear-text.
     	properties.setProperty(KEY_MUSICCABINET_JDBC_PASSWORD, utf8HexEncode(password));
     }
+
     public int getArtistRadioArtistCount() {
-    	return getInt(KEY_MUSICCABINET_ARTIST_RADIO_ARTIST_COUNT, 
-    			DEFAULT_MUSICCABINET_ARTIST_RADIO_ARTIST_COUNT);
+        return getInt(KEY_MUSICCABINET_ARTIST_RADIO_ARTIST_COUNT,
+                DEFAULT_MUSICCABINET_ARTIST_RADIO_ARTIST_COUNT);
     }
-    
+
     public void setArtistRadioArtistCount(int artistCount) {
-    	setInt(KEY_MUSICCABINET_ARTIST_RADIO_ARTIST_COUNT, artistCount);
+        setInt(KEY_MUSICCABINET_ARTIST_RADIO_ARTIST_COUNT, artistCount);
     }
 
     public int getArtistRadioTotalCount() {
-    	return getInt(KEY_MUSICCABINET_ARTIST_RADIO_TOTAL_COUNT, 
-    			DEFAULT_MUSICCABINET_ARTIST_RADIO_TOTAL_COUNT);
+        return getInt(KEY_MUSICCABINET_ARTIST_RADIO_TOTAL_COUNT,
+                DEFAULT_MUSICCABINET_ARTIST_RADIO_TOTAL_COUNT);
     }
-    
+
     public void setArtistRadioTotalCount(int totalCount) {
-    	setInt(KEY_MUSICCABINET_ARTIST_RADIO_TOTAL_COUNT, totalCount);
+        setInt(KEY_MUSICCABINET_ARTIST_RADIO_TOTAL_COUNT, totalCount);
     }
-    
+
     public int getArtistTopTracksTotalCount() {
-    	return getInt(KEY_MUSICCABINET_ARTIST_TOP_TRACKS_TOTAL_COUNT, 
-    			DEFAULT_MUSICCABINET_ARTIST_TOP_TRACKS_TOTAL_COUNT);
+        return getInt(KEY_MUSICCABINET_ARTIST_TOP_TRACKS_TOTAL_COUNT,
+                DEFAULT_MUSICCABINET_ARTIST_TOP_TRACKS_TOTAL_COUNT);
     }
-    
+
     public void setArtistTopTracksTotalCount(int totalCount) {
-    	setInt(KEY_MUSICCABINET_ARTIST_TOP_TRACKS_TOTAL_COUNT, totalCount);
+        setInt(KEY_MUSICCABINET_ARTIST_TOP_TRACKS_TOTAL_COUNT, totalCount);
     }
-    
+
     public int getGenreRadioArtistCount() {
-    	return getInt(KEY_MUSICCABINET_GENRE_RADIO_ARTIST_COUNT, 
-    			DEFAULT_MUSICCABINET_GENRE_RADIO_ARTIST_COUNT);
+        return getInt(KEY_MUSICCABINET_GENRE_RADIO_ARTIST_COUNT,
+                DEFAULT_MUSICCABINET_GENRE_RADIO_ARTIST_COUNT);
     }
-    
+
     public void setGenreRadioArtistCount(int artistCount) {
-    	setInt(KEY_MUSICCABINET_GENRE_RADIO_ARTIST_COUNT, artistCount);
+        setInt(KEY_MUSICCABINET_GENRE_RADIO_ARTIST_COUNT, artistCount);
     }
 
     public int getGenreRadioTotalCount() {
-    	return getInt(KEY_MUSICCABINET_GENRE_RADIO_TOTAL_COUNT, 
-    			DEFAULT_MUSICCABINET_GENRE_RADIO_TOTAL_COUNT);
+        return getInt(KEY_MUSICCABINET_GENRE_RADIO_TOTAL_COUNT,
+                DEFAULT_MUSICCABINET_GENRE_RADIO_TOTAL_COUNT);
     }
-    
+
     public void setGenreRadioTotalCount(int totalCount) {
-    	setInt(KEY_MUSICCABINET_GENRE_RADIO_TOTAL_COUNT, totalCount);
+        setInt(KEY_MUSICCABINET_GENRE_RADIO_TOTAL_COUNT, totalCount);
     }
-    
+
     public int getRelatedArtistsSamplerArtistCount() {
-    	return getInt(KEY_MUSICCABINET_RELATED_ARTISTS_SAMPLER_ARTIST_COUNT, 
-    			DEFAULT_MUSICCABINET_RELATED_ARTISTS_SAMPLER_ARTIST_COUNT);
+        return getInt(KEY_MUSICCABINET_RELATED_ARTISTS_SAMPLER_ARTIST_COUNT,
+                DEFAULT_MUSICCABINET_RELATED_ARTISTS_SAMPLER_ARTIST_COUNT);
     }
-    
+
     public void setRelatedArtistsSamplerArtistCount(int artistCount) {
     	setInt(KEY_MUSICCABINET_RELATED_ARTISTS_SAMPLER_ARTIST_COUNT, artistCount);
     }
 
     public boolean isPreferLastFmArtwork() {
-    	return getBoolean(KEY_MUSICCABINET_PREFER_LAST_FM_ARTWORK, 
-    			DEFAULT_MUSICCABINET_PREFER_LAST_FM_ARTWORK);
+        return getBoolean(KEY_MUSICCABINET_PREFER_LAST_FM_ARTWORK,
+                DEFAULT_MUSICCABINET_PREFER_LAST_FM_ARTWORK);
     }
-    
+
     public void setPreferLastFmArtwork(boolean preferLastFmArtwork) {
     	setBoolean(KEY_MUSICCABINET_PREFER_LAST_FM_ARTWORK, preferLastFmArtwork);
     }
