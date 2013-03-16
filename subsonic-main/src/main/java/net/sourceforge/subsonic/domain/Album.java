@@ -21,7 +21,15 @@ public class Album implements Comparable<Album> {
 	private List<Integer> trackIds;
 	private List<MediaFile> mediaFiles = new ArrayList<>();
 	private boolean isSelected;
-	
+
+	public Album() {
+	}
+
+	public Album(int id, String title, String coverArtPath) {
+		this.id = id;
+		this.title = title;
+		this.coverArtPath = coverArtPath;
+	}
 
 	public int getArtistId() {
 		return artistId;
@@ -46,19 +54,19 @@ public class Album implements Comparable<Album> {
 	public void setId(int id) {
 		this.id = id;
 	}
-	
+
 	public String getTitle() {
 		return title;
 	}
-	
+
 	public void setTitle(String title) {
 		this.title = title;
 	}
-	
+
 	public Short getYear() {
 		return year;
 	}
-	
+
 	public void setYear(Short year) {
 		this.year = year;
 	}
@@ -66,7 +74,7 @@ public class Album implements Comparable<Album> {
 	public String getCoverArtPath() {
 		return coverArtPath;
 	}
-	
+
 	public void setCoverArtPath(String coverArtPath) {
 		this.coverArtPath = coverArtPath;
 	}
@@ -78,7 +86,7 @@ public class Album implements Comparable<Album> {
 	public void setCoverArtUrl(String coverArtUrl) {
 		this.coverArtUrl = coverArtUrl;
 	}
-	
+
 	public String getCoverArtZoomUrl() {
 		return coverArtZoomUrl;
 	}
@@ -94,7 +102,7 @@ public class Album implements Comparable<Album> {
 	public void addMediaFile(MediaFile musicFile) {
 		mediaFiles.add(musicFile);
 	}
-	
+
 	public List<Integer> getTrackIds() {
 		return trackIds;
 	}
@@ -106,7 +114,7 @@ public class Album implements Comparable<Album> {
 	public List<MediaFile> getMediaFiles() {
 		return mediaFiles;
 	}
-	
+
 	public boolean isSelected() {
 		return isSelected;
 	}
@@ -115,6 +123,7 @@ public class Album implements Comparable<Album> {
 		this.isSelected = isSelected;
 	}
 
+	@Override
 	public int compareTo(Album album) {
 		if (UNKNOWN_ALBUM.equals(title)) {
 			return 1;
@@ -127,5 +136,5 @@ public class Album implements Comparable<Album> {
 		}
 		return year.compareTo(album.year);
 	}
-	
+
 }
