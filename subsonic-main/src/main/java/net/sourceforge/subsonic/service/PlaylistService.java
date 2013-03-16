@@ -18,18 +18,6 @@
  */
 package net.sourceforge.subsonic.service;
 
-import net.sourceforge.subsonic.Logger;
-import net.sourceforge.subsonic.domain.MediaFile;
-import net.sourceforge.subsonic.domain.Playlist;
-import net.sourceforge.subsonic.util.FileUtil;
-import net.sourceforge.subsonic.util.StringUtil;
-import org.apache.commons.lang.StringEscapeUtils;
-import org.jdom.Document;
-import org.jdom.Element;
-import org.jdom.JDOMException;
-import org.jdom.Namespace;
-import org.jdom.input.SAXBuilder;
-
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
@@ -40,6 +28,19 @@ import java.io.PrintWriter;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+
+import net.sourceforge.subsonic.Logger;
+import net.sourceforge.subsonic.domain.MediaFile;
+import net.sourceforge.subsonic.domain.Playlist;
+import net.sourceforge.subsonic.util.FileUtil;
+import net.sourceforge.subsonic.util.StringUtil;
+
+import org.apache.commons.lang.StringEscapeUtils;
+import org.jdom.Document;
+import org.jdom.Element;
+import org.jdom.JDOMException;
+import org.jdom.Namespace;
+import org.jdom.input.SAXBuilder;
 
 /**
  * Provides services for loading and saving playlists to and from persistent storage.
@@ -53,7 +54,7 @@ public class PlaylistService {
     private SettingsService settingsService;
     private SecurityService securityService;
     private MediaFileService mediaFileService;
-    
+
 
     /**
      * Saves the given playlist to persistent storage.
@@ -97,7 +98,8 @@ public class PlaylistService {
 
         playlist.setName(name);
 
-        BufferedReader reader = new BufferedReader(new InputStreamReader(new FileInputStream(playlistFile), StringUtil.ENCODING_UTF8));
+        BufferedReader reader = new BufferedReader(new InputStreamReader(
+                new FileInputStream(playlistFile), StringUtil.ENCODING_UTF8));
         try {
             PlaylistFormat format = PlaylistFormat.getPlaylistFormat(playlistFile);
             format.loadPlaylist(playlist, reader, mediaFileService);
@@ -170,7 +172,8 @@ public class PlaylistService {
     }
 
     private static class PlaylistFilenameFilter implements FilenameFilter {
-        public boolean accept(File dir, String name) {
+        @Override
+		public boolean accept(File dir, String name) {
             name = name.toLowerCase();
             return name.endsWith(".m3u") || name.endsWith(".pls") || name.endsWith(".xspf");
         }
@@ -180,13 +183,13 @@ public class PlaylistService {
      * Abstract superclass for playlist formats.
      */
     private abstract static class PlaylistFormat {
-    	
+
     	// TODO : playlist loading could be greatly improved by doing bulk
     	// lookup of mediaFileId / meta data loading
         public abstract void loadPlaylist(Playlist playlist, BufferedReader reader, MediaFileService mediaFileService) throws IOException;
 
         public abstract void savePlaylist(Playlist playlist, PrintWriter writer) throws IOException;
-        
+
         public static PlaylistFormat getPlaylistFormat(File file) {
             String name = file.getName().toLowerCase();
             if (name.endsWith(".m3u")) {
@@ -206,7 +209,8 @@ public class PlaylistService {
      * Implementation of M3U playlist format.
      */
     private static class M3UFormat extends PlaylistFormat {
-        public void loadPlaylist(Playlist playlist, BufferedReader reader, MediaFileService mediaFileService) throws IOException {
+        @Override
+		public void loadPlaylist(Playlist playlist, BufferedReader reader, MediaFileService mediaFileService) throws IOException {
             playlist.clear();
             String line = reader.readLine();
             while (line != null) {
@@ -224,7 +228,8 @@ public class PlaylistService {
             }
         }
 
-        public void savePlaylist(Playlist playlist, PrintWriter writer) throws IOException {
+        @Override
+		public void savePlaylist(Playlist playlist, PrintWriter writer) throws IOException {
             writer.println("#EXTM3U");
             for (MediaFile file : playlist.getFiles()) {
                 writer.println(file.getPath());
@@ -239,7 +244,8 @@ public class PlaylistService {
      * Implementation of PLS playlist format.
      */
     private static class PLSFormat extends PlaylistFormat {
-        public void loadPlaylist(Playlist playlist, BufferedReader reader, MediaFileService mediaFileService) throws IOException {
+        @Override
+		public void loadPlaylist(Playlist playlist, BufferedReader reader, MediaFileService mediaFileService) throws IOException {
             playlist.clear();
 
             Pattern pattern = Pattern.compile("^File\\d+=(.*)$");
@@ -261,7 +267,8 @@ public class PlaylistService {
             }
         }
 
-        public void savePlaylist(Playlist playlist, PrintWriter writer) throws IOException {
+        @Override
+		public void savePlaylist(Playlist playlist, PrintWriter writer) throws IOException {
             writer.println("[playlist]");
             int counter = 0;
 
@@ -282,7 +289,8 @@ public class PlaylistService {
      * Implementation of XSPF (http://www.xspf.org/) playlist format.
      */
     private static class XSPFFormat extends PlaylistFormat {
-        public void loadPlaylist(Playlist playlist, BufferedReader reader, MediaFileService mediaFileService) throws IOException {
+        @Override
+		public void loadPlaylist(Playlist playlist, BufferedReader reader, MediaFileService mediaFileService) throws IOException {
             playlist.clear();
 
             SAXBuilder builder = new SAXBuilder();
@@ -304,7 +312,7 @@ public class PlaylistService {
                 String location = track.getChildText("location", ns);
                 if (location != null && location.startsWith("file://")) {
                     location = location.replaceFirst("file://", "");
-                    
+
                     try {
                         MediaFile file = mediaFileService.getMediaFile(location);
                         if (file != null && file.exists()) {
@@ -317,7 +325,8 @@ public class PlaylistService {
             }
         }
 
-        public void savePlaylist(Playlist playlist, PrintWriter writer) throws IOException {
+        @Override
+		public void savePlaylist(Playlist playlist, PrintWriter writer) throws IOException {
             writer.println("<?xml version=\"1.0\" encoding=\"UTF-8\"?>");
             writer.println("<playlist version=\"1\" xmlns=\"http://xspf.org/ns/0/\">");
             writer.println("    <trackList>");
