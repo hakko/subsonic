@@ -72,9 +72,10 @@ public class HomeController extends ParameterizableViewController {
     private LibraryBrowserService libraryBrowserService;
     private MediaFileService mediaFileService;
     private StarService starService;
-    
+
+    @Override
     protected ModelAndView handleRequestInternal(HttpServletRequest request, HttpServletResponse response) throws Exception {
-    	
+
         Map<String, Object> map = new HashMap<String, Object>();
 
         User user = securityService.getCurrentUser(request);
@@ -84,16 +85,17 @@ public class HomeController extends ParameterizableViewController {
         }
 
         if (!libraryBrowserService.hasArtists()) {
-        	return new ModelAndView(new RedirectView("settings.view"));
+            return new ModelAndView(new RedirectView("settings.view"));
         }
-        
+
         String listType = request.getParameter("listType");
         String listGroup = request.getParameter("listGroup");
         String listUsers = StringUtils.defaultIfEmpty(request.getParameter("listUsers"),
-        		userSettings.isViewStatsForAllUsers() ? "all" : "current");
-    	String query = StringUtils.trimToNull(request.getParameter("query"));
-    	int page = "random".equals(listType) ? 0 : toInt(request.getParameter("page"), 0);
-    	String lastFmUsername = "current".equals(listUsers) ? userSettings.getLastFmUsername() : null;
+                userSettings.isViewStatsForAllUsers() ? "all" : "current");
+        String query = StringUtils.trimToNull(request.getParameter("query"));
+        int page = "random".equals(listType) ? 0 : toInt(request.getParameter("page"), 0);
+        String lastFmUsername = "current".equals(listUsers) || "topartists".equals(listType)
+                || "recommended".equals(listType) ? userSettings.getLastFmUsername() : null;
 
     	if (listType == null) {
             String defaultHomeView = userSettings.getDefaultHomeView();
@@ -130,14 +132,14 @@ public class HomeController extends ParameterizableViewController {
         map.put("listUsers", listUsers);
         map.put("user", user);
 		map.put("lastFmUser", userSettings.getLastFmUsername());
-        
+
         ModelAndView result = super.handleRequestInternal(request, response);
         result.addObject("model", map);
-        
+
         return result;
     }
 
-    private void setArtists(String listType, String listGroup, String query, int page, 
+    private void setArtists(String listType, String listGroup, String query, int page,
     		UserSettings userSettings, String lastFmUsername, Map<String, Object> map) {
     	if ("topartists".equals(listType)) {
     		Period period = Period.THREE_MONTHS;
@@ -157,33 +159,33 @@ public class HomeController extends ParameterizableViewController {
 
         	List<ArtistRecommendation> artists = Util.square(
         			getArtists(listType, lastFmUsername, offset, limit, query, userSettings));
-        	
+
         	if (artists.size() > ARTISTS) {
         		map.put("morePages", true);
         		artists.remove(ARTISTS);
         	}
         	map.put("page", page);
     		map.put("artists", artists);
-    		
+
     		if ("recommended".equals(listType)) {
                 map.put("artistsNotInLibrary", getRecommendedArtistsNotInLibrary(lastFmUsername, userSettings));
     		}
     	}
 		map.put("artistGridWidth", userSettings.getArtistGridWidth());
     }
-    
+
     private List<ArtistLink> getRecommendedArtistsNotInLibrary(String lastFmUsername, UserSettings userSettings) {
-    	List<ArtistLink> artistsNotInLibrary = new ArrayList<>();
-    	short amount = userSettings.getRecommendedArtists(); 
-		boolean onlyAlbumArtists = userSettings.isOnlyAlbumArtistRecommendations();
-		List<String> namesNotInLibrary = artistRecommendationService.
-				getRecommendedArtistsNotInLibrary(lastFmUsername, amount, onlyAlbumArtists);
-    	for (String name : namesNotInLibrary) {
-    		artistsNotInLibrary.add(new ArtistLink(name, getURLEncodedName(name)));
-    	}
-    	return artistsNotInLibrary;
+        List<ArtistLink> artistsNotInLibrary = new ArrayList<>();
+        short amount = userSettings.getRecommendedArtists();
+        boolean onlyAlbumArtists = userSettings.isOnlyAlbumArtistRecommendations();
+        List<String> namesNotInLibrary = artistRecommendationService.
+                getRecommendedArtistsNotInLibrary(lastFmUsername, amount, onlyAlbumArtists);
+        for (String name : namesNotInLibrary) {
+            artistsNotInLibrary.add(new ArtistLink(name, getURLEncodedName(name)));
+        }
+        return artistsNotInLibrary;
     }
-    
+
     private String getURLEncodedName(String name) {
     	try {
     		return encode(name, ENCODING_UTF8);
@@ -192,7 +194,7 @@ public class HomeController extends ParameterizableViewController {
     	}
     }
 
-    private List<ArtistRecommendation> getArtists(String listType, String lastFmUsername, 
+    private List<ArtistRecommendation> getArtists(String listType, String lastFmUsername,
     		int offset, int limit, String query, UserSettings userSettings) {
     	boolean onlyAlbumArtists = userSettings.isOnlyAlbumArtistRecommendations();
     	switch (listType) {
@@ -205,8 +207,8 @@ public class HomeController extends ParameterizableViewController {
     	}
     	return null;
     }
-    
-    private void setAlbums(String listType, String query, int page, 
+
+    private void setAlbums(String listType, String query, int page,
     		UserSettings userSettings, String lastFmUsername, Map<String, Object> map) {
     	final int ALBUMS = userSettings.getDefaultHomeAlbums();
     	int offset = page * ALBUMS, limit = ALBUMS + 1;
@@ -245,7 +247,7 @@ public class HomeController extends ParameterizableViewController {
     	return null;
     }
 
-    private void setSongs(String listType, String query, int page, 
+    private void setSongs(String listType, String query, int page,
     		UserSettings userSettings, String lastFmUsername, Map<String, Object> map) {
     	final int SONGS = userSettings.getDefaultHomeSongs();
     	int offset = page * SONGS, limit = SONGS + 1;
@@ -253,7 +255,7 @@ public class HomeController extends ParameterizableViewController {
     	List<Integer> mediaFileIds = getMediaFileIds(listType, query, offset, limit, lastFmUsername);
     	mediaFileService.loadMediaFiles(mediaFileIds);
     	List<MediaFile> mediaFiles = mediaFileService.getMediaFiles(mediaFileIds);
-    	
+
     	if (mediaFiles.size() > SONGS) {
     		map.put("morePages", true);
     		mediaFileIds.remove(SONGS);
@@ -274,7 +276,7 @@ public class HomeController extends ParameterizableViewController {
     	}
     	return trackIds;
     }
-    
+
     private List<Integer> getMediaFileIds(String listType, String query, int offset, int limit, String lastFmUsername) {
     	switch (listType) {
 		case "recent": return libraryBrowserService.getRecentlyPlayedTrackIds(lastFmUsername, offset, limit, query);
