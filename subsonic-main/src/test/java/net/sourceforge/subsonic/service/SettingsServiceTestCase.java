@@ -18,32 +18,42 @@
  */
 package net.sourceforge.subsonic.service;
 
-import junit.framework.*;
-import java.io.*;
-import java.util.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertTrue;
+
+import java.io.File;
+import java.util.Arrays;
+import java.util.Date;
+import java.util.Locale;
+
+import org.junit.Before;
+import org.junit.Test;
 
 /**
  * Unit test of {@link SettingsService}.
  *
  * @author Sindre Mehus
  */
-public class SettingsServiceTestCase extends TestCase {
+public class SettingsServiceTestCase {
 
     private static final File SUBSONIC_HOME = new File("/tmp/subsonic");
 
     private SettingsService settingsService;
 
-    @Override
-    protected void setUp() throws Exception {
+    @Before
+    public void setUp() throws Exception {
         System.setProperty("subsonic.home", SUBSONIC_HOME.getPath());
         new File(SUBSONIC_HOME, "subsonic.properties").delete();
         settingsService = new SettingsService();
     }
 
+    @Test
     public void testSubsonicHome() {
         assertEquals("Wrong Subsonic home.", SUBSONIC_HOME, SettingsService.getSubsonicHome());
     }
 
+    @Test
     public void testDefaultValues() {
         assertEquals("Wrong default language.", "en", settingsService.getLocale().getLanguage());
         assertEquals("Wrong default cover art limit.", 30, settingsService.getCoverArtLimit());
@@ -68,6 +78,7 @@ public class SettingsServiceTestCase extends TestCase {
         assertEquals("Wrong default LDAP auto-shadowing.", false, settingsService.isLdapAutoShadowing());
     }
 
+    @Test
     public void testChangeSettings() {
         settingsService.setIndexString("indexString");
         settingsService.setIgnoredArticles("a the foo bar");
