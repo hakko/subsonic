@@ -1,11 +1,19 @@
 package net.sourceforge.subsonic.dao;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertSame;
+
 import java.util.Date;
 import java.util.List;
 
 import net.sourceforge.subsonic.domain.PodcastChannel;
 import net.sourceforge.subsonic.domain.PodcastEpisode;
 import net.sourceforge.subsonic.domain.PodcastStatus;
+
+import org.junit.Before;
+import org.junit.Test;
 
 /**
  * Unit test of {@link PodcastDao}.
@@ -14,11 +22,12 @@ import net.sourceforge.subsonic.domain.PodcastStatus;
  */
 public class PodcastDaoTestCase extends DaoTestCaseBase {
 
-    @Override
-    protected void setUp() throws Exception {
+    @Before
+    public void setUp() throws Exception {
         getJdbcTemplate().execute("delete from podcast_channel");
     }
 
+    @Test
     public void testCreateChannel() {
         PodcastChannel channel = new PodcastChannel("http://foo");
         podcastDao.createChannel(channel);
@@ -28,6 +37,7 @@ public class PodcastDaoTestCase extends DaoTestCaseBase {
         assertChannelEquals(channel, newChannel);
     }
 
+    @Test
     public void testChannelId() {
         int channelId = podcastDao.createChannel(new PodcastChannel("http://foo"));
 
@@ -42,6 +52,7 @@ public class PodcastDaoTestCase extends DaoTestCaseBase {
         assertEquals("Error in createChannel.", channelId + 5, podcastDao.createChannel(new PodcastChannel("http://foo")));
     }
 
+    @Test
     public void testUpdateChannel() {
         PodcastChannel channel = new PodcastChannel("http://foo");
         podcastDao.createChannel(channel);
@@ -60,6 +71,7 @@ public class PodcastDaoTestCase extends DaoTestCaseBase {
         assertChannelEquals(channel, newChannel);
     }
 
+    @Test
     public void testDeleteChannel() {
         assertEquals("Wrong number of channels.", 0, podcastDao.getAllChannels().size());
 
@@ -77,6 +89,7 @@ public class PodcastDaoTestCase extends DaoTestCaseBase {
         assertEquals("Wrong number of channels.", 0, podcastDao.getAllChannels().size());
     }
 
+    @Test
     public void testCreateEpisode() {
         int channelId = createChannel();
         PodcastEpisode episode = new PodcastEpisode(null, channelId, "http://bar", "path", "title", "description",
@@ -88,6 +101,7 @@ public class PodcastDaoTestCase extends DaoTestCaseBase {
         assertEpisodeEquals(episode, newEpisode);
     }
 
+    @Test
     public void testGetEpisode() {
         assertNull("Error in getEpisode()", podcastDao.getEpisode(23));
 
@@ -101,6 +115,7 @@ public class PodcastDaoTestCase extends DaoTestCaseBase {
         assertEpisodeEquals(episode, newEpisode);
     }
 
+    @Test
     public void testGetEpisodes() {
         int channelId = createChannel();
         PodcastEpisode a = new PodcastEpisode(null, channelId, "a", null, null, null,
@@ -124,7 +139,7 @@ public class PodcastDaoTestCase extends DaoTestCaseBase {
         assertEpisodeEquals(d, episodes.get(3));
     }
 
-
+    @Test
     public void testUpdateEpisode() {
         int channelId = createChannel();
         PodcastEpisode episode = new PodcastEpisode(null, channelId, "http://bar", null, null, null,
@@ -149,6 +164,7 @@ public class PodcastDaoTestCase extends DaoTestCaseBase {
         assertEpisodeEquals(episode, newEpisode);
     }
 
+    @Test
     public void testDeleteEpisode() {
         int channelId = createChannel();
 
@@ -170,7 +186,7 @@ public class PodcastDaoTestCase extends DaoTestCaseBase {
         assertEquals("Wrong number of episodes.", 0, podcastDao.getEpisodes(channelId).size());
     }
 
-
+    @Test
     public void testCascadingDelete() {
         int channelId = createChannel();
         PodcastEpisode episode = new PodcastEpisode(null, channelId, "http://bar", null, null, null,

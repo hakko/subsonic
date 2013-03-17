@@ -18,18 +18,22 @@
  */
 package net.sourceforge.subsonic.domain;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
+
+import org.junit.Test;
+
 /**
  * Unit test of {@link Version}.
  * @author Sindre Mehus
  */
 
-import junit.framework.*;
-
-public class VersionTestCase extends TestCase {
+public class VersionTestCase {
 
     /**
      * Tests that equals(), hashCode(), toString() and compareTo() works.
      */
+    @Test
     public void testVersion()  {
         doTestVersion("0.0", "0.1");
         doTestVersion("1.5", "2.3");

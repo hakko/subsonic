@@ -1,10 +1,11 @@
 package net.sourceforge.subsonic.dao;
 
-import junit.framework.TestCase;
-import net.sourceforge.subsonic.util.FileUtil;
-import org.springframework.jdbc.core.JdbcTemplate;
-
 import java.io.File;
+
+import net.sourceforge.subsonic.util.FileUtil;
+
+import org.junit.After;
+import org.springframework.jdbc.core.JdbcTemplate;
 
 /**
  * Superclass for all DAO test cases.
@@ -12,7 +13,7 @@ import java.io.File;
  *
  * @author Sindre Mehus
  */
-public abstract class DaoTestCaseBase extends TestCase {
+public abstract class DaoTestCaseBase {
 
     /** Do not re-create database if it is less than one hour old. */
     private static final long MAX_DB_AGE_MILLIS = 60L * 60 * 1000;
@@ -50,9 +51,8 @@ public abstract class DaoTestCaseBase extends TestCase {
         podcastDao.setDaoHelper(daoHelper);
     }
 
-    @Override
-    protected void tearDown() throws Exception {
-        super.tearDown();
+    @After
+    public void tearDown() throws Exception {
         getJdbcTemplate().execute("shutdown");
     }
 

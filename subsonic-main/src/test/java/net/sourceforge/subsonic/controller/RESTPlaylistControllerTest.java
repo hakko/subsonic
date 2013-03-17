@@ -2,6 +2,7 @@ package net.sourceforge.subsonic.controller;
 
 import static org.apache.commons.io.FilenameUtils.getName;
 import static org.custommonkey.xmlunit.XMLAssert.assertXMLEqual;
+import static org.junit.Assert.assertEquals;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
@@ -13,7 +14,6 @@ import java.io.StringWriter;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import junit.framework.Assert;
 import net.sourceforge.subsonic.domain.MediaFile;
 import net.sourceforge.subsonic.domain.Playlist;
 import net.sourceforge.subsonic.service.MediaFileService;
@@ -126,7 +126,7 @@ public class RESTPlaylistControllerTest {
 
             @Override
             public void savePlaylist(Playlist playlist) throws IOException {
-                Assert.assertEquals(4, playlist.getFiles().length);
+                assertEquals(4, playlist.getFiles().length);
             }
         };
     }

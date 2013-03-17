@@ -1,9 +1,14 @@
 package net.sourceforge.subsonic.dao;
 
+import static org.junit.Assert.assertEquals;
+
 import java.util.List;
 
 import net.sourceforge.subsonic.domain.Player;
 import net.sourceforge.subsonic.domain.Transcoding;
+
+import org.junit.Before;
+import org.junit.Test;
 
 /**
  * Unit test of {@link TranscodingDao}.
@@ -12,11 +17,12 @@ import net.sourceforge.subsonic.domain.Transcoding;
  */
 public class TranscodingDaoTestCase extends DaoTestCaseBase {
 
-    @Override
-    protected void setUp() throws Exception {
+    @Before
+    public void setUp() throws Exception {
         getJdbcTemplate().execute("delete from transcoding2");
     }
 
+    @Test
     public void testCreateTranscoding() {
         Transcoding transcoding = new Transcoding(null, "name", "sourceFormats", "targetFormat", "step1", "step2", "step3", false);
         transcodingDao.createTranscoding(transcoding);
@@ -25,6 +31,7 @@ public class TranscodingDaoTestCase extends DaoTestCaseBase {
         assertTranscodingEquals(transcoding, newTranscoding);
     }
 
+    @Test
     public void testUpdateTranscoding() {
         Transcoding transcoding = new Transcoding(null, "name", "sourceFormats", "targetFormat", "step1", "step2", "step3", false);
         transcodingDao.createTranscoding(transcoding);
@@ -43,6 +50,7 @@ public class TranscodingDaoTestCase extends DaoTestCaseBase {
         assertTranscodingEquals(transcoding, newTranscoding);
     }
 
+    @Test
     public void testDeleteTranscoding() {
         assertEquals("Wrong number of transcodings.", 0, transcodingDao.getAllTranscodings().size());
 
@@ -59,6 +67,7 @@ public class TranscodingDaoTestCase extends DaoTestCaseBase {
         assertEquals("Wrong number of transcodings.", 0, transcodingDao.getAllTranscodings().size());
     }
 
+    @Test
     public void testPlayerTranscoding() {
         Player player = new Player();
         playerDao.createPlayer(player);
@@ -89,6 +98,7 @@ public class TranscodingDaoTestCase extends DaoTestCaseBase {
         assertEquals("Wrong number of transcodings.", 0, activeTranscodings.size());
     }
 
+    @Test
     public void testCascadingDeletePlayer() {
         Player player = new Player();
         playerDao.createPlayer(player);
@@ -105,6 +115,7 @@ public class TranscodingDaoTestCase extends DaoTestCaseBase {
         assertEquals("Wrong number of transcodings.", 0, activeTranscodings.size());
     }
 
+    @Test
     public void testCascadingDeleteTranscoding() {
         Player player = new Player();
         playerDao.createPlayer(player);
@@ -130,4 +141,5 @@ public class TranscodingDaoTestCase extends DaoTestCaseBase {
         assertEquals("Wrong step 3.", expected.getStep3(), actual.getStep3());
         assertEquals("Wrong default active.", expected.isDefaultActive(), actual.isDefaultActive());
     }
+
 }

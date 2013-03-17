@@ -18,16 +18,19 @@
  */
 package net.sourceforge.subsonic.service.metadata;
 
-import junit.framework.*;
+import static org.junit.Assert.assertEquals;
 import net.sourceforge.subsonic.domain.MetaData;
+
+import org.junit.Test;
 
 /**
  * Unit test of {@link MetaData}.
  *
  * @author Sindre Mehus
  */
-public class MetaDataTestCase extends TestCase {
+public class MetaDataTestCase {
 
+    @Test
     public void testGetDurationAsString() throws Exception {
         doTestGetDurationAsString(0, "0:00");
         doTestGetDurationAsString(1, "0:01");
@@ -58,6 +61,7 @@ public class MetaDataTestCase extends TestCase {
         assertEquals("Error in getDurationAsString().", expected, metaData.getDurationAsString());
     }
 
+    @Test
     public void testGetYearAsInteger() {
         doTestGetYearAsInteger(null, null);
         doTestGetYearAsInteger("", null);

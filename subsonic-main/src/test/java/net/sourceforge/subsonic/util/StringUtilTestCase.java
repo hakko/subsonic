@@ -18,20 +18,24 @@
  */
 package net.sourceforge.subsonic.util;
 
-import junit.framework.TestCase;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertTrue;
 
-import java.util.Locale;
 import java.util.Arrays;
+import java.util.Locale;
 
 import org.apache.commons.lang.math.LongRange;
+import org.junit.Test;
 
 /**
  * Unit test of {@link StringUtil}.
  *
  * @author Sindre Mehus
  */
-public class StringUtilTestCase extends TestCase {
-	
+public class StringUtilTestCase {
+
+    @Test
     public void testToHtml() throws Exception {
         assertEquals(null, StringUtil.toHtml(null));
         assertEquals("", StringUtil.toHtml(""));
@@ -40,6 +44,7 @@ public class StringUtilTestCase extends TestCase {
         assertEquals("q &amp; a &lt;&gt; b", StringUtil.toHtml("q & a <> b"));
     }
 
+    @Test
     public void testGetSuffix() {
         assertEquals("Error in getSuffix().", ".mp3", StringUtil.getSuffix("foo.mp3"));
         assertEquals("Error in getSuffix().", ".mp3", StringUtil.getSuffix(".mp3"));
@@ -49,6 +54,7 @@ public class StringUtilTestCase extends TestCase {
         assertEquals("Error in getSuffix().", "", StringUtil.getSuffix(""));
     }
 
+    @Test
     public void testRemoveSuffix() {
         assertEquals("Error in removeSuffix().", "foo", StringUtil.removeSuffix("foo.mp3"));
         assertEquals("Error in removeSuffix().", "", StringUtil.removeSuffix(".mp3"));
@@ -58,6 +64,7 @@ public class StringUtilTestCase extends TestCase {
         assertEquals("Error in removeSuffix().", "", StringUtil.removeSuffix(""));
     }
 
+    @Test
     public void testGetMimeType() {
         assertEquals("Error in getMimeType().", "audio/mpeg", StringUtil.getMimeType("mp3"));
         assertEquals("Error in getMimeType().", "audio/mpeg", StringUtil.getMimeType(".mp3"));
@@ -67,6 +74,7 @@ public class StringUtilTestCase extends TestCase {
         assertEquals("Error in getMimeType().", "application/octet-stream", StringUtil.getMimeType(null));
     }
 
+    @Test
     public void testFormatBytes() throws Exception {
         Locale locale = Locale.ENGLISH;
         assertEquals("Error in formatBytes().", "918 B", StringUtil.formatBytes(918, locale));
@@ -87,6 +95,7 @@ public class StringUtilTestCase extends TestCase {
         assertEquals("Error in formatBytes().", "3,50 GB", StringUtil.formatBytes(3758096384L, locale));
     }
 
+    @Test
     public void testFormatDuration() {
         assertEquals("Error in formatDuration().", "0:00", StringUtil.formatDuration(0));
         assertEquals("Error in formatDuration().", "0:05", StringUtil.formatDuration(5));
@@ -100,6 +109,7 @@ public class StringUtilTestCase extends TestCase {
         assertEquals("Error in formatDuration().", "83:45", StringUtil.formatDuration(5025));
     }
 
+    @Test
     public void testSplit() {
         doTestSplit("u2 rem \"greatest hits\"", "u2", "rem", "greatest hits");
         doTestSplit("u2", "u2");
@@ -123,6 +133,7 @@ public class StringUtilTestCase extends TestCase {
         }
     }
 
+    @Test
     public void testParseInts() {
         doTestParseInts("123", 123);
         doTestParseInts("1 2 3", 1, 2, 3);
@@ -138,6 +149,7 @@ public class StringUtilTestCase extends TestCase {
         assertEquals("Error in parseInts().", Arrays.toString(expected), Arrays.toString(StringUtil.parseInts(s)));
     }
 
+    @Test
     public void testToHttpUrl() throws Exception {
         assertEquals("Error in toHttpUrl.", "http://foo.bar.com", StringUtil.toHttpUrl("http://foo.bar.com", 8080));
         assertEquals("Error in toHttpUrl.", "http://foo.bar.com:12/abc?f=a", StringUtil.toHttpUrl("http://foo.bar.com:12/abc?f=a", 8080));
@@ -145,8 +157,8 @@ public class StringUtilTestCase extends TestCase {
         assertEquals("Error in toHttpUrl.", "http://foo.bar.com:443/a/b/c?k=1&j=2", StringUtil.toHttpUrl("https://foo.bar.com/a/b/c?k=1&j=2", 443));
     }
 
+    @Test
     public void testParseLocale() {
-        assertEquals("Error in parseLocale().", null, null);
         assertEquals("Error in parseLocale().", new Locale("en"), StringUtil.parseLocale("en"));
         assertEquals("Error in parseLocale().", new Locale("en"), StringUtil.parseLocale("en_"));
         assertEquals("Error in parseLocale().", new Locale("en"), StringUtil.parseLocale("en__"));
@@ -155,6 +167,7 @@ public class StringUtilTestCase extends TestCase {
         assertEquals("Error in parseLocale().", new Locale("en", "", "WIN"), StringUtil.parseLocale("en__WIN"));
     }
 
+    @Test
     public void testUtf8Hex() throws Exception {
         doTestUtf8Hex(null);
         doTestUtf8Hex("");
@@ -168,12 +181,14 @@ public class StringUtilTestCase extends TestCase {
         assertEquals("Error in utf8hex.", s, StringUtil.utf8HexDecode(StringUtil.utf8HexEncode(s)));
     }
 
+    @Test
     public void testMd5Hex() {
         assertNull("Error in md5Hex().", StringUtil.md5Hex(null));
         assertEquals("Error in md5Hex().", "d41d8cd98f00b204e9800998ecf8427e", StringUtil.md5Hex(""));
         assertEquals("Error in md5Hex().", "308ed0af23d48f6d2fd4717e77a23e0c", StringUtil.md5Hex("sindre@activeobjects.no"));
     }
 
+    @Test
     public void testGetUrlFile() {
         assertEquals("Error in getUrlFile().", "foo.mp3", StringUtil.getUrlFile("http://www.asdf.com/foo.mp3"));
         assertEquals("Error in getUrlFile().", "foo.mp3", StringUtil.getUrlFile("http://www.asdf.com/bar/foo.mp3"));
@@ -185,6 +200,7 @@ public class StringUtilTestCase extends TestCase {
         assertNull("Error in getUrlFile().", StringUtil.getUrlFile("http://www.asdf.com/foo/"));
     }
 
+    @Test
     public void testFileSystemSafe() {
         assertEquals("Error in fileSystemSafe().", "foo", StringUtil.fileSystemSafe("foo"));
         assertEquals("Error in fileSystemSafe().", "foo.mp3", StringUtil.fileSystemSafe("foo.mp3"));
@@ -193,6 +209,7 @@ public class StringUtilTestCase extends TestCase {
         assertEquals("Error in fileSystemSafe().", "foo-bar", StringUtil.fileSystemSafe("foo:bar"));
     }
 
+    @Test
     public void testRewriteUrl() {
         assertEquals("Error in rewriteUrl().", "http://foo/", StringUtil.rewriteUrl("http://foo/", "http://foo/"));
         assertEquals("Error in rewriteUrl().", "http://foo:81/", StringUtil.rewriteUrl("http://foo/", "http://foo:81/"));
@@ -209,6 +226,7 @@ public class StringUtilTestCase extends TestCase {
         assertEquals("Error in rewriteUrl().", "http://foo/", StringUtil.rewriteUrl("http://foo/", null));
     }
 
+    @Test
     public void testParseRange() {
         doTestParseRange(0L, 0L, "bytes=0-0");
         doTestParseRange(0L, 1L, "bytes=0-1");
@@ -233,6 +251,7 @@ public class StringUtilTestCase extends TestCase {
         assertEquals("Error in parseRange().", expectedTo, actual.getMaximumLong());
     }
 
+    @Test
     public void testRemoveMarkup() {
         assertEquals("Error in removeMarkup()", "foo", StringUtil.removeMarkup("<b>foo</b>"));
         assertEquals("Error in removeMarkup()", "foobar", StringUtil.removeMarkup("<b>foo</b>bar"));

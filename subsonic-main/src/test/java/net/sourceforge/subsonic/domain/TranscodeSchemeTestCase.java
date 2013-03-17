@@ -18,19 +18,24 @@
  */
 package net.sourceforge.subsonic.domain;
 
-import junit.framework.TestCase;
-import static net.sourceforge.subsonic.domain.TranscodeScheme.*;
+import static net.sourceforge.subsonic.domain.TranscodeScheme.MAX_32;
+import static net.sourceforge.subsonic.domain.TranscodeScheme.MAX_64;
+import static net.sourceforge.subsonic.domain.TranscodeScheme.OFF;
+import static org.junit.Assert.assertSame;
+
+import org.junit.Test;
 
 /**
  * Unit test of {@link TranscodeScheme}.
  *
  * @author Sindre Mehus
  */
-public class TranscodeSchemeTestCase extends TestCase {
+public class TranscodeSchemeTestCase {
 
     /**
      * Tests {@link TranscodeScheme#strictest}.
      */
+    @Test
     public void testStrictest() {
         assertSame("Error in strictest().", OFF, OFF.strictest(null));
         assertSame("Error in strictest().", OFF, OFF.strictest(OFF));

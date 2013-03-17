@@ -18,14 +18,19 @@
  */
 package net.sourceforge.subsonic.service;
 
-import junit.framework.*;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
+
+import org.junit.Test;
+
 /**
  * Unit test of {@link SecurityService}.
  *
  * @author Sindre Mehus
  */
-public class SecurityServiceTestCase extends TestCase {
+public class SecurityServiceTestCase {
 
+    @Test
     public void testIsFileInFolder() {
         SecurityService service = new SecurityService();
 

@@ -18,18 +18,26 @@
  */
 package net.sourceforge.subsonic.domain;
 
-import junit.framework.*;
-import net.sourceforge.subsonic.domain.Playlist.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertTrue;
 
 import java.io.IOException;
+
+import net.sourceforge.subsonic.domain.Playlist.SortOrder;
+import net.sourceforge.subsonic.domain.Playlist.Status;
+
+import org.junit.Test;
 
 /**
  * Unit test of {@link Playlist}.
  *
  * @author Sindre Mehus
  */
-public class PlaylistTestCase extends TestCase {
+public class PlaylistTestCase {
 
+    @Test
     public void testEmpty() {
         Playlist playlist = new Playlist();
         assertEquals(0, playlist.size());
@@ -42,19 +50,20 @@ public class PlaylistTestCase extends TestCase {
         Playlist playlist = new Playlist();
         assertEquals(Status.STOPPED, playlist.getStatus());
 
-        playlist.addFiles(Playlist.PLAY, new TestmediaFile());
+        playlist.addFiles(Playlist.PLAY, new TestMediaFile());
         assertEquals(Status.PLAYING, playlist.getStatus());
 
         playlist.clear();
         assertEquals(Status.STOPPED, playlist.getStatus());
 
-        playlist.addFiles(Playlist.ADD, new TestmediaFile());
+        playlist.addFiles(Playlist.ADD, new TestMediaFile());
         assertEquals(Status.STOPPED, playlist.getStatus());
 
-        playlist.addFiles(Playlist.ENQUEUE, new TestmediaFile());
+        playlist.addFiles(Playlist.ENQUEUE, new TestMediaFile());
         assertEquals(Status.STOPPED, playlist.getStatus());
     }
 
+    @Test
     public void testMoveUp() throws Exception {
         Playlist playlist = createPlaylist(0, "A", "B", "C", "D");
         playlist.moveUp(0);
@@ -73,6 +82,7 @@ public class PlaylistTestCase extends TestCase {
         assertPlaylistEquals(playlist, 2, "A", "B", "D", "C");
     }
 
+    @Test
     public void testMoveDown() throws Exception {
         Playlist playlist = createPlaylist(0, "A", "B", "C", "D");
         playlist.moveDown(0);
@@ -117,6 +127,7 @@ public class PlaylistTestCase extends TestCase {
         assertPlaylistEquals(playlist, -1);
     }
 
+    @Test
     public void testNext() throws Exception {
         Playlist playlist = createPlaylist(0, "A", "B", "C");
         assertFalse(playlist.isRepeatEnabled());
@@ -151,41 +162,43 @@ public class PlaylistTestCase extends TestCase {
         assertEquals("A", playlist.getCurrentFile().getName());
     }
 
+    @Test
     public void testAppend() throws Exception {
         Playlist playlist = createPlaylist(1, "A", "B", "C");
 
-        playlist.addFiles(Playlist.ADD, new TestmediaFile("D"));
+        playlist.addFiles(Playlist.ADD, new TestMediaFile("D"));
         assertPlaylistEquals(playlist, 1, "A", "B", "C", "D");
 
-        playlist.addFiles(Playlist.PLAY, new TestmediaFile("E"));
+        playlist.addFiles(Playlist.PLAY, new TestMediaFile("E"));
         assertPlaylistEquals(playlist, 0, "E");
     }
-    
+
     public void xtestEnqueue() throws Exception {
-    	Playlist playlist = new Playlist();
-    	playlist.addFiles(Playlist.ENQUEUE, new TestmediaFile("A"));
-    	assertPlaylistEquals(playlist, -1, "A");
+        Playlist playlist = new Playlist();
+        playlist.addFiles(Playlist.ENQUEUE, new TestMediaFile("A"));
+        assertPlaylistEquals(playlist, -1, "A");
 
-    	playlist.addFiles(Playlist.ENQUEUE, new TestmediaFile("B"));
-    	assertPlaylistEquals(playlist, -1, "B", "A");
-    	
-    	playlist.clear();
-    	
-    	playlist.addFiles(Playlist.PLAY, new TestmediaFile("A"), new TestmediaFile("B"));
-    	assertPlaylistEquals(playlist, 0, "A", "B");
+        playlist.addFiles(Playlist.ENQUEUE, new TestMediaFile("B"));
+        assertPlaylistEquals(playlist, -1, "B", "A");
 
-    	playlist.addFiles(Playlist.ENQUEUE, new TestmediaFile("C"));
-    	assertPlaylistEquals(playlist, 0, "A", "C", "B");
-    	
-    	playlist.setIndex(2);
+        playlist.clear();
 
-    	playlist.addFiles(Playlist.ENQUEUE, new TestmediaFile("D"));
-    	assertPlaylistEquals(playlist, 2, "A", "C", "B", "D");
+        playlist.addFiles(Playlist.PLAY, new TestMediaFile("A"), new TestMediaFile("B"));
+        assertPlaylistEquals(playlist, 0, "A", "B");
 
-    	playlist.addFiles(Playlist.ENQUEUE, new TestmediaFile("E"));
-    	assertPlaylistEquals(playlist, 2, "A", "C", "B", "E", "D");
+        playlist.addFiles(Playlist.ENQUEUE, new TestMediaFile("C"));
+        assertPlaylistEquals(playlist, 0, "A", "C", "B");
+
+        playlist.setIndex(2);
+
+        playlist.addFiles(Playlist.ENQUEUE, new TestMediaFile("D"));
+        assertPlaylistEquals(playlist, 2, "A", "C", "B", "D");
+
+        playlist.addFiles(Playlist.ENQUEUE, new TestMediaFile("E"));
+        assertPlaylistEquals(playlist, 2, "A", "C", "B", "E", "D");
     }
 
+    @Test
     public void testUndo() throws Exception {
         Playlist playlist = createPlaylist(0, "A", "B", "C");
         playlist.setIndex(2);
@@ -200,7 +213,7 @@ public class PlaylistTestCase extends TestCase {
         playlist.undo();
         assertPlaylistEquals(playlist, 0, "A", "B", "C");
 
-        playlist.addFiles(Playlist.ADD, new TestmediaFile());
+        playlist.addFiles(Playlist.ADD, new TestMediaFile());
         playlist.undo();
         assertPlaylistEquals(playlist, 0, "A", "B", "C");
 
@@ -213,12 +226,13 @@ public class PlaylistTestCase extends TestCase {
         assertPlaylistEquals(playlist, 0, "A", "B", "C");
     }
 
+    @Test
     public void testOrder() throws IOException {
         Playlist playlist = new Playlist();
-        playlist.addFiles(Playlist.ADD, new TestmediaFile(2, "Artist A", "Album B"));
-        playlist.addFiles(Playlist.ADD, new TestmediaFile(1, "Artist C", "Album C"));
-        playlist.addFiles(Playlist.ADD, new TestmediaFile(3, "Artist B", "Album A"));
-        playlist.addFiles(Playlist.ADD, new TestmediaFile(null, "Artist D", "Album D"));
+        playlist.addFiles(Playlist.ADD, new TestMediaFile(2, "Artist A", "Album B"));
+        playlist.addFiles(Playlist.ADD, new TestMediaFile(1, "Artist C", "Album C"));
+        playlist.addFiles(Playlist.ADD, new TestMediaFile(3, "Artist B", "Album A"));
+        playlist.addFiles(Playlist.ADD, new TestMediaFile(null, "Artist D", "Album D"));
         playlist.setIndex(2);
         assertEquals("Error in sort.", new Integer(3), playlist.getCurrentFile().getMetaData().getTrackNumber());
 
@@ -263,24 +277,25 @@ public class PlaylistTestCase extends TestCase {
     private Playlist createPlaylist(int index, String... songs) throws Exception {
         Playlist playlist = new Playlist();
         for (String song : songs) {
-            playlist.addFiles(Playlist.ADD, new TestmediaFile(song));
+            playlist.addFiles(Playlist.ADD, new TestMediaFile(song));
         }
         playlist.setIndex(index);
         return playlist;
     }
 
-    private static class TestmediaFile extends MediaFile {
+    private static class TestMediaFile extends MediaFile {
 
+        private static final long serialVersionUID = 1L;
         private String name;
         private MetaData metaData;
 
-        TestmediaFile() {}
+        TestMediaFile() {}
 
-        TestmediaFile(String name) {
+        TestMediaFile(String name) {
             this.name = name;
         }
 
-        TestmediaFile(Integer track, String artist, String album) {
+        TestMediaFile(Integer track, String artist, String album) {
             metaData = new MetaData();
             if (track != null) {
                 metaData.setTrackNumber(track);

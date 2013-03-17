@@ -1,15 +1,25 @@
 package net.sourceforge.subsonic.dao;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertSame;
+import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
+
 import java.util.Date;
 import java.util.Locale;
-
-import org.springframework.dao.DataIntegrityViolationException;
-import org.springframework.jdbc.core.JdbcTemplate;
 
 import net.sourceforge.subsonic.domain.AvatarScheme;
 import net.sourceforge.subsonic.domain.TranscodeScheme;
 import net.sourceforge.subsonic.domain.User;
 import net.sourceforge.subsonic.domain.UserSettings;
+
+import org.junit.Before;
+import org.junit.Test;
+import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.jdbc.core.JdbcTemplate;
 
 /**
  * Unit test of {@link UserDao}.
@@ -18,13 +28,14 @@ import net.sourceforge.subsonic.domain.UserSettings;
  */
 public class UserDaoTestCase extends DaoTestCaseBase {
 
-    @Override
-    protected void setUp() throws Exception {
+    @Before
+    public void setUp() throws Exception {
         JdbcTemplate template = getJdbcTemplate();
         template.execute("delete from user_role");
         template.execute("delete from user");
     }
 
+    @Test
     public void testCreateUser() {
         User user = new User("sindre", "secret", "sindre@activeobjects.no", false, 1000L, 2000L, 3000L);
         user.setAdminRole(true);
@@ -43,6 +54,7 @@ public class UserDaoTestCase extends DaoTestCaseBase {
         assertUserEquals(user, newUser);
     }
 
+    @Test
     public void testUpdateUser() {
         User user = new User("sindre", "secret", null);
         user.setAdminRole(true);
@@ -82,6 +94,7 @@ public class UserDaoTestCase extends DaoTestCaseBase {
         assertEquals("Wrong bytes uploaded.", 3, newUser.getBytesUploaded());
     }
 
+    @Test
     public void testGetUserByName() {
         User user = new User("sindre", "secret", null);
         userDao.createUser(user);
@@ -97,6 +110,7 @@ public class UserDaoTestCase extends DaoTestCaseBase {
         assertNull("Error in getUserByName().", userDao.getUserByName(null));
     }
 
+    @Test
     public void testDeleteUser() {
         assertEquals("Wrong number of users.", 0, userDao.getAllUsers().size());
 
@@ -113,6 +127,7 @@ public class UserDaoTestCase extends DaoTestCaseBase {
         assertEquals("Wrong number of users.", 0, userDao.getAllUsers().size());
     }
 
+    @Test
     public void testGetRolesForUser() {
         User user = new User("sindre", "secret", null);
         user.setAdminRole(true);
@@ -131,6 +146,7 @@ public class UserDaoTestCase extends DaoTestCaseBase {
         assertEquals("Wrong role.", "settings", roles[4]);
     }
 
+    @Test
     public void testUserSettings() {
         assertNull("Error in getUserSettings.", userDao.getUserSettings("sindre"));
 
@@ -216,4 +232,5 @@ public class UserDaoTestCase extends DaoTestCaseBase {
         assertEquals("Wrong jukebox role.", expected.isJukeboxRole(), actual.isJukeboxRole());
         assertEquals("Wrong settings role.", expected.isSettingsRole(), actual.isSettingsRole());
     }
+
 }

@@ -1,5 +1,12 @@
 package net.sourceforge.subsonic.dao;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNotSame;
+import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertTrue;
+
 import java.util.Date;
 import java.util.List;
 
@@ -9,6 +16,9 @@ import net.sourceforge.subsonic.domain.PlayerTechnology;
 import net.sourceforge.subsonic.domain.Playlist;
 import net.sourceforge.subsonic.domain.TranscodeScheme;
 
+import org.junit.Before;
+import org.junit.Test;
+
 /**
  * Unit test of {@link PlayerDao}.
  *
@@ -16,11 +26,12 @@ import net.sourceforge.subsonic.domain.TranscodeScheme;
  */
 public class PlayerDaoTestCase extends DaoTestCaseBase {
 
-    @Override
-    protected void setUp() throws Exception {
+    @Before
+    public void setUp() throws Exception {
         getJdbcTemplate().execute("delete from player");
     }
 
+    @Test
     public void testCreatePlayer() {
         Player player = new Player();
         player.setName("name");
@@ -43,6 +54,7 @@ public class PlayerDaoTestCase extends DaoTestCaseBase {
         assertPlayerEquals(player, newPlayer2);
     }
 
+    @Test
     public void testDefaultValues() {
         playerDao.createPlayer(new Player());
         Player player = playerDao.getAllPlayers().get(0);
@@ -52,6 +64,7 @@ public class PlayerDaoTestCase extends DaoTestCaseBase {
         assertNull("Player client ID should be null by default.", player.getClientId());
     }
 
+    @Test
     public void testIdentity() {
         Player player = new Player();
 
@@ -78,6 +91,7 @@ public class PlayerDaoTestCase extends DaoTestCaseBase {
         assertEquals("Wrong number of players.", 3, playerDao.getAllPlayers().size());
     }
 
+    @Test
     public void testPlaylist() {
         Player player = new Player();
         playerDao.createPlayer(player);
@@ -89,6 +103,7 @@ public class PlayerDaoTestCase extends DaoTestCaseBase {
         assertNotSame("Wrong playlist.", playlist, player.getPlaylist());
     }
 
+    @Test
     public void testGetPlayersForUserAndClientId() {
         Player player = new Player();
         player.setUsername("sindre");
@@ -110,6 +125,7 @@ public class PlayerDaoTestCase extends DaoTestCaseBase {
         assertPlayerEquals(player, players.get(0));
     }
 
+    @Test
     public void testUpdatePlayer() {
         Player player = new Player();
         playerDao.createPlayer(player);
@@ -132,6 +148,7 @@ public class PlayerDaoTestCase extends DaoTestCaseBase {
         assertPlayerEquals(player, newPlayer);
     }
 
+    @Test
     public void testDeletePlayer() {
         assertEquals("Wrong number of players.", 0, playerDao.getAllPlayers().size());
 

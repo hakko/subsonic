@@ -1,8 +1,13 @@
 package net.sourceforge.subsonic.dao;
 
+import static org.junit.Assert.assertEquals;
+
 import java.util.Date;
 
 import net.sourceforge.subsonic.domain.InternetRadio;
+
+import org.junit.Before;
+import org.junit.Test;
 
 /**
  * Unit test of {@link InternetRadioDao}.
@@ -11,10 +16,12 @@ import net.sourceforge.subsonic.domain.InternetRadio;
  */
 public class InternetRadioDaoTestCase extends DaoTestCaseBase {
 
-    protected void setUp() throws Exception {
+    @Before
+    public void setUp() throws Exception {
         getJdbcTemplate().execute("delete from internet_radio");
     }
 
+    @Test
     public void testCreateInternetRadio() {
         InternetRadio radio = new InternetRadio("name", "streamUrl", "homePageUrl", true, new Date());
         internetRadioDao.createInternetRadio(radio);
@@ -23,6 +30,7 @@ public class InternetRadioDaoTestCase extends DaoTestCaseBase {
         assertInternetRadioEquals(radio, newRadio);
     }
 
+    @Test
     public void testUpdateInternetRadio() {
         InternetRadio radio = new InternetRadio("name", "streamUrl", "homePageUrl", true, new Date());
         internetRadioDao.createInternetRadio(radio);
@@ -39,6 +47,7 @@ public class InternetRadioDaoTestCase extends DaoTestCaseBase {
         assertInternetRadioEquals(radio, newRadio);
     }
 
+    @Test
     public void testDeleteInternetRadio() {
         assertEquals("Wrong number of radios.", 0, internetRadioDao.getAllInternetRadios().size());
 
@@ -62,6 +71,5 @@ public class InternetRadioDaoTestCase extends DaoTestCaseBase {
         assertEquals("Wrong enabled state.", expected.isEnabled(), actual.isEnabled());
         assertEquals("Wrong changed date.", expected.getChanged(), actual.getChanged());
     }
-
 
 }

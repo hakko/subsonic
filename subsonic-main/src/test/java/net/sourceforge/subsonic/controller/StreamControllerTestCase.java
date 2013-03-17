@@ -18,16 +18,20 @@
  */
 package net.sourceforge.subsonic.controller;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNull;
+
 import java.awt.Dimension;
 
-import junit.framework.TestCase;
+import org.junit.Test;
 
 /**
  * @author Sindre Mehus
  * @version $Id: StreamControllerTestCase.java 2240 2011-06-09 21:02:29Z sindre_mehus $
  */
-public class StreamControllerTestCase extends TestCase {
+public class StreamControllerTestCase {
 
+    @Test
     public void testGetRequestedVideoSize() {
         StreamController controller = new StreamController();
 
@@ -56,6 +60,7 @@ public class StreamControllerTestCase extends TestCase {
         assertNull("Wrong size.", controller.getRequestedVideoSize("100x3000"));
     }
 
+    @Test
     public void testGetSuitableVideoSize() {
 
         // 4:3 aspect rate

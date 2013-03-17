@@ -18,30 +18,36 @@
  */
 package net.sourceforge.subsonic.service;
 
-import junit.framework.TestCase;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
+
+import java.util.Arrays;
+
 import net.sourceforge.subsonic.domain.Player;
 import net.sourceforge.subsonic.domain.TransferStatus;
 
-import java.util.Arrays;
+import org.junit.Before;
+import org.junit.Test;
 
 /**
  * Unit test of {@link StatusService}.
  *
  * @author Sindre Mehus
  */
-public class StatusServiceTestCase extends TestCase {
+public class StatusServiceTestCase {
 
     private StatusService service;
     private Player player1;
 
-    @Override
-    protected void setUp() throws Exception {
-        super.setUp();
+    @Before
+    public void setUp() throws Exception {
         service = new StatusService();
         player1 = new Player();
         player1.setId("1");
     }
 
+    @Test
     public void testSimpleAddRemove() {
         TransferStatus status = service.createStreamStatus(player1);
         assertTrue("Wrong status.", status.isActive());
@@ -54,6 +60,7 @@ public class StatusServiceTestCase extends TestCase {
         assertEquals("Wrong list of statuses.", Arrays.asList(status), service.getStreamStatusesForPlayer(player1));
     }
 
+    @Test
     public void testMultipleStreamsSamePlayer() {
         TransferStatus statusA = service.createStreamStatus(player1);
         TransferStatus statusB = service.createStreamStatus(player1);
