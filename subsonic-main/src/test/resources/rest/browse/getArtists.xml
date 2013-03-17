@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<subsonic-response xmlns="http://subsonic.org/restapi"
+                   status="ok" version="1.8.0">
+    <artists>
+        <index name="A">
+            <artist id="A5449" name="A-Ha"/>
+            <artist id="A5421" name="ABBA"/>
+        </index>
+        <index name="B">
+            <artist id="A5950" name="Bob Marley"/>
+        </index>
+    </artists>
+
+</subsonic-response>

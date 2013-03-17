@@ -18,10 +18,7 @@
  */
 package net.sourceforge.subsonic.filter;
 
-import net.sourceforge.subsonic.Logger;
-import net.sourceforge.subsonic.controller.RESTController;
-import org.springframework.web.bind.ServletRequestBindingException;
-import org.springframework.web.util.NestedServletException;
+import java.io.IOException;
 
 import javax.servlet.Filter;
 import javax.servlet.FilterChain;
@@ -31,10 +28,12 @@ import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.io.IOException;
 
-import static net.sourceforge.subsonic.controller.RESTController.ErrorCode.GENERIC;
-import static net.sourceforge.subsonic.controller.RESTController.ErrorCode.MISSING_PARAMETER;
+import net.sourceforge.subsonic.Logger;
+import net.sourceforge.subsonic.controller.RESTAbstractController;
+
+import org.springframework.web.bind.ServletRequestBindingException;
+import org.springframework.web.util.NestedServletException;
 
 /**
  * Intercepts exceptions thrown by RESTController.
@@ -46,6 +45,7 @@ public class RESTFilter implements Filter {
 
     private static final Logger LOG = Logger.getLogger(RESTFilter.class);
 
+    @Override
     public void doFilter(ServletRequest req, ServletResponse res, FilterChain chain) throws IOException, ServletException {
         try {
             chain.doFilter(req, res);
@@ -59,11 +59,12 @@ public class RESTFilter implements Filter {
             x = x.getCause();
         }
 
-        RESTController.ErrorCode code = (x instanceof ServletRequestBindingException) ? MISSING_PARAMETER : GENERIC;
+        RESTAbstractController.ErrorCode code = (x instanceof ServletRequestBindingException)
+                ? RESTAbstractController.ErrorCode.MISSING_PARAMETER : RESTAbstractController.ErrorCode.GENERIC;
         String msg = getErrorMessage(x);
         LOG.warn("Error in REST API: " + msg, x);
 
-        RESTController.error(request, response, code, msg);
+        RESTAbstractController.error(request, response, code, msg);
     }
 
     private String getErrorMessage(Throwable x) {
@@ -73,9 +74,11 @@ public class RESTFilter implements Filter {
         return x.getClass().getSimpleName();
     }
 
+    @Override
     public void init(FilterConfig filterConfig) {
     }
 
+    @Override
     public void destroy() {
     }
 }

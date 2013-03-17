@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<subsonic-response xmlns="http://subsonic.org/restapi"
+                   status="ok" version="1.8.0">
+
+    <album id="-11053" name="High Voltage" artist="AC/DC" artistId="A5432">
+        <song id="71463" parent="-11053" title="The Jack" album="High Voltage" artist="AC/DC" isDir="false" track="1" discNumber="1" year="2013" coverArt="666f6c6465722e6a7067" duration="352" bitRate="128" size="5624132" suffix="mp3" contentType="audio/mpeg" path="ACDC/High voltage/ACDC - The Jack.mp3"/>
+    </album>
+
+</subsonic-response>

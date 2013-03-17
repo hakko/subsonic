@@ -438,37 +438,105 @@
         <property name="securityService" ref="securityService"/>
         <property name="settingsService" ref="settingsService"/>
     </bean>
-    <bean id="restController" class="net.sourceforge.subsonic.controller.RESTController">
+    <bean id="restSystemController" class="net.sourceforge.subsonic.controller.RESTSystemController">
+        <property name="playerService" ref="playerService"/>
+        <property name="settingsService" ref="settingsService"/>
+    </bean>
+    <bean id="restBrowseController" class="net.sourceforge.subsonic.controller.RESTBrowseController">
+        <property name="playerService" ref="playerService"/>
         <property name="settingsService" ref="settingsService"/>
         <property name="securityService" ref="securityService"/>
-        <property name="playerService" ref="playerService"/>
         <property name="mediaFileService" ref="mediaFileService"/>
         <property name="transcodingService" ref="transcodingService"/>
-        <property name="statusService" ref="statusService"/>
-        <property name="jukeboxService" ref="jukeboxService"/>
-        <property name="playlistService" ref="playlistService"/>
-        <property name="playlistControlService" ref="ajaxPlaylistService"/>
-        <property name="chatService" ref="ajaxChatService"/>
-        <property name="podcastService" ref="podcastService"/>
-        <property name="shareService" ref="shareService"/>
-        <property name="downloadController" ref="downloadController"/>
-        <property name="streamController" ref="streamController"/>
-        <property name="hlsController" ref="hlsController"/>
-        <property name="coverArtController" ref="coverArtController"/>
-        <property name="userSettingsController" ref="userSettingsController"/>
         <property name="leftController" ref="leftController"/>
         <property name="homeController" ref="homeController"/>
-        <property name="nameSearchService" ref="nameSearchService"/>
+        <property name="statusService" ref="statusService"/>
         <property name="libraryBrowserService" ref="libraryBrowserService"/>
         <property name="artistIndexService" ref="artistIndexService"/>
         <property name="artistInfoService" ref="artistInfoService"/>
-        <property name="audioScrobblerService" ref="audioScrobblerService"/>
         <property name="tagService" ref="tagService"/>
         <property name="playlistGeneratorService" ref="playlistGeneratorService"/>
         <property name="artistRecommendationService" ref="artistRecommendationService"/>
         <property name="mediaFolderService" ref="mediaFolderService"/>
         <property name="directoryBrowserService" ref="directoryBrowserService"/>
+    </bean>
+    <bean id="restSearchController" class="net.sourceforge.subsonic.controller.RESTSearchController">
+        <property name="restBrowseController" ref="restBrowseController"/>
+        <property name="playerService" ref="playerService"/>
+        <property name="nameSearchService" ref="nameSearchService"/>
+        <property name="libraryBrowserService" ref="libraryBrowserService"/>
+    </bean>
+    <bean id="restPlaylistController" class="net.sourceforge.subsonic.controller.RESTPlaylistController">
+        <property name="restBrowseController" ref="restBrowseController"/>
+        <property name="playerService" ref="playerService"/>
+        <property name="securityService" ref="securityService"/>
+        <property name="playlistService" ref="playlistService"/>
+        <property name="mediaFileService" ref="mediaFileService"/>
+    </bean>
+    <bean id="restMediaRetrievalController" class="net.sourceforge.subsonic.controller.RESTMediaRetrievalController">
+        <property name="playerService" ref="playerService"/>
+        <property name="securityService" ref="securityService"/>
+        <property name="downloadController" ref="downloadController"/>
+        <property name="streamController" ref="streamController"/>
+        <property name="hlsController" ref="hlsController"/>
+        <property name="coverArtController" ref="coverArtController"/>
+        <property name="libraryBrowserService" ref="libraryBrowserService"/>
+        <property name="mediaFileService" ref="mediaFileService"/>
+        <property name="avatarController" ref="avatarController"/>
+    </bean>
+    <bean id="restMediaAnnotationController" class="net.sourceforge.subsonic.controller.RESTMediaAnnotationController">
+        <property name="restBrowseController" ref="restBrowseController"/>
+        <property name="playerService" ref="playerService"/>
+        <property name="settingsService" ref="settingsService"/>
+        <property name="securityService" ref="securityService"/>
         <property name="starService" ref="starService"/>
+        <property name="homeController" ref="homeController"/>
+        <property name="libraryBrowserService" ref="libraryBrowserService"/>
+        <property name="mediaFileService" ref="mediaFileService"/>
+        <property name="audioScrobblerService" ref="audioScrobblerService"/>
+    </bean>
+    <bean id="restShareController" class="net.sourceforge.subsonic.controller.RESTShareController">
+        <property name="restBrowseController" ref="restBrowseController"/>
+        <property name="playerService" ref="playerService"/>
+        <property name="securityService" ref="securityService"/>
+        <property name="shareService" ref="shareService"/>
+        <property name="mediaFileService" ref="mediaFileService"/>
+    </bean>
+    <bean id="restPodcastController" class="net.sourceforge.subsonic.controller.RESTPodcastController">
+        <property name="restBrowseController" ref="restBrowseController"/>
+        <property name="playerService" ref="playerService"/>
+        <property name="podcastService" ref="podcastService"/>
+        <property name="mediaFileService" ref="mediaFileService"/>
+    </bean>
+    <bean id="restJukeboxController" class="net.sourceforge.subsonic.controller.RESTJukeboxController">
+        <property name="restBrowseController" ref="restBrowseController"/>
+        <property name="playerService" ref="playerService"/>
+        <property name="securityService" ref="securityService"/>
+        <property name="playlistControlService" ref="ajaxPlaylistService"/>
+        <property name="jukeboxService" ref="jukeboxService"/>
+        <property name="mediaFileService" ref="mediaFileService"/>
+    </bean>
+    <bean id="restChatController" class="net.sourceforge.subsonic.controller.RESTChatController">
+        <property name="playerService" ref="playerService"/>
+        <property name="chatService" ref="ajaxChatService"/>
+    </bean>
+    <bean id="restUserController" class="net.sourceforge.subsonic.controller.RESTUserController">
+        <property name="playerService" ref="playerService"/>
+        <property name="settingsService" ref="settingsService"/>
+        <property name="securityService" ref="securityService"/>
+        <property name="userSettingsController" ref="userSettingsController"/>
+    </bean>
+    <bean id="restController" class="net.sourceforge.subsonic.controller.RESTController">
+        <property name="restSystemController" ref="restSystemController"/>
+        <property name="restBrowseController" ref="restBrowseController"/>
+        <property name="restSearchController" ref="restSearchController"/>
+        <property name="restPlaylistController" ref="restPlaylistController"/>
+        <property name="restMediaRetrievalController" ref="restMediaRetrievalController"/>
+        <property name="restMediaAnnotationController" ref="restMediaAnnotationController"/>
+        <property name="restShareController" ref="restShareController"/>
+        <property name="restPodcastController" ref="restPodcastController"/>
+        <property name="restChatController" ref="restChatController"/>
+        <property name="restUserController" ref="restUserController"/>
     </bean>
     <bean id="dbController" class="net.sourceforge.subsonic.controller.DBController">
         <property name="viewName" value="db"/>

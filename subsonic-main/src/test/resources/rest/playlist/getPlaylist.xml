@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<subsonic-response xmlns="http://subsonic.org/restapi" status="ok" version="1.8.0">
+    <playlist id="playlist1.m3u" name="playlist1" owner="admin" public="true">
+        <entry id="71463" parent="-11053" title="The Jack" album="High Voltage" artist="AC/DC"
+               isDir="false" duration="352" bitRate="128" size="5624132"
+               track="1" year="2013" suffix="mp3" contentType="audio/mpeg" isVideo="false"
+               path="/path/to/file.mp3"/>
+    </playlist>
+</subsonic-response>
+

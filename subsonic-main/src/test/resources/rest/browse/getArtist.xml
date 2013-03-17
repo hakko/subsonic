@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<subsonic-response xmlns="http://subsonic.org/restapi"
+                   status="ok" version="1.8.0">
+
+    <artist id="A5432" name="AC/DC">
+        <album id="-11047" name="Back In Black" coverArt="312e6a7067" artist="AC/DC" artistId="A5432"/>
+        <album id="-11048" name="Black Ice" coverArt="322e6a7067" artist="AC/DC" artistId="A5432"/>
+    </artist>
+
+</subsonic-response>
