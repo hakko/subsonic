@@ -135,7 +135,7 @@ public class RESTPlaylistController extends RESTAbstractController {
         }
 
         try {
-            String id = StringUtil.utf8HexDecode(ServletRequestUtils.getRequiredStringParameter(request, "id"));
+            String id = ServletRequestUtils.getRequiredStringParameter(request, "id");
             playlistService.deletePlaylist(id);
 
             XMLBuilder builder = createXMLBuilder(request, response, true);
