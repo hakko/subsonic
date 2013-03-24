@@ -117,7 +117,7 @@ ${model.artistName}
 		<a id="top_tracks" href="javascript:noop()" onclick="top.playlist.onPlayTopTracks(${model.artistId}, playMode());">Play top tracks</a> |
 		<a id="artist_radio" href="javascript:noop()" onclick="top.playlist.onPlayArtistRadio(${model.artistId}, playMode());">Play artist radio</a> |
 	</c:if>
-	<a id="random" href="javascript:noop()" onclick="top.playlist.onPlayRandom(${model.trackIds}, 10, playMode());"><fmt:message key="main.playrandom"/></a>
+	<a id="random" href="javascript:noop()" onclick="top.playlist.onPlayRandom(${model.trackIds}, playMode());"><fmt:message key="main.playrandom"/></a>
 	<br/>
 	<a id="togglePlayAdd" class="Play" href="javascript:togglePlayAdd()" title="Toggle if new tracks replace the current playlist, are played next, or are appended last to it.">Play/enqueue/add</a>
 	<c:if test="${model.isInSearchIndex}">

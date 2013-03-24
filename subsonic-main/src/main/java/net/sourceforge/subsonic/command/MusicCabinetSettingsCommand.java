@@ -36,6 +36,7 @@ public class MusicCabinetSettingsCommand {
 	private int radioMinimumSongLength;
 	private int radioMaximumSongLength;
 	private int relatedArtistsSamplerArtistCount;
+	private int randomSongCount;
 	private boolean preferLastFmArtwork;
 	private String lastFmLanguage;
 	private Map<String, String> availableLanguages;
@@ -203,7 +204,15 @@ public class MusicCabinetSettingsCommand {
 		this.relatedArtistsSamplerArtistCount = relatedArtistsSamplerArtistCount;
 	}
 
-	public boolean isPreferLastFmArtwork() {
+	public int getRandomSongCount() {
+        return randomSongCount;
+    }
+
+    public void setRandomSongCount(int randomSongCount) {
+        this.randomSongCount = randomSongCount;
+    }
+
+    public boolean isPreferLastFmArtwork() {
 		return preferLastFmArtwork;
 	}
 

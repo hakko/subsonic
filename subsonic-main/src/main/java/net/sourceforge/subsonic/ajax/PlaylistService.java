@@ -116,7 +116,7 @@ public class PlaylistService {
     	LOG.debug("starting play(" + ids + ", " + mode + ")");
         HttpServletRequest request = WebContextFactory.get().getHttpServletRequest();
         HttpServletResponse response = WebContextFactory.get().getHttpServletResponse();
-        
+
         Player player = getCurrentPlayer(request, response);
         List<MediaFile> mediaFiles = new ArrayList<MediaFile>();
         for (int id : ids) {
@@ -128,18 +128,19 @@ public class PlaylistService {
         player.getPlaylist().addFiles(mode, mediaFiles);
         return convert(request, player, true);
     }
-    
-    public PlaylistInfo playRandom(List<Integer> ids, int count, String mode) throws Exception {
-    	LOG.debug("starting playRandom(" + ids + ", " + count + ", " + mode + ")");
+
+    public PlaylistInfo playRandom(List<Integer> ids, String mode) throws Exception {
+    	LOG.debug("starting playRandom(" + ids + ", " + mode + ")");
         HttpServletRequest request = WebContextFactory.get().getHttpServletRequest();
         HttpServletResponse response = WebContextFactory.get().getHttpServletResponse();
 
+        int count = settingsService.getRandomSongCount();
         List<MediaFile> mediaFiles = new ArrayList<>();
         Collections.shuffle(ids);
         for (int i = 0; i < count && i < ids.size(); i++) {
         	mediaFiles.add(mediaFileService.getMediaFile(ids.get(i)));
         }
-        
+
         Player player = getCurrentPlayer(request, response);
         player.getPlaylist().addFiles(mode, mediaFiles);
         return convert(request, player, true);
@@ -148,7 +149,7 @@ public class PlaylistService {
     public PlaylistInfo playArtistRadio(int artistId, String mode) throws Exception {
     	LOG.debug("starting playArtistRadio(" + artistId + ", " + mode + ")");
 
-    	return getPlaylistInfo(mode, playlistService.getPlaylistForArtist(artistId, 
+    	return getPlaylistInfo(mode, playlistService.getPlaylistForArtist(artistId,
     			settingsService.getArtistRadioArtistCount(),
     			settingsService.getArtistRadioTotalCount()));
     }
@@ -159,10 +160,10 @@ public class PlaylistService {
     	return getPlaylistInfo(mode, playlistService.getTopTracksForArtist(artistId,
     			settingsService.getArtistTopTracksTotalCount()));
     }
-    
+
     public PlaylistInfo playGenreRadio(String[] tags) throws Exception {
     	LOG.debug("starting playGenreRadio(" + Arrays.toString(tags) + ")");
-    	
+
     	return getPlaylistInfo(Playlist.PLAY, playlistService.getPlaylistForTags(tags,
     			settingsService.getGenreRadioArtistCount(),
     			settingsService.getGenreRadioTotalCount()));
@@ -170,7 +171,7 @@ public class PlaylistService {
 
     public PlaylistInfo playGroupRadio(String group) throws Exception {
     	LOG.debug("starting playGroupRadio(" + group + ")");
-    	
+
     	return getPlaylistInfo(Playlist.PLAY, playlistService.getPlaylistForGroup(group,
     			settingsService.getGenreRadioArtistCount(),
     			settingsService.getGenreRadioTotalCount()));
@@ -186,17 +187,17 @@ public class PlaylistService {
     private PlaylistInfo getPlaylistInfo(String mode, List<Integer> trackIds) throws Exception {
         HttpServletRequest request = WebContextFactory.get().getHttpServletRequest();
         HttpServletResponse response = WebContextFactory.get().getHttpServletResponse();
-        
+
         mediaFileService.loadMediaFiles(trackIds);
         List<MediaFile> mediaFiles = new ArrayList<MediaFile>();
         for (int trackId : trackIds) {
         	mediaFiles.add(mediaFileService.getMediaFile(trackId));
         }
-        
+
         Player player = getCurrentPlayer(request, response);
         player.getPlaylist().addFiles(mode, mediaFiles);
         return convert(request, player, true);
-    	
+
     }
 
     public PlaylistInfo add(int mediaFileId) throws Exception {
@@ -217,7 +218,7 @@ public class PlaylistService {
         player.getPlaylist().addFiles(Playlist.ADD, files);
         return convert(request, player, false);
     }
-    
+
     public PlaylistInfo doSet(HttpServletRequest request, HttpServletResponse response, List<Integer> mediaFileIds) throws Exception {
         Player player = getCurrentPlayer(request, response);
         Playlist playlist = player.getPlaylist();
@@ -295,7 +296,7 @@ public class PlaylistService {
         player.getPlaylist().moveDown(index);
         return convert(request, player, false);
     }
-    
+
     public PlaylistInfo toggleRepeat() throws Exception {
         HttpServletRequest request = WebContextFactory.get().getHttpServletRequest();
         HttpServletResponse response = WebContextFactory.get().getHttpServletResponse();
@@ -381,9 +382,9 @@ public class PlaylistService {
 
             String format = formatFormat(player, file);
             entries.add(new PlaylistInfo.Entry(metaData.getTrackNumber(), metaData.getTitle(), metaData.getArtist(),
-            		metaData.getArtistId(), metaData.getAlbum(), metaData.getAlbumId(), metaData.getComposer(), 
-            		metaData.getGenre(), metaData.getYear(), formatBitRate(metaData), metaData.getDuration(), 
-            		metaData.getDurationAsString(), format, formatContentType(format), 
+            		metaData.getArtistId(), metaData.getAlbum(), metaData.getAlbumId(), metaData.getComposer(),
+            		metaData.getGenre(), metaData.getYear(), formatBitRate(metaData), metaData.getDuration(),
+            		metaData.getDurationAsString(), format, formatContentType(format),
             		formatFileSize(metaData.getFileSize(), locale), streamUrl));
         }
         boolean isStopEnabled = playlist.getStatus() == Playlist.Status.PLAYING && !player.isExternalWithPlaylist();
@@ -443,5 +444,5 @@ public class PlaylistService {
 	public void setPlaylistGeneratorService(PlaylistGeneratorService playlistService) {
 		this.playlistService = playlistService;
 	}
-	
+
 }

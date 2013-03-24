@@ -130,6 +130,7 @@ public class SettingsService {
     private static final String KEY_MUSICCABINET_GENRE_RADIO_ARTIST_COUNT = "MusicCabinetGenreRadioArtistCount";
     private static final String KEY_MUSICCABINET_GENRE_RADIO_TOTAL_COUNT = "MusicCabinetGenreRadioTotalCount";
     private static final String KEY_MUSICCABINET_RELATED_ARTISTS_SAMPLER_ARTIST_COUNT = "MusicCabinetRelatedArtistsSamplerArtistCount";
+    private static final String KEY_MUSICCABINET_RANDOM_SONG_COUNT = "MusicCabinetRandomSongCount";
     private static final String KEY_MUSICCABINET_PREFER_LAST_FM_ARTWORK = "MusicCabinetPreferLastFmArtwork";
     private static final String KEY_MUSICCABINET_RADIO_MINIMUM_SONG_LENGTH = "MusicCabinetRadioMinimumSongLength";
     private static final String KEY_MUSICCABINET_RADIO_MAXIMUM_SONG_LENGTH = "MusicCabinetRadioMaximumSongLength";
@@ -200,6 +201,7 @@ public class SettingsService {
     private static final int DEFAULT_MUSICCABINET_GENRE_RADIO_ARTIST_COUNT = 1;
     private static final int DEFAULT_MUSICCABINET_GENRE_RADIO_TOTAL_COUNT = 25;
     private static final int DEFAULT_MUSICCABINET_RELATED_ARTISTS_SAMPLER_ARTIST_COUNT = 3;
+    private static final int DEFAULT_MUSICCABINET_RANDOM_SONG_COUNT = 10;
     private static final boolean DEFAULT_MUSICCABINET_PREFER_LAST_FM_ARTWORK = true;
     private static final int DEFAULT_MUSICCABINET_RADIO_MINIMUM_SONG_LENGTH = 45;
     private static final int DEFAULT_MUSICCABINET_RADIO_MAXIMUM_SONG_LENGTH = 600;
@@ -1295,6 +1297,15 @@ public class SettingsService {
 
     public void setRelatedArtistsSamplerArtistCount(int artistCount) {
     	setInt(KEY_MUSICCABINET_RELATED_ARTISTS_SAMPLER_ARTIST_COUNT, artistCount);
+    }
+
+    public int getRandomSongCount() {
+        return getInt(KEY_MUSICCABINET_RANDOM_SONG_COUNT,
+                DEFAULT_MUSICCABINET_RANDOM_SONG_COUNT);
+    }
+
+    public void setRandomSongCount(int randomSongCount) {
+        setInt(KEY_MUSICCABINET_RANDOM_SONG_COUNT, randomSongCount);
     }
 
     public boolean isPreferLastFmArtwork() {

@@ -104,6 +104,13 @@
             </td>
            </tr>
            <tr>
+            <td>Random, number of songs</td>
+            <td>
+             <form:input path="randomSongCount" size="5"/>
+             <c:import url="helpToolTip.jsp"><c:param name="topic" value="randomsongcount"/></c:import>
+            </td>
+           </tr>
+           <tr>
             <td>Prefer last.fm artwork</td>
             <td>
                <form:select path="preferLastFmArtwork">

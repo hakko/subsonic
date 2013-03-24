@@ -142,11 +142,11 @@
     	    playlistService.play(path, mode, playlistCallback);
     	}
     }
-    function onPlayRandom(path, count, mode) {
+    function onPlayRandom(path, mode) {
     	append = (mode != 'P');
         if (append || verifyIfPartyMode()) {
 	        startPlayer = !append;
-    	    playlistService.playRandom(path, count, mode, playlistCallback);
+    	    playlistService.playRandom(path, mode, playlistCallback);
     	}
     }
     

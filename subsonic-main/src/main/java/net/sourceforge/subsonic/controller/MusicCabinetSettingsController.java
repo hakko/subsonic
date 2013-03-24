@@ -74,6 +74,7 @@ public class MusicCabinetSettingsController extends SimpleFormController impleme
         command.setRadioMinimumSongLength(settingsService.getRadioMinimumSongLength());
         command.setRadioMaximumSongLength(settingsService.getRadioMaximumSongLength());
         command.setRelatedArtistsSamplerArtistCount(settingsService.getRelatedArtistsSamplerArtistCount());
+        command.setRandomSongCount(settingsService.getRandomSongCount());
         command.setPreferLastFmArtwork(settingsService.isPreferLastFmArtwork());
         command.setLastFmLanguage(settingsService.getLastFmLanguage());
         command.setAvailableLanguages(getAvailableLanguages());
@@ -139,6 +140,7 @@ public class MusicCabinetSettingsController extends SimpleFormController impleme
         settingsService.setGenreRadioArtistCount(command.getGenreRadioArtistCount());
         settingsService.setGenreRadioTotalCount(command.getGenreRadioTotalCount());
         settingsService.setRelatedArtistsSamplerArtistCount(command.getRelatedArtistsSamplerArtistCount());
+        settingsService.setRandomSongCount(command.getRandomSongCount());
         settingsService.setPreferLastFmArtwork(command.isPreferLastFmArtwork());
         settingsService.setRadioMinimumSongLength(command.getRadioMinimumSongLength());
         settingsService.setRadioMaximumSongLength(command.getRadioMaximumSongLength());
