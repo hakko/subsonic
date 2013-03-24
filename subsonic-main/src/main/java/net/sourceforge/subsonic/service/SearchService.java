@@ -18,8 +18,8 @@
  */
 package net.sourceforge.subsonic.service;
 
-import static net.sourceforge.subsonic.ajax.LibraryStatusService.Message.SCAN_STARTED;
 import static net.sourceforge.subsonic.ajax.LibraryStatusService.Message.SCAN_FINISHED;
+import static net.sourceforge.subsonic.ajax.LibraryStatusService.Message.SCAN_STARTED;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -75,7 +75,7 @@ public class SearchService {
 		createIndex(paths, true, offlineScan, onlyNewArtists, notify);
     }
 
-    public void createIndex(final Set<String> paths, final boolean isRootPaths, 
+    public void createIndex(final Set<String> paths, final boolean isRootPaths,
     		final boolean offlineScan, final boolean onlyNewArtists, final boolean notify) {
         Thread thread = new Thread("Search Index Generator") { // TODO : use concurrent scheduler?
             @Override
@@ -92,7 +92,7 @@ public class SearchService {
 
         thread.start();
     }
-    
+
     public void deleteMediaFolders(final Set<String> deletedPaths) {
         Thread thread = new Thread("Search Index Generator") { // TODO : use concurrent scheduler?
             @Override
@@ -106,9 +106,9 @@ public class SearchService {
             	}
             }
         };
-        
+
         thread.start();
-    	
+
     }
 
     /*
@@ -119,19 +119,15 @@ public class SearchService {
     	if (lastFmUser.length() > 0) {
     		lastFmSettingsService.setLastFmUsername(lastFmUser);
     	}
-    	List<String> lastFmUsers = settingsService.getAllLastFmUsers();
-    	if (lastFmUsers.size() > 0) {
-    		List<LastFmUser> users = new ArrayList<LastFmUser>();
-    		for (String user : lastFmUsers) {
-    			users.add(new LastFmUser(user));
-    		}
-    		LOG.debug("Found users " + users);
-    		lastFmSettingsService.setLastFmUsers(users);
-    	}
+        List<LastFmUser> users = new ArrayList<LastFmUser>();
+        for (String user : settingsService.getAllLastFmUsers()) {
+            users.add(new LastFmUser(user));
+        }
+        lastFmSettingsService.setLastFmUsers(users);
 		lastFmSettingsService.setLocale(Locale.forLanguageTag(
 				settingsService.getLastFmLanguage()));
     }
-    
+
     /**
      * Schedule background execution of index creation.
      */
@@ -193,7 +189,7 @@ public class SearchService {
     public void setSettingsService(SettingsService settingsService) {
         this.settingsService = settingsService;
     }
-	
+
 	public void setMediaFolderService(MediaFolderService mediaFolderService) {
 		this.mediaFolderService = mediaFolderService;
 	}
