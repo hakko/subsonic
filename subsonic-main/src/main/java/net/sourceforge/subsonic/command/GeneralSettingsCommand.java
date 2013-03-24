@@ -41,6 +41,7 @@ public class GeneralSettingsCommand {
     private String loginMessage;
     private String shareUrlPrefix;
     private String lyricsUrl;
+    private String restAlbumName;
     private String localeIndex;
     private String[] locales;
     private String themeIndex;
@@ -143,7 +144,15 @@ public class GeneralSettingsCommand {
 		this.lyricsUrl = lyricsUrl;
 	}
 
-	public String getLocaleIndex() {
+	public String getRestAlbumName() {
+        return restAlbumName;
+    }
+
+    public void setRestAlbumName(String restAlbumName) {
+        this.restAlbumName = restAlbumName;
+    }
+
+    public String getLocaleIndex() {
         return localeIndex;
     }
 

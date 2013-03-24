@@ -178,6 +178,10 @@ public class RESTBrowseControllerTest {
                 new MediaFile(0, new File("ACDC/High voltage/ACDC - The Jack.mp3")));
         browseController.setMediaFileService(mediaFileService);
 
+        SettingsService settingsService = mock(SettingsService.class);
+        when(settingsService.getRestAlbumName()).thenReturn("$(album)");
+        browseController.setSettingsService(settingsService);
+
         LibraryBrowserService libraryBrowserService = mock(LibraryBrowserService.class);
         when(libraryBrowserService.getAlbum(albumId)).thenReturn(album);
         when(libraryBrowserService.getTracks(album.getTrackIds())).thenReturn(asList(track));

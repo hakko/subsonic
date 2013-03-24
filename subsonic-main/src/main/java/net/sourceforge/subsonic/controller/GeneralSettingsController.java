@@ -18,13 +18,15 @@
  */
 package net.sourceforge.subsonic.controller;
 
+import java.util.Locale;
+
+import javax.servlet.http.HttpServletRequest;
+
 import net.sourceforge.subsonic.command.GeneralSettingsCommand;
 import net.sourceforge.subsonic.domain.Theme;
 import net.sourceforge.subsonic.service.SettingsService;
-import org.springframework.web.servlet.mvc.SimpleFormController;
 
-import javax.servlet.http.HttpServletRequest;
-import java.util.Locale;
+import org.springframework.web.servlet.mvc.SimpleFormController;
 
 /**
  * Controller for the page used to administrate general settings.
@@ -35,6 +37,7 @@ public class GeneralSettingsController extends SimpleFormController {
 
     private SettingsService settingsService;
 
+    @Override
     protected Object formBackingObject(HttpServletRequest request) throws Exception {
         GeneralSettingsCommand command = new GeneralSettingsCommand();
         command.setIgnoredArticles(settingsService.getIgnoredArticles());
@@ -50,6 +53,7 @@ public class GeneralSettingsController extends SimpleFormController {
         command.setLoginMessage(settingsService.getLoginMessage());
         command.setShareUrlPrefix(settingsService.getShareUrlPrefix());
         command.setLyricsUrl(settingsService.getLyricsUrl());
+        command.setRestAlbumName(settingsService.getRestAlbumName());
 
         Theme[] themes = settingsService.getAvailableThemes();
         command.setThemes(themes);
@@ -77,6 +81,7 @@ public class GeneralSettingsController extends SimpleFormController {
 
     }
 
+    @Override
     protected void doSubmitAction(Object comm) throws Exception {
         GeneralSettingsCommand command = (GeneralSettingsCommand) comm;
 
@@ -103,6 +108,7 @@ public class GeneralSettingsController extends SimpleFormController {
         settingsService.setLoginMessage(command.getLoginMessage());
         settingsService.setShareUrlPrefix(command.getShareUrlPrefix());
         settingsService.setLyricsUrl(command.getLyricsUrl());
+        settingsService.setRestAlbumName(command.getRestAlbumName());
         settingsService.setThemeId(theme.getId());
         settingsService.setLocale(locale);
         settingsService.save();

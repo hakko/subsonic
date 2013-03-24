@@ -146,6 +146,13 @@
                 <c:import url="helpToolTip.jsp"><c:param name="topic" value="lyricsurl"/></c:import>
             </td>
         </tr>
+        <tr>
+            <td style="vertical-align:top;"><fmt:message key="generalsettings.restalbumname"/></td>
+            <td>
+                <form:input path="restAlbumName" size="70"/>
+                <c:import url="helpToolTip.jsp"><c:param name="topic" value="restalbumname"/></c:import>
+            </td>
+        </tr>
 
         <tr>
             <td colspan="2" style="padding-top:1.5em">

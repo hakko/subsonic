@@ -37,6 +37,7 @@ import net.sourceforge.subsonic.util.XMLBuilder.Attribute;
 import net.sourceforge.subsonic.util.XMLBuilder.AttributeSet;
 
 import org.apache.commons.io.FilenameUtils;
+import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang.math.NumberUtils;
 import org.springframework.web.bind.ServletRequestBindingException;
 import org.springframework.web.bind.ServletRequestUtils;
@@ -257,7 +258,7 @@ public class RESTBrowseController extends RESTAbstractController {
         XMLBuilder builder = createXMLBuilder(request, response, true);
         builder.add("album", false,
                 new Attribute("id", ALBUM_ID + albumId),
-                new Attribute("name", album.getName()),
+                new Attribute("name", getAlbumName(album)),
                 new Attribute("artist", album.getArtist().getName()),
                 new Attribute("artistId", ARTIST_ID + album.getArtist().getId()));
 
@@ -367,7 +368,7 @@ public class RESTBrowseController extends RESTAbstractController {
             builder.add("child", true,
                     new Attribute("id", ALBUM_ID + album.getId()),
                     new Attribute("parent", ARTIST_ID + artistId),
-                    new Attribute("title", album.getTitle()),
+                    new Attribute("title", getAlbumName(album.getTitle(), album.getYear())),
                     new Attribute("isDir", true),
                     new Attribute("coverArt", StringUtil.utf8HexEncode(album.getCoverArtPath())));
         }
@@ -442,7 +443,7 @@ public class RESTBrowseController extends RESTAbstractController {
 
         builder.add("directory", false,
                 new Attribute("id", ALBUM_ID + albumId),
-                new Attribute("name", album.getName()));
+                new Attribute("name", getAlbumName(album)));
 
         Collections.sort(tracks, trackComparator);
         addTracks(builder, tracks, album, player);
@@ -838,6 +839,18 @@ public class RESTBrowseController extends RESTAbstractController {
 
     private String resolveArtist(MediaFile file) throws IOException {
         return file.getMetaData().getArtist();
+    }
+
+    private String getAlbumName(Album album) {
+        return getAlbumName(album.getName(), album.getYear());
+    }
+
+    private String getAlbumName(String title, Short year) {
+        String albumName = settingsService.getRestAlbumName();
+        albumName = StringUtils.replace(albumName, "$(album)", title);
+        albumName = StringUtils.replace(albumName, "$(year)",
+                year == null || year == 0 ? "" : "" + year);
+        return albumName;
     }
 
     public void setSettingsService(SettingsService settingsService) {
