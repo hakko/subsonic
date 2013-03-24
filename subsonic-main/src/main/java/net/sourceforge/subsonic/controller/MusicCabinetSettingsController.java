@@ -1,6 +1,5 @@
 package net.sourceforge.subsonic.controller;
 
-import static java.lang.String.format;
 import static java.util.Locale.ENGLISH;
 
 import java.util.ArrayList;
@@ -34,37 +33,38 @@ import com.github.hakko.musiccabinet.service.lastfm.WebserviceHistoryService;
  */
 public class MusicCabinetSettingsController extends SimpleFormController implements InitializingBean {
 
-	private Logger LOG = Logger.getLogger(this.getClass());
-	
+    private Logger LOG = Logger.getLogger(this.getClass());
+
     private DatabaseAdministrationService dbAdmService;
     private PlaylistGeneratorService playlistService;
-    
+
     private SettingsService settingsService;
     private LastFmSettingsService lastFmSettingsService;
     private SearchService searchService;
     private MediaFolderService mediaFolderService;
     private LibraryUpdateService libraryUpdateService;
     private WebserviceHistoryService webserviceHistoryService;
-    
+
+    @Override
     protected Object formBackingObject(HttpServletRequest request) throws Exception {
         MusicCabinetSettingsCommand command = new MusicCabinetSettingsCommand();
-        
+
         command.setDatabaseRunning(dbAdmService.isRDBMSRunning());
         command.setPasswordCorrect(dbAdmService.isPasswordCorrect(
-        		settingsService.getMusicCabinetJDBCPassword()));
+                settingsService.getMusicCabinetJDBCPassword()));
         command.setDatabaseUpdated(dbAdmService.isDatabaseUpdated());
         command.setSearchIndexBeingCreated(libraryUpdateService.isIndexBeingCreated());
         if (command.isSearchIndexBeingCreated()) {
-        	command.setUpdateProgress(libraryUpdateService.getSearchIndexUpdateProgress());
+            command.setUpdateProgress(libraryUpdateService.getSearchIndexUpdateProgress());
         }
         if (command.isDatabaseRunning() && command.isDatabaseUpdated()) {
-        	if (playlistService.isSearchIndexCreated()) {
-        		command.setSearchIndexCreated(true);
-        	} else {
-        		command.setMediaFolderNames(getMediaFolderNames()); 
-        	}
+            if (playlistService.isSearchIndexCreated()) {
+                command.setSearchIndexCreated(true);
+            } else {
+                command.setMediaFolderNames(getMediaFolderNames());
+            }
         }
-        
+
         command.setLastFMUsername(settingsService.getMusicCabinetLastFMUsername());
         command.setArtistRadioArtistCount(settingsService.getArtistRadioArtistCount());
         command.setArtistRadioTotalCount(settingsService.getArtistRadioTotalCount());
@@ -79,58 +79,60 @@ public class MusicCabinetSettingsController extends SimpleFormController impleme
         command.setAvailableLanguages(getAvailableLanguages());
         command.setClearLanguageSpecificContent(false);
         command.setSyncStarredAndLovedTracks(settingsService.isSyncStarredAndLovedTracks());
-        
+        command.setPreferLocalGenres(settingsService.isPreferLocalGenres());
+
         return command;
     }
 
     private Map<String, String> getAvailableLanguages() {
-    	Map<String, String> languages = new TreeMap<>();
-		for (Locale locale : Locale.getAvailableLocales()) {
-			languages.put(locale.getDisplayLanguage(ENGLISH), locale.getLanguage());
-		}
-		return languages;
+        Map<String, String> languages = new TreeMap<>();
+        for (Locale locale : Locale.getAvailableLocales()) {
+            languages.put(locale.getDisplayLanguage(ENGLISH), locale.getLanguage());
+        }
+        return languages;
     }
 
+    @Override
     protected void doSubmitAction(Object comm) throws Exception {
         MusicCabinetSettingsCommand command = (MusicCabinetSettingsCommand) comm;
 
         if (command.isUpdateDatabase()) {
-        	dbAdmService.loadNewDatabaseUpdates();
-        	command.setDatabaseUpdated(dbAdmService.isDatabaseUpdated());
-        	if (playlistService.isSearchIndexCreated()) {
-        		command.setSearchIndexCreated(true);
-        	} else {
-        		command.setMediaFolderNames(getMediaFolderNames());
-        	}
+            dbAdmService.loadNewDatabaseUpdates();
+            command.setDatabaseUpdated(dbAdmService.isDatabaseUpdated());
+            if (playlistService.isSearchIndexCreated()) {
+                command.setSearchIndexCreated(true);
+            } else {
+                command.setMediaFolderNames(getMediaFolderNames());
+            }
         }
-        
+
         if (command.isUpdateSearchIndex()) {
-        	searchService.createIndex(false, false, true);
+            searchService.createIndex(false, false, true);
             command.setSearchIndexBeingCreated(true);
         }
-        
+
         if (command.getLastFMUsername() != null) {
-        	settingsService.setMusicCabinetLastFMUsername(command.getLastFMUsername());
+            settingsService.setMusicCabinetLastFMUsername(command.getLastFMUsername());
         }
-        
+
         if (command.getMusicCabinetJDBCPassword() != null) {
-        	String password = command.getMusicCabinetJDBCPassword();
-        	if (dbAdmService.isPasswordCorrect(password)) {
-            	settingsService.setMusicCabinetJDBCPassword(password);
-            	command.setPasswordCorrect(true);
-            	dbAdmService.forcePasswordUpdate(password);
+            String password = command.getMusicCabinetJDBCPassword();
+            if (dbAdmService.isPasswordCorrect(password)) {
+                settingsService.setMusicCabinetJDBCPassword(password);
+                command.setPasswordCorrect(true);
+                dbAdmService.forcePasswordUpdate(password);
                 command.setDatabaseUpdated(dbAdmService.isDatabaseUpdated());
                 command.setSearchIndexCreated(playlistService.isSearchIndexCreated());
-        	} else {
-        		command.setPasswordAttemptWrong(true);
-        	}
+            } else {
+                command.setPasswordAttemptWrong(true);
+            }
         }
 
         if (command.isClearLanguageSpecificContent()) {
-        	LOG.debug("clear language specific content");
-        	webserviceHistoryService.clearLanguageSpecificInvocations();
+            LOG.debug("clear language specific content");
+            webserviceHistoryService.clearLanguageSpecificInvocations();
         }
-        
+
         settingsService.setArtistRadioArtistCount(command.getArtistRadioArtistCount());
         settingsService.setArtistRadioTotalCount(command.getArtistRadioTotalCount());
         settingsService.setArtistTopTracksTotalCount(command.getArtistTopTracksTotalCount());
@@ -142,65 +144,63 @@ public class MusicCabinetSettingsController extends SimpleFormController impleme
         settingsService.setRadioMaximumSongLength(command.getRadioMaximumSongLength());
         settingsService.setLastFmLanguage(command.getLastFmLanguage());
         settingsService.setSyncStarredAndLovedTracks(command.isSyncStarredAndLovedTracks());
+        settingsService.setPreferLocalGenres(command.isPreferLocalGenres());
         settingsService.save();
 
-        playlistService.setAllowedTrackLengthInterval(
-				settingsService.getRadioMinimumSongLength(),
-				settingsService.getRadioMaximumSongLength());
+        afterPropertiesSet();
     }
 
     private List<String> getMediaFolderNames() {
-		List<String> mediaFolderNames = new ArrayList<String>();
-		for (MediaFolder mediaFolder : mediaFolderService.getIndexedMediaFolders()) {
-			mediaFolderNames.add(mediaFolder.getName());
-		}
-		return mediaFolderNames;
+        List<String> mediaFolderNames = new ArrayList<String>();
+        for (MediaFolder mediaFolder : mediaFolderService.getIndexedMediaFolders()) {
+            mediaFolderNames.add(mediaFolder.getName());
+        }
+        return mediaFolderNames;
     }
 
-	@Override
-	public void afterPropertiesSet() throws Exception {
-		LOG.debug(format("afterPropertiesSet(), set interval (%d, %d)",
-				settingsService.getRadioMinimumSongLength(),
-				settingsService.getRadioMaximumSongLength()));
-		playlistService.setAllowedTrackLengthInterval(
-				settingsService.getRadioMinimumSongLength(),
-				settingsService.getRadioMaximumSongLength());
-		lastFmSettingsService.setSyncStarredAndLovedTracks(
-				settingsService.isSyncStarredAndLovedTracks());
-	}
-    
+    @Override
+    public void afterPropertiesSet() throws Exception {
+        playlistService.setAllowedTrackLengthInterval(
+                settingsService.getRadioMinimumSongLength(),
+                settingsService.getRadioMaximumSongLength());
+        lastFmSettingsService.setSyncStarredAndLovedTracks(
+                settingsService.isSyncStarredAndLovedTracks());
+        lastFmSettingsService.setPreferLocalGenres(
+                settingsService.isPreferLocalGenres());
+    }
+
     // Spring setters
-    
+
     public void setDatabaseAdministrationService(DatabaseAdministrationService dbAdmService) {
         this.dbAdmService = dbAdmService;
     }
-    
+
     public void setPlaylistGeneratorService(PlaylistGeneratorService playlistService) {
-    	this.playlistService = playlistService;
+        this.playlistService = playlistService;
     }
 
-	public void setSettingsService(SettingsService settingsService) {
-    	this.settingsService = settingsService;
+    public void setSettingsService(SettingsService settingsService) {
+        this.settingsService = settingsService;
     }
- 
+
     public void setLastFmSettingsService(LastFmSettingsService lastFmSettingsService) {
-		this.lastFmSettingsService = lastFmSettingsService;
-	}
-
-	public void setSearchService(SearchService searchService) {
-    	this.searchService = searchService;
+        this.lastFmSettingsService = lastFmSettingsService;
     }
 
-	public void setMediaFolderService(MediaFolderService mediaFolderService) {
-		this.mediaFolderService = mediaFolderService;
-	}
+    public void setSearchService(SearchService searchService) {
+        this.searchService = searchService;
+    }
 
-	public void setLibraryUpdateService(LibraryUpdateService libraryUpdateService) {
-		this.libraryUpdateService = libraryUpdateService;
-	}
+    public void setMediaFolderService(MediaFolderService mediaFolderService) {
+        this.mediaFolderService = mediaFolderService;
+    }
 
-	public void setWebserviceHistoryService(WebserviceHistoryService webserviceHistoryService) {
-		this.webserviceHistoryService = webserviceHistoryService;
-	}
-   
+    public void setLibraryUpdateService(LibraryUpdateService libraryUpdateService) {
+        this.libraryUpdateService = libraryUpdateService;
+    }
+
+    public void setWebserviceHistoryService(WebserviceHistoryService webserviceHistoryService) {
+        this.webserviceHistoryService = webserviceHistoryService;
+    }
+
 }

@@ -19,13 +19,11 @@
 package net.sourceforge.subsonic.controller;
 
 import static java.util.Arrays.asList;
-import static org.apache.commons.lang.ArrayUtils.isEmpty;
 import static org.apache.commons.lang.ArrayUtils.isNotEmpty;
 import static org.apache.commons.lang.StringUtils.upperCase;
 import static org.apache.commons.lang.math.NumberUtils.toInt;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -44,8 +42,6 @@ import net.sourceforge.subsonic.service.SecurityService;
 import net.sourceforge.subsonic.service.SettingsService;
 import net.sourceforge.subsonic.util.Util;
 
-import org.apache.commons.lang.ArrayUtils;
-import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang.math.NumberUtils;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.ParameterizableViewController;
@@ -70,17 +66,17 @@ public class ArtistController extends ParameterizableViewController {
 	private LibraryBrowserService libraryBrowserService;
 	private MediaFileService mediaFileService;
 	private StarService starService;
-	
+
 	private static final Logger LOG = Logger.getLogger(ArtistController.class);
-	
+
     @Override
     protected ModelAndView handleRequestInternal(HttpServletRequest request, HttpServletResponse response) throws Exception {
         Map<String, Object> map = new HashMap<String, Object>();
 
         Player player = playerService.getPlayer(request, response);
-        
+
         int artistId = NumberUtils.toInt(request.getParameter("id"), -1);
-        
+
         String[] albumIds = request.getParameterValues("albumId");
 
         User user = securityService.getCurrentUser(request);
@@ -92,6 +88,7 @@ public class ArtistController extends ParameterizableViewController {
         map.put("trackId", request.getParameter("trackId"));
         map.put("artistStarred", starService.isArtistStarred(userSettings.getLastFmUsername(), artistId));
         map.put("topTags", artistTopTagsService.getTopTags(artistId, 3));
+        map.put("allowTopTagsEdit", !settingsService.isPreferLocalGenres());
         map.put("visibility", userSettings.getMainVisibility());
         map.put("player", player);
         map.put("user", user);
@@ -101,7 +98,7 @@ public class ArtistController extends ParameterizableViewController {
         return result;
     }
 
-    private void setAlbums(int artistId, boolean variousArtists, UserSettings userSettings, 
+    private void setAlbums(int artistId, boolean variousArtists, UserSettings userSettings,
     		Map<String, Object> map, String[] selectedAlbumIds) {
         List<Album> albums = mediaFileService.getAlbums(
         		variousArtists && isNotEmpty(selectedAlbumIds) ?
@@ -110,7 +107,7 @@ public class ArtistController extends ParameterizableViewController {
         		userSettings.isAlbumOrderByYear(), userSettings.isAlbumOrderAscending()));
         List<Integer> albumIds = new ArrayList<>();
         List<Integer> trackIds = new ArrayList<>();
-        
+
         for (Album album : albums) {
         	if (album.getArtistId() == artistId) {
         		album.setArtistName(null);
@@ -118,7 +115,7 @@ public class ArtistController extends ParameterizableViewController {
         	albumIds.add(album.getId());
         	trackIds.addAll(album.getTrackIds());
         }
-        
+
         if (albums.size() > 3) {
         	map.put("artistInfoMinimized", true);
         	map.put("artistInfoImageSize", 63);
@@ -164,12 +161,12 @@ public class ArtistController extends ParameterizableViewController {
         }
         return artistInfo;
     }
-	
+
 	private boolean isVariousArtists(ArtistInfo artistInfo) {
 		String artistName = upperCase(artistInfo.getArtist().getName());
 		return "VARIOUS ARTISTS".equals(artistName) || "VA".equals(artistName);
 	}
-    
+
     // Spring setters
 
     public void setPlayerService(PlayerService playerService) {
@@ -203,5 +200,5 @@ public class ArtistController extends ParameterizableViewController {
 	public void setStarService(StarService starService) {
 		this.starService = starService;
 	}
-    
+
 }

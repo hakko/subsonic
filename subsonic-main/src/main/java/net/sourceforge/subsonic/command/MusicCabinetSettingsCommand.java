@@ -3,9 +3,9 @@ package net.sourceforge.subsonic.command;
 import java.util.List;
 import java.util.Map;
 
-import com.github.hakko.musiccabinet.domain.model.aggr.SearchIndexUpdateProgress;
-
 import net.sourceforge.subsonic.controller.MusicCabinetSettingsController;
+
+import com.github.hakko.musiccabinet.domain.model.aggr.SearchIndexUpdateProgress;
 
 /**
  * Command used in {@link MusicCabinetSettingsController}.
@@ -22,7 +22,7 @@ public class MusicCabinetSettingsCommand {
 	private boolean isSearchIndexCreated;
 	private List<SearchIndexUpdateProgress> updateProgress;
 	private List<String> mediaFolderNames;
-	
+
 	private String musicCabinetJDBCPassword;
 	private String lastFMUsername;
 	private boolean updateDatabase;
@@ -41,15 +41,16 @@ public class MusicCabinetSettingsCommand {
 	private Map<String, String> availableLanguages;
 	private boolean clearLanguageSpecificContent;
 	private boolean syncStarredAndLovedTracks;
-	
+	private boolean preferLocalGenres;
+
 	public boolean isDatabaseRunning() {
 		return isDatabaseRunning;
 	}
-	
+
 	public void setDatabaseRunning(boolean isDatabaseRunning) {
 		this.isDatabaseRunning = isDatabaseRunning;
 	}
-	
+
 	public boolean isPasswordCorrect() {
 		return isPasswordCorrect;
 	}
@@ -69,7 +70,7 @@ public class MusicCabinetSettingsCommand {
 	public boolean isDatabaseUpdated() {
 		return isDatabaseUpdated;
 	}
-	
+
 	public void setDatabaseUpdated(boolean isDatabaseUpdated) {
 		this.isDatabaseUpdated = isDatabaseUpdated;
 	}
@@ -105,7 +106,7 @@ public class MusicCabinetSettingsCommand {
 	public void setUpdateProgress(List<SearchIndexUpdateProgress> updateProgress) {
 		this.updateProgress = updateProgress;
 	}
-	
+
 	public String getMusicCabinetJDBCPassword() {
 		return musicCabinetJDBCPassword;
 	}
@@ -241,5 +242,13 @@ public class MusicCabinetSettingsCommand {
 	public void setSyncStarredAndLovedTracks(boolean syncStarredAndLovedTracks) {
 		this.syncStarredAndLovedTracks = syncStarredAndLovedTracks;
 	}
+
+    public boolean isPreferLocalGenres() {
+        return preferLocalGenres;
+    }
+
+    public void setPreferLocalGenres(boolean preferLocalGenres) {
+        this.preferLocalGenres = preferLocalGenres;
+    }
 
 }
