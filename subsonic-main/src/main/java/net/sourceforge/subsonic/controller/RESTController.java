@@ -161,6 +161,11 @@ public class RESTController extends MultiActionController implements REST_1_8_0 
     }
 
     @Override
+    public void updatePlaylist(HttpServletRequest request, HttpServletResponse response) throws Exception {
+        restPlaylistController.updatePlaylist(request, response);
+    }
+
+    @Override
     public ModelAndView stream(HttpServletRequest request, HttpServletResponse response) throws Exception {
         return restMediaRetrievalController.stream(request, response);
     }

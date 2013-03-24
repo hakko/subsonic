@@ -37,6 +37,7 @@ public interface REST_1_8_0 {
     public void getPlaylist(HttpServletRequest request, HttpServletResponse response) throws Exception;
     public void createPlaylist(HttpServletRequest request, HttpServletResponse response) throws Exception;
     public void deletePlaylist(HttpServletRequest request, HttpServletResponse response) throws Exception;
+    public void updatePlaylist(HttpServletRequest request, HttpServletResponse response) throws Exception;
 
     // Media retrieval
     public ModelAndView stream(HttpServletRequest request, HttpServletResponse response) throws Exception;
