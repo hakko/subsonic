@@ -29,10 +29,6 @@ import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.apache.commons.lang.RandomStringUtils;
-import org.springframework.web.servlet.ModelAndView;
-import org.springframework.web.servlet.mvc.ParameterizableViewController;
-
 import net.sourceforge.subsonic.Logger;
 import net.sourceforge.subsonic.dao.ShareDao;
 import net.sourceforge.subsonic.domain.MediaFile;
@@ -43,6 +39,10 @@ import net.sourceforge.subsonic.service.MediaFileService;
 import net.sourceforge.subsonic.service.PlayerService;
 import net.sourceforge.subsonic.service.SecurityService;
 import net.sourceforge.subsonic.service.SettingsService;
+
+import org.apache.commons.lang.RandomStringUtils;
+import org.springframework.web.servlet.ModelAndView;
+import org.springframework.web.servlet.mvc.ParameterizableViewController;
 
 /**
  * Controller for the page used to play shared music (Twitter, Facebook etc).
@@ -134,6 +134,7 @@ public class ExternalPlayerController extends ParameterizableViewController {
         if (user == null) {
             user = new User(GUEST_USERNAME, RandomStringUtils.randomAlphanumeric(30), null);
             user.setStreamRole(true);
+            securityService.setSecurePassword(user);
             securityService.createUser(user);
         }
 
