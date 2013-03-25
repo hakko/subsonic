@@ -45,10 +45,6 @@
             var list = new Array();
 
         <c:forEach items="${model.songs}" var="song" varStatus="loopStatus">
-        <sub:url value="/stream" var="streamUrl">
-            <sub:param name="mfId" value="${song.id}"/>
-            <sub:param name="player" value="${model.player}"/>
-        </sub:url>
         <sub:url value="coverArt.view" var="coverUrl">
            <sub:param name="size" value="500"/>
            <c:if test="${not empty model.coverArts[loopStatus.count - 1]}">
@@ -58,7 +54,7 @@
 
            <!-- TODO: Use video provider for aac, m4a -->
             list[${loopStatus.count - 1}] = {
-                file: "${streamUrl}",
+                file: "/stream?mfId=${song.id}&player=${model.player}",
                 image: "${coverUrl}",
                 title: "${fn:escapeXml(song.title)}",
                 provider: "${song.video ? "video" : "sound"}",
