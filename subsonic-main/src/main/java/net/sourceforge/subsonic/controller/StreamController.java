@@ -30,13 +30,6 @@ import java.util.regex.Pattern;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.apache.commons.io.IOUtils;
-import org.apache.commons.lang.math.LongRange;
-import org.springframework.web.bind.ServletRequestBindingException;
-import org.springframework.web.bind.ServletRequestUtils;
-import org.springframework.web.servlet.ModelAndView;
-import org.springframework.web.servlet.mvc.Controller;
-
 import net.sourceforge.subsonic.Logger;
 import net.sourceforge.subsonic.domain.MediaFile;
 import net.sourceforge.subsonic.domain.Player;
@@ -58,6 +51,13 @@ import net.sourceforge.subsonic.service.TranscodingService;
 import net.sourceforge.subsonic.util.StringUtil;
 import net.sourceforge.subsonic.util.Util;
 
+import org.apache.commons.io.IOUtils;
+import org.apache.commons.lang.math.LongRange;
+import org.springframework.web.bind.ServletRequestBindingException;
+import org.springframework.web.bind.ServletRequestUtils;
+import org.springframework.web.servlet.ModelAndView;
+import org.springframework.web.servlet.mvc.Controller;
+
 /**
  * A controller which streams the content of a {@link Playlist} to a remote
  * {@link Player}.
@@ -77,6 +77,7 @@ public class StreamController implements Controller {
     private MediaFileService mediaFileService;
     private AudioScrobblerService audioScrobblerService;
 
+    @Override
     public ModelAndView handleRequest(HttpServletRequest request, HttpServletResponse response) throws Exception {
         TransferStatus status = null;
         PlaylistInputStream in = null;
@@ -84,12 +85,11 @@ public class StreamController implements Controller {
         User user = securityService.getUserByName(player.getUsername());
 
         try {
-        	
-        	if (user == null) {
-        		LOG.warn("No user associated with " + player);
+            if (user == null) {
+                LOG.warn("No user associated with " + player);
                 response.sendError(HttpServletResponse.SC_FORBIDDEN, "No such user: " + player.getUsername());
                 return null;
-        	}
+            }
 
             if (!user.isStreamRole()) {
                 response.sendError(HttpServletResponse.SC_FORBIDDEN, "Streaming is forbidden for user " + user.getUsername());
@@ -123,8 +123,8 @@ public class StreamController implements Controller {
             // (typically from the embedded Flash player). In that case, create a separate
             // playlist (in order to support multiple parallel streams). Also, enable
             // partial download (HTTP byte range).
-            int mediaFileId = toInt(request.getParameter("mfId"), 
-            		toInt("" + request.getAttribute("mfId"), -1));
+            int mediaFileId = toInt(request.getParameter("mfId"),
+                    toInt("" + request.getAttribute("mfId"), -1));
             LOG.debug("got mfId = " + mediaFileId + " from param " + request.getParameter("mfId"));
             boolean isSingleFile = mediaFileId != -1;
             LongRange range = null;
@@ -162,8 +162,8 @@ public class StreamController implements Controller {
                 if (isHls) {
                     response.setContentType(StringUtil.getMimeType("ts")); // HLS is always MPEG TS.
                 } else {
-                	String transcodedSuffix = transcodingService.getSuffix(player, file, preferredTargetFormat);
-                	response.setContentType(StringUtil.getMimeType(transcodedSuffix));
+                    String transcodedSuffix = transcodingService.getSuffix(player, file, preferredTargetFormat);
+                    response.setContentType(StringUtil.getMimeType(transcodedSuffix));
                 }
 
                 if (file.isVideo() || isHls) {
@@ -188,8 +188,8 @@ public class StreamController implements Controller {
 
             status = statusService.createStreamStatus(player);
 
-            in = new PlaylistInputStream(player, status, maxBitRate, preferredTargetFormat, videoTranscodingSettings, 
-            		transcodingService, audioScrobblerService);
+            in = new PlaylistInputStream(player, status, maxBitRate, preferredTargetFormat, videoTranscodingSettings,
+                    transcodingService, audioScrobblerService);
             OutputStream out = RangeOutputStream.wrap(response.getOutputStream(), range);
 
             // Enabled SHOUTcast, if requested.
@@ -235,7 +235,7 @@ public class StreamController implements Controller {
                 }
             }
         } catch (Throwable t) {
-        	LOG.warn("throwable caught!", t);
+            LOG.warn("throwable caught!", t);
         } finally {
             if (status != null) {
                 securityService.updateUserByteCounts(user, status.getBytesTransfered(), 0L, 0L);
@@ -418,8 +418,8 @@ public class StreamController implements Controller {
         this.transcodingService = transcodingService;
     }
 
-	public void setAudioScrobblerService(AudioScrobblerService audioScrobblerService) {
-		this.audioScrobblerService = audioScrobblerService;
-	}
+    public void setAudioScrobblerService(AudioScrobblerService audioScrobblerService) {
+        this.audioScrobblerService = audioScrobblerService;
+    }
 
 }

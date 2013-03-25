@@ -18,17 +18,23 @@
  */
 package net.sourceforge.subsonic.controller;
 
-import java.util.List;
 import java.util.Date;
+import java.util.List;
 
-import net.sourceforge.subsonic.service.*;
-import net.sourceforge.subsonic.domain.*;
-import net.sourceforge.subsonic.command.*;
-import org.springframework.web.servlet.mvc.*;
-import org.springframework.web.bind.*;
+import javax.servlet.http.HttpServletRequest;
+
+import net.sourceforge.subsonic.command.UserSettingsCommand;
+import net.sourceforge.subsonic.domain.TranscodeScheme;
+import net.sourceforge.subsonic.domain.User;
+import net.sourceforge.subsonic.domain.UserSettings;
+import net.sourceforge.subsonic.service.SecurityService;
+import net.sourceforge.subsonic.service.SettingsService;
+import net.sourceforge.subsonic.service.TranscodingService;
+
 import org.apache.commons.lang.StringUtils;
-
-import javax.servlet.http.*;
+import org.springframework.web.bind.ServletRequestBindingException;
+import org.springframework.web.bind.ServletRequestUtils;
+import org.springframework.web.servlet.mvc.SimpleFormController;
 
 /**
  * Controller for the page used to administrate users.
