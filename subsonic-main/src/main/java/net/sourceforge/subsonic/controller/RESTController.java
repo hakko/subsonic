@@ -166,6 +166,11 @@ public class RESTController extends MultiActionController implements REST_1_8_0 
     }
 
     @Override
+    public ModelAndView videoPlayer(HttpServletRequest request, HttpServletResponse response) throws Exception {
+        return restMediaRetrievalController.videoPlayer(request, response);
+    }
+
+    @Override
     public ModelAndView stream(HttpServletRequest request, HttpServletResponse response) throws Exception {
         return restMediaRetrievalController.stream(request, response);
     }
