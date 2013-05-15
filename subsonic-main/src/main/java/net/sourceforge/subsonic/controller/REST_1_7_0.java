@@ -30,6 +30,7 @@ public interface REST_1_7_0 {
     public void deletePlaylist(HttpServletRequest request, HttpServletResponse response) throws Exception;
 
     // Media retrieval
+    public ModelAndView videoPlayer(HttpServletRequest request, HttpServletResponse response) throws Exception;
     public ModelAndView stream(HttpServletRequest request, HttpServletResponse response) throws Exception;
     public ModelAndView download(HttpServletRequest request, HttpServletResponse response) throws Exception;
     public ModelAndView getCoverArt(HttpServletRequest request, HttpServletResponse response) throws Exception;
