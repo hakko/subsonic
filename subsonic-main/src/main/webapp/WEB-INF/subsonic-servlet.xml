@@ -537,6 +537,7 @@
         <property name="restPodcastController" ref="restPodcastController"/>
         <property name="restChatController" ref="restChatController"/>
         <property name="restUserController" ref="restUserController"/>
+        <property name="restJukeboxController" ref="restJukeboxController"/>
     </bean>
     <bean id="dbController" class="net.sourceforge.subsonic.controller.DBController">
         <property name="viewName" value="db"/>
