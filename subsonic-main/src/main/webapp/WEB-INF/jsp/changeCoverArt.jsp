@@ -1,11 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=utf-8" pageEncoding="iso-8859-1"%>
 
-<html><head>
-    <%@ include file="head.jspf" %>
-    <script type="text/javascript" src="<c:url value="/dwr/engine.js"/>"></script>    
-    <script type="text/javascript" src="<c:url value="/dwr/interface/coverArtService.js"/>"></script>
-    <script type="text/javascript" src="<c:url value="/dwr/util.js"/>"></script>
-    <script type="text/javascript" src="<c:url value="/script/prototype.js"/>"></script>
+    <%@ include file="include.jspf" %>
     <script type="text/javascript" src="https://www.google.com/jsapi"></script>
 
     <script type="text/javascript" language="javascript">
@@ -145,8 +140,7 @@
 
 
     </script>
-</head>
-<body class="mainframe bgcolor1">
+<div class="mainframe bgcolor1">
 <h1><fmt:message key="changecoverart.title"/></h1>
 <form action="javascript:search()">
     <table class="indent"><tr>
@@ -206,4 +200,4 @@
     </div>
 </div>
 
-</body></html>
+</div>

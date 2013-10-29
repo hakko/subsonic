@@ -1,3 +1,4 @@
+<%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
 <table style="border-collapse:collapse;white-space:nowrap">
 	<c:set var="cutoff" value="${model.visibility.captionCutoff}"/>
 <c:forEach items="${model.mediaFiles}" var="mediaFile" varStatus="loopStatus" >

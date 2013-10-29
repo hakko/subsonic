@@ -1237,6 +1237,9 @@ public class SettingsService {
     	} catch (Exception e) {
     		LOG.warn("UTF8 not supported? Could not read password", e);
     	}
+    	if("".equals(password)) {
+    		return System.getProperty("musiccabinet.jdbc.password");
+    	}
     	return password;
     }
 

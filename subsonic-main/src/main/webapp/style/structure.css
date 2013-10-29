@@ -1,0 +1,32 @@
+.left {
+  float: left;
+  width: 15%;
+  overflow: hidden;
+  height: 100%;
+  position: relative;
+}
+.inner-scroll {
+  max-height: 80%;
+  overflow: auto;
+  
+}
+.middle {
+  float: left;
+  width: 85%;
+}
+.main {
+  float: left;
+  width: 70%;
+  overflow: auto;
+}
+.right {
+  float: left;
+  width: 30%;
+  overflow: auto;
+}
+.playlist {
+  clear: both;
+}
+.leftframe {
+  position: relative;
+}

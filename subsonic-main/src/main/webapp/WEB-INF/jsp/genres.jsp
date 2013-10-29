@@ -13,9 +13,9 @@
 	<c:if test="${model.page == 0}">
 		<c:if test="${not empty model.genreDescription}"><div style="width:650px">${model.genreDescription}</div></c:if>
 		<c:choose><c:when test="${not empty model.genre}">
-			<a href="javascript:noop()" onclick="javascript:top.playlist.onPlayGenreRadio(new Array('${model.genre}'))">Play ${model.title} radio</a>
+			<a href="#" onclick="return playlist.onPlayGenreRadio(new Array('${model.genre}'))">Play ${model.title} radio</a>
 		</c:when><c:otherwise>
-			<a href="javascript:noop()" onclick="javascript:top.playlist.onPlayGroupRadio('${model.group}')">Play group radio</a>
+			<a href="#" onclick="return playlist.onPlayGroupRadio('${model.group}')">Play group radio</a>
 		</c:otherwise></c:choose>
 		| <a href="${model.url}">Browse last.fm</a>
 		<h1 style="margin-top: 15px">Top artists</h1>

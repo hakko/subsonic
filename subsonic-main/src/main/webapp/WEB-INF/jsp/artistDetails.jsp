@@ -1,23 +1,10 @@
 <%@ page language="java" contentType="text/html; charset=utf-8" pageEncoding="iso-8859-1" %>
-<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
-<%--@elvariable id="model" type="java.util.Map"--%>
 
-<html><head>
-	<%@ include file="head.jspf" %>
-	<link href="<c:url value="/style/shadow.css"/>" rel="stylesheet">
-	<script type="text/javascript" src="<c:url value="/script/jquery-1.7.2.min.js"/>"></script>
-    <script type="text/javascript" src="<c:url value="/dwr/engine.js"/>"></script>
-	<script type="text/javascript" src="<c:url value="/dwr/util.js"/>"></script>
-	<script type="text/javascript" src="<c:url value="/dwr/interface/uiStarService.js"/>"></script>
-</head><body class="mainframe bgcolor1" onload="init()">
+	<%@ include file="include.jspf" %>
+<dv class="mainframe bgcolor1">
 
 <%@ include file="toggleStar.jspf" %>
 
-<script type="text/javascript" language="javascript">
-    function init() {
-        dwr.engine.setErrorHandler(null);
-	}
-</script>
 
 <div style="padding: 15px;">
 
@@ -99,9 +86,9 @@ ${model.artistName}
 			<c:if test="${track.id != -1 && model.user.streamRole}">
 				<table>
 					<tr>
-						<td><a href="javascript:noop()" onclick="top.playlist.onPlay([${track.id}], 'P');"><img src="<spring:theme code="playImage"/>" alt="Play" title="Play"></a></td>
-						<td><a href="javascript:noop()" onclick="top.playlist.onPlay([${track.id}], 'E');"><img src="<spring:theme code="enqueueImage"/>" alt="Enqueue" title="Enqueue"></a></td>
-						<td><a href="javascript:noop()" onclick="top.playlist.onPlay([${track.id}], 'A');"><img src="<spring:theme code="addImage"/>" alt="Add" title="Add"></a></td>
+						<td><a href="#" onclick="return onPlay([${track.id}], 'P');"><img src="<spring:theme code="playImage"/>" alt="Play" title="Play"></a></td>
+						<td><a href="#" onclick="return onPlay([${track.id}], 'E');"><img src="<spring:theme code="enqueueImage"/>" alt="Enqueue" title="Enqueue"></a></td>
+						<td><a href="#" onclick="return onPlay([${track.id}], 'A');"><img src="<spring:theme code="addImage"/>" alt="Add" title="Add"></a></td>
 					</tr>
 				</table>
 			</c:if>
@@ -123,5 +110,10 @@ ${model.artistName}
 
 </div>
 
-</body>
-</html>
+<script type="text/javascript" language="javascript">
+    function init() {
+        dwr.engine.setErrorHandler(null);
+  	}
+    init();
+</script>
+</div>

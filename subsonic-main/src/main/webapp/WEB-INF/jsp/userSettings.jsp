@@ -2,13 +2,9 @@
 
 <html><head>
     <%@ include file="head.jspf" %>
-    <script type="text/javascript" src="<c:url value="/script/scripts.js"/>"></script>
-    <script type="text/javascript" src="<c:url value="/script/prototype.js"/>"></script>
 </head>
 
 <body class="mainframe bgcolor1" onload="enablePasswordChangeFields();">
-<script type="text/javascript" src="<c:url value="/script/wz_tooltip.js"/>"></script>
-<script type="text/javascript" src="<c:url value="/script/tip_balloon.js"/>"></script>
 
 <c:import url="settingsHeader.jsp">
     <c:param name="cat" value="user"/>

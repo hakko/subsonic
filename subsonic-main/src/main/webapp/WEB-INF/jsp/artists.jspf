@@ -13,7 +13,7 @@
 						${artistRecommendation.artistName}
 					</div>
 					<div style="width:18px;float:right">
-						<a href="javascript:noop()" onclick="top.playlist.onPlayTopTracks(${artistRecommendation.artistId}, 'P');">
+						<a href="#" onclick="return onPlayTopTracks(${artistRecommendation.artistId}, 'P');">
 			                <img src="<spring:theme code="playImage"/>" alt="Play top tracks" title="Play top tracks">
 						</a>
 					</div>

@@ -1,24 +1,11 @@
 <%@ page language="java" contentType="text/html; charset=utf-8" pageEncoding="iso-8859-1"%>
-<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 
-<html><head>
-    <%@ include file="head.jspf" %>
+    <%@ include file="include.jspf" %>
     <link href="<c:url value="/style/shadow.css"/>" rel="stylesheet">
-    <script type="text/javascript" src="<c:url value="/script/prototype.js"/>"></script>
-	<script type="text/javascript" src="<c:url value="/script/jquery-1.7.2.min.js"/>"></script>
-    <script type="text/javascript" src="<c:url value="/dwr/engine.js"/>"></script>
-	<script type="text/javascript" src="<c:url value="/dwr/util.js"/>"></script>
-	<script type="text/javascript" src="<c:url value="/dwr/interface/uiStarService.js"/>"></script>
-</head>
-</head><body class="mainframe bgcolor1" onload="init()">
+<div class="mainframe bgcolor1">
 
 <%@ include file="toggleStar.jspf" %>
 
-<script type="text/javascript" language="javascript">
-    function init() {
-        dwr.engine.setErrorHandler(null);
-	}
-</script>
 
 <h1>
     <img src="<spring:theme code="homeImage"/>" alt="">
@@ -79,5 +66,7 @@
             </c:if>
         </tr>
     </table>
-
-</body></html>
+<script type="text/javascript" language="javascript">
+        dwr.engine.setErrorHandler(null);
+</script>
+</div>

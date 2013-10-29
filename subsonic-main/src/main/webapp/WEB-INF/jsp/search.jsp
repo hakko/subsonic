@@ -1,21 +1,8 @@
 <%@ page language="java" contentType="text/html; charset=utf-8" pageEncoding="iso-8859-1"%>
 <%--@elvariable id="command" type="net.sourceforge.subsonic.command.SearchCommand"--%>
 
-<html><head>
-    <%@ include file="head.jspf" %>
-	<script type="text/javascript" src="<c:url value="/script/jquery-1.7.2.min.js"/>"></script>
-    <script type="text/javascript" src="<c:url value="/dwr/engine.js"/>"></script>
-	<script type="text/javascript" src="<c:url value="/dwr/util.js"/>"></script>
-	<script type="text/javascript" src="<c:url value="/dwr/interface/uiStarService.js"/>"></script>
-
-    <script type="text/javascript">
-    function init() {
-        dwr.engine.setErrorHandler(null);
-	}
-	</script>
-
-</head>
-<body class="mainframe bgcolor1" onload="init()">
+    <%@ include file="include.jspf" %>
+<div class="mainframe bgcolor1">
 
 <%@ include file="toggleStar.jspf" %>
 
@@ -138,5 +125,10 @@
 	<sub:param name="searchQuery" value="${command.query}"/>
 </sub:url>
 <div class="forward"><a href="${advancedSearchUrl}">Search for '${command.query}' in advanced mode</a></div>
-
-</body></html>
+  <script type="text/javascript">
+    function init() {
+        dwr.engine.setErrorHandler(null);
+  	}
+    init();
+	</script>
+</div>

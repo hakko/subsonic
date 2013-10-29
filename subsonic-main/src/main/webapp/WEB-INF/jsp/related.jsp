@@ -29,7 +29,7 @@
 </table>
 
 <br>
-<h1><a href="javascript:noop()" onclick="top.playlist.onPlayRelatedArtistsSampler(${model.id}, ${fn:length(model.artists)});">
+<h1><a href="#" onclick="return onPlayRelatedArtistsSampler(${model.id}, ${fn:length(model.artists)});">
 		<img src="<spring:theme code="playImage"/>" alt="Play related artists sampler" title="Play related artists sampler">
 	</a>Related artists
 </h1>

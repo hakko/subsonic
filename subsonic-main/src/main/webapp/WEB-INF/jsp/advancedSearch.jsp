@@ -1,10 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=utf-8" pageEncoding="iso-8859-1" %>
 
-<html><head>
-    <%@ include file="head.jspf" %>
-</head>
-<body class="mainframe bgcolor1">
-<script type="text/javascript" src="<c:url value="/script/jquery-1.7.2.min.js"/>"></script>
+    <%@ include file="include.jspf" %>
+<div class="mainframe bgcolor1">
 
 <script type="text/javascript">
 	function search(page) {
@@ -247,5 +244,4 @@
 	</form>
 
 </div>
-
-</body></html>
+</div>

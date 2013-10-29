@@ -11,7 +11,7 @@
 	<div style="padding-top:5px" id="alb${i.count}">
 		<div style="float:left">
 			<div class="outerpair1"><div class="outerpair2"><div class="shadowbox"><div class="innerbox">
-				<a href="javascript:noop()" onclick="toggleAlbum(${i.count})">
+				<a href="#" onclick="return toggleAlbum(${i.count})">
 					<img id="albart${i.count}" width="87" height="87" src="${coverArtUrl}" alt="">
 				</a>
 			</div></div></div></div>
@@ -79,7 +79,7 @@
 						</c:otherwise>
 					</c:choose>
 				</a>
-				<a href="javascript:noop()" onclick="toggleAlbum(${i.count})">
+				<a href="#" onclick="return toggleAlbum(${i.count})">
 					<b><c:if test="${not empty album.artistName}">${album.artistName} - </c:if>${album.title}</b><c:if test="${album.year > 0}"> <em>(${album.year})</em></c:if>
 				</a>
 				<c:if test="${album.artistId != model.artistId}"> <a href="artist.view?id=${album.artistId}&albumId=${album.id}">&raquo;</a></c:if>

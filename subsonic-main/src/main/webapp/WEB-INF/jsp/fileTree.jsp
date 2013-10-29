@@ -1,14 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=utf-8" pageEncoding="utf-8"%>
 
-<html><head>
-    <%@ include file="head.jspf" %>
-	<link href="<c:url value="/style/shadow.css"/>" rel="stylesheet">
-	<script type="text/javascript" src="<c:url value="/script/jquery-1.7.2.min.js"/>"></script>
-    <script type="text/javascript" src="<c:url value="/dwr/engine.js"/>"></script>
-	<script type="text/javascript" src="<c:url value="/dwr/util.js"/>"></script>
-	<script type="text/javascript" src="<c:url value="/dwr/interface/uiStarService.js"/>"></script>
-</head>
-<body class="mainframe bgcolor1">
+    <%@ include file="include.jspf" %>
+<div class="mainframe bgcolor1">
 
 <%@ include file="toggleStar.jspf" %>
 
@@ -112,4 +105,4 @@
 </c:otherwise>
 </c:choose>
 
-</body></html>
+</div>

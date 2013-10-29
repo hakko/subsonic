@@ -18,9 +18,25 @@
  */
 package net.sourceforge.subsonic.controller;
 
+import java.awt.Graphics2D;
+import java.awt.RenderingHints;
+import java.awt.image.BufferedImage;
+import java.io.ByteArrayInputStream;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
+
+import javax.imageio.ImageIO;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
 import net.sourceforge.subsonic.Logger;
 import net.sourceforge.subsonic.service.SecurityService;
 import net.sourceforge.subsonic.service.SettingsService;
+import net.sourceforge.subsonic.util.StringUtil;
 
 import org.apache.commons.codec.digest.DigestUtils;
 import org.apache.commons.io.FilenameUtils;
@@ -33,13 +49,6 @@ import org.springframework.web.servlet.mvc.LastModified;
 
 import com.github.hakko.musiccabinet.exception.ApplicationException;
 import com.github.hakko.musiccabinet.service.library.AudioTagService;
-
-import javax.imageio.ImageIO;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import java.awt.*;
-import java.awt.image.BufferedImage;
-import java.io.*;
 
 /**
  * Controller which produces cover art images.
@@ -54,6 +63,15 @@ public class CoverArtController implements Controller, LastModified {
     private static final Logger LOG = Logger.getLogger(CoverArtController.class);
 
     public long getLastModified(HttpServletRequest request) {
+    	String encodedPath = request.getParameter("pathUtf8Hex");
+        if (StringUtils.trimToNull(encodedPath) != null) {
+        	File file = new File(encodedPath);
+        	if(!file.exists()) {
+        		return -1;
+        	}
+        	return file.lastModified();
+        }
+    	
         String path = request.getParameter("path");
         if (StringUtils.trimToNull(path) == null) {
             return 0;
@@ -68,8 +86,12 @@ public class CoverArtController implements Controller, LastModified {
     }
 
     public ModelAndView handleRequest(HttpServletRequest request, HttpServletResponse response) throws Exception {
-        String path = request.getParameter("path");
-        File file = (path == null || path.length() == 0) ? null : new File(path);
+    	String encodedPath = request.getParameter("pathUtf8Hex");
+    	File file = (encodedPath == null || encodedPath.length() == 0) ? null : new File(StringUtil.utf8HexDecode(encodedPath));
+    	if(file == null) {
+    		String path = request.getParameter("path");
+    		file = (path == null || path.length() == 0) ? null : new File(path);
+    	}
         Integer size = ServletRequestUtils.getIntParameter(request, "size");
 
         // Check access.

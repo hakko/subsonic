@@ -3,7 +3,6 @@
 <html><head>
     <%@ include file="head.jspf" %>
     <link href="<c:url value="/style/shadow.css"/>" rel="stylesheet">
- 	<script type="text/javascript" src="<c:url value="/script/prototype.js"/>"></script>
 </head>
 <body class="mainframe bgcolor1">
 

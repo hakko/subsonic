@@ -13,4 +13,5 @@
 		if ($('#albson' + index).children().size() == 0) {
 			$('#albson' + index).load('album.view?view' + musicFiles[index].join('&mf=') <c:if test="${not empty model.trackId}">+ '&trackId=${model.trackId}'</c:if>);
 		}
+    return false;
 	}

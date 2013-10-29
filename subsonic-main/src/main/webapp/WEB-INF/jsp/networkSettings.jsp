@@ -1,46 +1,8 @@
 <%@ page language="java" contentType="text/html; charset=utf-8" pageEncoding="iso-8859-1" %>
 <%--@elvariable id="command" type="net.sourceforge.subsonic.command.NetworkSettingsCommand"--%>
 
-<html>
-<head>
-    <%@ include file="head.jspf" %>
-    <script type="text/javascript" src="<c:url value="/script/prototype.js"/>"></script>
-    <script type="text/javascript" src="<c:url value="/dwr/engine.js"/>"></script>    
-    <script type="text/javascript" src="<c:url value="/dwr/interface/multiService.js"/>"></script>
-    <script type="text/javascript" src="<c:url value="/dwr/util.js"/>"></script>
-    <script type="text/javascript" language="javascript">
-
-        function init() {
-            enableUrlRedirectionFields();
-            refreshStatus();
-        }
-
-        function refreshStatus() {
-            multiService.getNetworkStatus(updateStatus);
-        }
-
-        function updateStatus(networkStatus) {
-            dwr.util.setValue("portForwardingStatus", networkStatus.portForwardingStatusText);
-            dwr.util.setValue("urlRedirectionStatus", networkStatus.urlRedirectionStatusText);
-            window.setTimeout("refreshStatus()", 1000);
-        }
-
-        function enableUrlRedirectionFields() {
-            var checkbox = $("urlRedirectionEnabled");
-            var field = $("urlRedirectFrom");
-
-            if (checkbox && checkbox.checked) {
-                field.enable();
-            } else {
-                field.disable();
-            }
-        }
-
-    </script>
-</head>
-<body class="mainframe bgcolor1" onload="init()">
-<script type="text/javascript" src="<c:url value="/script/wz_tooltip.js"/>"></script>
-<script type="text/javascript" src="<c:url value="/script/tip_balloon.js"/>"></script>
+    <%@ include file="include.jspf" %>
+<div class="mainframe bgcolor1" onload="init()">
 
 <c:import url="settingsHeader.jsp">
     <c:param name="cat" value="network"/>
@@ -87,5 +49,32 @@
     </p>
 
 </form:form>
-</body>
-</html>
+</div>
+        <script type="text/javascript" src="<c:url value="/dwr/util.js"/>"></script>
+    <script type="text/javascript" language="javascript">
+        function refreshStatus() {
+            multiService.getNetworkStatus(updateStatus);
+        }
+
+        function updateStatus(networkStatus) {
+            dwr.util.setValue("portForwardingStatus", networkStatus.portForwardingStatusText);
+            dwr.util.setValue("urlRedirectionStatus", networkStatus.urlRedirectionStatusText);
+            window.setTimeout("refreshStatus()", 1000);
+        }
+
+        function enableUrlRedirectionFields() {
+            var checkbox = $("urlRedirectionEnabled");
+            var field = $("urlRedirectFrom");
+
+            if (checkbox && checkbox.checked) {
+                field.enable();
+            } else {
+                field.disable();
+            }
+        }
+
+            enableUrlRedirectionFields();
+            refreshStatus();
+
+
+    </script>

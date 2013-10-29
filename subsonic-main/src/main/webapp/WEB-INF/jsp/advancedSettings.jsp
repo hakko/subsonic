@@ -1,24 +1,8 @@
 <%@ page language="java" contentType="text/html; charset=utf-8" pageEncoding="iso-8859-1" %>
 
-<html><head>
-    <%@ include file="head.jspf" %>
-    <script type="text/javascript" src="<c:url value="/script/scripts.js"/>"></script>
-    <script type="text/javascript" src="<c:url value="/script/prototype.js"/>"></script>
-    <script type="text/javascript" language="javascript">
-        function enableLdapFields() {
-            var checkbox = $("ldap");
-            var table = $("ldapTable");
+    <%@ include file="include.jspf" %>
 
-            if (checkbox && checkbox.checked) {
-                table.show();
-            } else {
-                table.hide();
-            }
-        }
-    </script>
-</head>
-
-<body class="mainframe bgcolor1" onload="enableLdapFields()">
+<div class="mainframe bgcolor1" onload="enableLdapFields()">
 <script type="text/javascript" src="<c:url value="/script/wz_tooltip.js"/>"></script>
 <script type="text/javascript" src="<c:url value="/script/tip_balloon.js"/>"></script>
 
@@ -131,6 +115,19 @@
 
     </table>
 </form:form>
+    <script type="text/javascript" language="javascript">
+        function enableLdapFields() {
+            var checkbox = $("ldap");
+            var table = $("ldapTable");
+
+            if (checkbox && checkbox.checked) {
+                table.show();
+            } else {
+                table.hide();
+            }
+        }
+    </script>
+
 
 <c:if test="${command.reloadNeeded}">
     <script language="javascript" type="text/javascript">
@@ -139,4 +136,4 @@
     </script>
 </c:if>
 
-</body></html>
+</div>

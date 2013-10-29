@@ -1,40 +1,14 @@
 <%@ page language="java" contentType="text/html; charset=utf-8" pageEncoding="iso-8859-1"%>
-<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
-<html><head>
-	<%@ include file="head.jspf" %>
-	<script type="text/javascript" src="<c:url value="/script/scripts.js"/>"></script>
-	<script type="text/javascript" src="<c:url value="/script/smooth-scroll.js"/>"></script>
-	<script type="text/javascript" src="<c:url value="/script/jquery-1.7.2.min.js"/>"></script>
+	<%@ include file="include.jspf" %>
 
-    <script type="text/javascript" src="<c:url value="/dwr/engine.js"/>"></script>
-    <script type="text/javascript" src="<c:url value="/dwr/util.js"/>"></script>
-    <script type="text/javascript" src="<c:url value="/dwr/interface/libraryStatusService.js"/>"></script>
 
-	<script type="text/javascript">
-    function init() {
-        dwr.engine.setErrorHandler(null);
-        dwr.engine.setActiveReverseAjax(true);
-        dwr.engine.setNotifyServerOnPageUnload(true);
- 
-        $('#tag').change(function() {
-        	window.location = $(this).val();
-        });
-
-    }
-	</script>
-	
-	<meta http-equiv="Pragma" content="no-cache">
-	
-</head>
-	
-<body class="bgcolor2 leftframe" onload="init()">
-<a name="top"></a>
-
+<div class="bgcolor2 leftframe" onload="init()">
 <div style="padding-bottom:0.5em">
 	<c:forEach items="${model.indexes}" var="index">
 		<a href="#${index.key}" accesskey="${index.key}">${index.key}</a>
 	</c:forEach>
 </div>
+
 
 <c:if test="${not empty model.statistics}">
 	<div class="detail">
@@ -47,6 +21,8 @@
 		</fmt:message>
 	</div>
 </c:if>
+<div class="inner-scroll">
+
 
 <c:if test="${not empty model.filebased}">
     <div style="padding:5px;padding-bottom:15px;border:1px solid #<spring:theme code="detailColor"/>">
@@ -86,7 +62,7 @@
 </c:if>
 
 <c:if test="${not empty model.indexes or not empty model.currentTag}">
-	<h2 class="bgcolor1">Artists</h2>
+	<a name="left-top"><h2 class="bgcolor1">Artists</h2></a>
 	<c:if test="${not empty model.tags}">
 		<select id="tag">
 		<c:forEach items="${model.tags}" var="tag">
@@ -95,7 +71,7 @@
 		</c:forEach>
 		</select>
 		<c:if test="${not empty model.currentTag}">
-			<br><a href="javascript:noop()" onclick="javascript:top.playlist.onPlayGenreRadio(new Array('${model.currentTag}'))">Play ${model.currentTag} radio</a>
+			<br><a href="#" onclick="return playlist.onPlayGenreRadio(new Array('${model.currentTag}'))">Play ${model.currentTag} radio</a>
 		</c:if>
 	</c:if>
 	<div id="leftMessage"></div>
@@ -107,7 +83,7 @@
 				<h2 style="padding:0;margin:0;border:0"><c:if test="${model.reluctantArtistLoading}"><a href="left.view?indexLetter=${fn:replace(index.key,'#','0')}"></c:if>${index.key}<c:if test="${model.reluctantArtistLoading}"></a></c:if></h2>
 			</th>
 			<th style="text-align:right;">
-				<a href="#top"><img src="<spring:theme code="upImage"/>" alt=""></a>
+				<a href="#left-top"><img src="<spring:theme code="upImage"/>" alt=""></a>
 			</th>
 		</tr>
 	</table>
@@ -153,12 +129,6 @@
 
 <div style="height:5em"></div>
 
-<div class="bgcolor2" style="opacity: 1.0; clear: both; position: fixed; bottom: 0; right: 0; left: 0;
-	  padding: 0.25em 0.75em 0.25em 0.75em; border-top:1px solid black; max-width: 850px;">
-	<c:forEach items="${model.indexes}" var="index">
-		<a href="#${index.key}" accesskey="${index.key}">${index.key}</a>
-	</c:forEach>
-</div>
 
 <c:if test="${not empty model.reluctantArtistLoading and not empty model.indexedLetter}">
 <script type="text/javascript">
@@ -166,4 +136,27 @@ window.location.hash='${fn:replace(model.indexedLetter,'#','#bottom')}';
 </script>
 </c:if>
 
-</body></html>
+</div>
+
+
+<div class="bgcolor2">
+	<c:forEach items="${model.indexes}" var="index">
+		<a href="#${index.key}" accesskey="${index.key}">${index.key}</a>
+	</c:forEach>
+</div>
+
+
+	<script type="text/javascript">
+        /*
+        dwr.engine.setErrorHandler(null);
+        dwr.engine.setActiveReverseAjax(true);
+        dwr.engine.setNotifyServerOnPageUnload(true);
+        */
+        (function($) {
+            $('#tag').change(function() {
+              $(".left").load($(this).val());
+            });
+        }(jQuery));
+	</script>
+</div>
+

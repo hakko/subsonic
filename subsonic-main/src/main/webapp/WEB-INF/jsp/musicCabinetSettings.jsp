@@ -4,9 +4,6 @@
     <%@ include file="head.jspf" %>
 </head>
 <body class="mainframe bgcolor1">
-<script type="text/javascript" src="<c:url value="/script/wz_tooltip.js"/>"></script>
-<script type="text/javascript" src="<c:url value="/script/tip_balloon.js"/>"></script>
-<script type="text/javascript" src="<c:url value="/script/prototype.js"/>"></script>
 
 <c:import url="settingsHeader.jsp">
     <c:param name="cat" value="musicCabinet"/>

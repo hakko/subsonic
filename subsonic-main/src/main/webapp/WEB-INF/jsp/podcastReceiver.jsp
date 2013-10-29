@@ -1,11 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=utf-8" pageEncoding="iso-8859-1"%>
 
-<html><head>
-    <%@ include file="head.jspf" %>
-    <script type="text/javascript" src="<c:url value="/script/scripts.js"/>"></script>
-    <script type="text/javascript" src="<c:url value="/script/prototype.js"/>"></script>
-</head>
-<body class="mainframe bgcolor1">
+    <%@ include file="include.jspf" %>
+<div class="mainframe bgcolor1">
 
 <script type="text/javascript" language="javascript">
     var channelCount = ${fn:length(model.channels)};
@@ -269,5 +265,4 @@
 <fmt:message key="more.podcast.text"/>
 
 
-</body>
-</html>
+</div>

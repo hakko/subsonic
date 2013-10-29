@@ -23,7 +23,7 @@
 						<div class="detail"><str:truncateNicely lower="14" upper="14">${album.title}</str:truncateNicely></div>
 					</div>
 					<div style="width:18px;float:right">
-						<a href="javascript:noop()" onclick="top.playlist.onPlay(${album.trackIds}, 'P');">
+						<a href="#" onclick="return onPlay(${album.trackIds}, 'P');">
 			                <img src="<spring:theme code="playImage"/>" alt="Play album" title="Play album">
 						</a>
 					</div>

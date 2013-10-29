@@ -71,7 +71,7 @@ function playGenreRadio() {
 			genres.push(e[i].firstChild.data);
 		}
 	}
-	top.playlist.onPlayGenreRadio(genres);
+	playlist.onPlayGenreRadio(genres);
 }
 	</script>
 
