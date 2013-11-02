@@ -1,5 +1,5 @@
 <%@ page language="java" contentType="text/html; charset=utf-8" pageEncoding="iso-8859-1" %>
-	<%@ include file="include.jspf" %>
+<%@ include file="include.jspf" %>
 <div class="mainframe bgcolor1">
 
 <%@ include file="toggleStar.jspf" %>
@@ -22,17 +22,14 @@ ${model.artistName}
 </h1>
 
 <c:if test="${not empty model.artistInfo}">
-	<table>
-		<tr>
-			<td style="vertical-align:top">
-				<div class="outerpair1"><div class="outerpair2"><div class="shadowbox"><div class="innerbox">
+		<div class="clearfix">
+			<div class="col-lg-3">
 					<a href="#" onclick="return toggleArtist()">
-						<img id="bioArt" width="${model.artistInfoImageSize}" height="${model.artistInfoImageSize}" src="${model.artistInfo.largeImageUrl}" alt="">
+						<img id="bioArt" class="img-circle" width="${model.artistInfoImageSize}" height="${model.artistInfoImageSize}" src="${model.artistInfo.largeImageUrl}" alt="">
 					</a>
-				</div></div></div></div>
-			</td>
-			<td style="vertical-align:top">
-				<div style="width:525px;">
+			</div>
+			<div class="col-lg-7">
+				<div>
 					<div id="bio0" <c:if test="${not empty model.artistInfoMinimized}">style="display:none"</c:if>>
 						${model.artistInfo.bioSummary}
 					</div>
@@ -45,38 +42,45 @@ ${model.artistName}
 						<sub:url var="url" value="genres.view">
 							<sub:param name="genre" value="${topTag.name}"/>
 						</sub:url>
-						<a href="${url}">${topTag.name}</a><c:if test="${i.count < fn:length(model.topTags)}">, </c:if>
+						<a href="${url}" class="btn btn-default btn-xs">${topTag.name}</a><c:if test="${i.count < fn:length(model.topTags)}"> </c:if>
 					</c:forEach>
 					<c:if test="${fn:length(model.topTags) > 0 and model.allowTopTagsEdit}">
 						<a href="artistGenres.view?id=${model.artistId}">&raquo;</a>
 					</c:if>
 				</div>
-			</td>
-		</tr>
-	</table>
+			</div>
+		</div>
 </c:if>
 
-<h2>
-	<a id="all" href="#" onclick="return onPlay(${model.trackIds}, playMode());"><fmt:message key="main.playall"/></a> |
-	<c:if test="${model.isInSearchIndex}">
-		<a id="top_tracks" href="#" onclick="return onPlayTopTracks(${model.artistId}, playMode());">Play top tracks</a> |
-		<a id="artist_radio" href="#" onclick="return onPlayArtistRadio(${model.artistId}, playMode());">Play artist radio</a> |
-	</c:if>
-	<a id="random" href="#" onclick="return onPlayRandom(${model.trackIds}, playMode());"><fmt:message key="main.playrandom"/></a>
-	<br/>
-	<a id="togglePlayAdd" class="Play" href="javascript:togglePlayAdd()" title="Toggle if new tracks replace the current playlist, are played next, or are appended last to it.">Play/enqueue/add</a>
-	<c:if test="${model.isInSearchIndex}">
-		<sub:url value="related.view" var="relatedUrl"><sub:param name="id" value="${model.artistId}"/></sub:url>
-		| <a href="${relatedUrl}">Related artists</a>
-		<sub:url value="artistDetails.view" var="detailsUrl"><sub:param name="id" value="${model.artistId}"/></sub:url>
-		| <a href="${detailsUrl}">Details</a>
-	</c:if>
-
-	<c:if test="${model.user.coverArtRole and not empty model.artistInfo}">
-		<sub:url value="/editArtist.view" var="editArtistUrl"><sub:param name="id" value="${model.artistId}"/><sub:param name="artist" value="${model.artistName}"/></sub:url>
-		| <a href="${editArtistUrl}">Edit</a>
-	</c:if>
-</h2>
+<div class="btn-toolbar" role="toolbar">
+  <div class="btn-group">
+    <div class="btn-group">
+      <button type="button" class="btn btn-default dropdown-toggle btn-xs" data-toggle="dropdown">
+        Play
+        <span class="caret"></span>
+      </button>
+      <ul class="dropdown-menu">
+    	  <li><a class="btn btn-default btn-xs" id="all" href="#" onclick="return onPlay(${model.trackIds}, playMode());"><fmt:message key="main.playall"/></a></li>
+    	  <c:if test="${model.isInSearchIndex}">
+      		<li><a class="btn btn-default btn-xs" id="top_tracks" href="#" onclick="return onPlayTopTracks(${model.artistId}, playMode());">Top tracks</a></li>
+      		<li><a class="btn btn-default btn-xs" id="artist_radio" href="#" onclick="return onPlayArtistRadio(${model.artistId}, playMode());">Artist radio</a></li>
+      	</c:if>
+      	<li><a class="btn btn-default btn-xs" id="random" href="#" onclick="return onPlayRandom(${model.trackIds}, playMode());"><fmt:message key="main.playrandom"/></a></li>
+      </ul>
+    </div>
+  	<a class="btn btn-default btn-xs" id="togglePlayAdd" class="Play" href="#" onclick="return togglePlayAdd();" title="Toggle if new tracks replace the current playlist, are played next, or are appended last to it.">Play/enqueue/add</a>
+  	<c:if test="${model.isInSearchIndex}">
+  		<sub:url value="related.view" var="relatedUrl"><sub:param name="id" value="${model.artistId}"/></sub:url>
+  		<a class="btn btn-default btn-xs" href="${relatedUrl}">Related artists</a>
+  		<sub:url value="artistDetails.view" var="detailsUrl"><sub:param name="id" value="${model.artistId}"/></sub:url>
+  		<a class="btn btn-default btn-xs" href="${detailsUrl}">Details</a>
+  	</c:if>
+  	<c:if test="${model.user.coverArtRole and not empty model.artistInfo}">
+  		<sub:url value="/editArtist.view" var="editArtistUrl"><sub:param name="id" value="${model.artistId}"/><sub:param name="artist" value="${model.artistName}"/></sub:url>
+  		<a class="btn btn-default btn-xs" href="${editArtistUrl}">Edit</a>
+  	</c:if>
+  </div>
+</div>
 
 <%@ include file="albums.jspf" %>
 

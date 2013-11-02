@@ -1,7 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=utf-8" pageEncoding="iso-8859-1"%>
-<%--@elvariable id="command" type="net.sourceforge.subsonic.command.SearchCommand"--%>
 
-    <%@ include file="include.jspf" %>
+<%@ include file="include.jspf" %>
 <div class="mainframe bgcolor1">
 
 <%@ include file="toggleStar.jspf" %>
@@ -11,28 +10,30 @@
     <fmt:message key="search.title"/>
 </h1>
 
-<form:form commandName="command" method="post" action="search.view" name="searchForm">
-    <table>
-        <tr>
-            <td><fmt:message key="search.query"/></td>
-            <td style="padding-left:0.25em"><form:input path="query" size="35"/></td>
-            <td style="padding-left:0.25em"><input type="submit" onclick="search(0)" value="<fmt:message key="search.search"/>"/></td>
-        </tr>
-    </table>
+<form:form role="form" commandName="command" method="post" action="search.view" name="searchForm">
+<div class="form-group">
+<label for="query"><fmt:message key="search.query"/></label>
 
+<form:input path="query" size="35" class="form-control"/>
+</div>
+<input class="btn btn-default" type="button" onclick="return submitForm(this);" value="<fmt:message key="search.search"/>"/>
 </form:form>
-
+<br />
 <c:if test="${not command.indexCreated}">
-    <p class="warning"><fmt:message key="search.index"/></p>
+    <div class="alert alert-warning"><fmt:message key="search.index"/></div>
 </c:if>
 
 <c:if test="${command.indexCreated and empty command.artists and empty command.albums and empty command.songs}">
-    <p class="warning"><fmt:message key="search.hits.none"/></p>
+    <div class="alert alert-warning"><fmt:message key="search.hits.none"/></div>
 </c:if>
 
 <c:if test="${not empty command.artists}">
-    <h2><fmt:message key="search.hits.artists"/></h2>
-    <table style="border-collapse:collapse">
+    <table class="table table-bordered table-striped table-hover table-condensed">
+    <thead>
+    <tr>
+    <td><fmt:message key="search.hits.artists"/></td>
+    </tr>
+    </thead>
         <c:forEach items="${command.artists}" var="artist" varStatus="loopStatus">
 
             <sub:url value="/artist.view" var="artistUrl">
@@ -50,8 +51,12 @@
 </c:if>
 
 <c:if test="${not empty command.albums}">
-    <h2><fmt:message key="search.hits.albums"/></h2>
-    <table style="border-collapse:collapse">
+    <table class="table table-bordered table-striped table-hover table-condensed">
+    <thead>
+    <tr>
+    <td colspan="2"><fmt:message key="search.hits.albums"/></td>
+    </tr>
+    </thead>
         <c:forEach items="${command.albums}" var="album" varStatus="loopStatus">
 
 			<sub:url value="/artist.view" var="artistUrl">
@@ -78,8 +83,12 @@
 </c:if>
 
 <c:if test="${not empty command.songs}">
-    <h2><fmt:message key="search.hits.songs"/></h2>
-    <table style="border-collapse:collapse">
+    <table class="table table-bordered table-striped table-hover table-condensed">
+    <thead>
+    <tr>
+    <td colspan="4"><fmt:message key="search.hits.songs"/></td>
+    </tr>
+    </thead>
         <c:forEach items="${command.songs}" var="track" varStatus="loopStatus">
 
 			<sub:url value="/artist.view" var="artistUrl">
@@ -93,14 +102,14 @@
 
             <tr>
                 <c:import url="playAddDownload.jsp">
-                    <c:param name="id" value="[${track.id}]"/>
-					<c:param name="starred" value="${command.isTrackStarred[loopStatus.index]}"/>
-					<c:param name="starId" value="${track.id}"/>
-                    <c:param name="playEnabled" value="${command.user.streamRole and not command.partyModeEnabled}"/>
-                    <c:param name="enqueueEnabled" value="${command.user.streamRole}"/>
-                    <c:param name="addEnabled" value="${command.user.streamRole}"/>
-                    <c:param name="downloadEnabled" value="${command.user.downloadRole and not command.partyModeEnabled}"/>
-                    <c:param name="asTable" value="true"/>
+                  <c:param name="id" value="[${track.id}]"/>
+					        <c:param name="starred" value="${command.isTrackStarred[loopStatus.index]}"/>
+					        <c:param name="starId" value="${track.id}"/>
+                  <c:param name="playEnabled" value="${command.user.streamRole and not command.partyModeEnabled}"/>
+                  <c:param name="enqueueEnabled" value="${command.user.streamRole}"/>
+                  <c:param name="addEnabled" value="${command.user.streamRole}"/>
+                  <c:param name="downloadEnabled" value="${command.user.downloadRole and not command.partyModeEnabled}"/>
+                  <c:param name="asTable" value="true"/>
                 </c:import>
 
                 <td ${loopStatus.count % 2 == 1 ? "class='bgcolor2'" : ""} style="padding-left:0.25em;padding-right:1.25em">
@@ -120,7 +129,10 @@
     </table>
 </c:if>
 
-<h2>Advanced search</h2>
+<h1>
+    <img src="<spring:theme code="searchImage"/>" alt=""/>
+    Advanced search
+</h1>
 <sub:url value="/advancedSearch.view" var="advancedSearchUrl">
 	<sub:param name="searchQuery" value="${command.query}"/>
 </sub:url>

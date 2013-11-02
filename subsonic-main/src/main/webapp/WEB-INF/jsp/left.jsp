@@ -1,9 +1,9 @@
 <%@ page language="java" contentType="text/html; charset=utf-8" pageEncoding="iso-8859-1"%>
-	<%@ include file="include.jspf" %>
+<%@ include file="include.jspf" %>
 
 
-<div class="bgcolor2 leftframe" onload="init()">
-<div style="padding-bottom:0.5em">
+<div class="bgcolor2 leftframe">
+<div>
 	<c:forEach items="${model.indexes}" var="index">
 		<a href="#${index.key}" accesskey="${index.key}">${index.key}</a>
 	</c:forEach>
@@ -25,7 +25,7 @@
 
 
 <c:if test="${not empty model.filebased}">
-    <div style="padding:5px;padding-bottom:15px;border:1px solid #<spring:theme code="detailColor"/>">
+    <div style="border:1px solid #<spring:theme code="detailColor"/>">
 		<img src="icons/error.png" alt=""/><b>File-based browsing.<br/></b>
 		<c:choose>
 		<c:when test="${not empty model.hasArtists}">
@@ -77,19 +77,19 @@
 	<div id="leftMessage"></div>
 
 	<c:forEach items="${model.indexes}" var="index">
-	<table class="bgcolor1" style="width:100%;padding:0;margin:1em 0 0 0;border:0">
-		<tr style="padding:0;margin:0;border:0">
-			<th style="text-align:left;padding:0;margin:0;border:0"><a name="${index.key}"></a>
-				<h2 style="padding:0;margin:0;border:0"><c:if test="${model.reluctantArtistLoading}"><a href="left.view?indexLetter=${fn:replace(index.key,'#','0')}"></c:if>${index.key}<c:if test="${model.reluctantArtistLoading}"></a></c:if></h2>
+	<table class="bgcolor1">
+		<tr>
+			<th><a name="${index.key}"></a>
+				<h2><c:if test="${model.reluctantArtistLoading}"><a href="left.view?indexLetter=${fn:replace(index.key,'#','0')}"></c:if>${index.key}<c:if test="${model.reluctantArtistLoading}"></a></c:if></h2>
 			</th>
-			<th style="text-align:right;">
+			<th>
 				<a href="#left-top"><img src="<spring:theme code="upImage"/>" alt=""></a>
 			</th>
 		</tr>
 	</table>
 
 	<c:forEach items="${index.value}" var="artist">
-		<p class="dense" style="padding-left:0.5em">
+		<p class="dense">
 			<span title="${fn:escapeXml(artist.name)}">
 				<sub:url value="artist.view" var="artistUrl"><sub:param name="id" value="${artist.id}"/></sub:url>
 				<a target="main" href="${artistUrl}">${fn:escapeXml(artist.name)}</a>
@@ -103,7 +103,7 @@
 <c:if test="${not empty model.variousArtistsAlbums}">
 	<h2 class="bgcolor1">Various Artists</h2>
 	<c:forEach items="${model.variousArtistsAlbums}" var="album">
-		<p class="dense" style="padding-left:0.5em">
+		<p class="dense">
 			<sub:url value="artist.view" var="albumUrl"><sub:param name="id" value="${album.artist.id}"/><sub:param name="albumId" value="${album.id}"/></sub:url>
 			<a target="main" href="${albumUrl}">${album.name}</a>
 		</p>
@@ -113,7 +113,7 @@
 <c:if test="${not empty model.mediaFolders}">
 	<h2 class="bgcolor1">Media folders</h2>
 	<c:forEach items="${model.mediaFolders}" var="mediaFolder">
-		<p class="dense" style="padding-left:0.5em">
+		<p class="dense">
 			<sub:url value="main.view" var="mainUrl"><sub:param name="path" value="${mediaFolder.path}"/></sub:url>
 			<a target="main" href="${mainUrl}">${mediaFolder.name}</a>
 		</p>
@@ -121,13 +121,13 @@
 </c:if>
 
 <c:if test="${empty model.filebased}">
-	<div style="height:2em"></div><hr>
+	<div></div><hr>
 	<c:if test="${model.uploadRole}"><a target="main" href="more.view">Upload new music</a><br></c:if>
 	<c:if test="${model.adminRole}"><a target="main" href="missingAlbums.view">Missing albums</a><br></c:if>
 	<a href="left.view?method=file">File-based browsing</a>
 </c:if>
 
-<div style="height:5em"></div>
+<div></div>
 
 
 <c:if test="${not empty model.reluctantArtistLoading and not empty model.indexedLetter}">
@@ -147,11 +147,6 @@ window.location.hash='${fn:replace(model.indexedLetter,'#','#bottom')}';
 
 
 	<script type="text/javascript">
-        /*
-        dwr.engine.setErrorHandler(null);
-        dwr.engine.setActiveReverseAjax(true);
-        dwr.engine.setNotifyServerOnPageUnload(true);
-        */
         (function($) {
             $('#tag').change(function() {
               $(".left").load($(this).val());

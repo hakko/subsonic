@@ -1,7 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=utf-8" pageEncoding="utf-8"%>
 
-<html><head>
-    <%@ include file="head.jspf" %>
+<%@ include file="include.jspf" %>
 
 	<style type="text/css">
 span.off {
@@ -76,7 +75,7 @@ function playGenreRadio() {
 	</script>
 
 </head>
-<body class="mainframe bgcolor1">
+<div class="mainframe bgcolor1">
 
 <h1>
     <img src="<spring:theme code="radioImage"/>" alt="">
@@ -102,4 +101,4 @@ function playGenreRadio() {
     </c:otherwise>
 </c:choose>
 
-</body></html>
+</div>

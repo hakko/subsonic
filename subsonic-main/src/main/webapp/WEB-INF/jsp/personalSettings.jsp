@@ -1,13 +1,9 @@
 <%@ page language="java" contentType="text/html; charset=utf-8" pageEncoding="iso-8859-1" %>
 <%--@elvariable id="command" type="net.sourceforge.subsonic.command.PersonalSettingsCommand"--%>
 
-<html><head>
-    <%@ include file="head.jspf" %>
-</head>
+<%@ include file="include.jspf" %>
 
-<body class="mainframe bgcolor1">
-<script type="text/javascript" src="<c:url value="/script/wz_tooltip.js"/>"></script>
-<script type="text/javascript" src="<c:url value="/script/tip_balloon.js"/>"></script>
+<div class="mainframe bgcolor1">
 
 <c:import url="settingsHeader.jsp">
     <c:param name="cat" value="personal"/>
@@ -369,4 +365,4 @@
     </script>
 </c:if>
 
-</body></html>
+</div>

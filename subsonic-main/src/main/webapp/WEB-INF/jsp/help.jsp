@@ -1,11 +1,5 @@
-<%@ page language="java" contentType="text/html; charset=utf-8" pageEncoding="iso-8859-1"%>
-<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
-
-<html><head>
-    <%@ include file="head.jspf" %>
-    <script type="text/javascript" src="<c:url value="/script/scripts.js"/>"></script>
-</head>
-<body class="mainframe bgcolor1">
+<%@ include file="include.jspf" %>
+<div class="mainframe bgcolor1">
 
 <c:choose>
     <c:when test="${empty model.buildDate}">
@@ -48,4 +42,4 @@
 
 <div class="forward"><a href="help.view?"><fmt:message key="common.refresh"/></a></div>
 
-</body></html>
+</div>

@@ -1,32 +1,80 @@
-.left {
-  float: left;
-  width: 15%;
-  overflow: hidden;
-  height: 100%;
-  position: relative;
+#tag {
+  width: 100%;
 }
 .inner-scroll {
-  max-height: 80%;
-  overflow: auto;
-  
+  max-height: 70%;
+  overflow-y: scroll;
 }
-.middle {
-  float: left;
-  width: 85%;
+.nav>li>a {
+  padding: 5px 5px;
 }
-.main {
-  float: left;
-  width: 70%;
-  overflow: auto;
+.nav>li>a>img {
+  display: block;
+  margin: auto;
 }
-.right {
-  float: left;
-  width: 30%;
-  overflow: auto;
+ul.nav-tabs {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
-.playlist {
-  clear: both;
+.no-overflow, .dense {
+  white-space: nowrap; 
+  text-overflow: ellipsis; 
+  overflow: hidden;
+  vertical-align: text-bottom;
 }
-.leftframe {
-  position: relative;
+.thumbnail img {
+  height: auto;
+  max-width: 100%;
+}
+.detail > .detail {
+  display: inline;
+}
+  .table-responsive {
+    width: 100%;
+    margin-bottom: 15px;
+    overflow-x: scroll;
+    overflow-y: hidden;
+    border: 1px solid #dddddd;
+    -ms-overflow-style: -ms-autohiding-scrollbar;
+    -webkit-overflow-scrolling: touch;
+  }
+  .table-responsive > .table {
+    margin-bottom: 0;
+  }
+  .table-responsive > .table > thead > tr > th,
+  .table-responsive > .table > tbody > tr > th,
+  .table-responsive > .table > tfoot > tr > th,
+  .table-responsive > .table > thead > tr > td,
+  .table-responsive > .table > tbody > tr > td,
+  .table-responsive > .table > tfoot > tr > td {
+    white-space: nowrap;
+  }
+  .table-responsive > .table-bordered {
+    border: 0;
+  }
+  .table-responsive > .table-bordered > thead > tr > th:first-child,
+  .table-responsive > .table-bordered > tbody > tr > th:first-child,
+  .table-responsive > .table-bordered > tfoot > tr > th:first-child,
+  .table-responsive > .table-bordered > thead > tr > td:first-child,
+  .table-responsive > .table-bordered > tbody > tr > td:first-child,
+  .table-responsive > .table-bordered > tfoot > tr > td:first-child {
+    border-left: 0;
+  }
+  .table-responsive > .table-bordered > thead > tr > th:last-child,
+  .table-responsive > .table-bordered > tbody > tr > th:last-child,
+  .table-responsive > .table-bordered > tfoot > tr > th:last-child,
+  .table-responsive > .table-bordered > thead > tr > td:last-child,
+  .table-responsive > .table-bordered > tbody > tr > td:last-child,
+  .table-responsive > .table-bordered > tfoot > tr > td:last-child {
+    border-right: 0;
+  }
+  .table-responsive > .table-bordered > tbody > tr:last-child > th,
+  .table-responsive > .table-bordered > tfoot > tr:last-child > th,
+  .table-responsive > .table-bordered > tbody > tr:last-child > td,
+  .table-responsive > .table-bordered > tfoot > tr:last-child > td {
+    border-bottom: 0;
+  }
+.play-add-download {
+  white-space: nowrap;
 }

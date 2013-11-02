@@ -52,10 +52,27 @@ function submitForm(el) {
   }
   var form = jQuery(forms[0]);
   var action = form.attr("action");
-  jQuery.post(action, form.serialize(), function() {
-    loadInFrame(el, action);
+  jQuery.post(action, form.serialize(), function(data) {
+    el = jQuery(el);
+    target = findTarget(el);
+    jQuery("." + target).html(data);
   }); 
   return false;
 }
-
+function search(el, page) {
+  el = jQuery(el);
+  
+  var form = el;
+  if(el.length == 1 && el[0].tagName.toLowerCase() != 'form') {
+    form = el.parents('form');
+  }
+  var data = form.serialize();
+  if(!page) {
+    page = 0;
+  }
+  data += "&page=" + page;
+  jQuery('#songs').load('advancedSearchResult.view?' + data);
+  window.scrollTo(0, 0);
+  return false;
+}
 

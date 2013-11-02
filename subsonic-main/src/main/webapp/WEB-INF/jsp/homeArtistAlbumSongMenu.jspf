@@ -1,22 +1,14 @@
-<h3>
+<ul class="nav nav-pills nav-justified">
     <c:forTokens items="Artists Albums Songs" delims=" " var="listGroup" varStatus="loopStatus">
-        <c:if test="${loopStatus.count > 1}">&nbsp;|&nbsp;</c:if>
         <sub:url var="url" value="home.view">
             <sub:param name="listType" value="${model.listType}"/>
             <sub:param name="listGroup" value="${listGroup}"/>
         </sub:url>
 
-        <c:choose>
-            <c:when test="${model.listGroup eq listGroup}">
-                <span class="headerSelected">${listGroup}</span>
-            </c:when>
-            <c:otherwise>
-                <a href="${url}">${listGroup}</a>
-            </c:otherwise>
-        </c:choose>
+        <li ${model.listGroup eq listGroup ? 'class="active"' : ''}><a href="${url}">${listGroup}</a></li>
 
     </c:forTokens>
-</h3>
+</ul>
 
 <c:if test="${model.listType ne 'random'}"><%@ include file="homeQuery.jspf" %></c:if>
 

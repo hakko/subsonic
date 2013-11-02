@@ -10,11 +10,9 @@
 	</c:choose>
 	<div style="padding-top:5px" id="alb${i.count}">
 		<div style="float:left">
-			<div class="outerpair1"><div class="outerpair2"><div class="shadowbox"><div class="innerbox">
 				<a href="#" onclick="return toggleAlbum(${i.count})">
-					<img id="albart${i.count}" width="87" height="87" src="${coverArtUrl}" alt="">
+					<img class="img-thumbnail" id="albart${i.count}" width="87" height="87" src="${coverArtUrl}" alt="">
 				</a>
-			</div></div></div></div>
 			<div id="albcmd${i.count}" style="display:none;float:right;padding-right:10px;padding-bottom:15px;text-align:right" class="detail">
 				<c:import url="playAddDownload.jsp">
 					<c:param name="id" value="${album.trackIds}"/>

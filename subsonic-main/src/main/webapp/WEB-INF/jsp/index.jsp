@@ -1,33 +1,48 @@
 <%@ page language="java" contentType="text/html; charset=utf-8" pageEncoding="iso-8859-1"%>
 <!DOCTYPE HTML PUBLIC>
+<%@ include file="include.jspf" %>
+<html>
+<head>
+  <title>Subsonic</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+  <!--[if lt IE 7.]>
+  <script defer type="text/javascript" src="<c:url value="/script/pngfix.js"/>"></script>
+  <![endif]-->
+  <link href="<c:url value="/script/bower_components/bootstrap/dist/css/bootstrap.min.css"/>" rel="stylesheet" media="screen">
+  <link rel="stylesheet" href="<c:url value="/style/structure.css"/>" type="text/css" />
+  <link type="text/css" rel="stylesheet" href="<c:url value="/script/webfx/luna.css"/>" />
+  <link href="<c:url value="/style/shadow.css"/>" rel="stylesheet" type="text/css" />
+  <link href="<c:url value="/style/artistgenres.css"/>" rel="stylesheet" type="text/css" />
 
-<html><head>
-    <%@ include file="head.jspf" %>
-    <link rel="alternate" type="application/rss+xml" title="Subsonic Podcast" href="podcast.view?suffix=.rss">
+  <c:set var="styleSheet"><spring:theme code="styleSheet"/></c:set>
+  <link rel="stylesheet" href="<c:url value="/${styleSheet}"/>" type="text/css" />
+  <c:set var="faviconImage"><spring:theme code="faviconImage"/></c:set>
+  <link rel="shortcut icon" href="<c:url value="/${faviconImage}"/>" type="text/css" />
+  <link rel="alternate" type="application/rss+xml" title="Subsonic Podcast" href="podcast.view?suffix=.rss">
 </head>
 
-<body class="bgcolor1">
-  <div class="wrapper">
-  <header class="upper" data-src="top.view?" data-target="upper">
-  </header>
-  <section class="lower">
-    <div class="left" data-src="left.view?" data-target="left">
+<body class="bgcolor1 container">
+  <div class="upper col-lg-12" data-src="top.view?" data-target="upper">
+  </div>
+  <div class="lower row">
+    <div class="left col-lg-2" data-src="left.view?" data-target="left">
     </div>
-    <div class="middle">
-      <div>
-        <div class="main" data-src="nowPlaying.view?" data-target="main">
+    <div class="middle col-lg-10">
+      <div class="row">
+        <div class="main col-lg-8" data-src="nowPlaying.view?" data-target="main">
         </div>
-        <div class="right" data-src="right.view?" data-target="right">
+        <div class="right col-lg-4" data-src="right.view?" data-target="right">
         </div>
       </div>
       <div class="playlist" data-src="playlist.view?" data-target="playlist">
       </div>
     </div>
-  </section>
   </div>
 
 
-  <script type="text/javascript" src="<c:url value="/script/jquery-1.7.2.min.js"/>"></script>
+  <script type="text/javascript" src="<c:url value="/script/bower_components/jquery/jquery.min.js"/>"></script>
+  <script type="text/javascript" src="<c:url value="/script/bower_components/bootstrap/dist/js/bootstrap.min.js"/>"></script>
 	<script type="text/javascript" src="<c:url value="/script/prototype.js"/>"></script>
 
 
@@ -67,7 +82,7 @@
     jQuery("[data-src]").each(function() {
       loadFrame(this);
     });
-    jQuery("a").live("click.target", function() {
+    jQuery(document).on("click", "a", function() {
       var el = $(this);
       if(el.attr("href").indexOf("#") === 0) {
         return true;
