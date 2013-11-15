@@ -1,11 +1,8 @@
 <%@ page language="java" contentType="text/html; charset=utf-8" pageEncoding="iso-8859-1" %>
 
-<html>
-<head>
-    <%@ include file="head.jspf" %>
-</head>
+    <%@ include file="include.jspf" %>
 
-<body class="mainframe bgcolor1">
+<div class="mainframe bgcolor1">
 
 <div style="padding: 15px;">
 
@@ -21,6 +18,4 @@
 <div class="back"><a href="javascript:history.go(-1)"><fmt:message key="common.back"/></a></div>
 
 </div>
-
-</body>
-</html>
+</div>

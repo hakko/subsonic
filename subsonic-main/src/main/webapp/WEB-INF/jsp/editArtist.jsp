@@ -1,10 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=utf-8" pageEncoding="iso-8859-1" %>
 
-<html><head>
-    <%@ include file="head.jspf" %>
-    <link href="<c:url value="/style/shadow.css"/>" rel="stylesheet">
-</head>
-<body class="mainframe bgcolor1">
+    <%@ include file="include.jspf" %>
+<div class="mainframe bgcolor1">
 
 <form:form method="post" action="editArtist.view" commandName="command" id="editArtist">
 
@@ -41,5 +38,4 @@
 </p>
 
 </form:form>
-
-</body></html>
+</div>

@@ -1,104 +1,47 @@
-<%@ page language="java" contentType="text/html; charset=utf-8" pageEncoding="utf-8"%>
+<jsp:root xmlns:jsp="http://java.sun.com/JSP/Page"
+	xmlns:fn="http://java.sun.com/jsp/jstl/functions"
+	xmlns:spring="http://www.springframework.org/tags"
+	xmlns:form="http://www.springframework.org/tags/form"
+	xmlns:fmt="http://java.sun.com/jsp/jstl/fmt"
+	xmlns:sub="http://subsonic.org/taglib/sub"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:str="http://jakarta.apache.org/taglibs/string-1.1" version="2.1">
+	<jsp:directive.page session="false" />
+	<jsp:directive.page contentType="text/html; charset=utf-8" />
 
-<%@ include file="include.jspf" %>
 
-	<style type="text/css">
-span.off {
-    cursor: pointer;
-    float:left;
-    padding: 2px 6px;
-    margin: 2px;
-    background: #FFF;
-    color: #000;
-    -webkit-border-radius: 7px;
-    -moz-border-radius: 7px;
-    border-radius: 7px;
-    border: solid 1px #CCC;
-    text-shadow: 0 -1px 0 rgba(0, 0, 0, 0.4);
-    -webkit-transition-duration: 0.1s;
-    -moz-transition-duration: 0.1s;
-    transition-duration: 0.1s;
-    -webkit-user-select:none;
-    -moz-user-select:none;
-    -ms-user-select:none;
-    user-select:none;
-    white-space: nowrap;
-}
 
-span.on {
-    cursor: pointer;
-    float:left;
-    padding: 2px 6px;
-    margin: 2px;
-    background: #9E7;
-    color: #000;
-    -webkit-border-radius: 7px;
-    -moz-border-radius: 7px;
-    border-radius: 7px;
-    border: solid 1px #999;
-    text-shadow: 0 -1px 0 rgba(0, 0, 0, 0.4);
-    -webkit-box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.6);
-    -moz-box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.6);
-    box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.6);
-    -webkit-transition-duration: 0.1s;
-    -moz-transition-duration: 0.1s;
-    transition-duration: 0.1s;
-    -webkit-user-select:none;
-    -moz-user-select:none;
-    -ms-user-select:none;
-    user-select:none;
-    white-space: nowrap;
-}
+	<div class="mainframe bgcolor1">
 
-span.off:hover {
-    background: #9E7;opacity:0.7;
-    border: solid 1px #999;
-    text-decoration: none;
-}
-	</style>
-	
-	<script type="text/javascript">
+		<h1>
+			<c:set var="radioImg">
+				<spring:theme code="radioImage" />
+			</c:set>
+			<img alt="Radio" src="${radioImg}" /> Radio
+		</h1>
 
-function changeClass(elem, className1,className2) {
-    elem.className = (elem.className == className1)?className2:className1;
-}
-function playGenreRadio() {
-	var genres = new Array();
-	var e = document.getElementsByTagName("span");
-	for (var i = 0; i < e.length; i++) {
-		if (e[i].className == "on") {
-			genres.push(e[i].firstChild.data);
-		}
-	}
-	playlist.onPlayGenreRadio(genres);
-}
-	</script>
+		<c:choose>
+			<c:when test="${empty model.topTags}">
+				<p>
+					Please configure which genres to use <a href="tagSettings.view">here</a>.
+				</p>
 
-</head>
-<div class="mainframe bgcolor1">
+			</c:when>
+			<c:otherwise>
+				<p>Choose one or more genres.</p>
 
-<h1>
-    <img src="<spring:theme code="radioImage"/>" alt="">
-    Radio
-</h1>
+				<c:forEach items="${model.topTags}" var="topTag">
+					<span class="off" onclick="changeClass(this,'on','off');">
+					${topTag}
+					</span>
+				</c:forEach>
 
-<c:choose>
-    <c:when test="${empty model.topTags}">
-    	<p>Please configure which genres to use <a href="tagSettings.view">here</a>.
-    </c:when>
-    <c:otherwise>
-		<p>Choose one or more genres.</p>
+				<div style="clear: both" />
 
-		<c:forEach items="${model.topTags}" var="topTag">
-			<span class="off" onclick='changeClass(this,"on","off");'>${topTag}</span>
-		</c:forEach>
+					<input type="button" value="Play radio!"
+						onClick="return playGenreRadio();" />
+			</c:otherwise>
+		</c:choose>
 
-		<div style="clear:both"/>
-
-		<form>
-			<input type="button" value="Play radio!" onClick="playGenreRadio();">
-		</form> 
-    </c:otherwise>
-</c:choose>
-
-</div>
+	</div>
+</jsp:root>

@@ -57,9 +57,11 @@
         }
 
         function updateStatus(networkStatus) {
-            dwr.util.setValue("portForwardingStatus", networkStatus.portForwardingStatusText);
-            dwr.util.setValue("urlRedirectionStatus", networkStatus.urlRedirectionStatusText);
-            window.setTimeout("refreshStatus()", 1000);
+            (function($) {
+              $("#portForwardingStatus").html(networkStatus.portForwardingStatusText);
+              $("#urlRedirectionStatus".html(networkStatus.urlRedirectionStatusText);
+              window.setTimeout("refreshStatus()", 1000);
+            }(jQuery));
         }
 
         function enableUrlRedirectionFields() {

@@ -1,12 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=utf-8" pageEncoding="iso-8859-1"%>
 
-<html><head>
-    <%@ include file="head.jspf" %>
-    <script type="text/javascript" src="<c:url value="/dwr/engine.js"/>"></script>    
-    <script type="text/javascript" src="<c:url value="/dwr/interface/tagService.js"/>"></script>
-    <script type="text/javascript" src="<c:url value="/dwr/util.js"/>"></script>
-</head>
-<body class="mainframe bgcolor1">
+    <%@ include file="include.jspf" %>
+<div class="mainframe bgcolor1">
 
 <script type="text/javascript" language="javascript">
     var index = 0;
@@ -187,4 +182,4 @@
 
 <p><input type="submit" id="save" value="<fmt:message key="common.save"/>" onclick="javascript:updateTags()"/></p>
 <div class="warning" id="errors"/>
-</body></html>
+</div>

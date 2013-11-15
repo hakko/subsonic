@@ -19,8 +19,8 @@
 					<img class="img-thumbnail" width="126" height="126" src="${coverArtUrl}" alt="" title="${album.artistName} - ${album.title}">
         </a>					
 				<div class="detail">
-            <a href="#" onclick="return onPlay(${album.trackIds}, 'P');">
-                      <img src="<spring:theme code="playImage"/>" alt="Play album" title="Play album">
+            <a href="#" onclick="return onPlay(${album.trackIds}, 'A');">
+                      <img src="<spring:theme code="addImage"/>" alt="Add last" title="Add last">
             </a>
 						<div class="detail"><em><str:truncateNicely lower="14" upper="14">${album.artistName}</str:truncateNicely></em><br />
 						<str:truncateNicely lower="14" upper="14">${album.title}</str:truncateNicely></div>

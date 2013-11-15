@@ -1,10 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=utf-8" pageEncoding="utf-8"%>
 
-<html><head>
-    <%@ include file="head.jspf" %>
-    <link href="<c:url value="/style/shadow.css"/>" rel="stylesheet">
-</head>
-<body class="mainframe bgcolor1">
+    <%@ include file="include.jspf" %>
+<div class="mainframe bgcolor1">
 
 <div style="padding: 15px;">
 
@@ -40,5 +37,4 @@
 <%@ include file="artistRecommendation.jspf" %>
 
 </div>
-
-</body></html>
+</div>

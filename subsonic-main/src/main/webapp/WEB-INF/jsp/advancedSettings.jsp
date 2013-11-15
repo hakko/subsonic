@@ -1,139 +1,199 @@
-<%@ page language="java" contentType="text/html; charset=utf-8" pageEncoding="iso-8859-1" %>
+<%@ page language="java" contentType="text/html; charset=utf-8"
+	pageEncoding="iso-8859-1"%>
 
-    <%@ include file="include.jspf" %>
+<%@ include file="include.jspf"%>
 
-<div class="mainframe bgcolor1" onload="enableLdapFields()">
-<script type="text/javascript" src="<c:url value="/script/wz_tooltip.js"/>"></script>
-<script type="text/javascript" src="<c:url value="/script/tip_balloon.js"/>"></script>
+<div class="mainframe bgcolor1">
 
-<c:import url="settingsHeader.jsp">
-    <c:param name="cat" value="advanced"/>
-</c:import>
+	<c:import url="settingsHeader.jsp">
+		<c:param name="cat" value="advanced" />
+	</c:import>
 
-<form:form method="post" action="advancedSettings.view" commandName="command">
+	<form:form method="post" action="advancedSettings.view"
+		commandName="command"
+		onsubmit="return submitForm(this, 'Settings saved.');">
+		<div class="statusMessage"></div>
+		<div class="panel panel-default">
+			<div class="panel-heading">Advanced</div>
+			<div class="panel-body">
+				<div class="form-group">
+					<label for="downsampleCommand"> <fmt:message
+							key="advancedsettings.downsamplecommand" /> <c:import
+							url="helpToolTip.jsp">
+							<c:param name="topic" value="downsamplecommand" />
+						</c:import>
+					</label>
 
-    <table style="white-space:nowrap" class="indent">
+					<form:input class="form-control" path="downsampleCommand" size="70" />
 
-        <tr>
-            <td><fmt:message key="advancedsettings.downsamplecommand"/></td>
-            <td>
-                <form:input path="downsampleCommand" size="70"/>
-                <c:import url="helpToolTip.jsp"><c:param name="topic" value="downsamplecommand"/></c:import>
-            </td>
-        </tr>
 
-        <tr><td colspan="2">&nbsp;</td></tr>
+				</div>
 
-        <tr>
-            <td><fmt:message key="advancedsettings.coverartlimit"/></td>
-            <td>
-                <form:input path="coverArtLimit" size="8"/>
-                <c:import url="helpToolTip.jsp"><c:param name="topic" value="coverartlimit"/></c:import>
-            </td>
-        </tr>
+				<div class="row">
+					<div class="form-group col-xs-3">
+						<label for="coverArtLimit"> <c:import
+								url="helpToolTip.jsp">
+								<c:param name="topic" value="coverartlimit" />
+							</c:import> <fmt:message key="advancedsettings.coverartlimit" />
+						</label>
 
-        <tr>
-            <td><fmt:message key="advancedsettings.downloadlimit"/></td>
-            <td>
-                <form:input path="downloadLimit" size="8"/>
-                <c:import url="helpToolTip.jsp"><c:param name="topic" value="downloadlimit"/></c:import>
-            </td>
-        </tr>
+						<form:input class="form-control" path="coverArtLimit" size="8" />
 
-        <tr>
-            <td><fmt:message key="advancedsettings.uploadlimit"/></td>
-            <td>
-                <form:input path="uploadLimit" size="8"/>
-                <c:import url="helpToolTip.jsp"><c:param name="topic" value="uploadlimit"/></c:import>
-            </td>
-        </tr>
+					</div>
+				</div>
 
-        <tr>
-            <td><fmt:message key="advancedsettings.streamport"/></td>
-            <td>
-                <form:input path="streamPort" size="8"/>
-                <c:import url="helpToolTip.jsp"><c:param name="topic" value="streamport"/></c:import>
-            </td>
-        </tr>
+				<div class="row">
+					<div class="form-group col-xs-3">
+						<label for="downloadLimit"> <c:import
+								url="helpToolTip.jsp">
+								<c:param name="topic" value="downloadlimit" />
+							</c:import> <fmt:message key="advancedsettings.downloadlimit" />
+						</label>
 
-        <tr><td colspan="2">&nbsp;</td></tr>
 
-        <tr>
-            <td colspan="2">
-                <form:checkbox path="ldapEnabled" id="ldap" cssClass="checkbox" onclick="javascript:enableLdapFields()"/>
-                <label for="ldap"><fmt:message key="advancedsettings.ldapenabled"/></label>
-                <c:import url="helpToolTip.jsp"><c:param name="topic" value="ldap"/></c:import>
-            </td>
-        </tr>
 
-        <tr><td colspan="2">
-            <table class="indent" id="ldapTable" style="padding-left:2em">
-                <tr>
-                    <td><fmt:message key="advancedsettings.ldapurl"/></td>
-                    <td colspan="3">
-                        <form:input path="ldapUrl" size="70"/>
-                        <c:import url="helpToolTip.jsp"><c:param name="topic" value="ldapurl"/></c:import>
-                    </td>
-                </tr>
+						<form:input class="form-control" path="downloadLimit" size="8" />
 
-                <tr>
-                    <td><fmt:message key="advancedsettings.ldapsearchfilter"/></td>
-                    <td colspan="3">
-                        <form:input path="ldapSearchFilter" size="70"/>
-                        <c:import url="helpToolTip.jsp"><c:param name="topic" value="ldapsearchfilter"/></c:import>
-                    </td>
-                </tr>
+					</div>
+				</div>
 
-                <tr>
-                    <td><fmt:message key="advancedsettings.ldapmanagerdn"/></td>
-                    <td>
-                        <form:input path="ldapManagerDn" size="20"/>
-                    </td>
-                    <td><fmt:message key="advancedsettings.ldapmanagerpassword"/></td>
-                    <td>
-                        <form:password path="ldapManagerPassword" size="20"/>
-                        <c:import url="helpToolTip.jsp"><c:param name="topic" value="ldapmanagerdn"/></c:import>
-                    </td>
-                </tr>
+				<div class="row">
+					<div class="form-group col-xs-3">
+						<label for="uploadLimit"> <c:import url="helpToolTip.jsp">
+								<c:param name="topic" value="uploadlimit" />
+							</c:import> <fmt:message key="advancedsettings.uploadlimit" />
+						</label>
 
-                <tr>
-                    <td colspan="5">
-                        <form:checkbox path="ldapAutoShadowing" id="ldapAutoShadowing" cssClass="checkbox"/>
-                        <label for="ldapAutoShadowing"><fmt:message key="advancedsettings.ldapautoshadowing"><fmt:param value="${command.brand}"/></fmt:message></label>
-                        <c:import url="helpToolTip.jsp"><c:param name="topic" value="ldapautoshadowing"/></c:import>
-                    </td>
-                </tr>
-            </table>
-        </td></tr>
+						<form:input class="form-control" path="uploadLimit" size="8" />
 
-        <tr>
-            <td colspan="2" style="padding-top:1.5em">
-                <input type="submit" value="<fmt:message key="common.save"/>" style="margin-right:0.3em">
-                <input type="button" value="<fmt:message key="common.cancel"/>" onclick="location.href='nowPlaying.view'">
-            </td>
-        </tr>
+					</div>
+				</div>
 
-    </table>
-</form:form>
-    <script type="text/javascript" language="javascript">
-        function enableLdapFields() {
-            var checkbox = $("ldap");
-            var table = $("ldapTable");
+				<div class="row">
+					<div class="form-group col-xs-3">
+						<label for="streamPort"> <c:import url="helpToolTip.jsp">
+								<c:param name="topic" value="streamport" />
+							</c:import> <fmt:message key="advancedsettings.streamport" />
+						</label>
 
-            if (checkbox && checkbox.checked) {
-                table.show();
-            } else {
-                table.hide();
-            }
-        }
+						<form:input class="form-control" path="streamPort" size="8" />
+
+					</div>
+				</div>
+
+				<div class="checkbox">
+					<label for="ldap"> <form:checkbox path="ldapEnabled"
+							id="ldap" cssClass="checkbox"
+							onclick="javascript:enableLdapFields()" />
+							<c:import
+              url="helpToolTip.jsp">
+              <c:param name="topic" value="ldap" />
+            </c:import>
+							 
+							<fmt:message
+							key="advancedsettings.ldapenabled" /> 
+					</label>
+				</div>
+
+				<div class="panel panel-default" id="ldapTable">
+					<div class="panel-heading">LDAP</div>
+					<div class="panel-body">
+
+						<div class="form-group">
+							<label for="ldapUrl"> <fmt:message
+									key="advancedsettings.ldapurl" /> <c:import
+									url="helpToolTip.jsp">
+									<c:param name="topic" value="ldapurl" />
+								</c:import>
+							</label>
+
+							<form:input class="form-control" path="ldapUrl" size="70" />
+
+						</div>
+
+						<div class="form-group">
+							<label for="ldapSearchFilter"> <fmt:message
+									key="advancedsettings.ldapsearchfilter" /> <c:import
+									url="helpToolTip.jsp">
+									<c:param name="topic" value="ldapsearchfilter" />
+								</c:import>
+
+							</label>
+
+							<form:input class="form-control" path="ldapSearchFilter"
+								size="70" />
+
+						</div>
+
+						<div class="row">
+							<div class="form-group col-xs-6">
+								<label for="ldapManagerDn"> <fmt:message
+										key="advancedsettings.ldapmanagerdn" />
+								</label>
+
+								<form:input class="form-control" path="ldapManagerDn" size="20" />
+							</div>
+							<div class="form-group col-xs-6">
+								<label for="ldapManagerPassword"> <fmt:message
+										key="advancedsettings.ldapmanagerpassword" /> <c:import
+										url="helpToolTip.jsp">
+										<c:param name="topic" value="ldapmanagerdn" />
+									</c:import>
+
+								</label>
+								<form:password class="form-control" path="ldapManagerPassword"
+									size="20" />
+
+							</div>
+						</div>
+
+						<div class="checkbox">
+							<label for="ldapAutoShadowing"> <c:import
+									url="helpToolTip.jsp">
+									<c:param name="topic" value="ldapautoshadowing" />
+								</c:import> <fmt:message key="advancedsettings.ldapautoshadowing">
+									<fmt:param value="${command.brand}" />
+								</fmt:message> <form:checkbox path="ldapAutoShadowing" id="ldapAutoShadowing"
+									cssClass="checkbox" />
+							</label>
+
+
+
+						</div>
+					</div>
+				</div>
+
+			</div>
+			<div class="panel-footer">
+
+				<input class="btn btn-primary" type="submit"
+					value="<fmt:message key="common.save"/>"
+					style="margin-right: 0.3em"> <input class="btn btn-default"
+					type="button" value="<fmt:message key="common.cancel"/>"
+					onclick="location.href='nowPlaying.view'">
+			</div>
+		</div>
+	</form:form>
+	<script type="text/javascript">
+    function enableLdapFields() {
+      var checkbox = $("ldap");
+      var table = $("ldapTable");
+
+      if (checkbox && checkbox.checked) {
+        table.show();
+      } else {
+        table.hide();
+      }
+    }
+    enableLdapFields();
+  </script>
+
+
+	<c:if test="${command.reloadNeeded}">
+		<script language="javascript" type="text/javascript">
+      parent.frames.left.location.href = "left.view?";
+      parent.frames.playlist.location.href = "playlist.view?";
     </script>
-
-
-<c:if test="${command.reloadNeeded}">
-    <script language="javascript" type="text/javascript">
-        parent.frames.left.location.href="left.view?";
-        parent.frames.playlist.location.href="playlist.view?";
-    </script>
-</c:if>
+	</c:if>
 
 </div>

@@ -1,16 +1,14 @@
 <%@ page language="java" contentType="text/html; charset=utf-8" pageEncoding="iso-8859-1"%>
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 
-<html><head>
-    <%@ include file="head.jspf" %>
+    <%@ include file="include.jspf" %>
     <script type="text/javascript" language="javascript">
         function hideGettingStarted() {
             alert("<fmt:message key="gettingStarted.hidealert"/>");
             location.href = "gettingStarted.view?hide";
         }
     </script>
-</head>
-<body class="mainframe bgcolor1">
+<div class="mainframe bgcolor1">
 
 <h1 style="padding-bottom:0.5em">
     <img src="<spring:theme code="homeImage"/>" alt="">
@@ -53,5 +51,4 @@ Before you can use the new features, some configuration needs to be done.<br>
 </table>
 
 <div class="forward"><a href="javascript:hideGettingStarted()"><fmt:message key="gettingStarted.hide"/></a></div>
-
-</body></html>
+</div>

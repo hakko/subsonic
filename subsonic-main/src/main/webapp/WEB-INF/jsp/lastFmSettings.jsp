@@ -1,10 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=utf-8" pageEncoding="iso-8859-1"%>
 
-<html><head>
-    <%@ include file="head.jspf" %>
-
-</head>
-<body class="mainframe bgcolor1">
+    <%@ include file="include.jspf" %>
+<div class="mainframe bgcolor1">
 
 <c:choose>
 	<c:when test="${empty model.token}">
@@ -23,5 +20,4 @@
 		</form>
 	</c:otherwise>
 </c:choose>
-
-</body></html>
+</div>

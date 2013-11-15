@@ -1,13 +1,8 @@
 <%@ page language="java" contentType="text/html; charset=utf-8" pageEncoding="iso-8859-1" %>
 <%--@elvariable id="command" type="net.sourceforge.subsonic.command.PlayerSettingsCommand"--%>
 
-<html><head>
-    <%@ include file="head.jspf" %>
-    <script type="text/javascript" src="<c:url value="/script/scripts.js"/>"></script>
-</head>
-<body class="mainframe bgcolor1">
-<script type="text/javascript" src="<c:url value="/script/wz_tooltip.js"/>"></script>
-<script type="text/javascript" src="<c:url value="/script/tip_balloon.js"/>"></script>
+    <%@ include file="include.jspf" %>
+<div class="mainframe bgcolor1">
 
 <c:import url="settingsHeader.jsp">
     <c:param name="cat" value="player"/>
@@ -33,7 +28,7 @@
     <tr>
         <td><b><fmt:message key="playersettings.title"/></b></td>
         <td>
-            <select name="player" onchange="location='playerSettings.view?id=' + options[selectedIndex].value;">
+            <select name="player" onchange="return loadInFrame(this, 'playerSettings.view?id=' + options[selectedIndex].value);">
                 <c:forEach items="${command.players}" var="player">
                     <option ${player.id eq command.playerId ? "selected" : ""}
                             value="${player.id}">${player.description}</option>
@@ -47,26 +42,21 @@
     </tr>
 </table>
 
-<form:form commandName="command" method="post" action="playerSettings.view">
+<form:form commandName="command" method="post" action="playerSettings.view" onsubmit="return submitForm(this)" role="form" class="form">
 <form:hidden path="playerId"/>
 
-<table class="ruleTable indent">
     <c:forEach items="${command.technologyHolders}" var="technologyHolder">
         <c:set var="technologyName">
             <fmt:message key="playersettings.technology.${fn:toLowerCase(technologyHolder.name)}.title"/>
         </c:set>
-
-        <tr>
-            <td class="ruleTableHeader">
-                <form:radiobutton id="radio-${technologyName}" path="technologyName" value="${technologyHolder.name}"/>
-                <b><label for="radio-${technologyName}">${technologyName}</label></b>
-            </td>
-            <td class="ruleTableCell" style="width:40em">
-                <fmt:message key="playersettings.technology.${fn:toLowerCase(technologyHolder.name)}.text"/>
-            </td>
-        </tr>
+       <div class="radio">
+         <label>
+           <form:radiobutton id="radio-${technologyName}" path="technologyName" value="${technologyHolder.name}"/>
+           <label for="radio-${technologyName}">${technologyName}</label>
+         </label>
+         <p class="help-block"><fmt:message key="playersettings.technology.${fn:toLowerCase(technologyHolder.name)}.text"/></p>
+      </div>
     </c:forEach>
-</table>
 
 
 <table class="indent" style="border-spacing:3pt">
@@ -163,15 +153,14 @@
         </table>
     </c:if>
 
-    <input type="button" value="<fmt:message key="common.save"/>" style="margin-top:1em;margin-right:0.3em" onclick="return submitForm(this);">
-    <input type="button" value="<fmt:message key="common.cancel"/>" style="margin-top:1em" onclick="return loadInFrame(this, 'nowPlaying.view');">
+    <button type="submit" class="btn btn-primary"><fmt:message key="common.save"/></button>
+    <button type="button" class="btn btn-default" onclick="return loadInFrame(this, 'nowPlaying.view');"><fmt:message key="common.cancel"/></button>
 </form:form>
 
 </c:otherwise>
 </c:choose>
 
 <c:if test="${command.reloadNeeded}">
-    <script language="javascript" type="text/javascript">parent.frames.playlist.location.href="playlist.view?"</script>
+    <script language="javascript" type="text/javascript">jQuery('.playlist').load("playlist.view?");</script>
 </c:if>
-
-</body></html>
+</div>

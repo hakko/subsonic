@@ -21,17 +21,17 @@
 	
 	<c:set var="spanClass" value="detail"/><c:if test="${model.trackId eq mediaFile.id}"><c:set var="spanClass" value="detailSelected"/></c:if>
 	
-	<c:if test="${model.visibility.trackNumberVisible}"><td><span class="${spanClass}">${mediaFile.metaData.trackNumber}</span></td></c:if>
-	<td><span class="${spanClass}" title="${mediaFile.title}"><str:truncateNicely upper="${cutoff}">${fn:escapeXml(mediaFile.title)}</str:truncateNicely></span></td>
-	<c:if test="${model.visibility.albumVisible}"><td><span class="${spanClass}" title="${mediaFile.metaData.album}"><str:truncateNicely upper="${cutoff}">${fn:escapeXml(mediaFile.metaData.album)}</str:truncateNicely></span></td></c:if>
-	<c:if test="${model.visibility.artistVisible and model.multipleArtists}"><td><span class="${spanClass}" title="${mediaFile.metaData.artist}"><str:truncateNicely upper="${cutoff}">${fn:escapeXml(mediaFile.metaData.artist)}</str:truncateNicely></span></td></c:if>
-	<c:if test="${model.visibility.composerVisible}"><td><span class="${spanClass}" title="${mediaFile.metaData.composer}"><str:truncateNicely upper="${cutoff}">${fn:escapeXml(mediaFile.metaData.composer)}</str:truncateNicely></span></td></c:if>
-	<c:if test="${model.visibility.genreVisible}"><td><span class="${spanClass}">${mediaFile.metaData.genre}</span></td></c:if>
-	<c:if test="${model.visibility.yearVisible}"><td><span class="${spanClass}">${mediaFile.metaData.year}</span></td></c:if>
-	<c:if test="${model.visibility.formatVisible}"><td><span class="${spanClass}">${fn:toLowerCase(mediaFile.metaData.format)}</span></td></c:if>
-	<c:if test="${model.visibility.fileSizeVisible}"><td><span class="${spanClass}"><sub:formatBytes bytes="${mediaFile.metaData.fileSize}"/></span></td></c:if>
-	<c:if test="${model.visibility.durationVisible}"><td><span class="${spanClass}">${mediaFile.metaData.durationAsString}</span></td></c:if>
-	<c:if test="${model.visibility.bitRateVisible}"><td><span class="${spanClass}"><c:if test="${not empty mediaFile.metaData.bitRate}">${mediaFile.metaData.bitRate} Kbps ${mediaFile.metaData.variableBitRate ? "vbr" : ""}</c:if>
+	<c:if test="${model.visibility.trackNumberVisible}"><td class="trackNumber"><span class="${spanClass}">${mediaFile.metaData.trackNumber}</span></td></c:if>
+	<td class="title"><span class="${spanClass}" title="${mediaFile.title}"><str:truncateNicely upper="${cutoff}">${fn:escapeXml(mediaFile.title)}</str:truncateNicely></span></td>
+	<c:if test="${model.visibility.albumVisible}"><td class="album"><span class="${spanClass}" title="${mediaFile.metaData.album}"><str:truncateNicely upper="${cutoff}">${fn:escapeXml(mediaFile.metaData.album)}</str:truncateNicely></span></td></c:if>
+	<c:if test="${model.visibility.artistVisible and model.multipleArtists}"><td class="artist"><span class="${spanClass}" title="${mediaFile.metaData.artist}"><str:truncateNicely upper="${cutoff}">${fn:escapeXml(mediaFile.metaData.artist)}</str:truncateNicely></span></td></c:if>
+	<c:if test="${model.visibility.composerVisible}"><td class="composer"><span class="${spanClass}" title="${mediaFile.metaData.composer}"><str:truncateNicely upper="${cutoff}">${fn:escapeXml(mediaFile.metaData.composer)}</str:truncateNicely></span></td></c:if>
+	<c:if test="${model.visibility.genreVisible}"><td class="genre"><span class="${spanClass}">${mediaFile.metaData.genre}</span></td></c:if>
+	<c:if test="${model.visibility.yearVisible}"><td class="year"><span class="${spanClass}">${mediaFile.metaData.year}</span></td></c:if>
+	<c:if test="${model.visibility.formatVisible}"><td class="format"><span class="${spanClass}">${fn:toLowerCase(mediaFile.metaData.format)}</span></td></c:if>
+	<c:if test="${model.visibility.fileSizeVisible}"><td class="fileSize"><span class="${spanClass}"><sub:formatBytes bytes="${mediaFile.metaData.fileSize}"/></span></td></c:if>
+	<c:if test="${model.visibility.durationVisible}"><td class="duration"><span class="${spanClass}">${mediaFile.metaData.durationAsString}</span></td></c:if>
+	<c:if test="${model.visibility.bitRateVisible}"><td class="bitRate"><span class="${spanClass}"><c:if test="${not empty mediaFile.metaData.bitRate}">${mediaFile.metaData.bitRate} Kbps ${mediaFile.metaData.variableBitRate ? "vbr" : ""}</c:if>
 	<c:if test="${mediaFile.video and not empty mediaFile.metaData.width and not empty mediaFile.metaData.height}">(${mediaFile.metaData.width}x${mediaFile.metaData.height})</c:if></span></td></c:if>
 
 	</tr>

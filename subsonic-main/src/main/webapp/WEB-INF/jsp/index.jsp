@@ -10,6 +10,8 @@
   <script defer type="text/javascript" src="<c:url value="/script/pngfix.js"/>"></script>
   <![endif]-->
   <link href="<c:url value="/script/bower_components/bootstrap/dist/css/bootstrap.min.css"/>" rel="stylesheet" media="screen">
+  <link href="<c:url value="/script/bower_components/font-awesome/css/font-awesome.min.css"/>" rel="stylesheet" media="screen">
+
   <link rel="stylesheet" href="<c:url value="/style/structure.css"/>" type="text/css" />
   <link type="text/css" rel="stylesheet" href="<c:url value="/script/webfx/luna.css"/>" />
   <link href="<c:url value="/style/shadow.css"/>" rel="stylesheet" type="text/css" />
@@ -59,6 +61,8 @@
   <script type="text/javascript" src="<c:url value="/dwr/interface/multiService.js"/>"></script>
 	<script type="text/javascript" src="<c:url value="/dwr/interface/uiStarService.js"/>"></script>
 	<script type="text/javascript" src="<c:url value="/dwr/interface/uiTagService.js"/>"></script>
+  <script type="text/javascript" src="<c:url value="/dwr/interface/transferService.js"/>"></script>
+  <script type="text/javascript" src="<c:url value="/dwr/interface/tagService.js"/>"></script>
   <script type="text/javascript" src="<c:url value="/dwr/util.js"/>"></script>
 
 

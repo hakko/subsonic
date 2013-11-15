@@ -1,10 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=utf-8" pageEncoding="iso-8859-1"%>
 
-<html><head>
-    <%@ include file="head.jspf" %>
-</head>
-
-<body class="mainframe bgcolor1" onload="enablePasswordChangeFields();">
+<div class="mainframe bgcolor1">
 
 <c:import url="settingsHeader.jsp">
     <c:param name="cat" value="user"/>
@@ -197,5 +193,5 @@
     <input type="submit" value="<fmt:message key="common.save"/>" style="margin-top:1.5em;margin-right:0.3em">
     <input type="button" value="<fmt:message key="common.cancel"/>" onclick="location.href='nowPlaying.view'" style="margin-top:1.5em">
 </form:form>
-
-</body></html>
+<script type="text/javascript">enablePasswordChangeFields()</script>
+</div>

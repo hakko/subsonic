@@ -1,9 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=utf-8" pageEncoding="iso-8859-1" %>
 
-<html><head>
-    <%@ include file="head.jspf" %>
-</head>
-<body class="mainframe bgcolor1">
+<div class="mainframe bgcolor1">
 
 <c:import url="settingsHeader.jsp">
     <c:param name="cat" value="internetRadio"/>
@@ -59,4 +56,4 @@
     <script language="javascript" type="text/javascript">parent.frames.left.location.href="left.view?"</script>
 </c:if>
 
-</body></html>
+</div>
