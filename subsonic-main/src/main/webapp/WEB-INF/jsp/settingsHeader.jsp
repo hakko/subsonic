@@ -8,25 +8,21 @@
     <fmt:message key="settingsheader.title"/>
 </h1>
 
-<h2>
+<ul class="nav nav-tabs nav-justified">
 <c:forTokens items="${categories}" delims=" " var="cat" varStatus="loopStatus">
-    <c:choose>
-        <c:when test="${loopStatus.count > 1 and  (loopStatus.count - 1) % 7 != 0}">&nbsp;|&nbsp;</c:when>
-        <c:otherwise></h2><h2></c:otherwise>
-    </c:choose>
 
     <c:url var="url" value="${cat}Settings.view?"/>
 
     <c:choose>
         <c:when test="${param.cat eq cat}">
-            <span class="headerSelected"><fmt:message key="settingsheader.${cat}"/></span>
+            <li class="active"><a href="${url}"><fmt:message key="settingsheader.${cat}"/></a></li>
         </c:when>
         <c:otherwise>
-            <a href="${url}"><fmt:message key="settingsheader.${cat}"/></a>
+            <li><a href="${url}"><fmt:message key="settingsheader.${cat}"/></a></li>
         </c:otherwise>
     </c:choose>
 
 </c:forTokens>
-</h2>
+</ul>
 
-<p></p>
+
