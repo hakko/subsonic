@@ -1,197 +1,276 @@
-<%@ page language="java" contentType="text/html; charset=utf-8" pageEncoding="iso-8859-1"%>
+<%@ page language="java" contentType="text/html; charset=utf-8"
+	pageEncoding="iso-8859-1"%>
+<%@ include file="include.jspf"%>
+
 
 <div class="mainframe bgcolor1">
 
-<c:import url="settingsHeader.jsp">
-    <c:param name="cat" value="user"/>
-</c:import>
+	<c:import url="settingsHeader.jsp">
+		<c:param name="cat" value="user" />
+	</c:import>
 
-<script type="text/javascript" language="javascript">
+	<script type="text/javascript" language="javascript">
     function enablePasswordChangeFields() {
-        var changePasswordCheckbox = $("passwordChange");
-        var ldapCheckbox = $("ldapAuthenticated");
-        var passwordChangeTable = $("passwordChangeTable");
-        var passwordChangeCheckboxTable = $("passwordChangeCheckboxTable");
+      var changePasswordCheckbox = jQuery("#passwordChange");
+      var ldapCheckbox = jQuery("#ldapAuthenticated");
+      var passwordChangeTable = jQuery("#passwordChangeTable");
+      var passwordChangeCheckboxTable = jQuery("#passwordChangeCheckboxTable");
 
-        if (changePasswordCheckbox && changePasswordCheckbox.checked && (ldapCheckbox == null || !ldapCheckbox.checked)) {
-            passwordChangeTable.show();
-        } else {
-            passwordChangeTable.hide();
-        }
+      if (changePasswordCheckbox.is(":checked")
+          && (!ldapCheckbox.is(":checked"))) {
+        passwordChangeTable.show();
+      } else {
+        passwordChangeTable.hide();
+      }
 
-        if (changePasswordCheckbox) {
-            if (ldapCheckbox && ldapCheckbox.checked) {
-                passwordChangeCheckboxTable.hide();
-            } else {
-                passwordChangeCheckboxTable.show();
-            }
-        }
+      if (ldapCheckbox.is(":checked")) {
+        passwordChangeCheckboxTable.hide();
+      } else {
+        passwordChangeCheckboxTable.show();
+      }
     }
-</script>
+  </script>
 
-<table class="indent">
-    <tr>
-        <td><b><fmt:message key="usersettings.title"/></b></td>
-        <td>
-            <select name="username" onchange="location='userSettings.view?userIndex=' + (selectedIndex - 1);">
-                <option value="">-- <fmt:message key="usersettings.newuser"/> --</option>
-                <c:forEach items="${command.users}" var="user">
-                    <option ${user.username eq command.username ? "selected" : ""}
-                            value="${user.username}">${user.username}</option>
-                </c:forEach>
-            </select>
-        </td>
-    </tr>
-</table>
+	<form:form method="post" action="userSettings.view"
+		commandName="command"
+		onsubmit="return submitForm(this, 'User saved.')">
+		<div class="statusMessage"></div>
 
-<p/>
+		<div class="panel panel-default">
+			<div class="panel-heading">
+				<fmt:message key="usersettings.title" />
+			</div>
+			<div class="panel-body">
 
-<form:form method="post" action="userSettings.view" commandName="command">
-    <c:if test="${not command.admin}">
-        <table>
-            <tr>
-                <td><form:checkbox path="adminRole" id="admin" cssClass="checkbox"/></td>
-                <td><label for="admin"><fmt:message key="usersettings.admin"/></label></td>
-            </tr>
-            <tr>
-                <td><form:checkbox path="settingsRole" id="settings" cssClass="checkbox"/></td>
-                <td><label for="settings"><fmt:message key="usersettings.settings"/></label></td>
-            </tr>
-            <tr>
-                <td style="padding-top:1em"><form:checkbox path="streamRole" id="stream" cssClass="checkbox"/></td>
-                <td style="padding-top:1em"><label for="stream"><fmt:message key="usersettings.stream"/></label></td>
-            </tr>
-            <tr>
-                <td><form:checkbox path="jukeboxRole" id="jukebox" cssClass="checkbox"/></td>
-                <td><label for="jukebox"><fmt:message key="usersettings.jukebox"/></label></td>
-            </tr>
-            <tr>
-                <td><form:checkbox path="downloadRole" id="download" cssClass="checkbox"/></td>
-                <td><label for="download"><fmt:message key="usersettings.download"/></label></td>
-            </tr>
-            <tr>
-                <td><form:checkbox path="uploadRole" id="upload" cssClass="checkbox"/></td>
-                <td><label for="upload"><fmt:message key="usersettings.upload"/></label></td>
-            </tr>
-            <tr>
-                <td><form:checkbox path="shareRole" id="share" cssClass="checkbox"/></td>
-                <td><label for="share"><fmt:message key="usersettings.share"/></label></td>
-            </tr>
-            <tr>
-                <td style="padding-top:1em"><form:checkbox path="playlistRole" id="playlist" cssClass="checkbox"/></td>
-                <td style="padding-top:1em"><label for="playlist"><fmt:message key="usersettings.playlist"/></label></td>
-            </tr>
-            <tr>
-                <td><form:checkbox path="coverArtRole" id="coverArt" cssClass="checkbox"/></td>
-                <td><label for="coverArt"><fmt:message key="usersettings.coverart"/></label></td>
-            </tr>
-            <tr>
-                <td><form:checkbox path="commentRole" id="comment" cssClass="checkbox"/></td>
-                <td><label for="comment"><fmt:message key="usersettings.comment"/></label></td>
-            </tr>
-            <tr>
-                <td><form:checkbox path="podcastRole" id="podcast" cssClass="checkbox"/></td>
-                <td><label for="podcast"><fmt:message key="usersettings.podcast"/></label></td>
-            </tr>
-        </table>
-    </c:if>
+				<select name="username"
+					onchange="return loadInFrame(this, 'userSettings.view?userIndex=' + (selectedIndex - 1));">
+					<option value="">
+						--
+						<fmt:message key="usersettings.newuser" />
+						--
+					</option>
+					<c:forEach items="${command.users}" var="user">
+						<option ${user.username eq command.username ? "selected" : ""}
+							value="${user.username}">${user.username}</option>
+					</c:forEach>
+				</select>
 
-    <table class="indent">
-        <tr>
-            <td><fmt:message key="playersettings.maxbitrate"/></td>
-            <td>
-                <form:select path="transcodeSchemeName" cssStyle="width:8em">
-                    <c:forEach items="${command.transcodeSchemeHolders}" var="transcodeSchemeHolder">
-                        <form:option value="${transcodeSchemeHolder.name}" label="${transcodeSchemeHolder.description}"/>
-                    </c:forEach>
-                </form:select>
-            </td>
-            <td><c:import url="helpToolTip.jsp"><c:param name="topic" value="transcode"/></c:import></td>
-            <c:if test="${not command.transcodingSupported}">
-                <td class="warning"><fmt:message key="playersettings.nolame"/></td>
-            </c:if>
-        </tr>
-    </table>
 
-    <c:if test="${not command.newUser and not command.admin}">
-        <table class="indent">
-            <tr>
-                <td><form:checkbox path="delete" id="delete" cssClass="checkbox"/></td>
-                <td><label for="delete"><fmt:message key="usersettings.delete"/></label></td>
-            </tr>
-        </table>
-    </c:if>
 
-    <c:if test="${command.ldapEnabled and not command.admin}">
-        <table>
-            <tr>
-                <td><form:checkbox path="ldapAuthenticated" id="ldapAuthenticated" cssClass="checkbox" onclick="javascript:enablePasswordChangeFields()"/></td>
-                <td><label for="ldapAuthenticated"><fmt:message key="usersettings.ldap"/></label></td>
-                <td><c:import url="helpToolTip.jsp"><c:param name="topic" value="ldap"/></c:import></td>
-            </tr>
-        </table>
-    </c:if>
+				<c:if test="${not command.admin}">
 
-    <c:choose>
-        <c:when test="${command.newUser}">
+					<div class="checkbox">
+						<label for="admin"><fmt:message key="usersettings.admin" />
+							<form:checkbox path="adminRole" id="admin" cssClass="checkbox" />
+						</label>
+					</div>
 
-            <table class="indent">
-                <tr>
-                    <td><fmt:message key="usersettings.username"/></td>
-                    <td><form:input path="username"/></td>
-                    <td class="warning"><form:errors path="username"/></td>
-                </tr>
-                <tr>
-                    <td><fmt:message key="usersettings.email"/></td>
-                    <td><form:input path="email"/></td>
-                    <td class="warning"><form:errors path="email"/></td>
-                </tr>
-                <tr>
-                    <td><fmt:message key="usersettings.password"/></td>
-                    <td><form:password path="password"/></td>
-                    <td class="warning"><form:errors path="password"/></td>
-                </tr>
-                <tr>
-                    <td><fmt:message key="usersettings.confirmpassword"/></td>
-                    <td><form:password path="confirmPassword"/></td>
-                    <td/>
-                </tr>
-            </table>
-        </c:when>
 
-        <c:otherwise>
-            <table id="passwordChangeCheckboxTable">
-                <tr>
-                    <td><form:checkbox path="passwordChange" id="passwordChange" onclick="enablePasswordChangeFields();" cssClass="checkbox"/></td>
-                    <td><label for="passwordChange"><fmt:message key="usersettings.changepassword"/></label></td>
-                </tr>
-            </table>
+					<div class="checkbox">
 
-            <table id="passwordChangeTable" style="display:none">
-                <tr>
-                    <td><fmt:message key="usersettings.newpassword"/></td>
-                    <td><form:password path="password" id="path"/></td>
-                    <td class="warning"><form:errors path="password"/></td>
-                </tr>
-                <tr>
-                    <td><fmt:message key="usersettings.confirmpassword"/></td>
-                    <td><form:password path="confirmPassword" id="confirmPassword"/></td>
-                    <td/>
-                </tr>
-            </table>
+						<label for="settings"><fmt:message
+								key="usersettings.settings" /> <form:checkbox
+								path="settingsRole" id="settings" cssClass="checkbox" /></label>
+					</div>
 
-            <table>
-                <tr>
-                    <td><fmt:message key="usersettings.email"/></td>
-                    <td><form:input path="email"/></td>
-                    <td class="warning"><form:errors path="email"/></td>
-                </tr>
-            </table>
-        </c:otherwise>
-    </c:choose>
+					<div class="checkbox">
+						<label for="stream"><fmt:message key="usersettings.stream" />
+							<form:checkbox path="streamRole" id="stream" cssClass="checkbox" />
+						</label>
+					</div>
 
-    <input type="submit" value="<fmt:message key="common.save"/>" style="margin-top:1.5em;margin-right:0.3em">
-    <input type="button" value="<fmt:message key="common.cancel"/>" onclick="location.href='nowPlaying.view'" style="margin-top:1.5em">
-</form:form>
-<script type="text/javascript">enablePasswordChangeFields()</script>
+
+					<div class="checkbox">
+						<label for="jukebox"><fmt:message
+								key="usersettings.jukebox" /> <form:checkbox path="jukeboxRole"
+								id="jukebox" cssClass="checkbox" /> </label>
+					</div>
+					<div class="checkbox">
+
+						<label for="download"><fmt:message
+								key="usersettings.download" /> <form:checkbox
+								path="downloadRole" id="download" cssClass="checkbox" /></label>
+
+					</div>
+					<div class="checkbox">
+
+						<label for="upload"><fmt:message key="usersettings.upload" />
+							<form:checkbox path="uploadRole" id="upload" cssClass="checkbox" /></label>
+					</div>
+					<div class="checkbox">
+
+						<label for="share"><fmt:message key="usersettings.share" />
+							<form:checkbox path="shareRole" id="share" cssClass="checkbox" /></label>
+					</div>
+					<div class="checkbox">
+						<label for="playlist"><fmt:message
+								key="usersettings.playlist" /> <form:checkbox
+								path="playlistRole" id="playlist" cssClass="checkbox" /></label>
+					</div>
+					<div class="checkbox">
+
+						<label for="coverArt"><fmt:message
+								key="usersettings.coverart" /> <form:checkbox
+								path="coverArtRole" id="coverArt" cssClass="checkbox" /></label>
+					</div>
+					<div class="checkbox">
+
+
+						<label for="comment"><fmt:message
+								key="usersettings.comment" /> <form:checkbox path="commentRole"
+								id="comment" cssClass="checkbox" /></label>
+					</div>
+					<div class="checkbox">
+
+						<label for="podcast"><fmt:message
+								key="usersettings.podcast" /> <form:checkbox path="podcastRole"
+								id="podcast" cssClass="checkbox" /></label>
+					</div>
+				</c:if>
+
+				<div class="form-group">
+					<label for="transcodeSchemeName"> <fmt:message
+							key="playersettings.maxbitrate" /> <c:import
+							url="helpToolTip.jsp">
+							<c:param name="topic" value="transcode" />
+						</c:import>
+					</label>
+					<form:select path="transcodeSchemeName" cssStyle="width:8em">
+						<c:forEach items="${command.transcodeSchemeHolders}"
+							var="transcodeSchemeHolder">
+							<form:option value="${transcodeSchemeHolder.name}"
+								label="${transcodeSchemeHolder.description}" />
+						</c:forEach>
+					</form:select>
+					<div class="alert alert-warning">
+						<fmt:message key="playersettings.nolame" />
+					</div>
+				</div>
+
+				<c:if test="${not command.newUser and not command.admin}">
+					<div class="checkbox">
+
+						<label for="delete"><fmt:message key="usersettings.delete" />
+							<form:checkbox path="delete" id="delete" cssClass="checkbox" /></label>
+					</div>
+
+
+				</c:if>
+
+				<c:if test="${command.ldapEnabled and not command.admin}">
+
+					<div class="checkbox">
+						<label for="ldapAuthenticated"><fmt:message
+								key="usersettings.ldap" /> <c:import url="helpToolTip.jsp">
+								<c:param name="topic" value="ldap" />
+							</c:import> <form:checkbox path="ldapAuthenticated" id="ldapAuthenticated"
+								cssClass="checkbox"
+								onclick="javascript:enablePasswordChangeFields()" /> </label>
+					</div>
+
+
+				</c:if>
+
+				<c:choose>
+					<c:when test="${command.newUser}">
+
+						<div class="form-group">
+							<label for="username"> <fmt:message
+									key="usersettings.username" />
+
+							</label>
+							<form:input path="username" class="form-control" />
+							<div class="has-error">
+								<form:errors path="username" />
+							</div>
+						</div>
+						<div class="form-group">
+							<label for="email"> <fmt:message key="usersettings.email" />
+
+							</label>
+							<form:input path="email" class="form-control" />
+							<div class="has-error">
+								<form:errors path="email" />
+							</div>
+						</div>
+						<div class="form-group">
+							<label for="password"> <fmt:message
+									key="usersettings.password" />
+
+							</label>
+							<form:password path="password" class="form-control" />
+							<div class="has-error">
+								<form:errors path="password" />
+							</div>
+						</div>
+						<div class="form-group">
+							<label for="confirmPassword"> <fmt:message
+									key="usersettings.confirmpassword" />
+
+							</label>
+							<form:password path="confirmPassword" class="form-control" />
+							<div class="has-error">
+								<form:errors path="confirmPassword" />
+							</div>
+						</div>
+					</c:when>
+
+					<c:otherwise>
+						<div class="checkbox">
+							<label for="passwordChange"><fmt:message
+									key="usersettings.changepassword" /> <form:checkbox
+									path="passwordChange" id="passwordChange"
+									onclick="enablePasswordChangeFields();" cssClass="checkbox" />
+							</label>
+
+						</div>
+
+						<div id="passwordChangeTable" style="display: none">
+
+							<div class="form-group">
+								<label for="password"><fmt:message
+										key="usersettings.newpassword" /> </label>
+								<form:password path="password" id="password"
+									class="form-control" />
+
+								<div class="has-error">
+									<form:errors path="password" />
+								</div>
+							</div>
+
+							<div class="form-group">
+								<label for="confirmPassword"><fmt:message
+										key="usersettings.confirmpassword" /> </label>
+								<form:password path="confirmPassword" id="confirmPassword"
+									class="form-control" />
+
+								<div class="has-error">
+									<form:errors path="confirmPassword" />
+								</div>
+							</div>
+						</div>
+						<div class="form-group">
+							<label for="email"> <fmt:message key="usersettings.email" />
+							</label>
+							<form:input path="email" />
+							<div class="has-error">
+								<form:errors path="email" />
+							</div>
+
+						</div>
+					</c:otherwise>
+				</c:choose>
+			</div>
+			<div class="panel-footer">
+				<input class="btn btn-primary" type="submit"
+					value="<fmt:message key="common.save"/>"> <input
+					class="btn btn-default" type="button"
+					value="<fmt:message key="common.cancel"/>"
+					onclick="location.href='nowPlaying.view'">
+			</div>
+		</div>
+	</form:form>
+	<script type="text/javascript">
+    enablePasswordChangeFields()
+  </script>
 </div>

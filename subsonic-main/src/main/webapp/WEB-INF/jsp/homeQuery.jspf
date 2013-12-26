@@ -1,4 +1,4 @@
-<form method="post" action="home.view" name="searchForm">
+<form method="post" action="home.view" name="searchForm" onsubmit="return submitForm(this);">
 	<input type="hidden" name="listType" value="${model.listType}"/>
 	<input type="hidden" name="listGroup" value="${model.listGroup}"/>
 	<input type="hidden" name="listUsers" value="${model.listUsers}"/>

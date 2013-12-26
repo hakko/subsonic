@@ -1,33 +1,32 @@
 <div class="row">
 	<c:forEach items="${model.albums}" var="album" varStatus="loopStatus">
-        <c:if test="${loopStatus.count % model.artistGridWidth == 1}">
-	        <div>
-   	    </c:if>
 		<div class="col-sm-6 col-md-6 col-lg-3">
-			<a href="artist.view?id=${album.artistId}&albumId=${album.id}">
-				<c:choose>
-					<c:when test="${not empty album.coverArtUrl}"><c:set var="coverArtUrl">${album.coverArtUrl}</c:set></c:when>
+			<a href="artist.view?id=${album.artistId}&albumId=${album.id}"> <c:choose>
+					<c:when test="${not empty album.coverArtUrl}">
+						<c:set var="coverArtUrl">${album.coverArtUrl}</c:set>
+					</c:when>
 					<c:otherwise>
 						<sub:url value="coverArt.view" var="coverArtUrl">
-							<sub:param name="size" value="126"/>
-							<c:if test="${not empty album.coverArtPath}"><sub:param name="path" value="${album.coverArtPath}"/></c:if>
+							<sub:param name="size" value="126" />
+							<c:if test="${not empty album.coverArtPath}">
+								<sub:param name="path" value="${album.coverArtPath}" />
+							</c:if>
 						</sub:url>
 					</c:otherwise>
-				</c:choose>
-				
-				
-					<img class="img-thumbnail" width="126" height="126" src="${coverArtUrl}" alt="" title="${album.artistName} - ${album.title}">
-        </a>					
+				</c:choose> <img class="img-thumbnail" width="126" height="126"
+				src="${coverArtUrl}" alt=""
+				title="${album.artistName} - ${album.title}">
+			</a>
+			<div class="detail">
+				<a href="#" onclick="return onPlay(${album.trackIds}, 'A');"> <img
+					src="<spring:theme code="addImage"/>" alt="Add last"
+					title="Add last">
+				</a>
 				<div class="detail">
-            <a href="#" onclick="return onPlay(${album.trackIds}, 'A');">
-                      <img src="<spring:theme code="addImage"/>" alt="Add last" title="Add last">
-            </a>
-						<div class="detail"><em><str:truncateNicely lower="14" upper="14">${album.artistName}</str:truncateNicely></em><br />
-						<str:truncateNicely lower="14" upper="14">${album.title}</str:truncateNicely></div>
+					<em><str:truncateNicely lower="14" upper="14">${album.artistName}</str:truncateNicely></em><br />
+					<str:truncateNicely lower="14" upper="14">${album.title}</str:truncateNicely>
 				</div>
+			</div>
 		</div>
-        <c:if test="${loopStatus.count % model.artistGridWidth == 0}">
-            </div>
-        </c:if>
 	</c:forEach>
 </div>

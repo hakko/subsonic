@@ -140,18 +140,18 @@
         <property name="settingsService" ref="settingsService"/>
         <property name="playerService" ref="playerService"/>
         <property name="libraryUpdateService" ref="libraryUpdateService"/>
-        <property name="nameSearchService" ref="nameSearchService"/>
+        <property name="nameSearchService" ref="compositeNameSearchService"/>
         <property name="starService" ref="starService"/>
     </bean>
     <bean id="advancedSearchController" class="net.sourceforge.subsonic.controller.AdvancedSearchController">
         <property name="viewName" value="advancedSearch"/>
-        <property name="nameSearchService" ref="nameSearchService"/>
+        <property name="nameSearchService" ref="compositeNameSearchService"/>
         <property name="tagService" ref="tagService"/>
         <property name="mediaFolderService" ref="mediaFolderService"/>
     </bean>
     <bean id="advancedSearchResultController" class="net.sourceforge.subsonic.controller.AdvancedSearchResultController">
         <property name="viewName" value="advancedSearchResult"/>
-        <property name="nameSearchService" ref="nameSearchService"/>
+        <property name="nameSearchService" ref="compositeNameSearchService"/>
         <property name="securityService" ref="securityService"/>
         <property name="settingsService" ref="settingsService"/>
         <property name="mediaFileService" ref="mediaFileService"/>
@@ -181,6 +181,7 @@
         <property name="libraryBrowserService" ref="libraryBrowserService"/>
         <property name="libraryUpdateService" ref="libraryUpdateService"/>
         <property name="databaseAdministrationService" ref="databaseAdministrationService"/>
+        <property name="spotifyService" ref="spotifyService" />
     </bean>
     <bean id="networkSettingsController" class="net.sourceforge.subsonic.controller.NetworkSettingsController">
         <property name="commandClass" value="net.sourceforge.subsonic.command.NetworkSettingsCommand"/>
@@ -463,7 +464,7 @@
     <bean id="restSearchController" class="net.sourceforge.subsonic.controller.RESTSearchController">
         <property name="restBrowseController" ref="restBrowseController"/>
         <property name="playerService" ref="playerService"/>
-        <property name="nameSearchService" ref="nameSearchService"/>
+        <property name="nameSearchService" ref="compositeNameSearchService"/>
         <property name="libraryBrowserService" ref="libraryBrowserService"/>
     </bean>
     <bean id="restPlaylistController" class="net.sourceforge.subsonic.controller.RESTPlaylistController">

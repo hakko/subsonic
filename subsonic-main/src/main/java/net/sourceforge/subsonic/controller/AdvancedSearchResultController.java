@@ -26,7 +26,7 @@ import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.ParameterizableViewController;
 
 import com.github.hakko.musiccabinet.domain.model.music.SearchCriteria;
-import com.github.hakko.musiccabinet.service.NameSearchService;
+import com.github.hakko.musiccabinet.service.INameSearchService;
 import com.github.hakko.musiccabinet.service.StarService;
 
 /**
@@ -34,7 +34,7 @@ import com.github.hakko.musiccabinet.service.StarService;
  */
 public class AdvancedSearchResultController extends ParameterizableViewController {
 
-	private NameSearchService nameSearchService;
+	private INameSearchService nameSearchService;
     private SecurityService securityService;
     private SettingsService settingsService;
     private MediaFileService mediaFileService;
@@ -141,7 +141,7 @@ public class AdvancedSearchResultController extends ParameterizableViewControlle
 
     // Spring setter(s)
 
-	public void setNameSearchService(NameSearchService nameSearchService) {
+	public void setNameSearchService(INameSearchService nameSearchService) {
 		this.nameSearchService = nameSearchService;
 	}
 

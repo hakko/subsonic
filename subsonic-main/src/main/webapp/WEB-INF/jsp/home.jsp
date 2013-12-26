@@ -38,7 +38,8 @@
 
   <div class="col-lg-${not empty model.welcomeMessage ? '9' : '12'}">
 
-<c:if test="${model.listType eq 'newest'}"><%@ include file="homeQuery.jspf" %><%@ include file="homeAlbums.jspf" %></c:if>
+<c:if test="${model.listType eq 'newest'}"><%@ include
+					file="homeQuery.jspf"%><%@ include file="homeAlbums.jspf" %></c:if>
 <c:if test="${model.listType eq 'recent' or model.listType eq 'frequent' or model.listType eq 'starred' or model.listType eq 'random'}">
 	<%@ include file="homeArtistAlbumSongMenu.jspf" %>
 </c:if>

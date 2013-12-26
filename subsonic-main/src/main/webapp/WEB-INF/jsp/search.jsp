@@ -37,7 +37,7 @@
         <c:forEach items="${command.artists}" var="artist" varStatus="loopStatus">
 
             <sub:url value="/artist.view" var="artistUrl">
-                <sub:param name="id" value="${artist.id}"/>
+                <sub:param name="artist-uri" value="${artist.uri}"/>
             </sub:url>
 
             <tr>
@@ -60,12 +60,12 @@
         <c:forEach items="${command.albums}" var="album" varStatus="loopStatus">
 
 			<sub:url value="/artist.view" var="artistUrl">
-                <sub:param name="id" value="${album.artist.id}"/>
+                <sub:param name="artist-uri" value="${album.artist.uri}"/>
             </sub:url>
 
             <sub:url value="/artist.view" var="albumUrl">
-                <sub:param name="id" value="${album.artist.id}"/>
-                <sub:param name="albumId" value="${album.id}"/>
+                <sub:param name="artist-uri" value="${album.artist.uri}"/>
+                <sub:param name="album-uri" value="${album.uri}"/>
             </sub:url>
 
             <tr>
@@ -92,17 +92,17 @@
         <c:forEach items="${command.songs}" var="track" varStatus="loopStatus">
 
 			<sub:url value="/artist.view" var="artistUrl">
-                <sub:param name="id" value="${track.metaData.artistId}"/>
+                <sub:param name="artist-uri" value="${track.metaData.artistUri}"/>
             </sub:url>
 
             <sub:url value="/artist.view" var="albumUrl">
-                <sub:param name="id" value="${track.metaData.artistId}"/>
-                <sub:param name="albumId" value="${track.metaData.albumId}"/>
+                <sub:param name="artist-uri" value="${track.metaData.artistUri}"/>
+                <sub:param name="album-uri" value="${track.metaData.albumUri}"/>
             </sub:url>
 
             <tr>
                 <c:import url="playAddDownload.jsp">
-                  <c:param name="id" value="[${track.id}]"/>
+                  <c:param name="id" value="[${track.uri}]"/>
 					        <c:param name="starred" value="${command.isTrackStarred[loopStatus.index]}"/>
 					        <c:param name="starId" value="${track.id}"/>
                   <c:param name="playEnabled" value="${command.user.streamRole and not command.partyModeEnabled}"/>

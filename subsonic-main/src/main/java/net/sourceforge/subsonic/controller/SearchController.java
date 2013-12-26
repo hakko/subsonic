@@ -38,6 +38,7 @@ import org.springframework.web.servlet.mvc.SimpleFormController;
 import org.springframework.web.servlet.view.RedirectView;
 
 import com.github.hakko.musiccabinet.domain.model.music.Track;
+import com.github.hakko.musiccabinet.service.INameSearchService;
 import com.github.hakko.musiccabinet.service.LibraryUpdateService;
 import com.github.hakko.musiccabinet.service.NameSearchService;
 import com.github.hakko.musiccabinet.service.StarService;
@@ -53,7 +54,7 @@ public class SearchController extends SimpleFormController {
     private SettingsService settingsService;
     private PlayerService playerService;
     private LibraryUpdateService libraryUpdateService;
-    private NameSearchService nameSearchService;
+    private INameSearchService nameSearchService;
     private StarService starService;
 
     private static final int ARTIST_COUNT = 5;
@@ -122,7 +123,7 @@ public class SearchController extends SimpleFormController {
 		this.libraryUpdateService = libraryUpdateService;
 	}
 
-	public void setNameSearchService(NameSearchService nameSearchService) {
+	public void setNameSearchService(INameSearchService nameSearchService) {
 		this.nameSearchService = nameSearchService;
 	}
 

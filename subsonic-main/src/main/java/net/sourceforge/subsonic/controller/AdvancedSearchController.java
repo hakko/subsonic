@@ -13,7 +13,7 @@ import net.sourceforge.subsonic.service.MediaFolderService;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.ParameterizableViewController;
 
-import com.github.hakko.musiccabinet.service.NameSearchService;
+import com.github.hakko.musiccabinet.service.INameSearchService;
 import com.github.hakko.musiccabinet.service.TagService;
 
 /**
@@ -21,29 +21,31 @@ import com.github.hakko.musiccabinet.service.TagService;
  */
 public class AdvancedSearchController extends ParameterizableViewController {
 
-	private NameSearchService nameSearchService;
+	private INameSearchService nameSearchService;
 	private TagService tagService;
 	private MediaFolderService mediaFolderService;
 
-    @Override
-    protected ModelAndView handleRequestInternal(HttpServletRequest request, HttpServletResponse response) throws Exception {
+	@Override
+	protected ModelAndView handleRequestInternal(HttpServletRequest request,
+			HttpServletResponse response) throws Exception {
 
-        Map<String, Object> map = new HashMap<String, Object>();
-        ModelAndView result = super.handleRequestInternal(request, response);
+		Map<String, Object> map = new HashMap<String, Object>();
+		ModelAndView result = super.handleRequestInternal(request, response);
 
-        map.put("searchQuery", defaultString(request.getParameter("searchQuery")));
-        map.put("fileTypes", nameSearchService.getFileTypes());
-        map.put("trackGenres", tagService.getFileTags());
-        map.put("topTags", tagService.getTopTags());
-        map.put("mediaFolders", mediaFolderService.getIndexedMediaFolders());
+		map.put("searchQuery",
+				defaultString(request.getParameter("searchQuery")));
+		map.put("fileTypes", nameSearchService.getFileTypes());
+		map.put("trackGenres", tagService.getFileTags());
+		map.put("topTags", tagService.getTopTags());
+		map.put("mediaFolders", mediaFolderService.getIndexedMediaFolders());
 
-        result.addObject("model", map);
-        return result;
-    }
-    
-    // Spring setter(s)
+		result.addObject("model", map);
+		return result;
+	}
 
-	public void setNameSearchService(NameSearchService nameSearchService) {
+	// Spring setter(s)
+
+	public void setNameSearchService(INameSearchService nameSearchService) {
 		this.nameSearchService = nameSearchService;
 	}
 

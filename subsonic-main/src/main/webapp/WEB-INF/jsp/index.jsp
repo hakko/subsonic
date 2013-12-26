@@ -91,6 +91,9 @@
       if(el.attr("href").indexOf("#") === 0) {
         return true;
       }
+      if(el.attr("target") === "_top") {
+        return true;
+      }
       loadInFrame(el, el.attr("href"));
       return false;
     })

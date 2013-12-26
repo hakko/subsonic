@@ -8,42 +8,42 @@
 		<c:param name="cat" value="mediaFolder" />
 	</c:import>
 
-	<form method="post" action="mediaFolderSettings.view" onsubmit="return submitForm(this, 'Settings saved.');">
-	  <div class="statusMessage"></div>
+	<form method="post" action="mediaFolderSettings.view"
+		onsubmit="return submitForm(this, 'Settings saved.');">
+		<div class="statusMessage"></div>
 		<div class="panel panel-default">
 			<div class="panel-heading">Media Folders</div>
-				<table class="table table-striped table-hover table-condensed">
-					<tr>
-						<th><fmt:message key="mediaFoldersettings.name" /></th>
-						<th><fmt:message key="mediaFoldersettings.path" /></th>
-						<th style="padding-left: 1em"><fmt:message
-								key="mediaFoldersettings.indexed" /></th>
-						<th style="padding-left: 1em"><fmt:message
-								key="common.delete" /></th>
-					</tr>
+			<table class="table table-striped table-hover table-condensed">
+				<tr>
+					<th><fmt:message key="mediaFoldersettings.name" /></th>
+					<th><fmt:message key="mediaFoldersettings.path" /></th>
+					<th style="padding-left: 1em"><fmt:message
+							key="mediaFoldersettings.indexed" /></th>
+					<th style="padding-left: 1em"><fmt:message key="common.delete" /></th>
+				</tr>
 
-					<c:forEach items="${model.mediaFolders}" var="folder">
-						<tr>
-							<td><input type="text" name="name[${folder.id}]" size="20"
-								value="${folder.name}" /></td>
-							<td><input type="text" name="path[${folder.id}]" size="40"
-								value="${folder.path.path}" /></td>
-							<td align="center" style="padding-left: 1em"><input
-								type="checkbox" ${folder.indexed ? "checked" : ""}
-								name="indexed[${folder.id}]" class="checkbox" /></td>
-							<td align="center" style="padding-left: 1em"><input
-								type="checkbox" name="delete[${folder.id}]" class="checkbox"
-								<c:if test="${model.indexBeingCreated}">disabled title="Media folders cannot be deleted during library scanning."</c:if> /></td>
-						</tr>
-						<tr>
-							<td><input type="text" name="name" size="20" /></td>
-							<td><input type="text" name="path" size="40" /></td>
-							<td align="center" style="padding-left: 1em"><input
-								name="indexed" checked type="checkbox" class="checkbox" /></td>
-							<td />
-						</tr>
-					</c:forEach>
-				</table>
+				<c:forEach items="${model.mediaFolders}" var="folder">
+					<tr>
+						<td><input type="text" name="name[${folder.id}]" size="20"
+							value="${folder.name}" /></td>
+						<td><input type="text" name="path[${folder.id}]" size="40"
+							value="${folder.path.path}" /></td>
+						<td align="center" style="padding-left: 1em"><input
+							type="checkbox" ${folder.indexed ? "checked" : ""}
+							name="indexed[${folder.id}]" class="checkbox" /></td>
+						<td align="center" style="padding-left: 1em"><input
+							type="checkbox" name="delete[${folder.id}]" class="checkbox"
+							<c:if test="${model.indexBeingCreated}">disabled title="Media folders cannot be deleted during library scanning."</c:if> /></td>
+					</tr>
+					<tr>
+						<td><input type="text" name="name" size="20" /></td>
+						<td><input type="text" name="path" size="40" /></td>
+						<td align="center" style="padding-left: 1em"><input
+							name="indexed" checked type="checkbox" class="checkbox" /></td>
+						<td />
+					</tr>
+				</c:forEach>
+			</table>
 			<div class="panel-footer">
 				<button type="submit" class="btn btn-primary">
 					<fmt:message key="common.save" />
@@ -56,46 +56,87 @@
 			</div>
 		</div>
 
+
+		<c:if test="${not empty model.error}">
+			<p class="warning">
+				<fmt:message key="${model.error}" />
+			</p>
+		</c:if>
+
+		<c:if test="${not model.databaseAvailable}">
+			<p style="padding-top: 1em">
+				<b>MusicCabinet configuration</b>
+			</p>
+			<p>
+				MusicCabinet configuration isn't completed. Please finish it <a
+					href="musicCabinetSettings.view">here</a> before scanning media
+				folders.
+			</p>
+		</c:if>
+
+		<c:if
+			test="${model.databaseAvailable and not model.indexBeingCreated}">
+			<div class="panel panel-default">
+				<div class="panel-heading">
+					Scan media folders
+					<c:import url="helpToolTip.jsp">
+						<c:param name="topic" value="searchsettingsscan" />
+					</c:import>
+				</div>
+				<div class="panel-body">
+					<div class="button-group">
+						<a class="btn btn-default" target="main"
+							href="searchSettings.view?update=offline">Offline scan</a> <a
+							class="btn btn-default" target="main"
+							href="searchSettings.view?update=normal">Normal scan</a> <a
+							class="btn btn-default" target="main"
+							href="searchSettings.view?update=full">Full scan</a>
+					</div>
+
+				</div>
+			</div>
+		</c:if>
+
+		<c:if test="${model.spotifyAvailable}">
+			<div class="panel panel-default">
+				<div class="panel-heading">Spotify</div>
+				<div class="panel-body">
+					<p>Spotify can only be played in JukeBox mode and requires a
+						Spotify Premium account.</p>
+
+					<c:choose>
+						<c:when test="${not model.spotifyLoggedIn}">
+
+							<div class="form-group">
+								<label for="spotify_username"> <fmt:message
+										key="spotifysettings.username" />
+
+								</label> <input type="text" name="spotify_username" class="form-control" />
+							</div>
+
+
+							<div class="form-group">
+								<label for="spotify_password"><fmt:message
+										key="spotifysettings.password" /> </label> <input type="password"
+									name="spotify_password" id="spotify_password"
+									class="form-control" />
+							</div>
+
+							<button class="btn btn-primary">
+								<fmt:message key="common.ok" />
+							</button>
+						</c:when>
+						<c:otherwise>
+							Logged into spotify as ${model.spotifyUsername}
+							</c:otherwise>
+					</c:choose>
+				</div>
+			</div>
+		</c:if>
 	</form>
 
-	<c:if test="${not empty model.error}">
-		<p class="warning">
-			<fmt:message key="${model.error}" />
-		</p>
-	</c:if>
 
-	<c:if test="${not model.databaseAvailable}">
-		<p style="padding-top: 1em">
-			<b>MusicCabinet configuration</b>
-		</p>
-		<p>
-			MusicCabinet configuration isn't completed. Please finish it <a
-				href="musicCabinetSettings.view">here</a> before scanning media
-			folders.
-		</p>
-	</c:if>
 
-	<c:if test="${model.databaseAvailable and not model.indexBeingCreated}">
-		<div class="panel panel-default">
-			<div class="panel-heading">
-				Scan media folders
-				<c:import url="helpToolTip.jsp">
-					<c:param name="topic" value="searchsettingsscan" />
-				</c:import>
-			</div>
-			<div class="panel-body">
-				<div class="button-group">
-					<a class="btn btn-default" target="main"
-						href="searchSettings.view?update=offline">Offline scan</a> <a
-						class="btn btn-default" target="main"
-						href="searchSettings.view?update=normal">Normal scan</a> <a
-						class="btn btn-default" target="main"
-						href="searchSettings.view?update=full">Full scan</a>
-				</div>
-
-			</div>
-		</div>
-	</c:if>
 
 	<c:if test="${fn:length(model.filesMissingMetadata) > 0}">
 		<div class="panel panel-default">

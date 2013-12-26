@@ -28,7 +28,12 @@ function loadFrame(el) {
 }
 function findTarget(el) {
   el = jQuery(el);
-  var target = el.attr("target");
+  var target = el.data("target");
+  if(target) {
+    return target;
+  }
+  
+  target = el.attr("target");
   if (!target) {
     target = "main";
 

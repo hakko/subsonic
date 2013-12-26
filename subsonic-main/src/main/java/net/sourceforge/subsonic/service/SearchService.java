@@ -40,6 +40,7 @@ import com.github.hakko.musiccabinet.domain.model.library.LastFmUser;
 import com.github.hakko.musiccabinet.service.LibraryUpdateService;
 import com.github.hakko.musiccabinet.service.lastfm.LastFmSettingsService;
 import com.github.hakko.musiccabinet.service.library.LibraryScannerService;
+import com.github.hakko.musiccabinet.service.spotify.SpotifySettingsService;
 
 public class SearchService {
 
@@ -53,6 +54,7 @@ public class SearchService {
     private LibraryScannerService libraryScannerService;
     private LibraryStatusService libraryStatusService;
     private LastFmSettingsService lastFmSettingsService;
+    private SpotifySettingsService spotifySettingsService;
 
     /**
      * Generates the search index.  If the index already exists it will be
@@ -126,6 +128,9 @@ public class SearchService {
         lastFmSettingsService.setLastFmUsers(users);
 		lastFmSettingsService.setLocale(Locale.forLanguageTag(
 				settingsService.getLastFmLanguage()));
+		
+		spotifySettingsService.setSpotifyCache(settingsService.getSpotifyCache());
+		spotifySettingsService.setSpotifyUserName(settingsService.getSpotifyUserName());
     }
 
     /**
@@ -209,5 +214,9 @@ public class SearchService {
 	public void setLastFmSettingsService(LastFmSettingsService lastFmSettingsService) {
 		this.lastFmSettingsService = lastFmSettingsService;
 	}
+	
+	public void setSpotifySettingsService(SpotifySettingsService spotifySettingsService) {
+		this.spotifySettingsService = spotifySettingsService;
+	}	
 
 }

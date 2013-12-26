@@ -130,6 +130,3 @@ span.off:hover {
     border: solid 1px #999;
     text-decoration: none;
 }
-.personal-settings input, .personal-settings select {
-  width: 15em;
-} 

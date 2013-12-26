@@ -59,6 +59,8 @@ import org.apache.http.impl.client.BasicResponseHandler;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.params.HttpConnectionParams;
 
+import com.github.hakko.musiccabinet.service.spotify.SpotifySettingsService;
+
 /**
  * Provides persistent storage of application settings and preferences.
  *
@@ -120,6 +122,8 @@ public class SettingsService {
     private static final String KEY_URL_REDIRECT_CONTEXT_PATH = "UrlRedirectContextPath";
     private static final String KEY_SERVER_ID = "ServerId";
     private static final String KEY_SETTINGS_CHANGED = "SettingsChanged";
+    private static final String KEY_SPOTIFY_CACHE = "SpotifyCache";
+    private static final String KEY_SPOTIFY_USERNAME = "SpotifyUsername";
 
     private static final String KEY_MUSICCABINET_LASTFM_USERNAME = "MusicCabinetLastFMUsername";
     private static final String KEY_MUSICCABINET_JDBC_PASSWORD = "MusicCabinetJDBCPassword";
@@ -194,6 +198,7 @@ public class SettingsService {
     private static final String DEFAULT_URL_REDIRECT_CONTEXT_PATH = null;
     private static final String DEFAULT_SERVER_ID = null;
     private static final long DEFAULT_SETTINGS_CHANGED = 0L;
+    private static final String DEFAULT_SPOTIFY_CACHE = "libspotify";
 
     private static final int DEFAULT_MUSICCABINET_ARTIST_RADIO_ARTIST_COUNT = 3;
     private static final int DEFAULT_MUSICCABINET_ARTIST_RADIO_TOTAL_COUNT = 20;
@@ -225,6 +230,7 @@ public class SettingsService {
     private UserDao userDao;
     private AvatarDao avatarDao;
     private VersionService versionService;
+    private SpotifySettingsService spotifySettingsService;
 
     private String[] cachedMusicFileTypesArray;
     private String[] cachedVideoFileTypesArray;
@@ -269,8 +275,11 @@ public class SettingsService {
      * This method is invoked automatically by Spring.
      */
     public void init() {
+    	System.err.println("Initializing settings service.");
         ServiceLocator.setSettingsService(this);
         validateLicenseAsync();
+        spotifySettingsService.setSpotifyCache(getSpotifyCache());
+        spotifySettingsService.setSpotifyUserName(getSpotifyUserName());
     }
 
     public void save() {
@@ -1364,5 +1373,27 @@ public class SettingsService {
     public void setPreferLocalGenres(boolean preferLocalGenres) {
         setBoolean(KEY_MUSICCABINET_PREFER_LOCAL_GENRES, preferLocalGenres);
     }
-
+    
+    public String getSpotifyCache() {
+    	return properties.getProperty(KEY_SPOTIFY_CACHE, getSubsonicHome() + File.separator + SettingsService.DEFAULT_SPOTIFY_CACHE);
+    }
+    
+    public void setSpotifyCache(String spotifyCache) {
+    	setProperty(KEY_SPOTIFY_CACHE, spotifyCache);
+    }
+    
+    public String getSpotifyUserName() {
+    	return properties.getProperty(KEY_SPOTIFY_USERNAME);
+    }
+    
+    public void setSpotifyUserName(String spotifyUserName) {
+    	setProperty(KEY_SPOTIFY_USERNAME, spotifyUserName);
+    }
+    
+    
+    public void setSpotifySettingsService(SpotifySettingsService spotifySettingsService) {
+    	this.spotifySettingsService = spotifySettingsService;
+    }
+    
+    
 }

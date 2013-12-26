@@ -30,9 +30,8 @@
 			<a href="#" onclick="return onPlay(${model.trackIds}, 'E');">Enqueue all</a> |
 			<a href="#" onclick="return onPlay(${model.trackIds}, 'A');">Add all</a>
 		</h2>
-		<table style="border-collapse:collapse;white-space:nowrap">
 			<c:forEach items="${model.files}" var="file" varStatus="loopStatus">
-				<tr>
+				<div>
 					<c:import url="playAddDownload.jsp">
 						<c:param name="id" value="[${file.id}]"/>
 						<c:param name="video" value="${file.video and model.player.web}"/>
@@ -43,8 +42,8 @@
 						<c:param name="downloadEnabled" value="${model.user.downloadRole}"/>
 						<c:param name="asTable" value="true"/>
 					</c:import>
-					<td style="padding-right:1.25em;white-space:nowrap">${fn:escapeXml(file.title)}</td>
-				</tr>
+					${fn:escapeXml(file.title)}
+				</div>
 			</c:forEach>
 		</table>
 	</c:if>
