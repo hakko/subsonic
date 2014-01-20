@@ -18,15 +18,22 @@
  */
 package net.sourceforge.subsonic.controller;
 
-import org.springframework.web.servlet.mvc.*;
+import java.util.Date;
+import java.util.Locale;
+
+import javax.servlet.http.HttpServletRequest;
 
 import net.sourceforge.subsonic.Logger;
-import net.sourceforge.subsonic.service.*;
-import net.sourceforge.subsonic.command.*;
-import net.sourceforge.subsonic.domain.*;
+import net.sourceforge.subsonic.command.PersonalSettingsCommand;
+import net.sourceforge.subsonic.domain.AvatarScheme;
+import net.sourceforge.subsonic.domain.Theme;
+import net.sourceforge.subsonic.domain.User;
+import net.sourceforge.subsonic.domain.UserSettings;
+import net.sourceforge.subsonic.service.SecurityService;
+import net.sourceforge.subsonic.service.SettingsService;
+import net.sourceforge.subsonic.service.sync.DeviceListenerService;
 
-import javax.servlet.http.*;
-import java.util.*;
+import org.springframework.web.servlet.mvc.SimpleFormController;
 
 /**
  * Controller for the page used to administrate per-user settings.
@@ -37,6 +44,7 @@ public class PersonalSettingsController extends SimpleFormController {
 
     private SettingsService settingsService;
     private SecurityService securityService;
+    private DeviceListenerService deviceListenerService;
 
     private static final Logger LOG = Logger.getLogger(PersonalSettingsController.class);
     
@@ -76,6 +84,10 @@ public class PersonalSettingsController extends SimpleFormController {
         command.setReluctantArtistLoading(userSettings.isReluctantArtistLoading());
         command.setUseVariousArtistsShortlist(userSettings.isUseVariousArtistShortlist());
         command.setViewStatsForAllUsers(userSettings.isViewStatsForAllUsers());
+        command.setDeviceName(userSettings.getDeviceName());
+        command.setDeviceLastSync(userSettings.getDeviceLastSync());
+        command.setDeviceMountPath(userSettings.getDeviceMountPath());
+        command.setDeviceSyncSize(userSettings.getDeviceSyncSize());
         
         Locale currentLocale = userSettings.getLocale();
         Locale[] locales = settingsService.getAvailableLocales();
@@ -147,10 +159,19 @@ public class PersonalSettingsController extends SimpleFormController {
         settings.setOnlyAlbumArtistRecommendations(command.isOnlyAlbumArtistRecommendations());
         settings.setUseVariousArtistShortlist(command.isUseVariousArtistsShortlist());
         settings.setViewStatsForAllUsers(command.isViewStatsForAllUsers());
+        settings.setDeviceName(command.getDeviceName());
+        settings.setDeviceSyncSize(command.getDeviceSyncSize());
+        settings.setDeviceMountPath(command.getDeviceMountPath());
+        // force a new sync
+        settings.setDeviceLastSync(new Date(0));
         
         settings.setChanged(new Date());
         settingsService.updateUserSettings(settings);
         settingsService.clearUserSettingsCache(username);
+        
+        if(!"".equals(command.getDeviceName())) {
+        	deviceListenerService.addSerialNumber(command.getDeviceName());
+        }
 
         command.setReloadNeeded(true); // TODO : base on locale/themeid update
     }
@@ -185,6 +206,10 @@ public class PersonalSettingsController extends SimpleFormController {
 
     public void setSecurityService(SecurityService securityService) {
         this.securityService = securityService;
+    }
+    
+    public void setDeviceListenerService(DeviceListenerService deviceListenerService) {
+    	this.deviceListenerService = deviceListenerService;
     }
 
 }

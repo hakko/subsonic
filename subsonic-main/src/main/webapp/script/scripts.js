@@ -108,3 +108,40 @@ function playGenreRadio() {
   onPlayGenreRadio(genres);
   return false;
 }
+var chooseDevice_modal_tmpl = '<div class="modal fade" id="chooseDeviceModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">' +
+'  <div class="modal-dialog">' +
+'    <div class="modal-content">' +
+'      <div class="modal-header">' +
+'        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>' +
+'        <h4 class="modal-title" id="myModalLabel">{{title}}</h4>' +
+'      </div>' +
+'      <div class="modal-body">' +
+'        <select id="chooseDeviceSelect">' +
+'          {{#devices}}' + 
+'            <option value="{{serial}}">{{name}}</option>' +
+'          {{/devices}}' +
+'        </select>' +
+'      </div>' +
+'      <div class="modal-footer">' +
+'        <button type="button" class="btn btn-primary" onclick="return saveDevice(this);">Ok</button>' +
+'        <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>' +
+'      </div>' +
+'    </div>' +
+'  </div>' +
+'</div>'
+function chooseDevice(response) {
+  var devices = [];
+  jQuery.each(response, function(key, value) {
+    devices[devices.length] = {"serial": key, "name": value};
+  });
+  if(jQuery("#chooseDeviceModal").length == 0) {
+    jQuery(Mustache.render(chooseDevice_modal_tmpl, {"title": "Choose Device", "devices": devices})).modal();
+  } else {
+    jQuery("#chooseDeviceModal").modal("show");
+  }
+}
+function saveDevice() {
+  jQuery("#deviceName").val(jQuery("#chooseDeviceSelect").val());
+  jQuery("#chooseDeviceModal").modal("hide");
+  return true;
+}

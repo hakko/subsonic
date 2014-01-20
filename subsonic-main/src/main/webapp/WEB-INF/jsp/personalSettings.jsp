@@ -469,6 +469,35 @@
 				</div>
 			</div>
 		</div>
+		
+        <div class="panel panel-default">
+            <div class="panel-heading">Device Sync</div>
+            <div class="panel-body">
+            
+                <form:hidden path="deviceName" />
+                <div id="chooseDeviceLink" class="forward" style="padding-left: 2em">
+                <a href="#" onclick="deviceLocatorService.getDeviceMap(chooseDevice); return false;">Choose Device</a>
+                </div>
+                
+                <div class="form-group">
+                    <label for="deviceMountPath">Music Path</label>
+                    <form:input path="deviceMountPath" class="form-control" />
+                </div>
+                
+                    <div class="form-group">
+                        <label for="deviceSyncSize">Sync Size</label>
+                        <c:import url="helpToolTip.jsp">
+                            <c:param name="topic" value="deviceSyncSize" />
+                        </c:import>
+
+                        <form:input path="deviceSyncSize" size="3"
+                            class="form-control" cssStyle="width:15em" />
+
+
+                    </div>
+            </div>
+        </div>
+		
 
 		<div class="panel panel-default">
 			<div class="panel-heading">

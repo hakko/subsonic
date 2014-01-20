@@ -18,6 +18,10 @@
  */
 package net.sourceforge.subsonic.dao;
 
+import java.io.File;
+
+import javax.sql.DataSource;
+
 import net.sourceforge.subsonic.Logger;
 import net.sourceforge.subsonic.dao.schema.Schema;
 import net.sourceforge.subsonic.dao.schema.Schema25;
@@ -52,13 +56,11 @@ import net.sourceforge.subsonic.dao.schema.Schema46MusicCabinet0_7_12;
 import net.sourceforge.subsonic.dao.schema.Schema46MusicCabinet0_7_13;
 import net.sourceforge.subsonic.dao.schema.Schema46MusicCabinet0_7_16;
 import net.sourceforge.subsonic.dao.schema.Schema46MusicCabinet0_7_19;
+import net.sourceforge.subsonic.dao.schema.Schema46MusicCabinet0_7_20;
 import net.sourceforge.subsonic.service.SettingsService;
 
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.datasource.DriverManagerDataSource;
-
-import javax.sql.DataSource;
-import java.io.File;
 
 /**
  * DAO helper class which creates the data source, and updates the database schema.
@@ -86,7 +88,9 @@ public class DaoHelper {
                                 new Schema46MusicCabinet0_7_12(),
                                 new Schema46MusicCabinet0_7_13(),
                                 new Schema46MusicCabinet0_7_16(),
-                                new Schema46MusicCabinet0_7_19()};
+                                new Schema46MusicCabinet0_7_19(),
+                                new Schema46MusicCabinet0_7_20()
+                                };
     
     private DataSource dataSource;
     private static boolean shutdownHookAdded;

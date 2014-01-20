@@ -43,6 +43,11 @@
         <create creator="spring" javascript="uiTagService">
             <param name="beanName" value="ajaxUITagService"/>
         </create>
+        
+        <create creator="spring" javascript="deviceLocatorService">
+            <param name="beanName" value="ajaxDeviceLocatorService"/>
+        </create>
+        
 
         <convert converter="bean" match="net.sourceforge.subsonic.ajax.NetworkStatus"/>
         <convert converter="bean" match="net.sourceforge.subsonic.ajax.NowPlayingInfo"/>
@@ -54,6 +59,7 @@
         <convert converter="bean" match="net.sourceforge.subsonic.ajax.LibraryStatus"/>
         <convert converter="bean" match="net.sourceforge.subsonic.ajax.UIStarService"/>
         <convert converter="bean" match="net.sourceforge.subsonic.ajax.UITagService"/>
+        <convert converter="bean" match="net.sourceforge.subsonic.ajax.DeviceLocatorService"/>
 
     </allow>
 </dwr>

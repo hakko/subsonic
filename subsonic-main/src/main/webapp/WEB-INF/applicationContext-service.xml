@@ -181,6 +181,12 @@
     <bean id="artistIndexService" class="net.sourceforge.subsonic.service.ArtistIndexService">
         <property name="settingsService" ref="settingsService"/>
     </bean>
+    
+    <bean id="deviceListenerService" class="net.sourceforge.subsonic.service.sync.DeviceListenerService" init-method="init">
+        <property name="settingsService" ref="settingsService"/>
+        <property name="libraryBrowserService" ref="libraryBrowserService"/>
+    </bean>
+    
 
     <!-- AJAX services -->
 
@@ -239,6 +245,11 @@
         <property name="settingsService" ref="settingsService"/>
         <property name="tagUpdateService" ref="tagUpdateService"/>
     </bean>
+    
+    <bean id="ajaxDeviceLocatorService" class="net.sourceforge.subsonic.ajax.DeviceLocatorService">
+        <property name="settingsService" ref="settingsService"/>
+    </bean>
+    
 
 
 	<!-- MUSICCABINET copy/paste (propertyConfigurer is Subsonic specific) -->
@@ -743,7 +754,7 @@
     <bean id="musicBrainzArtistDao" class="com.github.hakko.musiccabinet.dao.jdbc.JdbcMusicBrainzArtistDao">
         <property name="dataSource" ref="dataSource"/>
     </bean>
-
+    
     <bean id="musicBrainzAlbumDao" class="com.github.hakko.musiccabinet.dao.jdbc.JdbcMusicBrainzAlbumDao">
         <property name="dataSource" ref="dataSource"/>
     </bean>
@@ -756,8 +767,7 @@
         <property name="dataSource" ref="dataSource"/>
         <property name="initialDataSource" ref="initialDataSource"/>
     </bean>
-
-
+    
     <!--  DATA SOURCE -->
 
     <bean id="dataSource" destroy-method="close"

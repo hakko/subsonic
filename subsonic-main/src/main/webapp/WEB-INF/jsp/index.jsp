@@ -45,6 +45,7 @@
 
   <script type="text/javascript" src="<c:url value="/script/bower_components/jquery/jquery.min.js"/>"></script>
   <script type="text/javascript" src="<c:url value="/script/bower_components/bootstrap/dist/js/bootstrap.min.js"/>"></script>
+  <script type="text/javascript" src="<c:url value="/script/bower_components/mustache/mustache.js"/>"></script>
 	<script type="text/javascript" src="<c:url value="/script/prototype.js"/>"></script>
 
 
@@ -63,6 +64,7 @@
 	<script type="text/javascript" src="<c:url value="/dwr/interface/uiTagService.js"/>"></script>
   <script type="text/javascript" src="<c:url value="/dwr/interface/transferService.js"/>"></script>
   <script type="text/javascript" src="<c:url value="/dwr/interface/tagService.js"/>"></script>
+  <script type="text/javascript" src="<c:url value="/dwr/interface/deviceLocatorService.js"/>"></script>
   <script type="text/javascript" src="<c:url value="/dwr/util.js"/>"></script>
 
 

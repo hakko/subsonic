@@ -18,107 +18,145 @@
  */
 package net.sourceforge.subsonic.domain;
 
-import java.util.*;
+import java.util.Date;
+import java.util.Locale;
 
 /**
  * Represent user-specific settings.
- *
+ * 
  * @author Sindre Mehus
  */
 public class UserSettings {
 
-    private String username;
-    private Locale locale;
-    private String themeId;
-    private boolean showNowPlayingEnabled;
-    private boolean showChatEnabled;
-    private Visibility mainVisibility = new Visibility();
-    private Visibility playlistVisibility = new Visibility();
-    private Visibility homeVisibility = new Visibility();
-    private boolean lastFmEnabled;
-    private String lastFmUsername;
-    private TranscodeScheme transcodeScheme = TranscodeScheme.OFF;
-    private boolean partyModeEnabled;
-    private boolean nowPlayingAllowed;
-    private AvatarScheme avatarScheme = AvatarScheme.NONE;
-    private Integer systemAvatarId;
-    private boolean albumOrderAscending = true;
-    private boolean albumOrderByYear = true;
-    private String defaultHomeView;
-    private short defaultHomeArtists;
-    private short defaultHomeAlbums;
-    private short defaultHomeSongs;
-    private short artistGridWidth;
-    private boolean albumGridLayout;
-    private short relatedArtists;
-    private short recommendedArtists;
-    private boolean reluctantArtistLoading;
-    private boolean onlyAlbumArtistRecommendations;
-    private boolean useVariousArtistShortlist;
-    private boolean viewStatsForAllUsers;
-    private Date changed = new Date();
+	private String username;
+	private Locale locale;
+	private String themeId;
+	private boolean showNowPlayingEnabled;
+	private boolean showChatEnabled;
+	private Visibility mainVisibility = new Visibility();
+	private Visibility playlistVisibility = new Visibility();
+	private Visibility homeVisibility = new Visibility();
+	private boolean lastFmEnabled;
+	private String lastFmUsername;
+	private TranscodeScheme transcodeScheme = TranscodeScheme.OFF;
+	private boolean partyModeEnabled;
+	private boolean nowPlayingAllowed;
+	private AvatarScheme avatarScheme = AvatarScheme.NONE;
+	private Integer systemAvatarId;
+	private boolean albumOrderAscending = true;
+	private boolean albumOrderByYear = true;
+	private String defaultHomeView;
+	private short defaultHomeArtists;
+	private short defaultHomeAlbums;
+	private short defaultHomeSongs;
+	private short artistGridWidth;
+	private boolean albumGridLayout;
+	private short relatedArtists;
+	private short recommendedArtists;
+	private boolean reluctantArtistLoading;
+	private boolean onlyAlbumArtistRecommendations;
+	private boolean useVariousArtistShortlist;
+	private boolean viewStatsForAllUsers;
+	private String deviceName;
+	private String deviceMountPath;
+	private long deviceSyncSize;
+	private Date deviceLastSync;
 
-    public UserSettings(String username) {
-        this.username = username;
-    }
+	public Date getDeviceLastSync() {
+		return deviceLastSync;
+	}
 
-    public String getUsername() {
-        return username;
-    }
+	public void setDeviceLastSync(Date deviceLastSync) {
+		this.deviceLastSync = deviceLastSync;
+	}
 
-    public void setUsername(String username) {
-        this.username = username;
-    }
+	public String getDeviceName() {
+		return deviceName;
+	}
 
-    public Locale getLocale() {
-        return locale;
-    }
+	public void setDeviceName(String deviceName) {
+		this.deviceName = deviceName;
+	}
 
-    public void setLocale(Locale locale) {
-        this.locale = locale;
-    }
+	public String getDeviceMountPath() {
+		return deviceMountPath;
+	}
 
-    public String getThemeId() {
-        return themeId;
-    }
+	public void setDeviceMountPath(String deviceMountPath) {
+		this.deviceMountPath = deviceMountPath;
+	}
 
-    public void setThemeId(String themeId) {
-        this.themeId = themeId;
-    }
+	public long getDeviceSyncSize() {
+		return deviceSyncSize;
+	}
 
-    public boolean isShowNowPlayingEnabled() {
-        return showNowPlayingEnabled;
-    }
+	public void setDeviceSyncSize(long deviceSyncSize) {
+		this.deviceSyncSize = deviceSyncSize;
+	}
 
-    public void setShowNowPlayingEnabled(boolean showNowPlayingEnabled) {
-        this.showNowPlayingEnabled = showNowPlayingEnabled;
-    }
+	private Date changed = new Date();
 
-    public boolean isShowChatEnabled() {
-        return showChatEnabled;
-    }
+	public UserSettings(String username) {
+		this.username = username;
+	}
 
-    public void setShowChatEnabled(boolean showChatEnabled) {
-        this.showChatEnabled = showChatEnabled;
-    }
+	public String getUsername() {
+		return username;
+	}
 
-    public Visibility getMainVisibility() {
-        return mainVisibility;
-    }
+	public void setUsername(String username) {
+		this.username = username;
+	}
 
-    public void setMainVisibility(Visibility mainVisibility) {
-        this.mainVisibility = mainVisibility;
-    }
+	public Locale getLocale() {
+		return locale;
+	}
 
-    public Visibility getPlaylistVisibility() {
-        return playlistVisibility;
-    }
+	public void setLocale(Locale locale) {
+		this.locale = locale;
+	}
 
-    public void setPlaylistVisibility(Visibility playlistVisibility) {
-        this.playlistVisibility = playlistVisibility;
-    }
+	public String getThemeId() {
+		return themeId;
+	}
 
-    public Visibility getHomeVisibility() {
+	public void setThemeId(String themeId) {
+		this.themeId = themeId;
+	}
+
+	public boolean isShowNowPlayingEnabled() {
+		return showNowPlayingEnabled;
+	}
+
+	public void setShowNowPlayingEnabled(boolean showNowPlayingEnabled) {
+		this.showNowPlayingEnabled = showNowPlayingEnabled;
+	}
+
+	public boolean isShowChatEnabled() {
+		return showChatEnabled;
+	}
+
+	public void setShowChatEnabled(boolean showChatEnabled) {
+		this.showChatEnabled = showChatEnabled;
+	}
+
+	public Visibility getMainVisibility() {
+		return mainVisibility;
+	}
+
+	public void setMainVisibility(Visibility mainVisibility) {
+		this.mainVisibility = mainVisibility;
+	}
+
+	public Visibility getPlaylistVisibility() {
+		return playlistVisibility;
+	}
+
+	public void setPlaylistVisibility(Visibility playlistVisibility) {
+		this.playlistVisibility = playlistVisibility;
+	}
+
+	public Visibility getHomeVisibility() {
 		return homeVisibility;
 	}
 
@@ -127,60 +165,60 @@ public class UserSettings {
 	}
 
 	public boolean isLastFmEnabled() {
-        return lastFmEnabled;
-    }
+		return lastFmEnabled;
+	}
 
-    public void setLastFmEnabled(boolean lastFmEnabled) {
-        this.lastFmEnabled = lastFmEnabled;
-    }
+	public void setLastFmEnabled(boolean lastFmEnabled) {
+		this.lastFmEnabled = lastFmEnabled;
+	}
 
-    public String getLastFmUsername() {
-        return lastFmUsername;
-    }
+	public String getLastFmUsername() {
+		return lastFmUsername;
+	}
 
-    public void setLastFmUsername(String lastFmUsername) {
-        this.lastFmUsername = lastFmUsername;
-    }
+	public void setLastFmUsername(String lastFmUsername) {
+		this.lastFmUsername = lastFmUsername;
+	}
 
-    public TranscodeScheme getTranscodeScheme() {
-        return transcodeScheme;
-    }
+	public TranscodeScheme getTranscodeScheme() {
+		return transcodeScheme;
+	}
 
-    public void setTranscodeScheme(TranscodeScheme transcodeScheme) {
-        this.transcodeScheme = transcodeScheme;
-    }
+	public void setTranscodeScheme(TranscodeScheme transcodeScheme) {
+		this.transcodeScheme = transcodeScheme;
+	}
 
-    public boolean isPartyModeEnabled() {
-        return partyModeEnabled;
-    }
+	public boolean isPartyModeEnabled() {
+		return partyModeEnabled;
+	}
 
-    public void setPartyModeEnabled(boolean partyModeEnabled) {
-        this.partyModeEnabled = partyModeEnabled;
-    }
+	public void setPartyModeEnabled(boolean partyModeEnabled) {
+		this.partyModeEnabled = partyModeEnabled;
+	}
 
-    public boolean isNowPlayingAllowed() {
-        return nowPlayingAllowed;
-    }
+	public boolean isNowPlayingAllowed() {
+		return nowPlayingAllowed;
+	}
 
-    public void setNowPlayingAllowed(boolean nowPlayingAllowed) {
-        this.nowPlayingAllowed = nowPlayingAllowed;
-    }
+	public void setNowPlayingAllowed(boolean nowPlayingAllowed) {
+		this.nowPlayingAllowed = nowPlayingAllowed;
+	}
 
-    public AvatarScheme getAvatarScheme() {
-        return avatarScheme;
-    }
+	public AvatarScheme getAvatarScheme() {
+		return avatarScheme;
+	}
 
-    public void setAvatarScheme(AvatarScheme avatarScheme) {
-        this.avatarScheme = avatarScheme;
-    }
+	public void setAvatarScheme(AvatarScheme avatarScheme) {
+		this.avatarScheme = avatarScheme;
+	}
 
-    public Integer getSystemAvatarId() {
-        return systemAvatarId;
-    }
+	public Integer getSystemAvatarId() {
+		return systemAvatarId;
+	}
 
-    public void setSystemAvatarId(Integer systemAvatarId) {
-        this.systemAvatarId = systemAvatarId;
-    }
+	public void setSystemAvatarId(Integer systemAvatarId) {
+		this.systemAvatarId = systemAvatarId;
+	}
 
 	public boolean isAlbumOrderAscending() {
 		return albumOrderAscending;
@@ -190,7 +228,7 @@ public class UserSettings {
 		this.albumOrderAscending = albumOrderAscending;
 	}
 
-    public boolean isAlbumOrderByYear() {
+	public boolean isAlbumOrderByYear() {
 		return albumOrderByYear;
 	}
 
@@ -274,7 +312,8 @@ public class UserSettings {
 		return onlyAlbumArtistRecommendations;
 	}
 
-	public void setOnlyAlbumArtistRecommendations(boolean onlyAlbumArtistRecommendations) {
+	public void setOnlyAlbumArtistRecommendations(
+			boolean onlyAlbumArtistRecommendations) {
 		this.onlyAlbumArtistRecommendations = onlyAlbumArtistRecommendations;
 	}
 
@@ -295,72 +334,73 @@ public class UserSettings {
 	}
 
 	/**
-     * Returns when the corresponding database entry was last changed.
-     *
-     * @return When the corresponding database entry was last changed.
-     */
-    public Date getChanged() {
-        return changed;
-    }
+	 * Returns when the corresponding database entry was last changed.
+	 * 
+	 * @return When the corresponding database entry was last changed.
+	 */
+	public Date getChanged() {
+		return changed;
+	}
 
-    /**
-     * Sets when the corresponding database entry was last changed.
-     *
-     * @param changed When the corresponding database entry was last changed.
-     */
-    public void setChanged(Date changed) {
-        this.changed = changed;
-    }
+	/**
+	 * Sets when the corresponding database entry was last changed.
+	 * 
+	 * @param changed
+	 *            When the corresponding database entry was last changed.
+	 */
+	public void setChanged(Date changed) {
+		this.changed = changed;
+	}
 
-    /**
-     * Configuration of what information to display about a song.
-     */
-    public static class Visibility {
-        private int captionCutoff;
-        private boolean isTrackNumberVisible;
-        private boolean isAlbumVisible;
-        private boolean isArtistVisible;
-        private boolean isComposerVisible;
-        private boolean isGenreVisible;
-        private boolean isYearVisible;
-        private boolean isBitRateVisible;
-        private boolean isDurationVisible;
-        private boolean isFormatVisible;
-        private boolean isFileSizeVisible;
+	/**
+	 * Configuration of what information to display about a song.
+	 */
+	public static class Visibility {
+		private int captionCutoff;
+		private boolean isTrackNumberVisible;
+		private boolean isAlbumVisible;
+		private boolean isArtistVisible;
+		private boolean isComposerVisible;
+		private boolean isGenreVisible;
+		private boolean isYearVisible;
+		private boolean isBitRateVisible;
+		private boolean isDurationVisible;
+		private boolean isFormatVisible;
+		private boolean isFileSizeVisible;
 
-        public int getCaptionCutoff() {
-            return captionCutoff;
-        }
+		public int getCaptionCutoff() {
+			return captionCutoff;
+		}
 
-        public void setCaptionCutoff(int captionCutoff) {
-            this.captionCutoff = captionCutoff;
-        }
+		public void setCaptionCutoff(int captionCutoff) {
+			this.captionCutoff = captionCutoff;
+		}
 
-        public boolean isTrackNumberVisible() {
-            return isTrackNumberVisible;
-        }
+		public boolean isTrackNumberVisible() {
+			return isTrackNumberVisible;
+		}
 
-        public void setTrackNumberVisible(boolean trackNumberVisible) {
-            isTrackNumberVisible = trackNumberVisible;
-        }
+		public void setTrackNumberVisible(boolean trackNumberVisible) {
+			isTrackNumberVisible = trackNumberVisible;
+		}
 
-        public boolean isAlbumVisible() {
-            return isAlbumVisible;
-        }
+		public boolean isAlbumVisible() {
+			return isAlbumVisible;
+		}
 
-        public void setAlbumVisible(boolean albumVisible) {
-            isAlbumVisible = albumVisible;
-        }
+		public void setAlbumVisible(boolean albumVisible) {
+			isAlbumVisible = albumVisible;
+		}
 
-        public boolean isArtistVisible() {
-            return isArtistVisible;
-        }
+		public boolean isArtistVisible() {
+			return isArtistVisible;
+		}
 
-        public void setArtistVisible(boolean artistVisible) {
-            isArtistVisible = artistVisible;
-        }
-        
-        public boolean isComposerVisible() {
+		public void setArtistVisible(boolean artistVisible) {
+			isArtistVisible = artistVisible;
+		}
+
+		public boolean isComposerVisible() {
 			return isComposerVisible;
 		}
 
@@ -369,51 +409,51 @@ public class UserSettings {
 		}
 
 		public boolean isGenreVisible() {
-            return isGenreVisible;
-        }
+			return isGenreVisible;
+		}
 
-        public void setGenreVisible(boolean genreVisible) {
-            isGenreVisible = genreVisible;
-        }
+		public void setGenreVisible(boolean genreVisible) {
+			isGenreVisible = genreVisible;
+		}
 
-        public boolean isYearVisible() {
-            return isYearVisible;
-        }
+		public boolean isYearVisible() {
+			return isYearVisible;
+		}
 
-        public void setYearVisible(boolean yearVisible) {
-            isYearVisible = yearVisible;
-        }
+		public void setYearVisible(boolean yearVisible) {
+			isYearVisible = yearVisible;
+		}
 
-        public boolean isBitRateVisible() {
-            return isBitRateVisible;
-        }
+		public boolean isBitRateVisible() {
+			return isBitRateVisible;
+		}
 
-        public void setBitRateVisible(boolean bitRateVisible) {
-            isBitRateVisible = bitRateVisible;
-        }
+		public void setBitRateVisible(boolean bitRateVisible) {
+			isBitRateVisible = bitRateVisible;
+		}
 
-        public boolean isDurationVisible() {
-            return isDurationVisible;
-        }
+		public boolean isDurationVisible() {
+			return isDurationVisible;
+		}
 
-        public void setDurationVisible(boolean durationVisible) {
-            isDurationVisible = durationVisible;
-        }
+		public void setDurationVisible(boolean durationVisible) {
+			isDurationVisible = durationVisible;
+		}
 
-        public boolean isFormatVisible() {
-            return isFormatVisible;
-        }
+		public boolean isFormatVisible() {
+			return isFormatVisible;
+		}
 
-        public void setFormatVisible(boolean formatVisible) {
-            isFormatVisible = formatVisible;
-        }
+		public void setFormatVisible(boolean formatVisible) {
+			isFormatVisible = formatVisible;
+		}
 
-        public boolean isFileSizeVisible() {
-            return isFileSizeVisible;
-        }
+		public boolean isFileSizeVisible() {
+			return isFileSizeVisible;
+		}
 
-        public void setFileSizeVisible(boolean fileSizeVisible) {
-            isFileSizeVisible = fileSizeVisible;
-        }
-    }
+		public void setFileSizeVisible(boolean fileSizeVisible) {
+			isFileSizeVisible = fileSizeVisible;
+		}
+	}
 }

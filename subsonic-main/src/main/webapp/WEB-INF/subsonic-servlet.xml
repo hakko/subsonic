@@ -246,6 +246,7 @@
         <property name="formView" value="personalSettings"/>
         <property name="settingsService" ref="settingsService"/>
         <property name="securityService" ref="securityService"/>
+        <property name="deviceListenerService" ref="deviceListenerService" />
     </bean>
     <bean id="lastFmSettingsController" class="net.sourceforge.subsonic.controller.LastFmSettingsController">
         <property name="viewName" value="lastFmSettings"/>

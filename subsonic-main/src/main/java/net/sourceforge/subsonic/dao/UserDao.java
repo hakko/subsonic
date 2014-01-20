@@ -1,4 +1,5 @@
 /*
+0rang3b1n
  This file is part of Subsonic.
 
  Subsonic is free software: you can redistribute it and/or modify
@@ -48,7 +49,8 @@ public class UserDao extends AbstractDao {
             "album_order_ascending, album_order_by_year, default_home_view, default_home_artists, " +
             "default_home_albums, default_home_songs, artist_grid_width, album_grid_layout, related_artists, " +
             "recommended_artists, reluctant_artist_loading, only_album_artist_recommendations, " +
-            "various_artists_shortlist, view_stats_for_all_users";
+            "various_artists_shortlist, view_stats_for_all_users, device_serial, device_mount_path, device_sync_size, " +
+            "device_last_sync";
     private static final String USER_VISIBILITY_COLUMNS = "username, type, caption_cutoff, track_number, artist, " +
             "album, composer, genre, year, bit_rate, duration, format, file_size";
 
@@ -91,6 +93,11 @@ public class UserDao extends AbstractDao {
 
     public List<String> getAllLastFmUsers() {
     	String sql = "select distinct LAST_FM_USERNAME from user_settings where LAST_FM_USERNAME is not null";
+    	return getJdbcTemplate().queryForList(sql, String.class);
+    }
+    
+    public List<String> getAllUserDevices() {
+    	String sql = "select distinct DEVICE_SERIAL from user_settings where DEVICE_SERIAL is not null";
     	return getJdbcTemplate().queryForList(sql, String.class);
     }
     
@@ -171,6 +178,19 @@ public class UserDao extends AbstractDao {
         }
         return userSettings;	
     }
+    
+    public UserSettings getUserSettingsByDevice(String deviceName) {
+        String sql = "select " + USER_SETTINGS_COLUMNS + " from user_settings where device_serial=?";
+        UserSettings userSettings = queryOne(sql, userSettingsRowMapper, deviceName);
+        if (userSettings != null) {
+        	sql = "select " + USER_VISIBILITY_COLUMNS + " from user_visibility where username=? and type=?";
+        	userSettings.setMainVisibility(queryOne(sql, userVisibilityRowMapper, userSettings.getUsername(), 0));
+        	userSettings.setPlaylistVisibility(queryOne(sql, userVisibilityRowMapper, userSettings.getUsername(), 1));
+        	userSettings.setHomeVisibility(queryOne(sql, userVisibilityRowMapper, userSettings.getUsername(), 2));
+        }
+        return userSettings;	
+    }
+    
 
     /**
      * Updates settings for the given username, creating it if necessary.
@@ -194,7 +214,8 @@ public class UserDao extends AbstractDao {
                 settings.getArtistGridWidth(), settings.isAlbumGridLayout(), settings.getRelatedArtists(), 
                 settings.getRecommendedArtists(), settings.isReluctantArtistLoading(), 
                 settings.isOnlyAlbumArtistRecommendations(), settings.isUseVariousArtistShortlist(),
-                settings.isViewStatsForAllUsers()});
+                settings.isViewStatsForAllUsers(),
+                settings.getDeviceName(), settings.getDeviceMountPath(), settings.getDeviceSyncSize(), settings.getDeviceLastSync()});
         
         template.update("delete from user_visibility where username=?", new Object[]{settings.getUsername()});
 
@@ -351,6 +372,10 @@ public class UserDao extends AbstractDao {
             settings.setOnlyAlbumArtistRecommendations(rs.getBoolean(col++));
             settings.setUseVariousArtistShortlist(rs.getBoolean(col++));
             settings.setViewStatsForAllUsers(rs.getBoolean(col++));
+            settings.setDeviceName(rs.getString(col++));
+            settings.setDeviceMountPath(rs.getString(col++));
+            settings.setDeviceSyncSize(rs.getLong(col++));
+            settings.setDeviceLastSync(rs.getTimestamp(col++));
             
             return settings;
         }

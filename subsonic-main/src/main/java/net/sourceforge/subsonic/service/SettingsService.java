@@ -948,6 +948,16 @@ public class SettingsService {
     public List<String> getAllLastFmUsers() {
     	return userDao.getAllLastFmUsers();
     }
+    
+    public List<String> getAllUserDevices() {
+    	return userDao.getAllUserDevices();
+    }
+    
+    public UserSettings getUserSettingsByDevice(String deviceName) {
+    	return userDao.getUserSettingsByDevice(deviceName);
+    }
+    
+    
 
     /**
      * Returns all internet radio stations. Disabled stations are not returned.
@@ -1029,6 +1039,7 @@ public class SettingsService {
     	} else {
     		UserSettings settings = userDao.getUserSettings(username);
         	if (settings == null) {
+        		LOG.error("Creating default user settings.");
         		settings = createDefaultUserSettings(username);
         	}
         	cachedUserSettings.put(username, settings);
