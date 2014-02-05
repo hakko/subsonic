@@ -1,5 +1,6 @@
 package net.sourceforge.subsonic.controller;
 
+import java.net.*;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
@@ -13,6 +14,7 @@ import net.sourceforge.subsonic.domain.UserSettings;
 import net.sourceforge.subsonic.service.SecurityService;
 import net.sourceforge.subsonic.service.SettingsService;
 
+import org.apache.commons.lang.StringUtils;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.ParameterizableViewController;
 import org.springframework.web.servlet.view.RedirectView;
@@ -59,8 +61,10 @@ public class LastFmSettingsController extends ParameterizableViewController {
         if (lastFmUsername == null && sessionKey == null && token == null) {
         	LOG.debug("Prepare data for last.fm auth.");
             map.put("api_key", LastFmService.API_KEY);
-            map.put("callbackUrl", request.getRequestURL());
-            LOG.debug("callback url = " + request.getRequestURL());
+
+            final String callbackUrl = getCallbackUrl(request);
+            map.put("callbackUrl", callbackUrl);
+            LOG.debug("callback url = " + callbackUrl);
         }
         
         ModelAndView result = super.handleRequestInternal(request, response);
@@ -68,9 +72,42 @@ public class LastFmSettingsController extends ParameterizableViewController {
         return result;
 
     }
-    
-    private String getCallbackUrl() {
-    	return null; // TODO : verify callback URL on different network setups
+
+    /**
+     * Determine a callback url for the callback URL.
+     *
+     * This uses the same approach as net.sourceforge.subsonic.service.ShareService#getShareBaseUrl
+     * However, instead of trying to detect the name of a machine it uses the request url as fallback.
+     *
+     * @return the determined callback url
+     */
+    private String getCallbackUrl(HttpServletRequest request) {
+        try{
+            URL host;
+            URL requestURI = new URL(request.getRequestURL().toString());
+
+            // from getShareBaseUrl
+            if (StringUtils.isNotEmpty(settingsService.getShareUrlPrefix())) {
+                LOG.debug("Using share prefix");
+                host = new URL(settingsService.getShareUrlPrefix());
+            } else if (settingsService.isUrlRedirectionEnabled()) {
+                LOG.debug("Using redirects");
+                host = new URL("http", settingsService.getUrlRedirectFrom() + ".subsonic.org", "");
+            } else {
+                LOG.debug("Using current address of request");
+                host = requestURI;
+            }
+
+            LOG.info("Callback url " + host.toString() + " + " + requestURI.getFile());
+
+            // callback url is determined url of current page + 'file' part of URL
+            return new URL(host, requestURI.getFile()).toString();
+        } catch (MalformedURLException e){
+            LOG.error("URL " + e.getMessage() + " was invalid");
+
+            // part of the input was likely invalid. Do not try to re-parse the current URL
+            return request.getRequestURL().toString();
+        }
     }
 
     // Spring setters
