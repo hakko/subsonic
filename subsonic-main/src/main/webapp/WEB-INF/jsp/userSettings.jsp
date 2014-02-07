@@ -42,7 +42,7 @@
 			</div>
 			<div class="panel-body">
 
-				<select name="username"
+				<select name="username-load"
 					onchange="return loadInFrame(this, 'userSettings.view?userIndex=' + (selectedIndex - 1));">
 					<option value="">
 						--

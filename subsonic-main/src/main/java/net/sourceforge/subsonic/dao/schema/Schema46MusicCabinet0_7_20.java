@@ -30,7 +30,7 @@ import org.springframework.jdbc.core.JdbcTemplate;
  */
 public class Schema46MusicCabinet0_7_20 extends Schema {
 
-    private static final Logger LOG = Logger.getLogger(Schema46MusicCabinet0_7_19.class);
+    private static final Logger LOG = Logger.getLogger(Schema46MusicCabinet0_7_20.class);
 
     @Override
     public void execute(JdbcTemplate template) {
