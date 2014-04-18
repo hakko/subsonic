@@ -28,7 +28,13 @@ import net.sourceforge.subsonic.domain.User;
 import net.sourceforge.subsonic.domain.VideoTranscodingSettings;
 import net.sourceforge.subsonic.service.jukebox.AudioPlayer;
 import net.sourceforge.subsonic.util.FileUtil;
+
 import org.apache.commons.io.IOUtils;
+
+import com.github.hakko.musiccabinet.dao.util.URIUtil;
+import com.github.hakko.musiccabinet.service.spotify.SpotifyService;
+
+import jahspotify.JahSpotify.PlayerStatus;
 
 import java.io.InputStream;
 
@@ -49,6 +55,7 @@ public class JukeboxService implements AudioPlayer.Listener {
     private StatusService statusService;
     private SettingsService settingsService;
     private SecurityService securityService;
+    private SpotifyService spotifyService;
 
     private Player player;
     private TransferStatus status;
@@ -73,7 +80,10 @@ public class JukeboxService implements AudioPlayer.Listener {
             this.player = player;
             play(player.getPlaylist().getCurrentFile(), offset);
         } else {
-            if (audioPlayer != null) {
+        	if(this.currentPlayingFile != null && this.currentPlayingFile.isSpotify()) {
+        		spotifyService.getSpotify().pause();
+        	}
+        	else if (audioPlayer != null) {
                 audioPlayer.pause();
             }
         }
@@ -85,9 +95,18 @@ public class JukeboxService implements AudioPlayer.Listener {
 
             // Resume if possible.
             boolean sameFile = file != null && file.equals(currentPlayingFile);
-            boolean paused = audioPlayer != null && audioPlayer.getState() == AudioPlayer.State.PAUSED;
+            boolean paused = false;
+            if(currentPlayingFile != null && currentPlayingFile.isSpotify()) {
+            	paused = spotifyService.getSpotify().getStatus().equals(PlayerStatus.PAUSED);
+            } else {
+            	paused = audioPlayer != null && audioPlayer.getState() == AudioPlayer.State.PAUSED;
+            }
             if (sameFile && paused && offset == 0) {
-                audioPlayer.play();
+            	if(currentPlayingFile.isSpotify()) {
+            		spotifyService.getSpotify().resume();
+            	} else {
+            		audioPlayer.play();
+            	}
             } else {
                 this.offset = offset;
                 if (audioPlayer != null) {
@@ -97,7 +116,10 @@ public class JukeboxService implements AudioPlayer.Listener {
                     }
                 }
 
-                if (file != null) {
+                if (file != null && file.isSpotify()) {
+                	spotifyService.getSpotify().play(URIUtil.getSpotifyLink(file.getUri().toString()));
+                }
+                else if (file != null) {
                     int duration = file.getMetaData().getDuration() == null ? 0 : file.getMetaData().getDuration() - offset;
                     TranscodingService.Parameters parameters = new TranscodingService.Parameters(file, new VideoTranscodingSettings(0, 0, offset, duration, false));
                     String command = settingsService.getJukeboxCommand();
@@ -145,7 +167,7 @@ public class JukeboxService implements AudioPlayer.Listener {
     private void onSongStart(MediaFile file) {
         LOG.info(player.getUsername() + " starting jukebox for \"" + FileUtil.getShortPath(file.getFile()) + "\"");
         status = statusService.createStreamStatus(player);
-        status.setMediaFileId(file.getId());
+        status.setMediaFileUri(file.getUri());
         status.setFile(file.getFile());
         status.addBytesTransfered(file.length());
         scrobble(file, false);
@@ -191,4 +213,8 @@ public class JukeboxService implements AudioPlayer.Listener {
     public void setSecurityService(SecurityService securityService) {
         this.securityService = securityService;
     }
+    
+	public void setSpotifyService(SpotifyService spotifyService) {
+		this.spotifyService = spotifyService;
+	}
 }

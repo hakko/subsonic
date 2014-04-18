@@ -3,7 +3,6 @@ package net.sourceforge.subsonic.controller;
 import static java.lang.Math.max;
 import static net.sourceforge.subsonic.util.StringUtil.utf8HexEncode;
 import static org.apache.commons.lang.StringUtils.defaultIfEmpty;
-import static org.apache.commons.lang.math.NumberUtils.toInt;
 import static org.springframework.web.bind.ServletRequestUtils.getRequiredStringParameter;
 
 import java.io.File;
@@ -42,6 +41,8 @@ import org.apache.commons.lang.math.NumberUtils;
 import org.springframework.web.bind.ServletRequestBindingException;
 import org.springframework.web.bind.ServletRequestUtils;
 
+import com.github.hakko.musiccabinet.configuration.Uri;
+import com.github.hakko.musiccabinet.dao.util.URIUtil;
 import com.github.hakko.musiccabinet.domain.model.aggr.ArtistRecommendation;
 import com.github.hakko.musiccabinet.domain.model.library.Directory;
 import com.github.hakko.musiccabinet.domain.model.music.Album;
@@ -176,17 +177,17 @@ public class RESTBrowseController extends RESTAbstractController {
             LOG.debug("genre radio for " + genre);
             getGenreRadio(genre, request, response);
         } else if (id.startsWith(ARTIST_RADIO_ID)) {
-            String artistId = id.substring(ARTIST_RADIO_ID.length());
-            LOG.debug("artist radio for " + artistId);
-            getArtistRadio(toInt(artistId), request, response);
+            Uri artistUri = URIUtil.parseURI(id.substring(ARTIST_RADIO_ID.length()));
+            LOG.debug("artist radio for " + artistUri);
+            getArtistRadio(artistUri, request, response);
         } else if (id.startsWith(TOP_TRACKS_ID)) {
-            String artistId = id.substring(TOP_TRACKS_ID.length());
-            LOG.debug("top tracks for " + artistId);
-            getTopTracks(toInt(artistId), request, response);
+        	Uri artistUri = URIUtil.parseURI(id.substring(TOP_TRACKS_ID.length()));
+            LOG.debug("top tracks for " + artistUri);
+            getTopTracks(artistUri, request, response);
         } else if (id.startsWith(RELATED_ARTISTS_ID)) {
-            String artistId = id.substring(RELATED_ARTISTS_ID.length());
-            LOG.debug("related artists for " + artistId);
-            getRelatedArtists(toInt(artistId), request, response);
+        	Uri artistUri = URIUtil.parseURI(id.substring(RELATED_ARTISTS_ID.length()));
+            LOG.debug("related artists for " + artistUri);
+            getRelatedArtists(artistUri, request, response);
         } else if (id.startsWith(MEDIA_FOLDERS_ID)) {
             int directoryId = NumberUtils.toInt(id.substring(MEDIA_FOLDERS_ID.length()));
             LOG.debug("directories for " + directoryId);
@@ -224,24 +225,24 @@ public class RESTBrowseController extends RESTAbstractController {
 
         UserSettings userSettings = settingsService.getUserSettings(securityService.getCurrentUsername(request));
 
-        int artistId = getId(request);
+        Uri artistUri = getId(request);
 
-        ArtistInfo artistInfo = artistInfoService.getArtistInfo(artistId);
+        ArtistInfo artistInfo = artistInfoService.getArtistInfo(artistUri);
         List<net.sourceforge.subsonic.domain.Album> albums = mediaFileService.getAlbums(
-                libraryBrowserService.getAlbums(artistId, userSettings.isAlbumOrderByYear(),
+                libraryBrowserService.getAlbums(artistUri, userSettings.isAlbumOrderByYear(),
                         userSettings.isAlbumOrderAscending()), true);
 
         builder.add("artist", false,
-                new Attribute("id", ARTIST_ID + artistId),
+                new Attribute("id", ARTIST_ID + artistUri),
                 new Attribute("name", artistInfo.getArtist().getName()));
 
         for (net.sourceforge.subsonic.domain.Album album : albums) {
             builder.add("album", true,
-                    new Attribute("id", ALBUM_ID + album.getId()),
+                    new Attribute("id", ALBUM_ID + album.getUri()),
                     new Attribute("name", album.getTitle()),
                     new Attribute("coverArt", StringUtil.utf8HexEncode(album.getCoverArtPath())),
                     new Attribute("artist", artistInfo.getArtist().getName()),
-                    new Attribute("artistId", ARTIST_ID + artistId));
+                    new Attribute("artistId", ARTIST_ID + artistUri));
         }
 
         builder.endAll();
@@ -252,17 +253,17 @@ public class RESTBrowseController extends RESTAbstractController {
         request = wrapRequest(request);
         Player player = playerService.getPlayer(request, response);
 
-        int albumId = getId(request);
-        Album album = libraryBrowserService.getAlbum(albumId);
+        Uri albumUri = getId(request);
+        Album album = libraryBrowserService.getAlbum(albumUri);
 
         XMLBuilder builder = createXMLBuilder(request, response, true);
         builder.add("album", false,
-                new Attribute("id", ALBUM_ID + albumId),
+                new Attribute("id", ALBUM_ID + albumUri),
                 new Attribute("name", getAlbumName(album)),
                 new Attribute("artist", album.getArtist().getName()),
-                new Attribute("artistId", ARTIST_ID + album.getArtist().getId()));
+                new Attribute("artistId", ARTIST_ID + album.getArtist().getUri()));
 
-        List<Track> tracks = libraryBrowserService.getTracks(album.getTrackIds());
+        List<Track> tracks = libraryBrowserService.getTracks(album.getTrackUris());
         Collections.sort(tracks, trackComparator);
         addTracks(builder, tracks, album, player, "song");
 
@@ -275,8 +276,8 @@ public class RESTBrowseController extends RESTAbstractController {
         Player player = playerService.getPlayer(request, response);
         XMLBuilder builder = createXMLBuilder(request, response, true);
 
-        int trackId = ServletRequestUtils.getRequiredIntParameter(request, "id");
-        MediaFile mediaFile = mediaFileService.getMediaFile(trackId);
+        Uri trackUri = URIUtil.parseURI(ServletRequestUtils.getRequiredStringParameter(request, "id"));
+        MediaFile mediaFile = mediaFileService.getMediaFile(trackUri);
 
         builder.add("song", createAttributesForMediaFile(player, null, mediaFile), true);
 
@@ -319,7 +320,7 @@ public class RESTBrowseController extends RESTAbstractController {
                     UserSettings userSettings = settingsService.getUserSettings(securityService.getCurrentUsername(request));
                     for (Album album : directoryBrowserService.getAlbums(id,
                             userSettings.isAlbumOrderByYear(), userSettings.isAlbumOrderAscending())) {
-                        List<Track> tracks = libraryBrowserService.getTracks(album.getTrackIds());
+                        List<Track> tracks = libraryBrowserService.getTracks(album.getTrackUris());
                         Collections.sort(tracks, trackComparator);
                         addTracks(builder, tracks, album, player);
                     }
@@ -341,16 +342,16 @@ public class RESTBrowseController extends RESTAbstractController {
     }
 
     private void getArtistDirectory(HttpServletRequest request, HttpServletResponse response) throws Exception {
-        int artistId;
+        Uri artistUri;
         ArtistInfo artistInfo;
         List<net.sourceforge.subsonic.domain.Album> albums;
 
         UserSettings userSettings = settingsService.getUserSettings(securityService.getCurrentUsername(request));
 
         try {
-            artistId = getId(request);
-            artistInfo = artistInfoService.getArtistInfo(artistId);
-            albums = mediaFileService.getAlbums(libraryBrowserService.getAlbums(artistId,
+            artistUri = getId(request);
+            artistInfo = artistInfoService.getArtistInfo(artistUri);
+            albums = mediaFileService.getAlbums(libraryBrowserService.getAlbums(artistUri,
                     userSettings.isAlbumOrderByYear(), userSettings.isAlbumOrderAscending()), true);
         } catch (Exception x) {
             LOG.warn("Error in REST API.", x);
@@ -361,33 +362,33 @@ public class RESTBrowseController extends RESTAbstractController {
         XMLBuilder builder = createXMLBuilder(request, response, true);
 
         builder.add("directory", false,
-                new Attribute("id", ARTIST_ID + artistId),
+                new Attribute("id", ARTIST_ID + artistUri),
                 new Attribute("name", artistInfo.getArtist().getName()));
 
         for (net.sourceforge.subsonic.domain.Album album : albums) {
             builder.add("child", true,
-                    new Attribute("id", ALBUM_ID + album.getId()),
-                    new Attribute("parent", ARTIST_ID + artistId),
+                    new Attribute("id", ALBUM_ID + album.getUri()),
+                    new Attribute("parent", ARTIST_ID + artistUri),
                     new Attribute("title", getAlbumName(album.getTitle(), album.getYear())),
                     new Attribute("isDir", true),
                     new Attribute("coverArt", StringUtil.utf8HexEncode(album.getCoverArtPath())));
         }
 
         builder.add("child", true,
-                new Attribute("id", ARTIST_RADIO_ID + artistId),
-                new Attribute("parent", ARTIST_ID + artistId),
+                new Attribute("id", ARTIST_RADIO_ID + artistUri),
+                new Attribute("parent", ARTIST_ID + artistUri),
                 new Attribute("title", ARTIST_RADIO_NAME),
                 new Attribute("isDir", true));
 
         builder.add("child", true,
-                new Attribute("id", TOP_TRACKS_ID + artistId),
-                new Attribute("parent", ARTIST_ID + artistId),
+                new Attribute("id", TOP_TRACKS_ID + artistUri),
+                new Attribute("parent", ARTIST_ID + artistUri),
                 new Attribute("title", TOP_TRACKS_NAME),
                 new Attribute("isDir", true));
 
         builder.add("child", true,
-                new Attribute("id", RELATED_ARTISTS_ID + artistId),
-                new Attribute("parent", ARTIST_ID + artistId),
+                new Attribute("id", RELATED_ARTISTS_ID + artistUri),
+                new Attribute("parent", ARTIST_ID + artistUri),
                 new Attribute("title", RELATED_ARTISTS_NAME),
                 new Attribute("isDir", true));
 
@@ -396,24 +397,24 @@ public class RESTBrowseController extends RESTAbstractController {
 
     }
 
-    private void getRelatedArtists(int artistId, HttpServletRequest request, HttpServletResponse response) throws Exception {
+    private void getRelatedArtists(Uri artistUri, HttpServletRequest request, HttpServletResponse response) throws Exception {
 
         UserSettings userSettings = settingsService.getUserSettings(securityService.getCurrentUsername(request));
 
-        ArtistInfo artistInfo = artistInfoService.getArtistInfo(artistId);
+        ArtistInfo artistInfo = artistInfoService.getArtistInfo(artistUri);
         List<ArtistRecommendation> relatedArtists = artistRecommendationService.getRelatedArtistsInLibrary(
-                artistId, userSettings.getRelatedArtists(), userSettings.isOnlyAlbumArtistRecommendations());
+                artistUri, userSettings.getRelatedArtists(), userSettings.isOnlyAlbumArtistRecommendations());
 
         XMLBuilder builder = createXMLBuilder(request, response, true);
 
         builder.add("directory", false,
-                new Attribute("id", RELATED_ARTISTS_ID + artistId),
+                new Attribute("id", RELATED_ARTISTS_ID + artistUri),
                 new Attribute("name", artistInfo.getArtist().getName()));
 
         for (ArtistRecommendation ar : relatedArtists) {
             builder.add("child", true,
-                    new Attribute("id", ARTIST_ID + ar.getArtistId()),
-                    new Attribute("parent", ARTIST_ID + artistId),
+                    new Attribute("id", ARTIST_ID + ar.getUri()),
+                    new Attribute("parent", ARTIST_ID + artistUri),
                     new Attribute("title", ar.getArtistName()),
                     new Attribute("isDir", true));
         }
@@ -423,16 +424,16 @@ public class RESTBrowseController extends RESTAbstractController {
     }
 
     private void getAlbumDirectory(HttpServletRequest request, HttpServletResponse response) throws Exception {
-        int albumId;
+        Uri albumUri;
         Album album;
         List<Track> tracks;
 
         Player player = playerService.getPlayer(request, response);
 
         try {
-            albumId = getId(request);
-            album = libraryBrowserService.getAlbum(albumId);
-            tracks = libraryBrowserService.getTracks(album.getTrackIds());
+        	albumUri = getId(request);
+            album = libraryBrowserService.getAlbum(albumUri);
+            tracks = libraryBrowserService.getTracks(album.getTrackUris());
         } catch (Exception x) {
             LOG.warn("Error in REST API.", x);
             error(request, response, ErrorCode.GENERIC, getErrorMessage(x));
@@ -442,7 +443,7 @@ public class RESTBrowseController extends RESTAbstractController {
         XMLBuilder builder = createXMLBuilder(request, response, true);
 
         builder.add("directory", false,
-                new Attribute("id", ALBUM_ID + albumId),
+                new Attribute("id", ALBUM_ID + albumUri),
                 new Attribute("name", getAlbumName(album)));
 
         Collections.sort(tracks, trackComparator);
@@ -456,7 +457,7 @@ public class RESTBrowseController extends RESTAbstractController {
     private void getGenreRadio(String genre, HttpServletRequest request, HttpServletResponse response) throws Exception {
         LOG.debug("getGenreRadio() for " + genre);
 
-        List<Integer> trackIds = playlistGeneratorService.getPlaylistForTags(new String[]{genre},
+        List<? extends Uri> trackIds = playlistGeneratorService.getPlaylistForTags(new String[]{genre},
                 settingsService.getGenreRadioArtistCount(), settingsService.getGenreRadioTotalCount());
         List<Track> tracks = trackIds.isEmpty() ? new ArrayList<Track>() : libraryBrowserService.getTracks(trackIds);
 
@@ -474,18 +475,18 @@ public class RESTBrowseController extends RESTAbstractController {
 
     }
 
-    private void getArtistRadio(int artistId, HttpServletRequest request, HttpServletResponse response) throws Exception {
-        LOG.debug("getArtistRadio() for " + artistId);
+    private void getArtistRadio(Uri artistUri, HttpServletRequest request, HttpServletResponse response) throws Exception {
+        LOG.debug("getArtistRadio() for " + artistUri);
 
-        List<Integer> trackIds = playlistGeneratorService.getPlaylistForArtist(artistId,
+        List<? extends Uri> trackUris = playlistGeneratorService.getPlaylistForArtist(artistUri,
                 settingsService.getArtistRadioArtistCount(), settingsService.getArtistRadioTotalCount());
-        List<Track> tracks = trackIds.isEmpty() ? new ArrayList<Track>() : libraryBrowserService.getTracks(trackIds);
+        List<Track> tracks = trackUris.isEmpty() ? new ArrayList<Track>() : libraryBrowserService.getTracks(trackUris);
         Collections.shuffle(tracks);
 
         XMLBuilder builder = createXMLBuilder(request, response, true);
 
         builder.add("directory", false,
-                new Attribute("id", ARTIST_RADIO_ID + artistId),
+                new Attribute("id", ARTIST_RADIO_ID + artistUri),
                 new Attribute("name", ARTIST_RADIO_NAME));
 
         Player player = playerService.getPlayer(request, response);
@@ -496,17 +497,17 @@ public class RESTBrowseController extends RESTAbstractController {
 
     }
 
-    private void getTopTracks(int artistId, HttpServletRequest request, HttpServletResponse response) throws Exception {
-        LOG.debug("getTopTracks() for " + artistId);
+    private void getTopTracks(Uri artistUri, HttpServletRequest request, HttpServletResponse response) throws Exception {
+        LOG.debug("getTopTracks() for " + artistUri);
 
-        List<Integer> trackIds = playlistGeneratorService.getTopTracksForArtist(artistId,
+        List<? extends Uri> trackIds = playlistGeneratorService.getTopTracksForArtist(artistUri,
                 settingsService.getArtistTopTracksTotalCount());
         List<Track> tracks = trackIds.isEmpty() ? new ArrayList<Track>() : libraryBrowserService.getTracks(trackIds);
 
         XMLBuilder builder = createXMLBuilder(request, response, true);
 
         builder.add("directory", false,
-                new Attribute("id", TOP_TRACKS_ID + artistId),
+                new Attribute("id", TOP_TRACKS_ID + artistUri),
                 new Attribute("name", TOP_TRACKS_NAME));
 
         Player player = playerService.getPlayer(request, response);
@@ -521,15 +522,15 @@ public class RESTBrowseController extends RESTAbstractController {
         for (Artist artist : artists) {
             builder.add("artist", true,
                     new Attribute("name", artist.getName()),
-                    new Attribute("id", ARTIST_ID + artist.getId()));
+                    new Attribute("id", ARTIST_ID + artist.getUri()));
         }
     }
 
     protected void addAlbums(XMLBuilder builder, List<Album> albums) throws IOException {
         for (Album album : albums) {
             builder.add("album", true,
-                    new Attribute("id", ALBUM_ID + album.getId()),
-                    new Attribute("parent", ARTIST_ID + album.getArtist().getId()),
+                    new Attribute("id", ALBUM_ID + album.getUri()),
+                    new Attribute("parent", ARTIST_ID + album.getArtist().getUri()),
                     new Attribute("title", album.getName()),
                     new Attribute("album", album.getName()),
                     new Attribute("artist", album.getArtist().getName()),
@@ -547,15 +548,15 @@ public class RESTBrowseController extends RESTAbstractController {
         if (album == null || album.getCoverArtPath() == null) {
             libraryBrowserService.addArtwork(tracks);
         }
-        mediaFileService.loadMediaFiles(getMediaFileIds(tracks));
+        mediaFileService.loadMediaFiles(getMediaFileUris(tracks));
         for (Track track : tracks) {
             String suffix = track.getMetaData().getMediaType().getFilesuffix().toLowerCase();
-            MediaFile mediaFile = mediaFileService.getMediaFile(track.getId());
+            MediaFile mediaFile = mediaFileService.getMediaFile(track.getUri());
 
             AttributeSet attributes = new AttributeSet();
-            attributes.add(new Attribute("id", track.getId()));
+            attributes.add(new Attribute("id", track.getUri()));
             attributes.add(new Attribute("parent", ALBUM_ID +
-                    (album == null ? track.getMetaData().getAlbumId() : album.getId())));
+                    (album == null ? track.getMetaData().getAlbumUri() : album.getUri())));
             attributes.add(new Attribute("title", track.getName()));
             attributes.add(new Attribute("album", track.getMetaData().getAlbum()));
             attributes.add(new Attribute("artist", track.getMetaData().getArtist()));
@@ -641,7 +642,7 @@ public class RESTBrowseController extends RESTAbstractController {
             LOG.debug("genre = " + genre);
 
             List<Track> tracks = libraryBrowserService.getTracks(
-                    libraryBrowserService.getRandomTrackIds(size, fromYear, toYear, genre));
+                    libraryBrowserService.getRandomTrackUris(size, fromYear, toYear, genre));
             addTracks(builder, tracks, null, player, "song");
 
             builder.endAll();
@@ -671,7 +672,7 @@ public class RESTBrowseController extends RESTAbstractController {
                     continue;
                 }
 
-                MediaFile mediaFile = mediaFileService.getMediaFile(status.getMediaFileId());
+                MediaFile mediaFile = mediaFileService.getMediaFile(status.getMediaFileUri());
                 File coverArt = mediaFileService.getCoverArt(mediaFile);
 
                 long minutesAgo = status.getMillisSinceLastUpdate() / 1000L / 60L;
@@ -712,12 +713,12 @@ public class RESTBrowseController extends RESTAbstractController {
                 lastFmUsername, 0, Short.MAX_VALUE, null)) {
             builder.add("artist", true,
                     new Attribute("name", rec.getArtistName()),
-                    new Attribute("id", ARTIST_ID + rec.getArtistId()));
+                    new Attribute("id", ARTIST_ID + rec.getUri()));
         }
         addAlbums(builder, libraryBrowserService.getStarredAlbums(
                 lastFmUsername, 0, Short.MAX_VALUE, null));
         List<Track> tracks = libraryBrowserService.getTracks(libraryBrowserService
-                .getStarredTrackIds(lastFmUsername, 0, Short.MAX_VALUE, null));
+                .getStarredTrackUris(lastFmUsername, 0, Short.MAX_VALUE, null));
         addTracks(builder, tracks, null, player, "song");
 
         builder.endAll();
@@ -726,9 +727,9 @@ public class RESTBrowseController extends RESTAbstractController {
 
     protected AttributeSet createAttributesForMediaFile(Player player, File coverArt, MediaFile mediaFile) throws IOException {
         AttributeSet attributes = new AttributeSet();
-        attributes.add("id", mediaFile.getId());
+        attributes.add("id", mediaFile.getUri());
         if (!mediaFile.isVideo()) {
-            attributes.add("parent", ALBUM_ID + mediaFile.getMetaData().getAlbumId());
+            attributes.add("parent", ALBUM_ID + mediaFile.getMetaData().getAlbumUri());
         }
         attributes.add("title", mediaFile.getTitle());
         attributes.add("isDir", false);
@@ -801,16 +802,16 @@ public class RESTBrowseController extends RESTAbstractController {
         return attributes;
     }
 
-    protected List<Integer> getMediaFileIds(List<Track> tracks) {
-        List<Integer> mediaFileIds = new ArrayList<Integer>();
+    protected List<Uri> getMediaFileUris(List<Track> tracks) {
+        List<Uri> mediaFileIds = new ArrayList<>();
         for (Track track : tracks) {
-            mediaFileIds.add(track.getId());
+            mediaFileIds.add(track.getUri());
         }
         return mediaFileIds;
     }
 
-    private int getId(HttpServletRequest request) throws ServletRequestBindingException {
-        return toInt(getRequiredStringParameter(request, "id").substring(1));
+    private Uri getId(HttpServletRequest request) throws ServletRequestBindingException {
+        return URIUtil.parseURI(getRequiredStringParameter(request, "id").substring(1));
     }
 
     private String getRelativePath(MediaFile mediaFile) {

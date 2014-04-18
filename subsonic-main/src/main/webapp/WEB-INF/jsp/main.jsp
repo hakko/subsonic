@@ -26,9 +26,9 @@
 
 	<c:if test="${fn:length(model.files) > 0}">
 		<h2>
-			<a href="#" onclick="return onPlay(${model.trackIds}, 'P');">Play all</a> |
-			<a href="#" onclick="return onPlay(${model.trackIds}, 'E');">Enqueue all</a> |
-			<a href="#" onclick="return onPlay(${model.trackIds}, 'A');">Add all</a>
+			<a href="#" onclick="return onPlay('${sub:esc(model.trackUris)}', 'P');">Play all</a> |
+			<a href="#" onclick="return onPlay('${sub:esc(model.trackUris)}', 'E');">Enqueue all</a> |
+			<a href="#" onclick="return onPlay('${sub:esc(model.trackUris)}', 'A');">Add all</a>
 		</h2>
 			<c:forEach items="${model.files}" var="file" varStatus="loopStatus">
 				<div>

@@ -2,6 +2,8 @@ package net.sourceforge.subsonic.domain;
 
 import java.io.Serializable;
 
+import com.github.hakko.musiccabinet.configuration.Uri;
+
 /**
  * Contains meta-data (song title, artist, album etc) for a music file.
  */
@@ -13,10 +15,10 @@ public class MetaData implements Serializable {
 	private Integer trackNumber;
 	private String title;
 	private String artist;
-	private int artistId;
+	private Uri artistUri;
 	private String albumArtist;
 	private String album;
-	private int albumId;
+	private Uri albumUri;
 	private String composer;
 	private String genre;
 	private String year;
@@ -60,13 +62,14 @@ public class MetaData implements Serializable {
 	public void setArtist(String artist) {
 		this.artist = artist;
 	}
-
-	public int getArtistId() {
-		return artistId;
+	
+	public void setArtistUri(Uri artistUri) {
+		this.artistUri = artistUri;
 	}
+	
 
-	public void setArtistId(int artistId) {
-		this.artistId = artistId;
+	public Uri getArtistUri() {
+		return artistUri;
 	}
 
 	public String getAlbumArtist() {
@@ -85,12 +88,12 @@ public class MetaData implements Serializable {
 		this.album = album;
 	}
 
-	public int getAlbumId() {
-		return albumId;
+	public Uri getAlbumUri() {
+		return albumUri;
 	}
 
-	public void setAlbumId(int albumId) {
-		this.albumId = albumId;
+	public void setAlbumUri(Uri albumUri) {
+		this.albumUri = albumUri;
 	}
 
 	public String getComposer() {

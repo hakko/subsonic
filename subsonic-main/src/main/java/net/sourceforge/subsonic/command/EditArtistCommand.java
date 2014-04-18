@@ -1,8 +1,9 @@
 package net.sourceforge.subsonic.command;
 
-import com.github.hakko.musiccabinet.domain.model.music.ArtistInfo;
-
 import net.sourceforge.subsonic.controller.EditArtistController;
+
+import com.github.hakko.musiccabinet.configuration.Uri;
+import com.github.hakko.musiccabinet.domain.model.music.ArtistInfo;
 
 /**
  * Command used in {@link EditArtistController}.
@@ -11,17 +12,17 @@ import net.sourceforge.subsonic.controller.EditArtistController;
  */
 public class EditArtistCommand {
 
-	private int id;
+	private Uri uri;
 	private String artist;
 	private ArtistInfo artistInfo;
 	private String bioSummary;
 	
-	public int getId() {
-		return id;
+	public Uri getUri() {
+		return uri;
 	}
 
-	public void setId(int id) {
-		this.id = id;
+	public void setUri(Uri uri) {
+		this.uri = uri;
 	}
 
 	public String getArtist() {

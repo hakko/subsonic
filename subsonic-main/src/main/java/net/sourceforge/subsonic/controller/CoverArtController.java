@@ -18,6 +18,10 @@
  */
 package net.sourceforge.subsonic.controller;
 
+import jahspotify.media.Image;
+import jahspotify.media.Link;
+import jahspotify.services.MediaHelper;
+
 import java.awt.Graphics2D;
 import java.awt.RenderingHints;
 import java.awt.image.BufferedImage;
@@ -25,9 +29,12 @@ import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.nio.file.FileSystems;
+import java.nio.file.Files;
 
 import javax.imageio.ImageIO;
 import javax.servlet.http.HttpServletRequest;
@@ -42,14 +49,16 @@ import org.apache.commons.codec.digest.DigestUtils;
 import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang.StringUtils;
-import org.jfree.util.Log;
 import org.springframework.web.bind.ServletRequestUtils;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.Controller;
 import org.springframework.web.servlet.mvc.LastModified;
 
+import com.github.hakko.musiccabinet.configuration.CharSet;
+import com.github.hakko.musiccabinet.dao.util.URIUtil;
 import com.github.hakko.musiccabinet.exception.ApplicationException;
 import com.github.hakko.musiccabinet.service.library.AudioTagService;
+import com.github.hakko.musiccabinet.service.spotify.SpotifyService;
 
 /**
  * Controller which produces cover art images.
@@ -60,6 +69,7 @@ public class CoverArtController implements Controller, LastModified {
 
     private SecurityService securityService;
     private AudioTagService audioTagService;
+	private SpotifyService spotifyService;
 
     private static final Logger LOG = Logger.getLogger(CoverArtController.class);
 
@@ -88,15 +98,35 @@ public class CoverArtController implements Controller, LastModified {
 
     public ModelAndView handleRequest(HttpServletRequest request, HttpServletResponse response) throws Exception {
     	String encodedPath = request.getParameter("pathUtf8Hex");
-    	File file = (encodedPath == null || encodedPath.length() == 0) ? null : new File(StringUtil.utf8HexDecode(encodedPath));
-    	if(file == null) {
-    		String path = request.getParameter("path");
-    		file = (path == null || path.length() == 0) ? null : new File(path);
+    	String path = (encodedPath == null || encodedPath.length() == 0) ? null : StringUtil.utf8HexDecode(encodedPath);
+    	if(path == null) {
+    		path = request.getParameter("path");
     	}
+    	File file = null;
         Integer size = ServletRequestUtils.getIntParameter(request, "size");
+        
+        boolean isSpotify = false;
+        if(URIUtil.isSpotify(path)) {
+        	isSpotify = true;
+        	Link link = Link.create(path);
+        	if(link.isImageLink()) {
+        		Image image = spotifyService.getSpotify().readImage(link);
+        		file = new File(getSpotifyCacheDirectory(), DigestUtils.md5Hex(path) + ".jpg");
+        		path = file.getAbsolutePath();
+        		// check if the image exists, if not cache it
+        		if(!file.exists()) {
+        			if(MediaHelper.waitFor(image, 120)) {
+       					Files.write(FileSystems.getDefault().getPath(path), image.getBytes());
+        			} else {
+        				file = null;
+        			}
+        		}
+        	}
+        }
 
         // Check access.
-        if (file != null && !securityService.isReadAllowed(file)) {
+        file = (path == null || path.length() == 0) ? null : new File(path);
+        if (file != null && !isSpotify && !securityService.isReadAllowed(file)) {
             response.sendError(HttpServletResponse.SC_FORBIDDEN);
             return null;
         }
@@ -199,6 +229,20 @@ public class CoverArtController implements Controller, LastModified {
             return new FileInputStream(file);
         }
     }
+    
+    private synchronized File getSpotifyCacheDirectory() {
+        File dir = new File(SettingsService.getSubsonicHome(), "thumbs");
+        dir = new File(dir, "spotify");
+        if (!dir.exists()) {
+            if (dir.mkdirs()) {
+                LOG.info("Created spotify thumbnail cache " + dir);
+            } else {
+                LOG.error("Failed to create spotify thumbnail cache " + dir);
+            }
+        }
+
+        return dir;
+    }    
 
     private synchronized File getImageCacheDirectory(int size) {
         File dir = new File(SettingsService.getSubsonicHome(), "thumbs");
@@ -251,4 +295,8 @@ public class CoverArtController implements Controller, LastModified {
 		this.audioTagService = audioTagService;
 	}
     
+	public void setSpotifyService(SpotifyService spotifyService) {
+		this.spotifyService = spotifyService;
+	}
+	
 }

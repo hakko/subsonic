@@ -20,9 +20,10 @@ import net.sourceforge.subsonic.util.XMLBuilder;
 import net.sourceforge.subsonic.util.XMLBuilder.Attribute;
 import net.sourceforge.subsonic.util.XMLBuilder.AttributeSet;
 
-import org.apache.commons.lang.math.NumberUtils;
 import org.springframework.web.bind.ServletRequestBindingException;
 import org.springframework.web.bind.ServletRequestUtils;
+
+import com.github.hakko.musiccabinet.dao.util.URIUtil;
 
 public class RESTShareController extends RESTAbstractController {
 
@@ -70,7 +71,7 @@ public class RESTShareController extends RESTAbstractController {
 
             List<MediaFile> files = new ArrayList<MediaFile>();
             for (String id : ServletRequestUtils.getRequiredStringParameters(request, "id")) {
-                MediaFile file = mediaFileService.getMediaFile(NumberUtils.toInt(id));
+                MediaFile file = mediaFileService.getMediaFile(URIUtil.parseURI(id));
                 files.add(file);
             }
 

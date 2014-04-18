@@ -1,5 +1,5 @@
 
-	var musicFiles = [[]<c:forEach items="${model.albums}" var="a">,[[]<c:forEach items="${a.trackIds}" var="t">,${t}</c:forEach>]</c:forEach>];
+  var musicFiles = ${sub:esc(model.albums)};
 	
 	function toggleAlbum(index) {
     $(function($) {
@@ -12,7 +12,7 @@
 		$('#albson' + index).toggle();
 
 		if ($('#albson' + index).children().size() == 0) {
-			$('#albson' + index).load('album.view?view' + musicFiles[index].join('&mf=') <c:if test="${not empty model.trackId}">+ '&trackId=${model.trackId}'</c:if>);
+			$('#albson' + index).load('album.view?view' + musicFiles[index].join('&mf=') <c:if test="${not empty model.trackUri}">+ '&trackId=${model.trackUri}'</c:if>);
 		}
     return false;
     }(jQuery));

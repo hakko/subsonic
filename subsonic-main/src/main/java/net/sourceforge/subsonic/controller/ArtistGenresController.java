@@ -13,10 +13,11 @@ import net.sourceforge.subsonic.service.SecurityService;
 import net.sourceforge.subsonic.service.SettingsService;
 import net.sourceforge.subsonic.util.Util;
 
-import org.apache.commons.lang.math.NumberUtils;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.ParameterizableViewController;
 
+import com.github.hakko.musiccabinet.configuration.Uri;
+import com.github.hakko.musiccabinet.dao.util.URIUtil;
 import com.github.hakko.musiccabinet.domain.model.music.ArtistInfo;
 import com.github.hakko.musiccabinet.domain.model.music.Tag;
 import com.github.hakko.musiccabinet.service.StarService;
@@ -40,20 +41,20 @@ public class ArtistGenresController extends ParameterizableViewController {
     protected ModelAndView handleRequestInternal(HttpServletRequest request, HttpServletResponse response) throws Exception {
         Map<String, Object> map = new HashMap<String, Object>();
         
-        int artistId = NumberUtils.toInt(request.getParameter("id"), -1);
+        Uri artistUri = URIUtil.parseURI(request.getParameter("id"));
 
         User user = securityService.getCurrentUser(request);
         UserSettings userSettings = settingsService.getUserSettings(user.getUsername());
         String lastFmUsername = userSettings.getLastFmUsername();
         
-        List<Tag> topTags = artistTopTagsService.getTopTags(artistId, 25);
+        List<Tag> topTags = artistTopTagsService.getTopTags(artistUri, 25);
         List<String> tags = tagService.getTopTags();
         for (Tag topTag : topTags) {
         	tags.remove(topTag.getName());
         }
         
-        ArtistInfo artistInfo = artistInfoService.getArtistInfo(artistId);
-        map.put("artistId", artistId);
+        ArtistInfo artistInfo = artistInfoService.getArtistInfo(artistUri);
+        map.put("artistId", artistUri);
         map.put("artistName", artistInfo.getArtist().getName());
         if (artistInfo.getLargeImageUrl() != null && artistInfo.getBioSummary() != null) {
         	map.put("artistInfo", Util.square(artistInfo));
@@ -62,7 +63,7 @@ public class ArtistGenresController extends ParameterizableViewController {
         map.put("topTags", topTags);
         map.put("tags", tags);
         map.put("lastFmUsername", lastFmUsername);
-        map.put("artistStarred", starService.isArtistStarred(lastFmUsername, artistId));
+        map.put("artistStarred", starService.isArtistStarred(lastFmUsername, artistUri));
 
         ModelAndView result = super.handleRequestInternal(request, response);
         result.addObject("model", map);

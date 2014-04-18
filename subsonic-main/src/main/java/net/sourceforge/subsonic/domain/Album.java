@@ -5,20 +5,22 @@ import static com.github.hakko.musiccabinet.service.library.AudioTagService.UNKN
 import java.util.ArrayList;
 import java.util.List;
 
+import com.github.hakko.musiccabinet.configuration.SubsonicUri;
+import com.github.hakko.musiccabinet.configuration.Uri;
 import com.github.hakko.musiccabinet.domain.model.music.AlbumInfo;
 
 public class Album implements Comparable<Album> {
 
-	private int artistId;
+	private Uri artistUri;
 	private String artistName;
-	private int id;
+	private Uri uri;
 	private String title;
 	private Short year;
 	private String coverArtPath;
 	private String coverArtUrl;
 	private String coverArtZoomUrl;
 
-	private List<Integer> trackIds;
+	private List<? extends Uri> trackUris;
 	private List<MediaFile> mediaFiles = new ArrayList<>();
 	private boolean isSelected;
 
@@ -26,17 +28,17 @@ public class Album implements Comparable<Album> {
 	}
 
 	public Album(int id, String title, String coverArtPath) {
-		this.id = id;
+		this.uri = new SubsonicUri(id);
 		this.title = title;
 		this.coverArtPath = coverArtPath;
 	}
 
-	public int getArtistId() {
-		return artistId;
+	public Uri getArtistUri() {
+		return artistUri;
 	}
 
-	public void setArtistId(int artistId) {
-		this.artistId = artistId;
+	public void setArtistUri(Uri artistUri) {
+		this.artistUri = artistUri;
 	}
 
 	public String getArtistName() {
@@ -47,12 +49,13 @@ public class Album implements Comparable<Album> {
 		this.artistName = artistName;
 	}
 
+	@Deprecated
 	public int getId() {
-		return id;
+		return uri.getId();
 	}
 
 	public void setId(int id) {
-		this.id = id;
+		this.uri = new SubsonicUri(id);
 	}
 
 	public String getTitle() {
@@ -103,12 +106,12 @@ public class Album implements Comparable<Album> {
 		mediaFiles.add(musicFile);
 	}
 
-	public List<Integer> getTrackIds() {
-		return trackIds;
+	public List<? extends Uri> getTrackUris() {
+		return trackUris;
 	}
 
-	public void setTrackIds(List<Integer> trackIds) {
-		this.trackIds = trackIds;
+	public void setTrackIds(List<? extends Uri> trackUris) {
+		this.trackUris = trackUris;
 	}
 
 	public List<MediaFile> getMediaFiles() {
@@ -136,5 +139,14 @@ public class Album implements Comparable<Album> {
 		}
 		return year.compareTo(album.year);
 	}
+	
+	public Uri getUri() {
+		return uri;
+	}
+	
+	public void setUri(Uri uri) {
+		this.uri = uri;
+	}
+	
 
 }

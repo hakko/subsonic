@@ -60,6 +60,9 @@
         <convert converter="bean" match="net.sourceforge.subsonic.ajax.UIStarService"/>
         <convert converter="bean" match="net.sourceforge.subsonic.ajax.UITagService"/>
         <convert converter="bean" match="net.sourceforge.subsonic.ajax.DeviceLocatorService"/>
+        <convert converter="string" match="com.github.hakko.musiccabinet.configuration.SubsonicUri"/>
+        <convert converter="string" match="com.github.hakko.musiccabinet.configuration.SpotifyUri"/>
+        
 
     </allow>
 </dwr>

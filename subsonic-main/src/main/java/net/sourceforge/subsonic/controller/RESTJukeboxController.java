@@ -20,9 +20,11 @@ import net.sourceforge.subsonic.util.XMLBuilder;
 import net.sourceforge.subsonic.util.XMLBuilder.Attribute;
 import net.sourceforge.subsonic.util.XMLBuilder.AttributeSet;
 
-import org.apache.commons.lang.math.NumberUtils;
 import org.springframework.web.bind.ServletRequestBindingException;
 import org.springframework.web.bind.ServletRequestUtils;
+
+import com.github.hakko.musiccabinet.configuration.Uri;
+import com.github.hakko.musiccabinet.dao.util.URIUtil;
 
 public class RESTJukeboxController extends RESTAbstractController {
 
@@ -53,17 +55,17 @@ public class RESTJukeboxController extends RESTAbstractController {
                 int offset = ServletRequestUtils.getIntParameter(request, "offset", 0);
                 playlistControlService.doSkip(request, response, index, offset);
             } else if ("add".equals(action)) {
-                String[] ids = ServletRequestUtils.getStringParameters(request, "id");
-                List<Integer> mediaFileIds = new ArrayList<Integer>(ids.length);
-                for (String id : ids) {
-                    mediaFileIds.add(NumberUtils.toInt(id));
+                String[] uris = ServletRequestUtils.getStringParameters(request, "id");
+                List<Uri> mediaFileIds = new ArrayList<Uri>(uris.length);
+                for (String uri : uris) {
+                    mediaFileIds.add(URIUtil.parseURI(uri));
                 }
                 playlistControlService.doAdd(request, response, mediaFileIds);
             } else if ("set".equals(action)) {
-                String[] ids = ServletRequestUtils.getStringParameters(request, "id");
-                List<Integer> mediaFileIds = new ArrayList<Integer>(ids.length);
-                for (String id : ids) {
-                    mediaFileIds.add(NumberUtils.toInt(id));
+                String[] uris = ServletRequestUtils.getStringParameters(request, "id");
+                List<Uri> mediaFileIds = new ArrayList<Uri>(uris.length);
+                for (String uri : uris) {
+                    mediaFileIds.add(URIUtil.parseURI(uri));
                 }
                 playlistControlService.doSet(request, response, mediaFileIds);
             } else if ("clear".equals(action)) {

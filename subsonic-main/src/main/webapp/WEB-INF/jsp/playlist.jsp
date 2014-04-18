@@ -3,8 +3,8 @@
 
 <script type="text/javascript" language="javascript">
     var songs = null;
-    var currentArtistId = null;
-    var currentAlbumId = null;
+    var currentArtistUri = null;
+    var currentAlbumUri = null;
     var currentStreamUrl = null;
     var startPlayer = false;
     var repeatEnabled = false;
@@ -200,10 +200,10 @@
     function nowPlayingCallback(nowPlayingInfo) {
         if (nowPlayingInfo != null && nowPlayingInfo.streamUrl != currentStreamUrl) {
             getPlaylist();
-            if (currentArtistId != nowPlayingInfo.artistId && currentAlbumId != nowPlayingInfo.albumId && top.main.updateNowPlaying) {
+            if (currentArtistUri != nowPlayingInfo.artistUri && currentAlbumUri != nowPlayingInfo.albumUri && top.main.updateNowPlaying) {
                 jQuery(".main").load("nowPlaying.view?");
-                currentArtistId = nowPlayingInfo.artistId;
-				currentAlbumId = nowPlayingInfo.albumId;
+                currentArtistUri = nowPlayingInfo.artistUri;
+        				currentAlbumUri = nowPlayingInfo.albumUri;
             }
         <c:if test="${not model.player.web}">
             currentStreamUrl = nowPlayingInfo.streamUrl;
@@ -344,10 +344,10 @@
       return false;
 
     }
-    function onPlayRelatedArtistsSampler(artistId, artistCount) {
+    function onPlayRelatedArtistsSampler(artistUri, artistCount) {
         if (verifyIfPartyMode()) {
 	    	startPlayer = true;
-			playlistService.playRelatedArtistsSampler(artistId, artistCount, playlistCallback);
+			playlistService.playRelatedArtistsSampler(artistUri, artistCount, playlistCallback);
     	}
       return false;
 
@@ -468,12 +468,12 @@
             if ($("#album" + id)) {
                 $("#album" + id).html(truncate(song.album));
                 $("#album" + id).title = song.album;
-                $("#albumUrl" + id).href = "artist.view?id=" + song.artistId + "&albumId=" + song.albumId;
+                $("#albumUrl" + id).href = "artist.view?id=" + song.artistUri + "&albumId=" + song.albumUri;
             }
             if ($("#artist" + id)) {
                 $("#artist" + id).html(truncate(song.artist));
                 $("#artist" + id).title = song.artist;
-                $("#artistUrl" + id).href = "artist.view?id=" + song.artistId;
+                $("#artistUrl" + id).href = "artist.view?id=" + song.artistUri;
             }
             if ($("#composer" + id)) {
                 $("#composer" + id).html(truncate(song.composer));

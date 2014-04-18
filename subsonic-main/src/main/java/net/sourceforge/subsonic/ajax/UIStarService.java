@@ -26,6 +26,7 @@ import net.sourceforge.subsonic.service.SettingsService;
 import org.directwebremoting.WebContext;
 import org.directwebremoting.WebContextFactory;
 
+import com.github.hakko.musiccabinet.configuration.Uri;
 import com.github.hakko.musiccabinet.exception.ApplicationException;
 import com.github.hakko.musiccabinet.service.StarService;
 
@@ -42,15 +43,15 @@ public class UIStarService {
 	private SettingsService settingsService;
 	private StarService starService;
 
-	public void starArtist(int artistId) {
+	public void starArtist(Uri artistId) {
 		starService.starArtist(getUser(), artistId);
 	}
 
-	public void unstarArtist(int artistId) {
+	public void unstarArtist(Uri artistId) {
 		starService.unstarArtist(getUser(), artistId);
 	}
 
-	public void starAlbum(int albumId) {
+	public void starAlbum(Uri albumId) {
 		try {
 			starService.starAlbum(getUser(), albumId);
 		} catch (Exception e) {
@@ -58,7 +59,7 @@ public class UIStarService {
 		}
 	}
 
-	public void unstarAlbum(int albumId) {
+	public void unstarAlbum(Uri albumId) {
 		try {
 
 			starService.unstarAlbum(getUser(), albumId);
@@ -68,7 +69,7 @@ public class UIStarService {
 
 	}
 
-	public void starTrack(int trackId) {
+	public void starTrack(Uri trackId) {
 		try {
 			starService.starTrack(getUser(), trackId);
 		} catch (ApplicationException e) {
@@ -77,7 +78,7 @@ public class UIStarService {
 		}
 	}
 
-	public void unstarTrack(int trackId) {
+	public void unstarTrack(Uri trackId) {
 		try {
 			starService.unstarTrack(getUser(), trackId);
 		} catch (ApplicationException e) {

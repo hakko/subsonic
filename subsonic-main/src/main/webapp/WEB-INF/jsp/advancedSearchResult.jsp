@@ -12,9 +12,9 @@
 <c:otherwise>
   <div class="btn-group">
   
-    <a class="btn btn-default" href="#" onclick="return onPlay(${model.trackIds}, 'P');">Play all</a>
-    <a class="btn btn-default" href="#" onclick="return onPlay(${model.trackIds}, 'E');">Enqueue all</a>
-    <a class="btn btn-default" href="#" onclick="return onPlay(${model.trackIds}, 'A');">Add all</a>
+    <a class="btn btn-default" href="#" onclick="return onPlay(${sub:esc(model.trackUris)}, 'P');">Play all</a>
+    <a class="btn btn-default" href="#" onclick="return onPlay(${sub:esc(model.trackUris)}, 'E');">Enqueue all</a>
+    <a class="btn btn-default" href="#" onclick="return onPlay(${sub:esc(model.trackUris)}, 'A');">Add all</a>
   </div>
   <%@ include file="songs.jspf" %>
   

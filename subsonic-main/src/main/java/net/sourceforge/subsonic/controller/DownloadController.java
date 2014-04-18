@@ -22,7 +22,6 @@ import static org.apache.commons.lang.StringUtils.defaultIfEmpty;
 import static org.apache.commons.lang.StringUtils.removeEnd;
 import static org.apache.commons.lang.StringUtils.removeStart;
 import static org.apache.commons.lang.StringUtils.split;
-import static org.apache.commons.lang.math.NumberUtils.toInt;
 
 import java.io.BufferedInputStream;
 import java.io.File;
@@ -64,6 +63,9 @@ import org.springframework.web.bind.ServletRequestUtils;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.Controller;
 import org.springframework.web.servlet.mvc.LastModified;
+
+import com.github.hakko.musiccabinet.configuration.Uri;
+import com.github.hakko.musiccabinet.dao.util.URIUtil;
 
 /**
  * A controller used for downloading files to a remote client. If the requested path refers to a file, the
@@ -117,7 +119,7 @@ public class DownloadController implements Controller, LastModified {
                 downloadPlaylist(response, status, playlist, indexes.length == 0 ? null : indexes, null);
             } else {
                 LOG.debug("download id param = " + request.getParameter("id"));
-                List<Integer> mediaFileIds = getMediaFileIds(request.getParameter("id"));
+                List<Uri> mediaFileIds = getMediaFileIds(request.getParameter("id"));
                 LOG.debug("ids = " + mediaFileIds);
             	downloadFiles(response, status, mediaFileIds, preferredName);
             }
@@ -139,13 +141,13 @@ public class DownloadController implements Controller, LastModified {
     /*
      * given string "[x, y, z]", returns the integers x, y and z as a list.
      */
-    private List<Integer> getMediaFileIds(String query) {
+    private List<Uri> getMediaFileIds(String query) {
     	if (query.indexOf("[") == -1) {
     		query = "[" + query + "]"; // support request for single resource (from REST service)
     	}
-    	List<Integer> mediaFileIds = new ArrayList<>(); 
+    	List<Uri> mediaFileIds = new ArrayList<>(); 
     	for (String s : split(removeEnd(removeStart(query, "["), "]"), ", ")) {
-    		mediaFileIds.add(toInt(s));
+    		mediaFileIds.add(URIUtil.parseURI(s));
     	}
     	return mediaFileIds;
     }
@@ -182,7 +184,7 @@ public class DownloadController implements Controller, LastModified {
      * @param indexes  Only download files with these indexes within the directory.
      * @throws IOException If an I/O error occurs.
      */
-    private void downloadFiles(HttpServletResponse response, TransferStatus status, List<Integer> mediaFileIds, String preferredName) throws IOException {
+    private void downloadFiles(HttpServletResponse response, TransferStatus status, List<Uri> mediaFileUris, String preferredName) throws IOException {
         String zipFileName = defaultIfEmpty(preferredName, "subsonic" + new Random().nextInt(10000)) + ".zip";
         LOG.info("Starting to download '" + zipFileName + "' to " + status.getPlayer());
 
@@ -193,8 +195,8 @@ public class DownloadController implements Controller, LastModified {
         out.setMethod(ZipOutputStream.STORED);  // No compression.
 
         List<MediaFile> mediaFiles = new ArrayList<MediaFile>();
-        for (int mediaFileId : mediaFileIds) {
-            mediaFiles.add(mediaFileService.getMediaFile(mediaFileId));
+        for (Uri mediaFileUri : mediaFileUris) {
+            mediaFiles.add(mediaFileService.getMediaFile(mediaFileUri));
         }
 
         for (MediaFile mediaFile : mediaFiles) {

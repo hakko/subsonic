@@ -377,6 +377,7 @@
     <bean id="coverArtController" class="net.sourceforge.subsonic.controller.CoverArtController">
         <property name="securityService" ref="securityService"/>
         <property name="audioTagService" ref="audioTagService"/>
+        <property name="spotifyService" ref="spotifyService" />
     </bean>
     <bean id="avatarController" class="net.sourceforge.subsonic.controller.AvatarController">
         <property name="settingsService" ref="settingsService"/>

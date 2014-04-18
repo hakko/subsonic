@@ -8,13 +8,13 @@
 <div style="padding: 15px;">
 
 <h1>
-<a href="#" onclick="toggleStar('art', ${model.artistId}, '#starImage${model.artistId}'); return false;">
+<a href="#" onclick="toggleStar('art', '${model.artistUri}', '#starImage${model.artistUri}'); return false;">
 	<c:choose>
 		<c:when test="${model.artistStarred}">
-			<img id="starImage${model.artistId}" src="<spring:theme code="ratingOnImage"/>" alt="">
+			<img id="starImage${model.artistUri}" src="<spring:theme code="ratingOnImage"/>" alt="">
 		</c:when>
 		<c:otherwise>
-			<img id="starImage${model.artistId}" src="<spring:theme code="ratingOffImage"/>" alt="">
+			<img id="starImage${model.artistUri}" src="<spring:theme code="ratingOffImage"/>" alt="">
 		</c:otherwise>
 	</c:choose>
 </a>
@@ -45,7 +45,7 @@ ${model.artistName}
 						<a href="${url}" class="btn btn-default btn-xs">${topTag.name}</a><c:if test="${i.count < fn:length(model.topTags)}"> </c:if>
 					</c:forEach>
 					<c:if test="${fn:length(model.topTags) > 0 and model.allowTopTagsEdit}">
-						<a href="artistGenres.view?id=${model.artistId}">&raquo;</a>
+						<a href="artistGenres.view?id=${model.artistUri}">&raquo;</a>
 					</c:if>
 				</div>
 			</div>
@@ -60,23 +60,23 @@ ${model.artistName}
         <span class="caret"></span>
       </button>
       <ul class="dropdown-menu">
-    	  <li><a class="btn btn-default btn-xs" id="all" href="#" onclick="return onPlay(${model.trackIds}, playMode());"><fmt:message key="main.playall"/></a></li>
+    	  <li><a class="btn btn-default btn-xs" id="all" href="#" onclick="return onPlay(${sub:esc(model.trackUris)}, playMode());"><fmt:message key="main.playall"/></a></li>
     	  <c:if test="${model.isInSearchIndex}">
-      		<li><a class="btn btn-default btn-xs" id="top_tracks" href="#" onclick="return onPlayTopTracks(${model.artistId}, playMode());">Top tracks</a></li>
-      		<li><a class="btn btn-default btn-xs" id="artist_radio" href="#" onclick="return onPlayArtistRadio(${model.artistId}, playMode());">Artist radio</a></li>
+      		<li><a class="btn btn-default btn-xs" id="top_tracks" href="#" onclick="return onPlayTopTracks('${model.artistUri}', playMode());">Top tracks</a></li>
+      		<li><a class="btn btn-default btn-xs" id="artist_radio" href="#" onclick="return onPlayArtistRadio('${model.artistUri}', playMode());">Artist radio</a></li>
       	</c:if>
-      	<li><a class="btn btn-default btn-xs" id="random" href="#" onclick="return onPlayRandom(${model.trackIds}, playMode());"><fmt:message key="main.playrandom"/></a></li>
+      	<li><a class="btn btn-default btn-xs" id="random" href="#" onclick="return onPlayRandom(${sub:esc(model.trackUris)}, playMode());"><fmt:message key="main.playrandom"/></a></li>
       </ul>
     </div>
   	<a class="btn btn-default btn-xs" id="togglePlayAdd" class="Play" href="#" onclick="return togglePlayAdd();" title="Toggle if new tracks replace the current playlist, are played next, or are appended last to it.">Play/enqueue/add</a>
   	<c:if test="${model.isInSearchIndex}">
-  		<sub:url value="related.view" var="relatedUrl"><sub:param name="id" value="${model.artistId}"/></sub:url>
+  		<sub:url value="related.view" var="relatedUrl"><sub:param name="id" value="${model.artistUri}"/></sub:url>
   		<a class="btn btn-default btn-xs" href="${relatedUrl}">Related artists</a>
-  		<sub:url value="artistDetails.view" var="detailsUrl"><sub:param name="id" value="${model.artistId}"/></sub:url>
+  		<sub:url value="artistDetails.view" var="detailsUrl"><sub:param name="id" value="${model.artistUri}"/></sub:url>
   		<a class="btn btn-default btn-xs" href="${detailsUrl}">Details</a>
   	</c:if>
   	<c:if test="${model.user.coverArtRole and not empty model.artistInfo}">
-  		<sub:url value="/editArtist.view" var="editArtistUrl"><sub:param name="id" value="${model.artistId}"/><sub:param name="artist" value="${model.artistName}"/></sub:url>
+  		<sub:url value="/editArtist.view" var="editArtistUrl"><sub:param name="id" value="${model.artistUri}"/><sub:param name="artist" value="${model.artistName}"/></sub:url>
   		<a class="btn btn-default btn-xs" href="${editArtistUrl}">Edit</a>
   	</c:if>
   </div>

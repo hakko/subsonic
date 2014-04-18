@@ -112,8 +112,8 @@
 
 <h1><fmt:message key="edittags.title"/></h1>
 <sub:url value="artist.view" var="backUrl">
-	<sub:param name="id" value="${model.artistId}"/>
-	<sub:param name="albumId" value="${model.albumId}"/>
+	<sub:param name="id" value="${model.artistUri}"/>
+	<sub:param name="albumId" value="${model.albumUri}"/>
 </sub:url>
 <div class="back"><a href="${backUrl}"><fmt:message key="common.back"/></a></div>
 
@@ -160,7 +160,7 @@
 	  </tr>
 	<tr>
             <str:truncateNicely lower="25" upper="25" var="fileName">${song.fileName}</str:truncateNicely>
-            <input type="hidden" name="id${loopStatus.count - 1}" value="${song.id}"/>
+            <input type="hidden" name="id${loopStatus.count - 1}" value="${song.uri}"/>
             <input type="hidden" name="suggestedTitle${loopStatus.count - 1}" value="${song.suggestedTitle}"/>
             <input type="hidden" name="originalTitle${loopStatus.count - 1}" value="${song.title}"/>
             <input type="hidden" name="suggestedTrack${loopStatus.count - 1}" value="${song.suggestedTrack}"/>

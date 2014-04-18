@@ -27,6 +27,7 @@ import org.apache.commons.lang.math.NumberUtils;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.ParameterizableViewController;
 
+import com.github.hakko.musiccabinet.configuration.Uri;
 import com.github.hakko.musiccabinet.domain.model.aggr.DirectoryContent;
 import com.github.hakko.musiccabinet.domain.model.library.Directory;
 import com.github.hakko.musiccabinet.service.DirectoryBrowserService;
@@ -116,7 +117,7 @@ public class FileTreeController extends ParameterizableViewController {
         	if (albums.size() > 0) {
         		map.put("albums", albums);
         		map.put("isAlbumStarred", starService.getStarredAlbumsMask(
-        				userSettings.getLastFmUsername(), getAlbumIds(albums)));
+        				userSettings.getLastFmUsername(), getAlbumUris(albums)));
         		map.put("visibility", userSettings.getMainVisibility());
         	}
 
@@ -141,10 +142,10 @@ public class FileTreeController extends ParameterizableViewController {
     	return mediaFiles;
     }
     
-    private List<Integer> getAlbumIds(List<Album> albums) {
-    	List<Integer> albumIds = new ArrayList<>();
+    private List<Uri> getAlbumUris(List<Album> albums) {
+    	List<Uri> albumIds = new ArrayList<>();
     	for (Album album : albums) {
-    		albumIds.add(album.getId());
+    		albumIds.add(album.getUri());
     	}
     	return albumIds;
     }

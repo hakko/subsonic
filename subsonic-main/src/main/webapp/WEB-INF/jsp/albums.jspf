@@ -15,7 +15,7 @@
 				</a>
 			<div id="albcmd${i.count}" style="display:none;float:right;padding-right:10px;padding-bottom:15px;text-align:right" class="detail">
 				<c:import url="playAddDownload.jsp">
-					<c:param name="id" value="${album.trackIds}"/>
+					<c:param name="uri" value="${sub:esc(album.trackUris)}"/>
 					<c:param name="starDisabled" value="true"/>
 					<c:param name="playEnabled" value="${model.user.streamRole}"/>
 					<c:param name="enqueueEnabled" value="${model.user.streamRole}"/>
@@ -40,25 +40,25 @@
 
 				<c:if test="${model.user.coverArtRole}">
 					<sub:url value="/changeCoverArt.view" var="changeCoverArtUrl">
-						<sub:param name="id" value="${album.trackIds[0]}"/>
-						<sub:param name="artistId" value="${album.artistId}"/>
-						<sub:param name="albumId" value="${album.id}"/>
+						<sub:param name="id" value="${sub:esc(album.trackUris[0])}"/>
+						<sub:param name="artistId" value="${album.artistUri}"/>
+						<sub:param name="albumId" value="${album.uri}"/>
 					</sub:url>
 					<a href="${changeCoverArtUrl}">Art</a> |
 				</c:if>
 
 				<c:if test="${model.user.coverArtRole}">
 					<sub:url value="editTags.view" var="editTagsUrl">
-						<sub:param name="ids" value="${album.trackIds}"/>
-						<sub:param name="artistId" value="${album.artistId}"/>
-						<sub:param name="albumId" value="${album.id}"/>
+						<sub:param name="ids" value="${sub:esc(album.trackUris)}"/>
+						<sub:param name="artistId" value="${album.artistUri}"/>
+						<sub:param name="albumId" value="${album.uri}"/>
 					</sub:url>
 					<a href="${editTagsUrl}">Tags</a> |
 				</c:if>
 				
 				<c:if test="${model.user.shareRole}">
 					<sub:url value="createShare.view" var="shareUrl">
-						<sub:param name="ids" value="${album.trackIds}"/>
+						<sub:param name="ids" value="${sub:esc(album.trackUris)}"/>
 					</sub:url>
 					<a href="${shareUrl}">Share</a>
 				</c:if>
@@ -67,25 +67,25 @@
 		</div>
 		<div style="float:left;padding-left:10px;padding-bottom:15px">
 			<div>
-				<a href="#" onclick="toggleStar('alb', ${album.id}, '#starImage${album.id}'); return false;">
+				<a href="#" onclick="toggleStar('alb', ${album.uri}, '#starImage${album.uri}'); return false;">
 					<c:choose>
 						<c:when test="${model.isAlbumStarred[i.index]}">
-							<img id="starImage${album.id}" src="<spring:theme code="ratingOnImage"/>" alt="">
+							<img id="starImage${album.uri}" src="<spring:theme code="ratingOnImage"/>" alt="">
 						</c:when>
 						<c:otherwise>
-							<img id="starImage${album.id}" src="<spring:theme code="ratingOffImage"/>" alt="">
+							<img id="starImage${album.uri}" src="<spring:theme code="ratingOffImage"/>" alt="">
 						</c:otherwise>
 					</c:choose>
 				</a>
 				<a href="#" onclick="return toggleAlbum(${i.count})">
 					<b><c:if test="${not empty album.artistName}">${album.artistName} - </c:if>${album.title}</b><c:if test="${album.year > 0}"> <em>(${album.year})</em></c:if>
 				</a>
-				<c:if test="${album.artistId != model.artistId}"> <a href="artist.view?id=${album.artistId}&albumId=${album.id}">&raquo;</a></c:if>
+				<c:if test="${album.artistUri != model.artistUri}"> <a href="artist.view?id=${album.artistUri}&albumId=${album.uri}">&raquo;</a></c:if>
 				<br>
 			</div>
 			<div id="albtit${i.count}">
 				<c:import url="playAddDownload.jsp">
-					<c:param name="id" value="${album.trackIds}"/>
+					<c:param name="uri" value="${sub:esc(album.trackUris)}"/>
 					<c:param name="starDisabled" value="true"/>
 					<c:param name="playEnabled" value="${model.user.streamRole}"/>
 					<c:param name="enqueueEnabled" value="${model.user.streamRole}"/>

@@ -21,16 +21,26 @@ package net.sourceforge.subsonic.controller;
 import static org.apache.commons.lang.StringUtils.removeEnd;
 import static org.apache.commons.lang.StringUtils.removeStart;
 import static org.apache.commons.lang.StringUtils.split;
-import static org.apache.commons.lang.math.NumberUtils.toInt;
-import net.sourceforge.subsonic.domain.*;
-import net.sourceforge.subsonic.service.*;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+import net.sourceforge.subsonic.domain.MediaFile;
+import net.sourceforge.subsonic.domain.MetaData;
+import net.sourceforge.subsonic.service.MediaFileService;
 import net.sourceforge.subsonic.service.metadata.JaudiotaggerParser;
 
-import org.springframework.web.servlet.*;
-import org.springframework.web.servlet.mvc.*;
+import org.springframework.web.servlet.ModelAndView;
+import org.springframework.web.servlet.mvc.ParameterizableViewController;
 
-import javax.servlet.http.*;
-import java.util.*;
+import com.github.hakko.musiccabinet.configuration.SubsonicUri;
+import com.github.hakko.musiccabinet.configuration.Uri;
+import com.github.hakko.musiccabinet.dao.util.URIUtil;
 
 /**
  * Controller for the page used to edit MP3 tags.
@@ -43,7 +53,7 @@ public class EditTagsController extends ParameterizableViewController {
     
     protected ModelAndView handleRequestInternal(HttpServletRequest request, HttpServletResponse response) throws Exception {
 
-        List<Integer> mediaFileIds = getMediaFileIds(request.getParameter("ids"));
+        List<? extends Uri> mediaFileIds = getMediaFileUris(request.getParameter("ids"));
         
         List<MediaFile> files = mediaFileService.getMediaFiles(mediaFileIds);
 
@@ -76,10 +86,10 @@ public class EditTagsController extends ParameterizableViewController {
     /*
      * given string "[x, y, z]", returns the integers x, y and z as a list.
      */
-    private List<Integer> getMediaFileIds(String query) {
-    	List<Integer> mediaFileIds = new ArrayList<>(); 
+    private List<? extends Uri> getMediaFileUris(String query) {
+    	List<Uri> mediaFileIds = new ArrayList<>(); 
     	for (String s : split(removeEnd(removeStart(query, "["), "]"), ", ")) {
-    		mediaFileIds.add(toInt(s));
+    		mediaFileIds.add(URIUtil.parseURI(s));
     	}
     	return mediaFileIds;
     }
@@ -88,7 +98,7 @@ public class EditTagsController extends ParameterizableViewController {
         MetaData metaData = mf.getMetaData();
 
         Song song = new Song();
-        song.setId(mf.getId());
+        song.setUri(mf.getUri());
         song.setFileName(mf.getName());
         song.setTrack(metaData.getTrackNumber());
         song.setSuggestedTrack(index + 1);
@@ -111,7 +121,7 @@ public class EditTagsController extends ParameterizableViewController {
      * Contains information about a single song.
      */
     public static class Song {
-        private int id;
+        private Uri uri;
         private String fileName;
         private Integer suggestedTrack;
         private Integer track;
@@ -124,12 +134,13 @@ public class EditTagsController extends ParameterizableViewController {
         private String year;
         private String genre;
 
+        @Deprecated
         public int getId() {
-			return id;
+			return uri.getId();
 		}
 
 		public void setId(int id) {
-			this.id = id;
+			this.uri = new SubsonicUri(id);
 		}
 
 		public String getFileName() {
@@ -222,13 +233,23 @@ public class EditTagsController extends ParameterizableViewController {
 
 		@Override
 		public String toString() {
-			return "Song [id=" + id + ", fileName=" + fileName
+			return "Song [uri=" + uri + ", fileName=" + fileName
 					+ ", suggestedTrack=" + suggestedTrack + ", track=" + track
 					+ ", suggestedTitle=" + suggestedTitle + ", title=" + title
 					+ ", artist=" + artist + ", album artist=" + albumArtist
 					+ ", composer=" + composer + ", album=" + album + ", year="
 					+ year + ", genre=" + genre + "]";
 		}
+
+		public Uri getUri() {
+			return uri;
+		}
+
+		public void setUri(Uri uri) {
+			this.uri = uri;
+		}
+		
+		
         
     }
 

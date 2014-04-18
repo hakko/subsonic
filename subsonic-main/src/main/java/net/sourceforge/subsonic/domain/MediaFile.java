@@ -36,6 +36,10 @@ import net.sourceforge.subsonic.util.FileUtil;
 import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.lang.builder.CompareToBuilder;
 
+import com.github.hakko.musiccabinet.configuration.SubsonicUri;
+import com.github.hakko.musiccabinet.configuration.Uri;
+import com.github.hakko.musiccabinet.dao.util.URIUtil;
+
 /**
  * Represents a file or directory containing music. Media files can be put in a
  * {@link Playlist}, and may be streamed to remote players. All media files are
@@ -49,7 +53,7 @@ public class MediaFile implements Serializable, Comparable<MediaFile> {
 
 	private static final Logger LOG = Logger.getLogger(MediaFile.class);
 
-	private int id;
+	private Uri uri;
 	private File file;
 	private boolean isFile;
 	private boolean isDirectory;
@@ -62,7 +66,10 @@ public class MediaFile implements Serializable, Comparable<MediaFile> {
 	 * {@link MediaFileService#getmediaFile}.
 	 */
 	public MediaFile(int id, File file) {
-		this.id = id;
+		this(new SubsonicUri(id), file);
+	}
+    public MediaFile(Uri uri, File file) {	
+		this.uri = uri;
 		this.file = file;
 
 		// Cache these values for performance.
@@ -73,7 +80,7 @@ public class MediaFile implements Serializable, Comparable<MediaFile> {
 
 		if (isFile) {
 			getMetaData();
-			LOG.debug("created file with id " + id + " from file " + file + ", metadata = " + metaData);
+			LOG.debug("created file with uri " + uri + " from file " + file + ", metadata = " + metaData);
 		}
 	}
 
@@ -83,15 +90,28 @@ public class MediaFile implements Serializable, Comparable<MediaFile> {
 	protected MediaFile() {
 		isFile = true;
 	}
-	
+
+	@Deprecated
 	public MediaFile(int id) {
-		this.id = id;
+		this.uri = new SubsonicUri(id);
 		this.isFile = true;
 		this.metaData = new MetaData();
 	}
+	
+	public MediaFile(Uri uri) {
+		this.uri = uri;
+		this.isFile = true;
+		this.metaData = new MetaData();
+	}
+	
 
+	@Deprecated
 	public int getId() {
-		return id;
+		return uri.getId();
+	}
+	
+	public Uri getUri() {
+		return uri;
 	}
 	
 	public File getFile() {
@@ -167,6 +187,9 @@ public class MediaFile implements Serializable, Comparable<MediaFile> {
 	 * @return Whether this music file exists.
 	 */
 	public boolean exists() {
+		if(isSpotify()) {
+			return true;
+		}
 		return file.exists();
 	}
 
@@ -326,7 +349,7 @@ public class MediaFile implements Serializable, Comparable<MediaFile> {
 		if (o == this) return true;
 		if (o.getClass() != getClass()) return false;
 		
-		return id == ((MediaFile) o).id;
+		return uri == ((MediaFile) o).uri;
 	}
 
 	/**
@@ -336,7 +359,7 @@ public class MediaFile implements Serializable, Comparable<MediaFile> {
 	 */
 	@Override
 	public int hashCode() {
-		return id;
+		return uri.hashCode();
 	}
 
 	/**
@@ -346,7 +369,14 @@ public class MediaFile implements Serializable, Comparable<MediaFile> {
 	 */
 	@Override
 	public String toString() {
+		if(URIUtil.isSpotify(uri)) {
+			return uri.toString();
+		}
 		return getPath();
+	}
+	
+	public boolean isSpotify() {
+		return URIUtil.isSpotify(uri);
 	}
 
 	@Override

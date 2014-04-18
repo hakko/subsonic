@@ -18,8 +18,6 @@
  */
 package net.sourceforge.subsonic.controller;
 
-import static org.apache.commons.lang.math.NumberUtils.toInt;
-
 import java.awt.Dimension;
 import java.io.IOException;
 import java.io.OutputStream;
@@ -58,26 +56,29 @@ import org.springframework.web.bind.ServletRequestUtils;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.Controller;
 
+import com.github.hakko.musiccabinet.configuration.Uri;
+import com.github.hakko.musiccabinet.dao.util.URIUtil;
+
 /**
  * A controller which streams the content of a {@link Playlist} to a remote
  * {@link Player}.
- *
+ * 
  * @author Sindre Mehus
  */
 public class StreamController implements Controller {
 
-    private static final Logger LOG = Logger.getLogger(StreamController.class);
+	private static final Logger LOG = Logger.getLogger(StreamController.class);
 
-    private StatusService statusService;
-    private PlayerService playerService;
-    private PlaylistService playlistService;
-    private SecurityService securityService;
-    private SettingsService settingsService;
-    private TranscodingService transcodingService;
-    private MediaFileService mediaFileService;
-    private AudioScrobblerService audioScrobblerService;
+	private StatusService statusService;
+	private PlayerService playerService;
+	private PlaylistService playlistService;
+	private SecurityService securityService;
+	private SettingsService settingsService;
+	private TranscodingService transcodingService;
+	private MediaFileService mediaFileService;
+	private AudioScrobblerService audioScrobblerService;
 
-    @Override
+	@Override
     public ModelAndView handleRequest(HttpServletRequest request, HttpServletResponse response) throws Exception {
         TransferStatus status = null;
         PlaylistInputStream in = null;
@@ -123,21 +124,20 @@ public class StreamController implements Controller {
             // (typically from the embedded Flash player). In that case, create a separate
             // playlist (in order to support multiple parallel streams). Also, enable
             // partial download (HTTP byte range).
-            int mediaFileId = toInt(request.getParameter("mfId"),
-                    toInt("" + request.getAttribute("mfId"), -1));
-            LOG.debug("got mfId = " + mediaFileId + " from param " + request.getParameter("mfId"));
-            boolean isSingleFile = mediaFileId != -1;
+            Uri mediaFileUri = URIUtil.parseURI(request.getParameter("mfId"));
+            LOG.debug("got mfId = " + mediaFileUri + " from param " + request.getParameter("mfId"));
+            boolean isSingleFile = mediaFileUri != null;
             LongRange range = null;
 
             if (isSingleFile) {
                 Playlist playlist = new Playlist();
-                MediaFile file = mediaFileService.getMediaFile(mediaFileId);
+                MediaFile file = mediaFileService.getMediaFile(mediaFileUri);
                 player.getPlaylist().setIndex(file); // force index update of "main" playlist
                 playlist.addFiles(Playlist.PLAY, file);
                 player.setPlaylist(playlist);
 
                 if (!file.isVideo()) {
-                    response.setIntHeader("ETag", mediaFileId);
+                    response.setHeader("ETag", mediaFileUri.toString());
                     response.setHeader("Accept-Ranges", "bytes");
                 }
 
@@ -246,180 +246,200 @@ public class StreamController implements Controller {
         return null;
     }
 
-    private long getFileLength(TranscodingService.Parameters parameters) {
-        MediaFile file = parameters.getMediaFile();
+	private long getFileLength(TranscodingService.Parameters parameters) {
+		MediaFile file = parameters.getMediaFile();
 
-        if (!parameters.isDownsample() && !parameters.isTranscode()) {
-            return file.length();
-        }
-        Integer duration = file.getMetaData().getDuration();
-        Integer maxBitRate = parameters.getMaxBitRate();
+		if (!parameters.isDownsample() && !parameters.isTranscode()) {
+			return file.length();
+		}
+		Integer duration = file.getMetaData().getDuration();
+		Integer maxBitRate = parameters.getMaxBitRate();
 
-        if (duration == null) {
-            LOG.warn("Unknown duration for " + file + ". Unable to estimate transcoded size.");
-            return file.length();
-        }
+		if (duration == null) {
+			LOG.warn("Unknown duration for " + file
+					+ ". Unable to estimate transcoded size.");
+			return file.length();
+		}
 
-        if (maxBitRate == null) {
-            LOG.error("Unknown bit rate for " + file + ". Unable to estimate transcoded size.");
-            return file.length();
-        }
+		if (maxBitRate == null) {
+			LOG.error("Unknown bit rate for " + file
+					+ ". Unable to estimate transcoded size.");
+			return file.length();
+		}
 
-        return duration * maxBitRate * 1000L / 8L;
-    }
+		return duration * maxBitRate * 1000L / 8L;
+	}
 
-    private LongRange getRange(HttpServletRequest request, MediaFile file) {
+	private LongRange getRange(HttpServletRequest request, MediaFile file) {
 
-        // First, look for "Range" HTTP header.
-        LongRange range = StringUtil.parseRange(request.getHeader("Range"));
-        if (range != null) {
-            return range;
-        }
+		// First, look for "Range" HTTP header.
+		LongRange range = StringUtil.parseRange(request.getHeader("Range"));
+		if (range != null) {
+			return range;
+		}
 
-        // Second, look for "offsetSeconds" request parameter.
-        String offsetSeconds = request.getParameter("offsetSeconds");
-        range = parseAndConvertOffsetSeconds(offsetSeconds, file);
-        if (range != null) {
-            return range;
-        }
+		// Second, look for "offsetSeconds" request parameter.
+		String offsetSeconds = request.getParameter("offsetSeconds");
+		range = parseAndConvertOffsetSeconds(offsetSeconds, file);
+		if (range != null) {
+			return range;
+		}
 
-        return null;
-    }
+		return null;
+	}
 
-    private LongRange parseAndConvertOffsetSeconds(String offsetSeconds, MediaFile file) {
-        if (offsetSeconds == null) {
-            return null;
-        }
+	private LongRange parseAndConvertOffsetSeconds(String offsetSeconds,
+			MediaFile file) {
+		if (offsetSeconds == null) {
+			return null;
+		}
 
-        try {
-            Integer duration = file.getMetaData().getDuration();
-            Long fileSize = file.getMetaData().getFileSize();
-            if (duration == null || fileSize == null) {
-                return null;
-            }
-            float offset = Float.parseFloat(offsetSeconds);
+		try {
+			Integer duration = file.getMetaData().getDuration();
+			Long fileSize = file.getMetaData().getFileSize();
+			if (duration == null || fileSize == null) {
+				return null;
+			}
+			float offset = Float.parseFloat(offsetSeconds);
 
-            // Convert from time offset to byte offset.
-            long byteOffset = (long) (fileSize * (offset / duration));
-            return new LongRange(byteOffset, Long.MAX_VALUE);
+			// Convert from time offset to byte offset.
+			long byteOffset = (long) (fileSize * (offset / duration));
+			return new LongRange(byteOffset, Long.MAX_VALUE);
 
-        } catch (Exception x) {
-            LOG.error("Failed to parse and convert time offset: " + offsetSeconds, x);
-            return null;
-        }
-    }
+		} catch (Exception x) {
+			LOG.error("Failed to parse and convert time offset: "
+					+ offsetSeconds, x);
+			return null;
+		}
+	}
 
-    private VideoTranscodingSettings createVideoTranscodingSettings(MediaFile file, HttpServletRequest request) throws ServletRequestBindingException {
-        Integer existingWidth = file.getMetaData().getWidth();
-        Integer existingHeight = file.getMetaData().getHeight();
-        Integer maxBitRate = ServletRequestUtils.getIntParameter(request, "maxBitRate");
-        int timeOffset = ServletRequestUtils.getIntParameter(request, "timeOffset", 0);
-        int defaultDuration = file.getMetaData().getDuration() == null ? Integer.MAX_VALUE : file.getMetaData().getDuration() - timeOffset;
-        int duration = ServletRequestUtils.getIntParameter(request, "duration", defaultDuration);
-        boolean hls = ServletRequestUtils.getBooleanParameter(request, "hls", false);
+	private VideoTranscodingSettings createVideoTranscodingSettings(
+			MediaFile file, HttpServletRequest request)
+			throws ServletRequestBindingException {
+		Integer existingWidth = file.getMetaData().getWidth();
+		Integer existingHeight = file.getMetaData().getHeight();
+		Integer maxBitRate = ServletRequestUtils.getIntParameter(request,
+				"maxBitRate");
+		int timeOffset = ServletRequestUtils.getIntParameter(request,
+				"timeOffset", 0);
+		int defaultDuration = file.getMetaData().getDuration() == null ? Integer.MAX_VALUE
+				: file.getMetaData().getDuration() - timeOffset;
+		int duration = ServletRequestUtils.getIntParameter(request, "duration",
+				defaultDuration);
+		boolean hls = ServletRequestUtils.getBooleanParameter(request, "hls",
+				false);
 
-        Dimension dim = getRequestedVideoSize(request.getParameter("size"));
-        if (dim == null) {
-            dim = getSuitableVideoSize(existingWidth, existingHeight, maxBitRate);
-        }
+		Dimension dim = getRequestedVideoSize(request.getParameter("size"));
+		if (dim == null) {
+			dim = getSuitableVideoSize(existingWidth, existingHeight,
+					maxBitRate);
+		}
 
-        return new VideoTranscodingSettings(dim.width, dim.height, timeOffset, duration, hls);
-    }
+		return new VideoTranscodingSettings(dim.width, dim.height, timeOffset,
+				duration, hls);
+	}
 
-    protected Dimension getRequestedVideoSize(String sizeSpec) {
-        if (sizeSpec == null) {
-            return null;
-        }
+	protected Dimension getRequestedVideoSize(String sizeSpec) {
+		if (sizeSpec == null) {
+			return null;
+		}
 
-        Pattern pattern = Pattern.compile("^(\\d+)x(\\d+)$");
-        Matcher matcher = pattern.matcher(sizeSpec);
-        if (matcher.find()) {
-            int w = Integer.parseInt(matcher.group(1));
-            int h = Integer.parseInt(matcher.group(2));
-            if (w >= 0 && h >= 0 && w <= 2000 && h <= 2000) {
-                return new Dimension(w, h);
-            }
-        }
-        return null;
-    }
+		Pattern pattern = Pattern.compile("^(\\d+)x(\\d+)$");
+		Matcher matcher = pattern.matcher(sizeSpec);
+		if (matcher.find()) {
+			int w = Integer.parseInt(matcher.group(1));
+			int h = Integer.parseInt(matcher.group(2));
+			if (w >= 0 && h >= 0 && w <= 2000 && h <= 2000) {
+				return new Dimension(w, h);
+			}
+		}
+		return null;
+	}
 
-    protected Dimension getSuitableVideoSize(Integer existingWidth, Integer existingHeight, Integer maxBitRate) {
-        if (maxBitRate == null) {
-            return new Dimension(320, 240);
-        }
+	protected Dimension getSuitableVideoSize(Integer existingWidth,
+			Integer existingHeight, Integer maxBitRate) {
+		if (maxBitRate == null) {
+			return new Dimension(320, 240);
+		}
 
-        int w, h;
-        if (maxBitRate <= 600) {
-            w = 320; h = 240;
-        } else if (maxBitRate <= 1000) {
-            w = 480; h = 360;
-        } else {
-            w = 640; h = 480;
-        }
+		int w, h;
+		if (maxBitRate <= 600) {
+			w = 320;
+			h = 240;
+		} else if (maxBitRate <= 1000) {
+			w = 480;
+			h = 360;
+		} else {
+			w = 640;
+			h = 480;
+		}
 
-        if (existingWidth == null || existingHeight == null) {
-            return new Dimension(w, h);
-        }
+		if (existingWidth == null || existingHeight == null) {
+			return new Dimension(w, h);
+		}
 
-        if (existingWidth < w || existingHeight < h) {
-            return new Dimension(even(existingWidth), even(existingHeight));
-        }
+		if (existingWidth < w || existingHeight < h) {
+			return new Dimension(even(existingWidth), even(existingHeight));
+		}
 
-        double aspectRate = existingWidth.doubleValue() / existingHeight.doubleValue();
-        w = (int) Math.round(h * aspectRate);
+		double aspectRate = existingWidth.doubleValue()
+				/ existingHeight.doubleValue();
+		w = (int) Math.round(h * aspectRate);
 
-        return new Dimension(even(w), even(h));
-    }
+		return new Dimension(even(w), even(h));
+	}
 
-    // Make sure width and height are multiples of two, as some versions of ffmpeg require it.
-    private int even(int size) {
-        return size + (size % 2);
-    }
+	// Make sure width and height are multiples of two, as some versions of
+	// ffmpeg require it.
+	private int even(int size) {
+		return size + (size % 2);
+	}
 
-    /**
-     * Feed the other end with some dummy data to keep it from reconnecting.
-     */
-    private void sendDummy(byte[] buf, OutputStream out) throws IOException {
-        try {
-            Thread.sleep(2000);
-        } catch (InterruptedException x) {
-            LOG.warn("Interrupted in sleep.", x);
-        }
-        Arrays.fill(buf, (byte) 0xFF);
-        out.write(buf);
-        out.flush();
-    }
+	/**
+	 * Feed the other end with some dummy data to keep it from reconnecting.
+	 */
+	private void sendDummy(byte[] buf, OutputStream out) throws IOException {
+		try {
+			Thread.sleep(2000);
+		} catch (InterruptedException x) {
+			LOG.warn("Interrupted in sleep.", x);
+		}
+		Arrays.fill(buf, (byte) 0xFF);
+		out.write(buf);
+		out.flush();
+	}
 
-    public void setStatusService(StatusService statusService) {
-        this.statusService = statusService;
-    }
+	public void setStatusService(StatusService statusService) {
+		this.statusService = statusService;
+	}
 
-    public void setPlayerService(PlayerService playerService) {
-        this.playerService = playerService;
-    }
+	public void setPlayerService(PlayerService playerService) {
+		this.playerService = playerService;
+	}
 
-    public void setPlaylistService(PlaylistService playlistService) {
-        this.playlistService = playlistService;
-    }
+	public void setPlaylistService(PlaylistService playlistService) {
+		this.playlistService = playlistService;
+	}
 
-    public void setSecurityService(SecurityService securityService) {
-        this.securityService = securityService;
-    }
+	public void setSecurityService(SecurityService securityService) {
+		this.securityService = securityService;
+	}
 
-    public void setMediaFileService(MediaFileService mediaFileService) {
-        this.mediaFileService = mediaFileService;
-    }
+	public void setMediaFileService(MediaFileService mediaFileService) {
+		this.mediaFileService = mediaFileService;
+	}
 
-    public void setSettingsService(SettingsService settingsService) {
-        this.settingsService = settingsService;
-    }
+	public void setSettingsService(SettingsService settingsService) {
+		this.settingsService = settingsService;
+	}
 
-    public void setTranscodingService(TranscodingService transcodingService) {
-        this.transcodingService = transcodingService;
-    }
+	public void setTranscodingService(TranscodingService transcodingService) {
+		this.transcodingService = transcodingService;
+	}
 
-    public void setAudioScrobblerService(AudioScrobblerService audioScrobblerService) {
-        this.audioScrobblerService = audioScrobblerService;
-    }
+	public void setAudioScrobblerService(
+			AudioScrobblerService audioScrobblerService) {
+		this.audioScrobblerService = audioScrobblerService;
+	}
 
 }

@@ -16,6 +16,8 @@ import net.sourceforge.subsonic.util.XMLBuilder.AttributeSet;
 import org.springframework.web.bind.ServletRequestUtils;
 import org.springframework.web.servlet.ModelAndView;
 
+import com.github.hakko.musiccabinet.configuration.Uri;
+import com.github.hakko.musiccabinet.dao.util.URIUtil;
 import com.github.hakko.musiccabinet.service.LibraryBrowserService;
 
 public class RESTMediaRetrievalController extends RESTAbstractController {
@@ -108,8 +110,8 @@ public class RESTMediaRetrievalController extends RESTAbstractController {
         request = wrapRequest(request);
 
         Map<String, Object> map = new HashMap<String, Object>();
-        int id = ServletRequestUtils.getRequiredIntParameter(request, "id");
-        MediaFile file = mediaFileService.getMediaFile(id);
+        Uri uri = URIUtil.parseURI(ServletRequestUtils.getRequiredStringParameter(request, "id"));
+        MediaFile file = mediaFileService.getMediaFile(uri);
 
         int timeOffset = ServletRequestUtils.getIntParameter(request, "timeOffset", 0);
         timeOffset = Math.max(0, timeOffset);

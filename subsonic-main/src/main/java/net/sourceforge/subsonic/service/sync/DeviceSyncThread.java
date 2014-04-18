@@ -14,6 +14,7 @@ import net.sourceforge.subsonic.domain.UserSettings;
 
 import org.apache.commons.io.FileUtils;
 
+import com.github.hakko.musiccabinet.configuration.Uri;
 import com.github.hakko.musiccabinet.domain.model.aggr.ArtistRecommendation;
 import com.github.hakko.musiccabinet.domain.model.music.Album;
 import com.github.hakko.musiccabinet.domain.model.music.Track;
@@ -84,11 +85,11 @@ public class DeviceSyncThread implements Runnable {
 		LibraryBrowserService libraryBrowserService = deviceListenerService
 				.getLibraryBrowserService();
 
-		List<Integer> tracks = new ArrayList<Integer>();
+		List<Uri> tracks = new ArrayList<Uri>();
 		List<Album> starredAlbums = libraryBrowserService.getStarredAlbums(
 				userSettings.getLastFmUsername(), 0, 1000000, null);
 		for (Album album : starredAlbums) {
-			tracks.addAll(album.getTrackIds());
+			tracks.addAll(album.getTrackUris());
 		}
 
 		List<ArtistRecommendation> starredArtists = libraryBrowserService
@@ -96,9 +97,9 @@ public class DeviceSyncThread implements Runnable {
 						1000000, null);
 		for (ArtistRecommendation artist : starredArtists) {
 			List<Album> albums = libraryBrowserService.getAlbums(
-					artist.getArtistId(), false);
+					artist.getUri(), false);
 			for (Album album : albums) {
-				tracks.addAll(album.getTrackIds());
+				tracks.addAll(album.getTrackUris());
 			}
 		}
 		
@@ -106,24 +107,24 @@ public class DeviceSyncThread implements Runnable {
 				.getMostPlayedAlbums(userSettings.getLastFmUsername(), 0,
 						1000000, null);
 		for (Album album : mostPlayedAlumbs) {
-			tracks.addAll(album.getTrackIds());
+			tracks.addAll(album.getTrackUris());
 		}
 
 		List<Track> starredTracks = libraryBrowserService
-				.getTracks(libraryBrowserService.getStarredTrackIds(
+				.getTracks(libraryBrowserService.getStarredTrackUris(
 						userSettings.getLastFmUsername(), 0, 1000000, null));
 		for (Track track : starredTracks) {
 			// this should probably have an exception for various artists
 			Album album = libraryBrowserService.getAlbum(track.getMetaData()
-					.getAlbumId());
-			tracks.addAll(album.getTrackIds());
+					.getAlbumUri());
+			tracks.addAll(album.getTrackUris());
 		}
 
 
 		List<Album> recentlyAdded = libraryBrowserService
 				.getRecentlyAddedAlbums(0, 1000000, null);
 		for (Album album : recentlyAdded) {
-			tracks.addAll(album.getTrackIds());
+			tracks.addAll(album.getTrackUris());
 		}
 
 		List<String> alreadyMade = new ArrayList<String>();
@@ -136,7 +137,7 @@ public class DeviceSyncThread implements Runnable {
 				break;
 			}
 
-			List<Integer> subList = tracks.subList(i * 100,
+			List<? extends Uri> subList = tracks.subList(i * 100,
 					Math.min((i + 1) * 100, tracks.size()));
 			List<Track> subTracks = libraryBrowserService.getTracks(subList);
 			for (Track track : subTracks) {

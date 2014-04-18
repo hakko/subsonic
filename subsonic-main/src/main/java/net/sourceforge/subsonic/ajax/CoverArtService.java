@@ -19,11 +19,17 @@
 package net.sourceforge.subsonic.ajax;
 
 import static com.github.hakko.musiccabinet.service.library.LibraryUtil.set;
+
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.InputStream;
+
 import net.sourceforge.subsonic.Logger;
 import net.sourceforge.subsonic.domain.MediaFile;
 import net.sourceforge.subsonic.service.MediaFileService;
 import net.sourceforge.subsonic.service.SecurityService;
 import net.sourceforge.subsonic.util.StringUtil;
+
 import org.apache.commons.io.IOUtils;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.HttpClient;
@@ -31,12 +37,9 @@ import org.apache.http.client.methods.HttpGet;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.params.HttpConnectionParams;
 
+import com.github.hakko.musiccabinet.configuration.Uri;
 import com.github.hakko.musiccabinet.exception.ApplicationException;
 import com.github.hakko.musiccabinet.service.LibraryUpdateService;
-
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.InputStream;
 
 /**
  * Provides AJAX-enabled services for changing cover art images.
@@ -60,21 +63,21 @@ public class CoverArtService {
      * @param url  The image URL.
      * @return The error string if something goes wrong, <code>null</code> otherwise.
      */
-    public String setCoverArtImage(int mediaFileId, String url) {
+    public String setCoverArtImage(Uri mediaFileUri, String url) {
         try {
-            saveCoverArt(mediaFileId, url);
+            saveCoverArt(mediaFileUri, url);
             return null;
         } catch (Exception x) {
-            LOG.warn("Failed to save cover art for " + mediaFileId, x);
+            LOG.warn("Failed to save cover art for " + mediaFileUri, x);
             return x.toString();
         }
     }
 
-    private void saveCoverArt(int mediaFileId, String url) throws Exception {
+    private void saveCoverArt(Uri mediaFileUri, String url) throws Exception {
         InputStream input = null;
         HttpClient client = new DefaultHttpClient();
 
-        MediaFile mediaFile = mediaFileService.getMediaFile(mediaFileId);
+        MediaFile mediaFile = mediaFileService.getMediaFile(mediaFileUri);
         String path = mediaFile.getFile().getParent();
         
         try {

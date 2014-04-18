@@ -33,10 +33,11 @@ import net.sourceforge.subsonic.service.SecurityService;
 import net.sourceforge.subsonic.service.SettingsService;
 import net.sourceforge.subsonic.util.Util;
 
-import org.apache.commons.lang.math.NumberUtils;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.ParameterizableViewController;
 
+import com.github.hakko.musiccabinet.configuration.Uri;
+import com.github.hakko.musiccabinet.dao.util.URIUtil;
 import com.github.hakko.musiccabinet.domain.model.music.ArtistInfo;
 import com.github.hakko.musiccabinet.domain.model.music.Track;
 import com.github.hakko.musiccabinet.service.MusicBrainzService;
@@ -63,22 +64,22 @@ public class ArtistDetailsController extends ParameterizableViewController {
     protected ModelAndView handleRequestInternal(HttpServletRequest request, HttpServletResponse response) throws Exception {
         Map<String, Object> map = new HashMap<String, Object>();
         
-        int artistId = NumberUtils.toInt(request.getParameter("id"), -1);
+        Uri artistUri = URIUtil.parseURI(request.getParameter("id"));
 
         User user = securityService.getCurrentUser(request);
         UserSettings userSettings = settingsService.getUserSettings(user.getUsername());
 
-        ArtistInfo artistInfo = artistInfoService.getDetailedArtistInfo(artistId);
-        boolean artistStarred = starService.isArtistStarred(userSettings.getLastFmUsername(), artistId);
-        List<Album> albums = mediaFileService.getAlbums(musicBrainzService.getDiscography(artistId,
+        ArtistInfo artistInfo = artistInfoService.getDetailedArtistInfo(artistUri);
+        boolean artistStarred = starService.isArtistStarred(userSettings.getLastFmUsername(), artistUri);
+        List<Album> albums = mediaFileService.getAlbums(musicBrainzService.getDiscography(artistUri,
         		userSettings.isAlbumOrderByYear(), userSettings.isAlbumOrderAscending()));
-        List<Track> topTracks = artistTopTracksService.getTopTracks(artistId);
+        List<Track> topTracks = artistTopTracksService.getTopTracks(artistUri);
 
-        map.put("artistId", artistId);
+        map.put("artistId", artistUri);
         map.put("artistName", artistInfo.getArtist().getName());
     	map.put("artistInfo", Util.square(artistInfo));
         map.put("artistStarred", artistStarred);
-        map.put("topTags", artistTopTagsService.getTopTags(artistId, 3));
+        map.put("topTags", artistTopTagsService.getTopTags(artistUri, 3));
         map.put("albums", albums);
         map.put("topTracks", topTracks);
         map.put("user", user);

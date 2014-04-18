@@ -31,6 +31,7 @@ import net.sourceforge.subsonic.Logger;
 import net.sourceforge.subsonic.domain.Album;
 import net.sourceforge.subsonic.domain.MediaFile;
 
+import com.github.hakko.musiccabinet.configuration.Uri;
 import com.github.hakko.musiccabinet.domain.model.library.MetaData;
 import com.github.hakko.musiccabinet.domain.model.music.Track;
 import com.github.hakko.musiccabinet.service.LibraryBrowserService;
@@ -51,22 +52,22 @@ public class MediaFileService {
     
     private static final Logger LOG = Logger.getLogger(MediaFileService.class);
     
-    public MediaFile getMediaFile(int trackId) {
-		if (!mediaFileCache.isElementInMemory(trackId)) {
+    public MediaFile getMediaFile(Uri trackUri) {
+		if (!mediaFileCache.isElementInMemory(trackUri)) {
 			LOG.debug("media file not in memory, load meta data from db!");
-			loadMediaFiles(Arrays.asList(trackId));
-			if (!mediaFileCache.isElementInMemory(trackId)) {
+			loadMediaFiles(Arrays.asList(trackUri));
+			if (!mediaFileCache.isElementInMemory(trackUri)) {
 				// trackId might refer to a playing track/video that since have been removed
 				return null;
 			}
 		}
-		return (MediaFile) mediaFileCache.get(trackId).getValue();
+		return (MediaFile) mediaFileCache.get(trackUri).getValue();
     }
 
-    public List<MediaFile> getMediaFiles(List<Integer> trackIds) {
+    public List<MediaFile> getMediaFiles(List<? extends Uri> trackUris) {
     	List<MediaFile> mediaFiles = new ArrayList<>();
-    	for (Integer trackId : trackIds) {
-    		MediaFile mediaFile = getMediaFile(trackId);
+    	for (Uri trackUri : trackUris) {
+    		MediaFile mediaFile = getMediaFile(trackUri);
     		if (mediaFile != null) {
     			mediaFiles.add(mediaFile);
     		}
@@ -74,37 +75,41 @@ public class MediaFileService {
     	return mediaFiles;
     }
 
-    public void loadMediaFiles(List<Integer> mediaFileIds) {
-    	List<Integer> missingMediaFileIds = new ArrayList<>(mediaFileIds);
-    	for (Iterator<Integer> it = missingMediaFileIds.iterator(); it.hasNext();) {
+    public void loadMediaFiles(List<? extends Uri> mediaFileIds) {
+    	List<Uri> missingMediaFileUris = new ArrayList<>(mediaFileIds);
+    	for (Iterator<Uri> it = missingMediaFileUris.iterator(); it.hasNext();) {
     		if (mediaFileCache.isElementInMemory(it.next())) {
     			it.remove();
     		}
     	}
-    	if (missingMediaFileIds.size() > 0) {
-    		List<Track> tracks = libraryBrowserService.getTracks(missingMediaFileIds);
+    	if (missingMediaFileUris.size() > 0) {
+    		List<Track> tracks = libraryBrowserService.getTracks(missingMediaFileUris);
         	for (Track track : tracks) {
-        		mediaFileCache.put(new Element(track.getId(), getMediaFile(track)));
+        		mediaFileCache.put(new Element(track.getUri(), getMediaFile(track)));
         	}
     	}
     }
     
     public static MediaFile getMediaFile(Track track) {
-    	MediaFile mediaFile = new MediaFile(track.getId());
+    	MediaFile mediaFile = new MediaFile(track.getUri());
     	MetaData md = track.getMetaData();
     	mediaFile.getMetaData();
-    	mediaFile.setFile(new File(md.getPath()));
+    	if(md.getPath() != null) {
+    		mediaFile.setFile(new File(md.getPath()));
+    	}
     	mediaFile.getMetaData().setAlbum(md.getAlbum());
-    	mediaFile.getMetaData().setAlbumId(md.getAlbumId());
+    	mediaFile.getMetaData().setAlbumUri(md.getAlbumUri());
     	mediaFile.getMetaData().setArtist(md.getArtist());
-    	mediaFile.getMetaData().setArtistId(md.getArtistId());
+    	mediaFile.getMetaData().setArtistUri(md.getArtistUri());
     	mediaFile.getMetaData().setAlbumArtist(md.getAlbumArtist());
     	mediaFile.getMetaData().setComposer(md.getComposer());
     	mediaFile.getMetaData().setBitRate((int) md.getBitrate());
     	mediaFile.getMetaData().setDiscNumber((int) md.getDiscNr());
     	mediaFile.getMetaData().setDuration((int) md.getDuration());
     	mediaFile.getMetaData().setFileSize((long) md.getSize());
-    	mediaFile.getMetaData().setFormat(md.getMediaType().getFilesuffix().toLowerCase());
+    	if(md.getMediaType() != null) {
+    		mediaFile.getMetaData().setFormat(md.getMediaType().getFilesuffix().toLowerCase());
+    	}
     	mediaFile.getMetaData().setGenre(md.getGenre());
     	mediaFile.getMetaData().setTitle(track.getName());
     	mediaFile.getMetaData().setTrackNumber((int) md.getTrackNr());
@@ -120,10 +125,10 @@ public class MediaFileService {
     
     public File getCoverArt(MediaFile mediaFile) throws IOException {
         String coverArtFile = null;
-    	Element element = coverArtCache.get(mediaFile.getId());
+    	Element element = coverArtCache.get(mediaFile.getUri());
         if (element == null) {
-        	coverArtFile = libraryBrowserService.getCoverArtFileForTrack(mediaFile.getId());
-        	coverArtCache.put(new Element(mediaFile.getId(), coverArtFile));
+        	coverArtFile = libraryBrowserService.getCoverArtFileForTrack(mediaFile.getUri());
+        	coverArtCache.put(new Element(mediaFile.getUri(), coverArtFile));
         } else {
         	coverArtFile = (String) element.getObjectValue();
         }
@@ -136,19 +141,19 @@ public class MediaFileService {
 
     public List<Album> getAlbums(List<com.github.hakko.musiccabinet.domain.model.music.Album> alb, boolean onlyLocalArtwork) {
     	List<Album> albums = new ArrayList<>();
-        List<Integer> trackIds = new ArrayList<>();
+        List<Uri> trackIds = new ArrayList<>();
 
         boolean preferLastFmArtwork = settingsService.isPreferLastFmArtwork();
     	for (com.github.hakko.musiccabinet.domain.model.music.Album a : alb) {
         	Album album = new Album();
-        	album.setArtistId(a.getArtist().getId());
+        	album.setArtistUri(a.getArtist().getUri());
         	album.setArtistName(a.getArtist().getName());
-        	album.setId(a.getId());
+        	album.setUri(a.getUri());
         	album.setTitle(a.getName());
         	album.setYear(a.getYear());
         	album.setCoverArtPath(a.getCoverArtPath());
         	album.setCoverArtUrl(a.getCoverArtURL());
-        	album.setTrackIds(a.getTrackIds());
+        	album.setTrackIds(a.getTrackUris());
         	if (album.getCoverArtPath() != null && album.getCoverArtUrl() != null) {
         		if (preferLastFmArtwork && !onlyLocalArtwork) {
         			album.setCoverArtPath(null);
@@ -156,7 +161,7 @@ public class MediaFileService {
         			album.setCoverArtUrl(null);
         		}
         	}
-        	trackIds.addAll(a.getTrackIds());
+        	trackIds.addAll(a.getTrackUris());
         	albums.add(album);
         }
         loadMediaFiles(trackIds);
@@ -168,8 +173,8 @@ public class MediaFileService {
      * like when loading files from a saved playlist.
      */
     public MediaFile getMediaFile(String absolutePath) {
-    	int trackId = libraryBrowserService.getTrackId(absolutePath);
-    	return trackId == -1 ? null : getMediaFile(trackId);
+    	Uri trackId = libraryBrowserService.getTrackUri(absolutePath);
+    	return getMediaFile(trackId);
     }
 
     /*

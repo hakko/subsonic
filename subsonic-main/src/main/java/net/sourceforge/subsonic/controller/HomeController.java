@@ -48,6 +48,7 @@ import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.ParameterizableViewController;
 import org.springframework.web.servlet.view.RedirectView;
 
+import com.github.hakko.musiccabinet.configuration.Uri;
 import com.github.hakko.musiccabinet.domain.model.aggr.ArtistRecommendation;
 import com.github.hakko.musiccabinet.domain.model.library.LastFmUser;
 import com.github.hakko.musiccabinet.domain.model.library.Period;
@@ -222,15 +223,15 @@ public class HomeController extends ParameterizableViewController {
     	}
     	map.put("page", page);
     	map.put("albums", albums);
-        map.put("isAlbumStarred", starService.getStarredAlbumsMask(lastFmUsername, getAlbumIds(albums)));
+        map.put("isAlbumStarred", starService.getStarredAlbumsMask(lastFmUsername, getAlbumUris(albums)));
 		map.put("artistGridWidth", userSettings.getArtistGridWidth());
 		map.put("albumGridLayout", userSettings.isAlbumGridLayout());
     }
 
-    private List<Integer> getAlbumIds(List<Album> albums) {
-    	List<Integer> albumIds = new ArrayList<>();
+    private List<? extends Uri> getAlbumUris(List<Album> albums) {
+    	List<Uri> albumIds = new ArrayList<>();
     	for (Album album : albums) {
-    		albumIds.add(album.getId());
+    		albumIds.add(album.getUri());
     	}
     	return albumIds;
     }
@@ -252,7 +253,7 @@ public class HomeController extends ParameterizableViewController {
     	final int SONGS = userSettings.getDefaultHomeSongs();
     	int offset = page * SONGS, limit = SONGS + 1;
 
-    	List<Integer> mediaFileIds = getMediaFileIds(listType, query, offset, limit, lastFmUsername);
+    	List<? extends Uri> mediaFileIds = getMediaFileUris(listType, query, offset, limit, lastFmUsername);
     	mediaFileService.loadMediaFiles(mediaFileIds);
     	List<MediaFile> mediaFiles = mediaFileService.getMediaFiles(mediaFileIds);
 
@@ -266,23 +267,23 @@ public class HomeController extends ParameterizableViewController {
     	map.put("mediaFiles", mediaFiles);
     	map.put("multipleArtists", true);
     	map.put("visibility", userSettings.getHomeVisibility());
-        map.put("isTrackStarred", starService.getStarredTracksMask(lastFmUsername, getTrackIds(mediaFiles)));
+        map.put("isTrackStarred", starService.getStarredTracksMask(lastFmUsername, getTrackUris(mediaFiles)));
     }
 
-    private List<Integer> getTrackIds(List<MediaFile> mediaFiles) {
-    	List<Integer> trackIds = new ArrayList<>();
+    private List<Uri> getTrackUris(List<MediaFile> mediaFiles) {
+    	List<Uri> trackUris = new ArrayList<>();
     	for (MediaFile mediaFile : mediaFiles) {
-    		trackIds.add(mediaFile.getId());
+    		trackUris.add(mediaFile.getUri());
     	}
-    	return trackIds;
+    	return trackUris;
     }
 
-    private List<Integer> getMediaFileIds(String listType, String query, int offset, int limit, String lastFmUsername) {
+    private List<? extends Uri> getMediaFileUris(String listType, String query, int offset, int limit, String lastFmUsername) {
     	switch (listType) {
-		case "recent": return libraryBrowserService.getRecentlyPlayedTrackIds(lastFmUsername, offset, limit, query);
-		case "frequent": return libraryBrowserService.getMostPlayedTrackIds(lastFmUsername, offset, limit, query);
-		case "starred": return libraryBrowserService.getStarredTrackIds(lastFmUsername, offset, limit, query);
-		case "random": return libraryBrowserService.getRandomTrackIds(limit);
+		case "recent": return libraryBrowserService.getRecentlyPlayedTrackUris(lastFmUsername, offset, limit, query);
+		case "frequent": return libraryBrowserService.getMostPlayedTrackUris(lastFmUsername, offset, limit, query);
+		case "starred": return libraryBrowserService.getStarredTrackUris(lastFmUsername, offset, limit, query);
+		case "random": return libraryBrowserService.getRandomTrackUris(limit);
     	}
 		return null;
 	}

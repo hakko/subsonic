@@ -25,6 +25,7 @@ import org.apache.commons.lang.math.NumberUtils;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.ParameterizableViewController;
 
+import com.github.hakko.musiccabinet.configuration.Uri;
 import com.github.hakko.musiccabinet.domain.model.music.SearchCriteria;
 import com.github.hakko.musiccabinet.service.INameSearchService;
 import com.github.hakko.musiccabinet.service.StarService;
@@ -54,7 +55,7 @@ public class AdvancedSearchResultController extends ParameterizableViewControlle
         UserSettings userSettings = settingsService.getUserSettings(user.getUsername());
         String lastFmUsername = userSettings.getLastFmUsername();
 
-        List<Integer> trackIds = getMatchingTrackIds(request, page, lastFmUsername);
+        List<? extends Uri> trackIds = getMatchingTrackIds(request, page, lastFmUsername);
         if (trackIds.size() > RESULTS_PER_PAGE) {
     		map.put("morePages", true);
     		trackIds.remove(RESULTS_PER_PAGE);
@@ -75,7 +76,7 @@ public class AdvancedSearchResultController extends ParameterizableViewControlle
         return result;
     }
     
-    private List<Integer> getMatchingTrackIds(HttpServletRequest request, int page, String lastFmUsername) {
+    private List<? extends Uri> getMatchingTrackIds(HttpServletRequest request, int page, String lastFmUsername) {
         SearchCriteria criteria = new SearchCriteria();
         addFileTagCriteria(request, criteria);
         addFileHeaderCriteria(request, criteria);

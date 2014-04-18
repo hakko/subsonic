@@ -3,7 +3,6 @@ package net.sourceforge.subsonic.controller;
 import static java.lang.Integer.MAX_VALUE;
 import static net.sourceforge.subsonic.controller.RESTBrowseController.ALBUM_ID;
 import static net.sourceforge.subsonic.controller.RESTBrowseController.ARTIST_ID;
-import static org.apache.commons.lang.math.NumberUtils.toInt;
 
 import java.util.List;
 
@@ -18,9 +17,10 @@ import net.sourceforge.subsonic.service.SecurityService;
 import net.sourceforge.subsonic.service.SettingsService;
 import net.sourceforge.subsonic.util.XMLBuilder;
 
-import org.apache.commons.lang.math.NumberUtils;
 import org.springframework.web.bind.ServletRequestUtils;
 
+import com.github.hakko.musiccabinet.configuration.Uri;
+import com.github.hakko.musiccabinet.dao.util.URIUtil;
 import com.github.hakko.musiccabinet.domain.model.music.Track;
 import com.github.hakko.musiccabinet.service.LibraryBrowserService;
 import com.github.hakko.musiccabinet.service.StarService;
@@ -75,9 +75,9 @@ public class RESTMediaAnnotationController extends RESTAbstractController {
             } else {
                 LOG.debug("star track: " + id + ", " + star);
                 if (star) {
-                    starService.starTrack(lastFmUsername, toInt(id));
+                    starService.starTrack(lastFmUsername, URIUtil.parseURI(id));
                 } else {
-                    starService.unstarTrack(lastFmUsername, toInt(id));
+                    starService.unstarTrack(lastFmUsername, URIUtil.parseURI(id));
                 }
             }
         }
@@ -99,7 +99,7 @@ public class RESTMediaAnnotationController extends RESTAbstractController {
             restBrowseController.addArtists(builder, starService.getStarredArtists(lastFmUsername));
             restBrowseController.addAlbums(builder, homeController.getAlbums("starred", null, 0, MAX_VALUE, lastFmUsername));
             List<Track> tracks = libraryBrowserService.getTracks(
-                    libraryBrowserService.getStarredTrackIds(lastFmUsername, 0, MAX_VALUE, null));
+                    libraryBrowserService.getStarredTrackUris(lastFmUsername, 0, MAX_VALUE, null));
             restBrowseController.addTracks(builder, tracks, null, player, "song");
         }
 
@@ -124,8 +124,8 @@ public class RESTMediaAnnotationController extends RESTAbstractController {
 
         MediaFile file;
         try {
-            int mediaFileId = NumberUtils.toInt(ServletRequestUtils.getRequiredStringParameter(request, "id"));
-            file = mediaFileService.getMediaFile(mediaFileId);
+            Uri mediaFileUri = URIUtil.parseURI(ServletRequestUtils.getRequiredStringParameter(request, "id"));
+            file = mediaFileService.getMediaFile(mediaFileUri);
             boolean submission = ServletRequestUtils.getBooleanParameter(request, "submission", true);
             audioScrobblerService.scrobble(player.getUsername(), file, submission);
         } catch (Exception x) {
@@ -138,8 +138,8 @@ public class RESTMediaAnnotationController extends RESTAbstractController {
         response.getWriter().print(builder);
     }
 
-    private int getId(String prefixedId) {
-        return toInt(prefixedId.substring(1));
+    private Uri getId(String prefixedId) {
+        return URIUtil.parseURI(prefixedId.substring(1));
     }
 
     public void setRestBrowseController(RESTBrowseController restBrowseController) {

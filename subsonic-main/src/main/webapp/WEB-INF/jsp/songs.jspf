@@ -9,9 +9,9 @@
 <span class="detailSelected">
 <tr>
 	<c:import url="playAddDownload.jsp">
-		<c:param name="id" value="[${mediaFile.id}]"/>
+		<c:param name="uri" value="${sub:esc(mediaFile.uri)}"/>
 		<c:param name="starred" value="${model.isTrackStarred[loopStatus.index]}"/>
-		<c:param name="starId" value="${mediaFile.id}"/>
+		<c:param name="starId" value="${mediaFile.uri}"/>
 		<c:param name="starEnabled" value="${model.isTrackStarred[loopStatus.index]}"/>
 		<c:param name="playEnabled" value="${model.user.streamRole}"/>
 		<c:param name="enqueueEnabled" value="${model.user.streamRole}"/>
@@ -19,7 +19,7 @@
 		<c:param name="asTable" value="true"/>
 	</c:import>
 	
-	<c:set var="spanClass" value="detail"/><c:if test="${model.trackId eq mediaFile.id}"><c:set var="spanClass" value="detailSelected"/></c:if>
+	<c:set var="spanClass" value="detail"/><c:if test="${model.trackUri eq mediaFile.uri}"><c:set var="spanClass" value="detailSelected"/></c:if>
 	
 	<c:if test="${model.visibility.trackNumberVisible}"><td class="trackNumber"><span class="${spanClass}">${mediaFile.metaData.trackNumber}</span></td></c:if>
 	<td class="title"><span class="${spanClass}" title="${mediaFile.title}"><str:truncateNicely upper="${cutoff}">${fn:escapeXml(mediaFile.title)}</str:truncateNicely></span></td>

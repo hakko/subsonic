@@ -8,13 +8,13 @@
 <div style="padding: 15px;">
 
 <h1>
-<a href="#" onclick="toggleStar('art', ${model.artistId}, '#starImage${model.artistId}'); return false;">
+<a href="#" onclick="toggleStar('art', ${model.artistUri}, '#starImage${model.artistUri}'); return false;">
 	<c:choose>
 		<c:when test="${model.artistStarred}">
-			<img id="starImage${model.artistId}" src="<spring:theme code="ratingOnImage"/>" alt="">
+			<img id="starImage${model.artistUri}" src="<spring:theme code="ratingOnImage"/>" alt="">
 		</c:when>
 		<c:otherwise>
-			<img id="starImage${model.artistId}" src="<spring:theme code="ratingOffImage"/>" alt="">
+			<img id="starImage${model.artistUri}" src="<spring:theme code="ratingOffImage"/>" alt="">
 		</c:otherwise>
 	</c:choose>
 </a>
@@ -50,7 +50,7 @@ ${model.artistName}
 </div>
 
 <sub:url value="artist.view" var="backUrl">
-	<sub:param name="id" value="${model.artistId}"/>
+	<sub:param name="id" value="${model.artistUri}"/>
 </sub:url>
 <div class="back"><a href="${backUrl}"><fmt:message key="common.back"/></a></div>
 
@@ -89,7 +89,7 @@ ${model.artistName}
 		} else {
 			bar.width(width);
 		}
-		uiTagService.tagArtist(${model.artistId}, "${model.artistName}", genre, width / 5, diff > 0);
+		uiTagService.tagArtist(${model.artistUri}, "${model.artistName}", genre, width / 5, diff > 0);
 	}
 
 	$(document).ready(function() {

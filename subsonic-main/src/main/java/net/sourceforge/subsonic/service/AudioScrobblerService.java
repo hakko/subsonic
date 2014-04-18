@@ -25,9 +25,9 @@ public class AudioScrobblerService {
 			try {
 				MetaData metaData = new MetaData();
 				metaData.setArtist(mediaFile.getMetaData().getArtist());
-				metaData.setArtistId(mediaFile.getMetaData().getArtistId());
+				metaData.setArtistUri(mediaFile.getMetaData().getArtistUri());
 				metaData.setAlbum(mediaFile.getMetaData().getAlbum());
-				metaData.setAlbumId(mediaFile.getMetaData().getAlbumId());
+				metaData.setAlbumUri(mediaFile.getMetaData().getAlbumUri());
 				metaData.setDuration((short) mediaFile.getMetaData().getDuration().intValue());
 				Track track = new Track(mediaFile.getId(), mediaFile.getTitle(), metaData);
 

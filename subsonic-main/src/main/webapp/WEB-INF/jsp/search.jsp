@@ -10,7 +10,7 @@
     <fmt:message key="search.title"/>
 </h1>
 
-<form:form role="form" commandName="command" method="post" action="search.view" name="searchForm">
+<form:form role="form" commandName="command" method="post" action="search.view" name="searchForm" onSubmit="return submitForm(this)">
 <div class="form-group">
 <label for="query"><fmt:message key="search.query"/></label>
 
@@ -37,7 +37,7 @@
         <c:forEach items="${command.artists}" var="artist" varStatus="loopStatus">
 
             <sub:url value="/artist.view" var="artistUrl">
-                <sub:param name="artist-uri" value="${artist.uri}"/>
+                <sub:param name="id" value="${artist.uri}"/>
             </sub:url>
 
             <tr>
@@ -60,11 +60,11 @@
         <c:forEach items="${command.albums}" var="album" varStatus="loopStatus">
 
 			<sub:url value="/artist.view" var="artistUrl">
-                <sub:param name="artist-uri" value="${album.artist.uri}"/>
+                <sub:param name="id" value="${album.artist.uri}"/>
             </sub:url>
 
             <sub:url value="/artist.view" var="albumUrl">
-                <sub:param name="artist-uri" value="${album.artist.uri}"/>
+                <sub:param name="id" value="${album.artist.uri}"/>
                 <sub:param name="album-uri" value="${album.uri}"/>
             </sub:url>
 
@@ -92,11 +92,11 @@
         <c:forEach items="${command.songs}" var="track" varStatus="loopStatus">
 
 			<sub:url value="/artist.view" var="artistUrl">
-                <sub:param name="artist-uri" value="${track.metaData.artistUri}"/>
+                <sub:param name="id" value="${track.metaData.artistUri}"/>
             </sub:url>
 
             <sub:url value="/artist.view" var="albumUrl">
-                <sub:param name="artist-uri" value="${track.metaData.artistUri}"/>
+                <sub:param name="id" value="${track.metaData.artistUri}"/>
                 <sub:param name="album-uri" value="${track.metaData.albumUri}"/>
             </sub:url>
 
@@ -104,7 +104,7 @@
                 <c:import url="playAddDownload.jsp">
                   <c:param name="id" value="[${track.uri}]"/>
 					        <c:param name="starred" value="${command.isTrackStarred[loopStatus.index]}"/>
-					        <c:param name="starId" value="${track.id}"/>
+					        <c:param name="starId" value="${track.uri}"/>
                   <c:param name="playEnabled" value="${command.user.streamRole and not command.partyModeEnabled}"/>
                   <c:param name="enqueueEnabled" value="${command.user.streamRole}"/>
                   <c:param name="addEnabled" value="${command.user.streamRole}"/>

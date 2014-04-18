@@ -27,15 +27,17 @@ import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
 
-import org.apache.commons.lang.ObjectUtils;
-import org.apache.commons.lang.RandomStringUtils;
-import org.apache.commons.lang.StringUtils;
-
 import net.sourceforge.subsonic.Logger;
 import net.sourceforge.subsonic.dao.ShareDao;
 import net.sourceforge.subsonic.domain.MediaFile;
 import net.sourceforge.subsonic.domain.Share;
 import net.sourceforge.subsonic.domain.User;
+
+import org.apache.commons.lang.ObjectUtils;
+import org.apache.commons.lang.RandomStringUtils;
+import org.apache.commons.lang.StringUtils;
+
+import com.github.hakko.musiccabinet.configuration.Uri;
 
 /**
  * Provides services for sharing media.
@@ -71,7 +73,7 @@ public class ShareService {
     }
 
     public List<MediaFile> getSharedFiles(int id) {
-        List<Integer> mediaFileIds = shareDao.getSharedFiles(id);
+        List<Uri> mediaFileIds = shareDao.getSharedFiles(id);
         mediaFileService.loadMediaFiles(mediaFileIds);
         return mediaFileService.getMediaFiles(mediaFileIds);
     }

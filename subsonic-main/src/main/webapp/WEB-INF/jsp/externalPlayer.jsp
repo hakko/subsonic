@@ -45,7 +45,7 @@
 
            <!-- TODO: Use video provider for aac, m4a -->
             list[${loopStatus.count - 1}] = {
-                file: "/stream?mfId=${song.id}&player=${model.player}",
+                file: "/stream?mfId=${song.uri}&player=${model.player}",
                 image: "${coverUrl}",
                 title: "${fn:escapeXml(song.title)}",
                 provider: "${song.video ? "video" : "sound"}",

@@ -12,6 +12,7 @@ import net.sourceforge.subsonic.util.XMLBuilder.Attribute;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.web.bind.ServletRequestUtils;
 
+import com.github.hakko.musiccabinet.configuration.Uri;
 import com.github.hakko.musiccabinet.domain.model.music.Album;
 import com.github.hakko.musiccabinet.domain.model.music.Artist;
 import com.github.hakko.musiccabinet.domain.model.music.Track;
@@ -67,7 +68,7 @@ public class RESTSearchController extends RESTAbstractController {
         int songOffset = ServletRequestUtils.getIntParameter(request, "songOffset", 0);
         List<Track> tracks = nameSearchService.getTracks(StringUtils.trimToEmpty(query),
                 songOffset, songCount).getResults();
-        List<Integer> mediaFileIds = restBrowseController.getMediaFileIds(tracks);
+        List<Uri> mediaFileIds = restBrowseController.getMediaFileUris(tracks);
         restBrowseController.addTracks(builder, libraryBrowserService.getTracks(mediaFileIds), null, player, "song");
 
         builder.endAll();

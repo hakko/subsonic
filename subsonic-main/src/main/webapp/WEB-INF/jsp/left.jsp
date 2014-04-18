@@ -109,7 +109,7 @@
 				<p class="dense">
 					<span title="${fn:escapeXml(artist.name)}"> <sub:url
 							value="artist.view" var="artistUrl">
-							<sub:param name="id" value="${artist.id}" />
+							<sub:param name="id" value="${artist.uri}" />
 						</sub:url> <a target="main" href="${artistUrl}">${fn:escapeXml(artist.name)}</a>
 					</span>
 				</p>
@@ -123,8 +123,8 @@
 		<c:forEach items="${model.variousArtistsAlbums}" var="album">
 			<p class="dense">
 				<sub:url value="artist.view" var="albumUrl">
-					<sub:param name="id" value="${album.artist.id}" />
-					<sub:param name="albumId" value="${album.id}" />
+					<sub:param name="id" value="${album.artist.uri}" />
+					<sub:param name="albumId" value="${album.uri}" />
 				</sub:url>
 				<a target="main" href="${albumUrl}">${album.name}</a>
 			</p>

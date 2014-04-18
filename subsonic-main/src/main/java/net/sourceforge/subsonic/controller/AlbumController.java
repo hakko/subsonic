@@ -18,8 +18,6 @@
  */
 package net.sourceforge.subsonic.controller;
 
-import static org.apache.commons.lang.math.NumberUtils.toInt;
-
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -40,6 +38,8 @@ import net.sourceforge.subsonic.service.SettingsService;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.ParameterizableViewController;
 
+import com.github.hakko.musiccabinet.configuration.Uri;
+import com.github.hakko.musiccabinet.dao.util.URIUtil;
 import com.github.hakko.musiccabinet.service.StarService;
 
 /**
@@ -58,13 +58,13 @@ public class AlbumController extends ParameterizableViewController {
     protected ModelAndView handleRequestInternal(HttpServletRequest request, HttpServletResponse response) throws Exception {
         Map<String, Object> map = new HashMap<String, Object>();
 
-        Set<Integer> artistIds = new HashSet<>();
+        Set<Uri> artistIds = new HashSet<>();
 
         MediaFile mediaFile;
         List<MediaFile> mediaFiles = new ArrayList<>();
         for (String param : request.getParameterValues("mf")) {
-        	mediaFiles.add(mediaFile = mediaFileService.getMediaFile(toInt(param)));
-        	artistIds.add(mediaFile.getMetaData().getArtistId());
+        	mediaFiles.add(mediaFile = mediaFileService.getMediaFile(URIUtil.parseURI(param)));
+        	artistIds.add(mediaFile.getMetaData().getArtistUri());
         }
 
         map.put("mediaFiles", mediaFiles);
@@ -74,7 +74,7 @@ public class AlbumController extends ParameterizableViewController {
         map.put("visibility", userSettings.getMainVisibility());
         map.put("user", securityService.getCurrentUser(request));
         map.put("isTrackStarred", starService.getStarredTracksMask(userSettings.getLastFmUsername(), 
-        		getTrackIds(mediaFiles)));
+        		getTrackUris(mediaFiles)));
         map.put("trackId", request.getParameter("trackId"));
         map.put("albumView", true);
 
@@ -83,12 +83,12 @@ public class AlbumController extends ParameterizableViewController {
         return result;
     }
 
-    private List<Integer> getTrackIds(List<MediaFile> mediaFiles) {
-    	List<Integer> trackIds = new ArrayList<>();
+    private List<Uri> getTrackUris(List<MediaFile> mediaFiles) {
+    	List<Uri> trackUris = new ArrayList<>();
     	for (MediaFile mediaFile : mediaFiles) {
-    		trackIds.add(mediaFile.getId());
+    		trackUris.add(mediaFile.getUri());
     	}
-    	return trackIds;
+    	return trackUris;
     }
     
     // Spring setters

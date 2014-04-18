@@ -22,6 +22,8 @@ import static org.apache.commons.lang.StringUtils.trimToEmpty;
 
 import java.util.List;
 
+import com.github.hakko.musiccabinet.configuration.Uri;
+
 /**
  * The playlist of a player.
  *
@@ -73,9 +75,9 @@ public class PlaylistInfo {
         private final Integer trackNumber;
         private final String title;
         private final String artist;
-        private final int artistId;
+        private final Uri artistUri;
         private final String album;
-        private final int albumId;
+        private final Uri albumUri;
         private final String composer;
         private final String genre;
         private final String year;
@@ -87,15 +89,15 @@ public class PlaylistInfo {
         private final String fileSize;
         private final String streamUrl;
 
-        public Entry(Integer trackNumber, String title, String artist, int artistId, String album, int albumId,
+        public Entry(Integer trackNumber, String title, String artist, Uri artistUri, String album, Uri albumUri,
         		String composer, String genre, String year, String bitRate, Integer duration, String durationAsString, 
         		String format, String contentType, String fileSize, String streamUrl) {
             this.trackNumber = trackNumber;
             this.title = title;
             this.artist = artist;
-            this.artistId = artistId;
+            this.artistUri = artistUri;
             this.album = album;
-            this.albumId = albumId;
+            this.albumUri = albumUri;
             this.composer = trimToEmpty(composer);
             this.genre = genre;
             this.year = year;
@@ -120,16 +122,16 @@ public class PlaylistInfo {
             return artist;
         }
 
-        public int getArtistId() {
-			return artistId;
+        public Uri getArtistUri() {
+			return artistUri;
 		}
 
 		public String getAlbum() {
             return album;
         }
 
-        public int getAlbumId() {
-			return albumId;
+        public Uri getAlbumUri() {
+			return albumUri;
 		}
 
 		public String getComposer() {

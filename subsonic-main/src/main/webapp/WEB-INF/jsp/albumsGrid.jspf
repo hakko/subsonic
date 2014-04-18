@@ -1,7 +1,7 @@
 <div class="row">
 	<c:forEach items="${model.albums}" var="album" varStatus="loopStatus">
 		<div class="col-sm-6 col-md-6 col-lg-3">
-			<a href="artist.view?id=${album.artistId}&albumId=${album.id}"> <c:choose>
+			<a href="artist.view?id=${album.artistUri}&albumId=${album.uri}"> <c:choose>
 					<c:when test="${not empty album.coverArtUrl}">
 						<c:set var="coverArtUrl">${album.coverArtUrl}</c:set>
 					</c:when>
@@ -18,7 +18,7 @@
 				title="${album.artistName} - ${album.title}">
 			</a>
 			<div class="detail">
-				<a href="#" onclick="return onPlay(${album.trackIds}, 'A');"> <img
+				<a href="#" onclick="return onPlay(${sub:esc(album.trackUris)}, 'A');"> <img
 					src="<spring:theme code="addImage"/>" alt="Add last"
 					title="Add last">
 				</a>

@@ -14,8 +14,7 @@
 	http://www.springframework.org/schema/integration/spring-integration.xsd
 	http://www.springframework.org/schema/task
 	http://www.springframework.org/schema/task/spring-task.xsd">
-
-
+	
 	<!-- SPRING SECURITY BEANS -->
 
 	<bean id="passwordEncoder"
@@ -164,6 +163,7 @@
         <property name="audioScrobblerService" ref="audioScrobblerService"/>
         <property name="settingsService" ref="settingsService"/>
         <property name="securityService" ref="securityService"/>
+        <property name="spotifyService" ref="spotifyService" />
     </bean>
 
     <bean id="metaDataParserFactory" class="net.sourceforge.subsonic.service.metadata.MetaDataParserFactory" init-method="init">
@@ -649,10 +649,23 @@
     <bean id="libraryDeletionDao" class="com.github.hakko.musiccabinet.dao.jdbc.JdbcLibraryDeletionDao">
         <property name="dataSource" ref="dataSource"/>
     </bean>
-
-    <bean id="libraryBrowserDao" class="com.github.hakko.musiccabinet.dao.jdbc.JdbcLibraryBrowserDao">
+    
+    <bean id="jdbcLibraryBrowserDao" class="com.github.hakko.musiccabinet.dao.jdbc.JdbcLibraryBrowserDao">
         <property name="dataSource" ref="dataSource"/>
         <property name="lastFmSettingsService" ref="lastFmSettingsService"/>
+    </bean>
+    
+    <bean id="spotifyLibraryBrowserDao" class="com.github.hakko.musiccabinet.dao.spotify.SpotifyLibraryBrowserDao">
+        <property name="spotifyService" ref="spotifyService" />
+    </bean>
+    
+    <bean id="libraryBrowserDao" class="com.github.hakko.musiccabinet.dao.aggregate.AggregateLibraryBrowserDao">
+        <property name="daos">
+            <list>
+                <ref bean="jdbcLibraryBrowserDao" />    
+                <ref bean="spotifyLibraryBrowserDao" />
+            </list>
+        </property>
     </bean>
 
     <bean id="musicDao" class="com.github.hakko.musiccabinet.dao.jdbc.JdbcMusicDao">
@@ -680,9 +693,23 @@
     <bean id="trackRelationDao" class="com.github.hakko.musiccabinet.dao.jdbc.JdbcTrackRelationDao">
         <property name="dataSource" ref="dataSource"/>
     </bean>
+    
 
-    <bean id="artistInfoDao" class="com.github.hakko.musiccabinet.dao.jdbc.JdbcArtistInfoDao">
+    <bean id="jdbcArtistInfoDao" class="com.github.hakko.musiccabinet.dao.jdbc.JdbcArtistInfoDao">
         <property name="dataSource" ref="dataSource"/>
+    </bean>
+    
+    <bean id="spotifyArtistInfoDao" class="com.github.hakko.musiccabinet.dao.spotify.SpotifyArtistInfoDao">
+        <property name="spotifyService" ref="spotifyService" />
+    </bean>
+    
+    <bean id="artistInfoDao" class="com.github.hakko.musiccabinet.dao.aggregate.AggregateArtistInfoDao">
+        <property name="daos">
+            <list>
+                <ref bean="jdbcArtistInfoDao" />    
+                <ref bean="spotifyArtistInfoDao" />
+            </list>
+        </property>
     </bean>
 
     <bean id="albumInfoDao" class="com.github.hakko.musiccabinet.dao.jdbc.JdbcAlbumInfoDao">

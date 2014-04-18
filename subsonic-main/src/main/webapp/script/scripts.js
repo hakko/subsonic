@@ -72,19 +72,23 @@ function submitForm(el, msg) {
   return false;
 }
 function search(el, page) {
-  el = jQuery(el);
+  try {
+    el = jQuery(el);
 
-  var form = el;
-  if (el.length == 1 && el[0].tagName.toLowerCase() != 'form') {
-    form = el.parents('form');
+    var form = el;
+    if (el.length == 1 && el[0].tagName.toLowerCase() != 'form') {
+      form = el.parents('form');
+    }
+    var data = form.serialize();
+    if (!page) {
+      page = 0;
+    }
+    data += "&page=" + page;
+    jQuery('#songs').load('advancedSearchResult.view?' + data);
+    window.scrollTo(0, 0);
+  } catch(e) {
+    window.console.log(e);
   }
-  var data = form.serialize();
-  if (!page) {
-    page = 0;
-  }
-  data += "&page=" + page;
-  jQuery('#songs').load('advancedSearchResult.view?' + data);
-  window.scrollTo(0, 0);
   return false;
 }
 function dwrErrorHandler(msg, exc) {

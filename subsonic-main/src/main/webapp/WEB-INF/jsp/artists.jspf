@@ -3,14 +3,14 @@
 	<c:forEach items="${model.artists}" var="artistRecommendation" varStatus="loopStatus">
 	<div class="col-sm-6 col-md-6 col-lg-3">
 		<div>
-			  <a href="artist.view?id=${artistRecommendation.artistId}">
+			  <a href="artist.view?id=${artistRecommendation.artistUri}">
 					<img src="${artistRecommendation.imageUrl}" class="img-thumbnail">
 				</a>
 				<div class="detail caption no-overflow">
-            <a href="#" onclick="return onPlayTopTracks(${artistRecommendation.artistId}, 'P');">
+            <a href="#" onclick="return onPlayTopTracks('${artistRecommendation.artistUri}', 'P');">
                       <img src="<spring:theme code="playImage"/>" alt="Play top tracks" title="Play top tracks">
             </a>
-					  <a href="artist.view?id=${artistRecommendation.artistId}">
+					  <a href="artist.view?id=${artistRecommendation.artistUri}">
 						${artistRecommendation.artistName}
 						</a>
 				</div>

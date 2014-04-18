@@ -51,13 +51,13 @@ public class NowPlayingController extends AbstractController {
         Player player = playerService.getPlayer(request, response);
         List<TransferStatus> statuses = statusService.getStreamStatusesForPlayer(player);
 
-        MediaFile current = statuses.isEmpty() ? null : mediaFileService.getMediaFile(statuses.get(0).getMediaFileId());
+        MediaFile current = statuses.isEmpty() ? null : mediaFileService.getMediaFile(statuses.get(0).getMediaFileUri());
         
         String url;
-        if (current != null && current.getId() >= 0) {
-            url = "artist.view?id=" + current.getMetaData().getArtistId() +
-                    "&albumId=" + current.getMetaData().getAlbumId() +
-                    "&trackId=" + current.getId();
+        if (current != null) {
+            url = "artist.view?id=" + current.getMetaData().getArtistUri() +
+                    "&albumId=" + current.getMetaData().getAlbumUri() +
+                    "&trackId=" + current.getUri();
         } else {
             url = "home.view";
         }

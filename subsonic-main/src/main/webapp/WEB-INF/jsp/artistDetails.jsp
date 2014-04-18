@@ -9,13 +9,13 @@
 <div style="padding: 15px;">
 
 <h1>
-<a href="#" onclick="toggleStar('art', ${model.artistId}, '#starImage${model.artistId}'); return false;">
+<a href="#" onclick="toggleStar('art', ${model.artistUri}, '#starImage${model.artistUri}'); return false;">
 	<c:choose>
 		<c:when test="${model.artistStarred}">
-			<img id="starImage${model.artistId}" src="<spring:theme code="ratingOnImage"/>" alt="">
+			<img id="starImage${model.artistUri}" src="<spring:theme code="ratingOnImage"/>" alt="">
 		</c:when>
 		<c:otherwise>
-			<img id="starImage${model.artistId}" src="<spring:theme code="ratingOffImage"/>" alt="">
+			<img id="starImage${model.artistUri}" src="<spring:theme code="ratingOffImage"/>" alt="">
 		</c:otherwise>
 	</c:choose>
 </a>
@@ -42,7 +42,7 @@ ${model.artistName}
 						<a href="${url}">${topTag.name}</a><c:if test="${i.count < fn:length(model.topTags)}">, </c:if>
 					</c:forEach>
 					<c:if test="${fn:length(model.topTags) > 0}">
-						<a href="artistGenres.view?id=${model.artistId}">&raquo;</a>
+						<a href="artistGenres.view?id=${model.artistUri}">&raquo;</a>
 					</c:if>
 				</div>
 			</td>
@@ -70,7 +70,7 @@ ${model.artistName}
 		</div>
 		<div style="float:left">
 			<b>${album.title}</b><c:if test="${album.year > 0}"> <em>(${album.year})</em></c:if>
-			<c:if test="${album.id != -1}"> <a href="artist.view?id=${model.artistId}&albumId=${album.id}">&raquo;</a></c:if>
+			<c:if test="${album.uri != -1}"> <a href="artist.view?id=${model.artistUri}&albumId=${album.uri}">&raquo;</a></c:if>
 		</div>
 		<div style="clear:both;"></div>
 	</div>
@@ -83,12 +83,12 @@ ${model.artistName}
 <c:forEach items="${model.topTracks}" var="track" varStatus="i">
 	<tr>
 		<td>
-			<c:if test="${track.id != -1 && model.user.streamRole}">
+			<c:if test="${track.uri != -1 && model.user.streamRole}">
 				<table>
 					<tr>
-						<td><a href="#" onclick="return onPlay([${track.id}], 'P');"><img src="<spring:theme code="playImage"/>" alt="Play" title="Play"></a></td>
-						<td><a href="#" onclick="return onPlay([${track.id}], 'E');"><img src="<spring:theme code="enqueueImage"/>" alt="Enqueue" title="Enqueue"></a></td>
-						<td><a href="#" onclick="return onPlay([${track.id}], 'A');"><img src="<spring:theme code="addImage"/>" alt="Add" title="Add"></a></td>
+						<td><a href="#" onclick="return onPlay([${sub:esc(track.uri)}], 'P');"><img src="<spring:theme code="playImage"/>" alt="Play" title="Play"></a></td>
+						<td><a href="#" onclick="return onPlay([${sub:esc(track.uri)}], 'E');"><img src="<spring:theme code="enqueueImage"/>" alt="Enqueue" title="Enqueue"></a></td>
+						<td><a href="#" onclick="return onPlay([${sub:esc(track.uri)}], 'A');"><img src="<spring:theme code="addImage"/>" alt="Add" title="Add"></a></td>
 					</tr>
 				</table>
 			</c:if>
@@ -102,7 +102,7 @@ ${model.artistName}
 </div>
 
 <sub:url value="artist.view" var="artistUrl">
-	<sub:param name="id" value="${model.artistId}"/>
+	<sub:param name="id" value="${model.artistUri}"/>
 </sub:url>
 
 <div style="padding-top:15px"/>

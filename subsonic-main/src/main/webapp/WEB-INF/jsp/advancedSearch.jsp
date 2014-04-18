@@ -42,7 +42,7 @@
 	Advanced search
 	</h1>
 
-<form id="form" role="form" onsubmit="search(this, 0); return false;">
+<form id="form" role="form" onsubmit="return search(this, 0);">
 	<div class="panel panel-default">
 	<div class="panel-heading">Search Criteria</div>
   <div class="panel-body">
