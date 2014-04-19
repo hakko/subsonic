@@ -4,6 +4,7 @@ import static java.lang.Math.max;
 import static net.sourceforge.subsonic.util.StringUtil.utf8HexEncode;
 import static org.apache.commons.lang.StringUtils.defaultIfEmpty;
 import static org.springframework.web.bind.ServletRequestUtils.getRequiredStringParameter;
+import jahspotify.query.Genre;
 
 import java.io.File;
 import java.io.IOException;
@@ -16,7 +17,9 @@ import java.util.Set;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.xml.ws.Response;
 
+import net.sourceforge.subsonic.domain.Genres;
 import net.sourceforge.subsonic.domain.MediaFile;
 import net.sourceforge.subsonic.domain.MediaFolder;
 import net.sourceforge.subsonic.domain.MetaData;
@@ -73,6 +76,9 @@ public class RESTBrowseController extends RESTAbstractController {
     private PlaylistGeneratorService playlistGeneratorService;
     private ArtistRecommendationService artistRecommendationService;
     private DirectoryBrowserService directoryBrowserService;
+    
+    private final JAXBWriter jaxbWriter = new JAXBWriter();
+
 
     private final Comparator<Track> trackComparator = new Comparator<Track>() {
         @Override
@@ -912,6 +918,5 @@ public class RESTBrowseController extends RESTAbstractController {
 
     public void setDirectoryBrowserService(DirectoryBrowserService directoryBrowserService) {
         this.directoryBrowserService = directoryBrowserService;
-    }
-
+    }    
 }
