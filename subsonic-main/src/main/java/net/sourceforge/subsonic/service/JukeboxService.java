@@ -18,6 +18,13 @@
  */
 package net.sourceforge.subsonic.service;
 
+import static net.sourceforge.subsonic.service.jukebox.AudioPlayer.State.EOM;
+import jahspotify.JahSpotify.PlayerStatus;
+import jahspotify.PlaybackListener;
+import jahspotify.media.Link;
+
+import java.io.InputStream;
+
 import net.sourceforge.subsonic.Logger;
 import net.sourceforge.subsonic.domain.MediaFile;
 import net.sourceforge.subsonic.domain.Player;
@@ -34,18 +41,12 @@ import org.apache.commons.io.IOUtils;
 import com.github.hakko.musiccabinet.dao.util.URIUtil;
 import com.github.hakko.musiccabinet.service.spotify.SpotifyService;
 
-import jahspotify.JahSpotify.PlayerStatus;
-
-import java.io.InputStream;
-
-import static net.sourceforge.subsonic.service.jukebox.AudioPlayer.State.EOM;
-
 /**
  * Plays music on the local audio device.
  *
  * @author Sindre Mehus
  */
-public class JukeboxService implements AudioPlayer.Listener {
+public class JukeboxService implements AudioPlayer.Listener, PlaybackListener {
 
     private static final Logger LOG = Logger.getLogger(JukeboxService.class);
 
@@ -62,6 +63,7 @@ public class JukeboxService implements AudioPlayer.Listener {
     private MediaFile currentPlayingFile;
     private float gain = 0.5f;
     private int offset;
+    private boolean spotifyListening = false;
 
     /**
      * Updates the jukebox by starting or pausing playback on the local audio device.
@@ -117,6 +119,10 @@ public class JukeboxService implements AudioPlayer.Listener {
                 }
 
                 if (file != null && file.isSpotify()) {
+                	if(!spotifyListening) {
+                		spotifyService.getSpotify().addPlaybackListener(this);
+                		spotifyListening = true;
+                	}
                 	spotifyService.getSpotify().play(URIUtil.getSpotifyLink(file.getUri().toString()));
                 }
                 else if (file != null) {
@@ -216,5 +222,39 @@ public class JukeboxService implements AudioPlayer.Listener {
     
 	public void setSpotifyService(SpotifyService spotifyService) {
 		this.spotifyService = spotifyService;
+	}
+
+	@Override
+	public void trackStarted(Link link) {
+		// NOOP
+	}
+
+	@Override
+	public void trackEnded(Link link, boolean forcedEnd) {
+		stateChanged(audioPlayer, EOM);
+	}
+
+	@Override
+	public Link nextTrackToPreload() {
+		// NOOP
+		return null;
+	}
+
+	@Override
+	public void playTokenLost() {
+		// NOOP
+		
+	}
+
+	@Override
+	public void setAudioFormat(int rate, int channels) {
+		// NOOP
+		
+	}
+
+	@Override
+	public int addToBuffer(byte[] buffer) {
+		// NOOP
+		return 0;
 	}
 }
