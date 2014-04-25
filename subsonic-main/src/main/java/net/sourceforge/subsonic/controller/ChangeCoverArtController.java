@@ -54,9 +54,9 @@ public class ChangeCoverArtController extends ParameterizableViewController {
         Map<String, Object> map = new HashMap<String, Object>();
         map.put("artist", artist);
         map.put("album", album);
-        map.put("id", mediaFileUri);
-        map.put("artistId", request.getParameter("artistId"));
-        map.put("albumId", request.getParameter("albumId"));
+        map.put("uri", mediaFileUri);
+        map.put("artistUri", mediaFile.getMetaData().getArtistUri());
+        map.put("albumUri", mediaFile.getMetaData().getAlbumUri());
 
         ModelAndView result = super.handleRequestInternal(request, response);
         result.addObject("model", map);

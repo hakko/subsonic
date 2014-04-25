@@ -119,7 +119,7 @@ public class MediaFileService {
     	return mediaFile;
     }
     
-    private static String toYear(short year) {
+    private static String toYear(int year) {
     	return year == 0 ? null : "" + year;
     }
     

@@ -38,6 +38,7 @@ import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.params.HttpConnectionParams;
 
 import com.github.hakko.musiccabinet.configuration.Uri;
+import com.github.hakko.musiccabinet.dao.util.URIUtil;
 import com.github.hakko.musiccabinet.exception.ApplicationException;
 import com.github.hakko.musiccabinet.service.LibraryUpdateService;
 
@@ -63,9 +64,9 @@ public class CoverArtService {
      * @param url  The image URL.
      * @return The error string if something goes wrong, <code>null</code> otherwise.
      */
-    public String setCoverArtImage(Uri mediaFileUri, String url) {
+    public String setCoverArtImage(String mediaFileUri, String url) {
         try {
-            saveCoverArt(mediaFileUri, url);
+            saveCoverArt(URIUtil.parseURI(mediaFileUri), url);
             return null;
         } catch (Exception x) {
             LOG.warn("Failed to save cover art for " + mediaFileUri, x);

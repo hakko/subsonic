@@ -237,3 +237,11 @@ img {
 .ruleTableHeader {
     font-weight: bold;
 }
+.overlay {
+    position: relative;
+}
+.spotify-icon {
+    position: absolute;
+    top: 0;
+    right: 0;
+}

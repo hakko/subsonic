@@ -149,7 +149,7 @@ public class RESTPlaylistControllerTest {
         metaData.setDiscNr((short) 1);
         metaData.setTrackNr((short) 1);
         metaData.setPath("/path/to/file.mp3");
-        metaData.setYear((short) 2013);
+        metaData.setYear(2013);
         Track track = new Track(71463, "The Jack", metaData);
 
         return MediaFileService.getMediaFile(track);

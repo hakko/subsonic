@@ -35,6 +35,8 @@ import net.sourceforge.subsonic.util.FileUtil;
 
 import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.lang.builder.CompareToBuilder;
+import org.json.JSONArray;
+import org.json.JSONException;
 
 import com.github.hakko.musiccabinet.configuration.SubsonicUri;
 import com.github.hakko.musiccabinet.configuration.Uri;
@@ -404,5 +406,21 @@ public class MediaFile implements Serializable, Comparable<MediaFile> {
 	private int nvl(Integer value, int defaultValue) {
 		return value == null ? defaultValue : value;
 	}
+	
+    /*
+     * given string "['x', 'y', 'z']", returns the integers x, y and z as a list.
+     */
+    public static List<? extends Uri> getMediaFileUris(String query) throws JSONException {
+    	List<Uri> mediaFileIds = new ArrayList<>();
+    	
+    	JSONArray list = new JSONArray(query);
+    	for(int i = 0; i < list.length(); i++) {
+    		mediaFileIds.add(URIUtil.parseURI(list.getString(i)));
+    		
+    	}
+    	return mediaFileIds;
+    }
+
+	
 
 }

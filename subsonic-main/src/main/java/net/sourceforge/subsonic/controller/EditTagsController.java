@@ -35,6 +35,8 @@ import net.sourceforge.subsonic.domain.MetaData;
 import net.sourceforge.subsonic.service.MediaFileService;
 import net.sourceforge.subsonic.service.metadata.JaudiotaggerParser;
 
+import org.json.JSONArray;
+import org.json.JSONException;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.ParameterizableViewController;
 
@@ -53,7 +55,7 @@ public class EditTagsController extends ParameterizableViewController {
     
     protected ModelAndView handleRequestInternal(HttpServletRequest request, HttpServletResponse response) throws Exception {
 
-        List<? extends Uri> mediaFileIds = getMediaFileUris(request.getParameter("ids"));
+    	List<? extends Uri> mediaFileIds = MediaFile.getMediaFileUris(request.getParameter("ids"));
         
         List<MediaFile> files = mediaFileService.getMediaFiles(mediaFileIds);
 
@@ -81,17 +83,6 @@ public class EditTagsController extends ParameterizableViewController {
         ModelAndView result = super.handleRequestInternal(request, response);
         result.addObject("model", map);
         return result;
-    }
-
-    /*
-     * given string "[x, y, z]", returns the integers x, y and z as a list.
-     */
-    private List<? extends Uri> getMediaFileUris(String query) {
-    	List<Uri> mediaFileIds = new ArrayList<>(); 
-    	for (String s : split(removeEnd(removeStart(query, "["), "]"), ", ")) {
-    		mediaFileIds.add(URIUtil.parseURI(s));
-    	}
-    	return mediaFileIds;
     }
 
     private Song createSong(MediaFile mf, int index) {

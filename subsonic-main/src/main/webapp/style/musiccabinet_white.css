@@ -104,3 +104,27 @@ label, p {
 ::-webkit-scrollbar-thumb:window-inactive {
     background: rgba(200, 200, 200, 0.2);
 }
+@media (min-width: 1200px) {
+  .container {
+    width: 100%;
+    margin-right: 0;
+    margin-left: 0;
+  }
+}
+.bgcolor2, .ruleTableHeader, .log {
+background-color: #FFFFFF;
+color: #696969;
+}
+.bgcolor2, .ruleTableHeader, .log {
+background-color: #e7e7e7;
+color: #696969;
+}
+.navbar-default {
+background-color: #f8f8f8;
+border: none;
+}
+@media (min-width: 768px) {
+  .navbar {
+   border-radius: 0px; 
+  }
+}

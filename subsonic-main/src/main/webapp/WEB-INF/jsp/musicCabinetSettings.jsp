@@ -9,7 +9,7 @@
 
 <p style="padding-top:1em"><b>MusicCabinet configuration</b></p>
 
-<form:form method="post" action="musicCabinetSettings.view" commandName="command" onsubmit="document.getElementById('button').disabled = 1;">
+<form:form method="post" action="musicCabinetSettings.view" commandName="command" onsubmit="return submitForm(this, 'MusicCabinet settings saved.');">
 
 <c:choose>
  <c:when test="${command.databaseRunning}">

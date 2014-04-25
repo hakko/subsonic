@@ -17,6 +17,7 @@ import org.apache.commons.io.FileUtils;
 import com.github.hakko.musiccabinet.configuration.Uri;
 import com.github.hakko.musiccabinet.domain.model.aggr.ArtistRecommendation;
 import com.github.hakko.musiccabinet.domain.model.music.Album;
+import com.github.hakko.musiccabinet.domain.model.music.Artist;
 import com.github.hakko.musiccabinet.domain.model.music.Track;
 import com.github.hakko.musiccabinet.service.LibraryBrowserService;
 
@@ -96,8 +97,9 @@ public class DeviceSyncThread implements Runnable {
 				.getStarredArtists(userSettings.getLastFmUsername(), 0,
 						1000000, null);
 		for (ArtistRecommendation artist : starredArtists) {
+			new ArrayList<Album>();
 			List<Album> albums = libraryBrowserService.getAlbums(
-					artist.getUri(), false);
+					new Artist(artist.getArtistUri(), artist.getArtistName()), false);
 			for (Album album : albums) {
 				tracks.addAll(album.getTrackUris());
 			}

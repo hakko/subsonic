@@ -96,7 +96,7 @@ public class RESTBrowseControllerTest {
         metaData.setDiscNr((short) 1);
         metaData.setTrackNr((short) 1);
         metaData.setPath("/path/to/file.mp3");
-        metaData.setYear((short) 2013);
+        metaData.setYear(2013);
         track = new Track(trackId = 71463, "The Jack", metaData);
 
         XMLUnit.setIgnoreWhitespace(true);
@@ -151,9 +151,9 @@ public class RESTBrowseControllerTest {
         when(artistInfoService.getArtistInfo(new SubsonicUri(artistId))).thenReturn(new ArtistInfo(artist));
         browseController.setArtistInfoService(artistInfoService);
 
-        LibraryBrowserService libraryBrowserService = mock(LibraryBrowserService.class);
-        when(libraryBrowserService.getAlbums(new SubsonicUri(artistId), true, true)).thenReturn(null);
-        browseController.setLibraryBrowserService(libraryBrowserService);
+        //LibraryBrowserService libraryBrowserService = mock(LibraryBrowserService.class);
+        //when(libraryBrowserService.getAlbums(new ArrayList<Album>(), new SubsonicUri(artistId), true, true)).thenReturn(null);
+        //browseController.setLibraryBrowserService(libraryBrowserService);
 
         MediaFileService mediaFileService = mock(MediaFileService.class);
         when(mediaFileService.getAlbums(null, true)).thenReturn(albums);

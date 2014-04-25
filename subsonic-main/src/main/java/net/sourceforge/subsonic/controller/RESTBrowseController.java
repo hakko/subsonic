@@ -229,7 +229,7 @@ public class RESTBrowseController extends RESTAbstractController {
 
         ArtistInfo artistInfo = artistInfoService.getArtistInfo(artistUri);
         List<net.sourceforge.subsonic.domain.Album> albums = mediaFileService.getAlbums(
-                libraryBrowserService.getAlbums(artistUri, userSettings.isAlbumOrderByYear(),
+                libraryBrowserService.getAlbums(new Artist(artistUri, artistInfo.getArtist().getName()), userSettings.isAlbumOrderByYear(),
                         userSettings.isAlbumOrderAscending()), true);
 
         builder.add("artist", false,
@@ -351,7 +351,7 @@ public class RESTBrowseController extends RESTAbstractController {
         try {
             artistUri = getId(request);
             artistInfo = artistInfoService.getArtistInfo(artistUri);
-            albums = mediaFileService.getAlbums(libraryBrowserService.getAlbums(artistUri,
+            albums = mediaFileService.getAlbums(libraryBrowserService.getAlbums(new Artist(artistUri, artistInfo.getArtist().getName()),
                     userSettings.isAlbumOrderByYear(), userSettings.isAlbumOrderAscending()), true);
         } catch (Exception x) {
             LOG.warn("Error in REST API.", x);
@@ -413,7 +413,7 @@ public class RESTBrowseController extends RESTAbstractController {
 
         for (ArtistRecommendation ar : relatedArtists) {
             builder.add("child", true,
-                    new Attribute("id", ARTIST_ID + ar.getUri()),
+                    new Attribute("id", ARTIST_ID + ar.getArtistUri()),
                     new Attribute("parent", ARTIST_ID + artistUri),
                     new Attribute("title", ar.getArtistName()),
                     new Attribute("isDir", true));
@@ -713,7 +713,7 @@ public class RESTBrowseController extends RESTAbstractController {
                 lastFmUsername, 0, Short.MAX_VALUE, null)) {
             builder.add("artist", true,
                     new Attribute("name", rec.getArtistName()),
-                    new Attribute("id", ARTIST_ID + rec.getUri()));
+                    new Attribute("id", ARTIST_ID + rec.getArtistUri()));
         }
         addAlbums(builder, libraryBrowserService.getStarredAlbums(
                 lastFmUsername, 0, Short.MAX_VALUE, null));
@@ -846,7 +846,7 @@ public class RESTBrowseController extends RESTAbstractController {
         return getAlbumName(album.getName(), album.getYear());
     }
 
-    private String getAlbumName(String title, Short year) {
+    private String getAlbumName(String title, Integer year) {
         String albumName = settingsService.getRestAlbumName();
         albumName = StringUtils.replace(albumName, "$(album)", title);
         albumName = StringUtils.replace(albumName, "$(year)",

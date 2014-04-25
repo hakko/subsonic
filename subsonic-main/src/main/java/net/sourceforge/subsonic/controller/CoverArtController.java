@@ -115,7 +115,7 @@ public class CoverArtController implements Controller, LastModified {
         		path = file.getAbsolutePath();
         		// check if the image exists, if not cache it
         		if(!file.exists()) {
-        			if(MediaHelper.waitFor(image, 120)) {
+        			if(MediaHelper.waitFor(image, 10)) {
        					Files.write(FileSystems.getDefault().getPath(path), image.getBytes());
         			} else {
         				file = null;

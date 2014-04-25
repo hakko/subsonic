@@ -25,7 +25,7 @@ ${model.artistName}
 		<div class="clearfix">
 			<div class="col-lg-3">
 					<a href="#" onclick="return toggleArtist()">
-						<img id="bioArt" class="img-circle" width="${model.artistInfoImageSize}" height="${model.artistInfoImageSize}" src="${model.artistInfo.largeImageUrl}" alt="">
+						<img id="bioArt" class="img-responsive" width="${model.artistInfoImageSize}" height="${model.artistInfoImageSize}" src="${model.artistInfo.largeImageUrl}" alt="">
 					</a>
 			</div>
 			<div class="col-lg-7">

@@ -8,10 +8,22 @@
 			</sub:url>
 		</c:otherwise>
 	</c:choose>
+	<c:choose>
+	<c:when test="${model.player.web && sub:isSpotify(album.uri)}">
+	   <iframe src="https://embed.spotify.com/?uri=${album.uri}&theme=white&view=coverart" 
+	       width="300" height="80" frameborder="0" 
+	       allowtransparency="true"></iframe>
+	</c:when>
+	<c:otherwise>
 	<div style="padding-top:5px" id="alb${i.count}">
 		<div style="float:left">
 				<a href="#" onclick="return toggleAlbum(${i.count})">
+					<span class="overlay">
 					<img class="img-thumbnail" id="albart${i.count}" width="87" height="87" src="${coverArtUrl}" alt="">
+					   <c:if test="${sub:isSpotify(album.uri)}">
+				           <img class="spotify-icon" src="icons/spotify.png" width="16" height="16" />
+					   </c:if>
+					</span>
 				</a>
 			<div id="albcmd${i.count}" style="display:none;float:right;padding-right:10px;padding-bottom:15px;text-align:right" class="detail">
 				<c:import url="playAddDownload.jsp">
@@ -40,7 +52,7 @@
 
 				<c:if test="${model.user.coverArtRole}">
 					<sub:url value="/changeCoverArt.view" var="changeCoverArtUrl">
-						<sub:param name="id" value="${sub:esc(album.trackUris[0])}"/>
+						<sub:param name="id" value="${album.trackUris[0]}"/>
 						<sub:param name="artistId" value="${album.artistUri}"/>
 						<sub:param name="albumId" value="${album.uri}"/>
 					</sub:url>
@@ -98,6 +110,8 @@
 			<div id="albson${i.count}" style="display:none"></div>
 		</div>
 	</div>
+	</c:otherwise>
+	</c:choose>
 	<div style="clear:both;"></div>
 
 </c:forEach>		

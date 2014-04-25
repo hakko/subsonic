@@ -657,6 +657,7 @@
     
     <bean id="spotifyLibraryBrowserDao" class="com.github.hakko.musiccabinet.dao.spotify.SpotifyLibraryBrowserDao">
         <property name="spotifyService" ref="spotifyService" />
+        <property name="nameSearchService" ref="spotifySearchService" />
     </bean>
     
     <bean id="libraryBrowserDao" class="com.github.hakko.musiccabinet.dao.aggregate.AggregateLibraryBrowserDao">

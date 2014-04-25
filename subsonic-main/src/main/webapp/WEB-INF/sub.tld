@@ -115,5 +115,11 @@
         <function-class>net.sourceforge.subsonic.taglib.SubsonicFunctions</function-class>
         <function-signature>String esc(java.lang.Object)</function-signature>
     </function>    
+    <function>
+        <name>isSpotify</name>
+        <function-class>net.sourceforge.subsonic.taglib.SubsonicFunctions</function-class>
+        <function-signature>boolean isSpotify(com.github.hakko.musiccabinet.configuration.Uri)</function-signature>
+    </function>    
+
 
 </taglib>

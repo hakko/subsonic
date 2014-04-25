@@ -47,6 +47,7 @@ import org.springframework.web.servlet.mvc.ParameterizableViewController;
 
 import com.github.hakko.musiccabinet.configuration.Uri;
 import com.github.hakko.musiccabinet.dao.util.URIUtil;
+import com.github.hakko.musiccabinet.domain.model.music.Artist;
 import com.github.hakko.musiccabinet.domain.model.music.ArtistInfo;
 import com.github.hakko.musiccabinet.exception.ApplicationException;
 import com.github.hakko.musiccabinet.service.LibraryBrowserService;
@@ -83,8 +84,9 @@ public class ArtistController extends ParameterizableViewController {
         User user = securityService.getCurrentUser(request);
         UserSettings userSettings = settingsService.getUserSettings(user.getUsername());
 
-        boolean variousArtists = isVariousArtists(setArtistInfo(artistUri, map));
-        setAlbums(artistUri, variousArtists, userSettings, map, albumIds);
+        ArtistInfo artistInfo = setArtistInfo(artistUri, map);
+        boolean variousArtists = isVariousArtists(artistInfo);
+        setAlbums(new Artist(artistUri, artistInfo.getArtist().getName()), variousArtists, userSettings, map, albumIds);
 
         map.put("trackId", request.getParameter("trackId"));
         map.put("artistStarred", starService.isArtistStarred(userSettings.getLastFmUsername(), artistUri));
@@ -99,18 +101,18 @@ public class ArtistController extends ParameterizableViewController {
         return result;
     }
 
-    private void setAlbums(Uri artistUri, boolean variousArtists, UserSettings userSettings,
+    private void setAlbums(Artist artist, boolean variousArtists, UserSettings userSettings,
     		Map<String, Object> map, String[] selectedAlbumIds) {
         List<Album> albums = mediaFileService.getAlbums(
         		variousArtists && isNotEmpty(selectedAlbumIds) ?
         		asList(libraryBrowserService.getAlbum(URIUtil.parseURI(selectedAlbumIds[0]))) :
-        		libraryBrowserService.getAlbums(artistUri,
+        		libraryBrowserService.getAlbums(artist,
         		userSettings.isAlbumOrderByYear(), userSettings.isAlbumOrderAscending()));
         List<Uri> albumUris = new ArrayList<>();
         List<Uri> trackUris = new ArrayList<>();
 
         for (Album album : albums) {
-        	if (album.getArtistUri().equals(artistUri)) {
+        	if (album.getArtistUri().equals(artist.getUri())) {
         		album.setArtistName(null);
         	}
         	albumUris.add(album.getUri());

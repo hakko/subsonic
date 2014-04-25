@@ -7,6 +7,9 @@ import net.sourceforge.subsonic.domain.Album;
 
 import org.apache.commons.lang.StringEscapeUtils;
 
+import com.github.hakko.musiccabinet.configuration.Uri;
+import com.github.hakko.musiccabinet.dao.util.URIUtil;
+
 
 public class SubsonicFunctions {
 
@@ -50,6 +53,10 @@ public class SubsonicFunctions {
 		}
 		
 		return "'" + StringEscapeUtils.escapeJavaScript(object.toString()) + "'";
+	}
+	
+	public static boolean isSpotify(Uri uri) {
+		return URIUtil.isSpotify(uri);
 	}
 	
 	public static void main(String... args) {
