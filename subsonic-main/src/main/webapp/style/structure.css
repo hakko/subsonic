@@ -130,3 +130,11 @@ span.off:hover {
     border: solid 1px #999;
     text-decoration: none;
 }
+.btn-play-dd {
+  height: 22px;
+  padding: 0px 6px 1px 6px;
+}
+.play-label {
+  float: left;
+  padding-right: 5px;
+}

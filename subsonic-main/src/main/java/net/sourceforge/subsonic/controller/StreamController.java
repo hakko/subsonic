@@ -51,6 +51,7 @@ import net.sourceforge.subsonic.util.Util;
 
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang.math.LongRange;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.web.bind.ServletRequestBindingException;
 import org.springframework.web.bind.ServletRequestUtils;
 import org.springframework.web.servlet.ModelAndView;
@@ -124,7 +125,11 @@ public class StreamController implements Controller {
             // (typically from the embedded Flash player). In that case, create a separate
             // playlist (in order to support multiple parallel streams). Also, enable
             // partial download (HTTP byte range).
-            Uri mediaFileUri = URIUtil.parseURI(request.getParameter("mfId"));
+            String id = (String) request.getAttribute("mfId");
+            if(StringUtils.isEmpty(id)) {
+            	id = request.getParameter("mfId");
+            }
+            Uri mediaFileUri = URIUtil.parseURI(id);
             LOG.debug("got mfId = " + mediaFileUri + " from param " + request.getParameter("mfId"));
             boolean isSingleFile = mediaFileUri != null;
             LongRange range = null;

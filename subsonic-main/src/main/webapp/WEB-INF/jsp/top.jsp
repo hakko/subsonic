@@ -19,7 +19,7 @@
 			<span class="sr-only">Toggle navigation</span> <span class="icon-bar"></span>
 			<span class="icon-bar"></span> <span class="icon-bar"></span>
 		</button>
-		<a href="help.view?" target="main" class="navbar-brand"><img
+		<a href="#/help" class="navbar-brand"><img
 			src="<spring:theme code="logoImage"/>" title="${help}" alt=""></a>
 	</div>
 	<div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
@@ -30,39 +30,38 @@
 						<fmt:message key="top.missing" />
 					</p>
 				</c:if></li>
-			<li class="text-center"><a href="home.view?" target="main"><img
+			<li class="text-center"><a href="#/home"><img
 					src="<spring:theme code="homeImage"/>" title="${home}"
 					alt="${home}">${home}</a></li>
-			<li class="text-center"><a href="genres.view?" target="main"><img
+			<li class="text-center"><a href="#/genres"><img
 					src="<spring:theme code="genresImage"/>" title="Genres"
 					alt="Genres">Genres</a></li>
-			<li class="text-center"><a href="radio.view?" target="main"><img
+			<li class="text-center"><a href="#/radio"><img
 					src="<spring:theme code="radioImage"/>" title="Radio" alt="Radio">Radio</a></li>
-			<li class="text-center"><a href="fileTree.view?" target="main"><img
+			<li class="text-center"><a href="#/fileTree"><img
 					src="<spring:theme code="fileTreeImage"/>" title="File tree"
 					alt="File tree">File tree</a></li>
-			<li class="text-center"><a href="podcastReceiver.view?"
-				target="main"><img
+			<li class="text-center"><a href="#/podcastReceiver"><img
 					src="<spring:theme code="podcastLargeImage"/>" title="${podcast}"
 					alt="${podcast}">${podcast}</a></li>
-			<li class="text-center"><a href="nowPlaying.view?" target="main"><img
+			<li class="text-center"><a href="#/nowPlaying"><img
 					src="<spring:theme code="nowPlayingImage"/>" title="${nowPlaying}"
 					alt="${nowPlaying}">${nowPlaying}</a></li>
 			<c:if test="${model.user.settingsRole}">
-				<li class="text-center"><a href="settings.view?" target="main"><img
+				<li class="text-center"><a href="#/settings"><img
 						src="<spring:theme code="settingsImage"/>" title="${settings}"
 						alt="${settings}">${settings}</a></li>
 			</c:if>
-			<li class="text-center"><a href="status.view?" target="main"><img
+			<li class="text-center"><a href="#/status"><img
 					src="<spring:theme code="statusImage"/>" title="${status}"
 					alt="${status}">${status}</a></li>
-			<li class="text-center"><a href="help.view?" target="main"><img
+			<li class="text-center"><a href="#/help"><img
 					src="<spring:theme code="helpImage"/>" title="${help}"
 					alt="${help}">${help}</a></li>
 
 		</ul>
 		<form class="navbar-form navbar-left" role="search" method="POST"
-			action="search.view" data-target="main" name="searchForm" onsubmit="return submitForm(this);">
+			action="#/search" data-target="main" name="searchForm" onsubmit="return submitForm(this);">
 			<div class="form-group">
 				<input type="text" name="query" class="form-control"
 					placeholder="Search">
@@ -72,15 +71,15 @@
 				title="${search}"></a>
 		</form>
 		<p class="navbar-text">
-			<a href="j_spring_security_logout" target="_top"><fmt:message
+			<a href="j_spring_security_logout"><fmt:message
 					key="top.logout">
 					<fmt:param value="${model.user.username}" />
 				</fmt:message></a>
 			<c:if test="${not model.licensed}">
 				<br>
-				<a href="donate.view" target="main"><img
+				<a href="#/donate"><img
 					src="<spring:theme code="donateSmallImage"/>" alt=""></a>
-				<a href="donate.view" target="main"><fmt:message
+				<a href="#/donate"><fmt:message
 						key="donate.title" /></a>
 			</c:if>
 		</p>

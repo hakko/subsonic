@@ -4,6 +4,7 @@ package net.sourceforge.subsonic.taglib;
 import java.util.List;
 
 import net.sourceforge.subsonic.domain.Album;
+import net.sourceforge.subsonic.util.StringUtil;
 
 import org.apache.commons.lang.StringEscapeUtils;
 
@@ -59,9 +60,17 @@ public class SubsonicFunctions {
 		return URIUtil.isSpotify(uri);
 	}
 	
-	public static void main(String... args) {
-		String[] foo = new String[] {"a","b","c"};
-		System.out.println(esc(foo));
-		
+	public static String hex(String unescaped) {
+		return StringUtil.utf8HexEncode(unescaped);
 	}
+	
+	public static String deHex(String escaped) {
+		try {
+			return StringUtil.utf8HexDecode(escaped);
+		} catch(Exception e) {
+			e.printStackTrace();
+			return "";
+		}
+	}
+	
 }

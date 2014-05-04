@@ -11,7 +11,8 @@
   <![endif]-->
   <link href="<c:url value="/script/bower_components/bootstrap/dist/css/bootstrap.min.css"/>" rel="stylesheet" media="screen">
   <link href="<c:url value="/script/bower_components/font-awesome/css/font-awesome.min.css"/>" rel="stylesheet" media="screen">
-
+  
+  
   <link rel="stylesheet" href="<c:url value="/style/structure.css"/>" type="text/css" />
   <link type="text/css" rel="stylesheet" href="<c:url value="/script/webfx/luna.css"/>" />
   <link href="<c:url value="/style/shadow.css"/>" rel="stylesheet" type="text/css" />
@@ -46,7 +47,8 @@
   <script type="text/javascript" src="<c:url value="/script/bower_components/jquery/jquery.min.js"/>"></script>
   <script type="text/javascript" src="<c:url value="/script/bower_components/bootstrap/dist/js/bootstrap.min.js"/>"></script>
   <script type="text/javascript" src="<c:url value="/script/bower_components/mustache/mustache.js"/>"></script>
-	<script type="text/javascript" src="<c:url value="/script/prototype.js"/>"></script>
+  <script type="text/javascript" src="<c:url value="/script/bower_components/director/build/director.min.js"/>"></script>
+  <!--script type="text/javascript" src="<c:url value="/script/prototype.js"/>"></script-->
 
 
 
@@ -69,7 +71,6 @@
 
 
   <script type="text/javascript" src="<c:url value="/script/jwplayer.js"/>"></script>    
-  <script type="text/javascript" src="<c:url value="/script/scripts.js"/>"></script>
   <script type="text/javascript" src="<c:url value="/script/webfx/range.js"/>"></script>
   <script type="text/javascript" src="<c:url value="/script/webfx/timer.js"/>"></script>
   <script type="text/javascript" src="<c:url value="/script/webfx/slider.js"/>"></script>
@@ -82,9 +83,14 @@
 
 
 
-
   <script text="text/javascript">
-    (function($) {
+    ;(function($) {
+      var router = Router(app.routes);
+      router.init("/");    
+    })(jQuery);
+    
+
+/*    
     jQuery("[data-src]").each(function() {
       loadFrame(this);
     });
@@ -99,7 +105,8 @@
       loadInFrame(el, el.attr("href"));
       return false;
     })
-    })(jQuery);
+    */
+    
   </script>
 </body>
 </html>

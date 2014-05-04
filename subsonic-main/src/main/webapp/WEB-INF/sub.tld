@@ -44,6 +44,13 @@
             <required>false</required>
             <rtexprvalue>true</rtexprvalue>
         </attribute>
+        <attribute>
+            <description>Where to encode as a javascript hash based url.</description>
+            <name>hashurl</name>
+            <required>false</required>
+            <rtexprvalue>true</rtexprvalue>
+        </attribute>
+        
     </tag>
 
     <tag>
@@ -119,7 +126,18 @@
         <name>isSpotify</name>
         <function-class>net.sourceforge.subsonic.taglib.SubsonicFunctions</function-class>
         <function-signature>boolean isSpotify(com.github.hakko.musiccabinet.configuration.Uri)</function-signature>
+    </function>
+    <function>
+        <name>dehex</name>
+        <function-class>net.sourceforge.subsonic.taglib.SubsonicFunctions</function-class>
+        <function-signature>String deHex(java.lang.String)</function-signature>
+    </function>
+    <function>
+        <name>hex</name>
+        <function-class>net.sourceforge.subsonic.taglib.SubsonicFunctions</function-class>
+        <function-signature>String hex(java.lang.String)</function-signature>
     </function>    
+        
 
 
 </taglib>

@@ -149,3 +149,151 @@ function saveDevice() {
   jQuery("#chooseDeviceModal").modal("hide");
   return true;
 }
+
+
+var app = (function() {
+  $ = this.jQuery;
+  var module = {};
+  
+  module.loadMain = function(path) {
+    module.loadIndex(true);
+    $.when($.ajax( path)).then(function( data, textStatus, jqXHR ) {
+      jQuery('div.main').html(data);
+    });
+  }
+  
+  module.loadIndex = function(skipMain) {
+    
+    if($('div.upper').html().trim() != "") {
+      return;
+    }
+    window.console.log("Loading everything");
+    $.when( $.ajax( "top.view" ) ).then(function( data, textStatus, jqXHR ) {
+      jQuery('div.upper').html(data);
+    });
+    $.when( $.ajax( "left.view" ) ).then(function( data, textStatus, jqXHR ) {
+      jQuery('div.left').html(data);
+    });
+    $.when( $.ajax( "right.view" ) ).then(function( data, textStatus, jqXHR ) {
+      jQuery('div.right').html(data);
+    });
+    if(!skipMain) {
+      module.loadMain("nowPlaying.view");
+    }
+    $.when( $.ajax( "playlist.view" ) ).then(function( data, textStatus, jqXHR ) {
+      jQuery('div.playlist').html(data);
+    });
+  };
+
+  module.loadArtist = function(artistId, albumId) {
+    module.loadIndex(true);
+    var url ="artist.view?idUtf8Hex=" + artistId;
+    if(albumId) {
+      url += "&albumIdUtf8Hex=" + albumId;
+    }
+    // we should test if this is already loaded
+    $.when( $.ajax( url ) ).then(function( data, textStatus, jqXHR ) {
+      jQuery('div.main').html(data);
+      // we should do the expansion here
+      if(albumId) {
+        var id = $('div[meta-album="' + albumId + '"]').attr("id").replace("alb", "");
+        toggleAlbum(id);
+      }
+    });
+  }
+  module.loadHome = function(listType, listGroup) {
+    var url = "home.view";
+    if(listType) {
+      url += "?listType=" + listType;
+    }
+    if(listGroup) {
+      url += "&listGroup=" + listGroup;
+    }
+    module.loadMain(url);
+  }
+  module.loadGenres = function() {
+    module.loadMain("genres.view");
+  }
+  module.loadRadio = function() {
+    module.loadMain("radio.view");
+  }
+  module.loadFileTree = function() {
+    module.loadMain("fileTree.view");
+  }
+  module.loadPodcastReceiver = function() {
+    module.loadMain("podcastReceiver.view");
+  }
+  module.loadNowPlaying = function() {
+    module.loadMain("nowPlaying.view");
+  }
+  module.loadSettings = function() {
+    module.loadMain("settings.view");
+  }
+  module.loadStatus = function() {
+    module.loadMain("status.view");
+  }
+  module.loadHelp = function() {
+    module.loadMain("help.view");
+  }
+  module.loadPersonalSettings = function() {
+    module.loadMain("personalSettings.view");
+  }
+  module.loadPlayerSettings = function() {
+    module.loadMain("playerSettings.view");
+  }
+  module.loadPasswordSettings = function() {
+    module.loadMain("passwordSettings.view");
+  }
+  module.loadShareSettings = function() {
+    module.loadMain("shareSettings.view");
+  }
+  
+  
+  
+  module.routes = {
+      '/': module.loadIndex,
+      '/home': module.loadHome,
+      '/home/listType/:type': module.loadHome,
+      '/home/listType/:type/listGroup/:group': module.loadHome,
+      '/genres': module.loadGenres,
+      '/radio': module.loadRadio,
+      '/fileTree': module.loadFileTree,
+      '/podcastReceiver': module.loadPodcastReceiver,
+      '/nowPlaying': module.loadNowPlaying,
+      '/settings': module.loadSettings,
+      '/status': module.loadStatus,
+      '/help': module.loadHelp,
+      '/personalSettings': module.loadPersonalSettings,
+      '/passwordSettings': module.loadPasswordSettings,
+      '/playerSettings': module.loadPlayerSettings,
+      '/shareSettings': module.loadShareSettings,
+      '/artist/idUtf8Hex/:id': module.loadArtist,
+      '/artist/idUtf8Hex/:id/albumIdUtf8Hex/:album_id': module.loadArtist
+  };
+  return module;
+})();
+
+    /*
+    $.when( $.ajax( "playlist.view" ) ).then(function( data, textStatus, jqXHR ) {
+      jQuery('div.playlist').html(data);
+    });
+    
+    this.load('artist.view?idUtf8Hex=' + artistId).then(function(output) {
+      // TODO: Scroll to this and highlight in left hand bar
+      this.app.swap(output);
+//      if(callback) {
+//        callback.call();
+//      }
+    })
+    */
+  /*
+  this.get('#/artist/idUtf8Hex/:id', function() {
+    this.loadArtist(this.params['id']);
+  });
+  
+  this.get('#/artist/idUtf8Hex/:id/albumIdUtf8Hex/:album_id', function(context) {
+    this.loadArtist(this.params['id'], function() {
+      context.log("I need to toggle the album")
+    });
+  });
+  */

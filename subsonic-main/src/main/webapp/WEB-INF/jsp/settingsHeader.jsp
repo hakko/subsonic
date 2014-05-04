@@ -11,7 +11,7 @@
 <ul class="nav nav-tabs nav-justified">
 <c:forTokens items="${categories}" delims=" " var="cat" varStatus="loopStatus">
 
-    <c:url var="url" value="${cat}Settings.view?"/>
+    <c:url var="url" value="#/${cat}Settings"/>
 
     <c:choose>
         <c:when test="${param.cat eq cat}">

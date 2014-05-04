@@ -37,7 +37,7 @@
 			</c:if>
 			<c:if test="${model.indexing eq false}">Before you can use the full graphic interface, a library scan must be performed.<br />
 			</c:if>
-			<a target="main" href="musicCabinetSettings.view">Learn more.</a>
+			<a href="musicCabinetSettings.view">Learn more.</a>
 			<div id="leftMessage"></div>
 	</div>
 	</c:if>
@@ -50,7 +50,7 @@
 		</h2>
 		<c:forEach items="${model.radios}" var="radio">
 			<p class="dense">
-				<a target="hidden" href="${radio.streamUrl}"> <img
+				<a href="${radio.streamUrl}"> <img
 					src="<spring:theme code="playImage"/>"
 					alt="<fmt:message key="common.play"/>"
 					title="<fmt:message key="common.play"/>"></a>
@@ -59,7 +59,7 @@
 					${radio.name}
 				</c:when>
 					<c:otherwise>
-						<a target="main" href="${radio.homepageUrl}">${radio.name}</a>
+						<a href="${radio.homepageUrl}">${radio.name}</a>
 					</c:otherwise>
 				</c:choose>
 			</p>
@@ -110,7 +110,7 @@
 					<span title="${fn:escapeXml(artist.name)}"> <sub:url
 							value="artist.view" var="artistUrl">
 							<sub:param name="id" value="${artist.uri}" />
-						</sub:url> <a target="main" href="${artistUrl}">${fn:escapeXml(artist.name)}</a>
+						</sub:url> <a href="${artistUrl}">${fn:escapeXml(artist.name)}</a>
 					</span>
 				</p>
 			</c:forEach>
@@ -126,7 +126,7 @@
 					<sub:param name="id" value="${album.artist.uri}" />
 					<sub:param name="albumId" value="${album.uri}" />
 				</sub:url>
-				<a target="main" href="${albumUrl}">${album.name}</a>
+				<a href="${albumUrl}">${album.name}</a>
 			</p>
 		</c:forEach>
 	</c:if>
@@ -138,7 +138,7 @@
 				<sub:url value="main.view" var="mainUrl">
 					<sub:param name="path" value="${mediaFolder.path}" />
 				</sub:url>
-				<a target="main" href="${mainUrl}">${mediaFolder.name}</a>
+				<a href="${mainUrl}">${mediaFolder.name}</a>
 			</p>
 		</c:forEach>
 	</c:if>
@@ -147,11 +147,11 @@
 		<div></div>
 		<hr>
 		<c:if test="${model.uploadRole}">
-			<a target="main" href="more.view">Upload new music</a>
+			<a href="more.view">Upload new music</a>
 			<br>
 		</c:if>
 		<c:if test="${model.adminRole}">
-			<a target="main" href="missingAlbums.view">Missing albums</a>
+			<a href="missingAlbums.view">Missing albums</a>
 			<br>
 		</c:if>
 

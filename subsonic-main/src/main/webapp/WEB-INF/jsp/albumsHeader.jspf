@@ -1,19 +1,19 @@
 
-  var musicFiles = ${sub:esc(model.albums)};
+    var musicFiles = ${sub:esc(model.albums)};
 	
 	function toggleAlbum(index) {
-    $(function($) {
-		a = '#albart' + index;
-		$(a).attr('width', 174 + 87 - $(a).attr('width'));
-		$(a).attr('height', 174 + 87 - $(a).attr('height'));
+        return $(function($) {
+		  a = '#albart' + index;
+		  $(a).attr('width', 174 + 87 - $(a).attr('width'));
+		  $(a).attr('height', 174 + 87 - $(a).attr('height'));
 
-		$('#albcmd' + index).toggle();
-		$('#albtit' + index).toggle();
-		$('#albson' + index).toggle();
+		  $('#albcmd' + index).toggle();
+		  $('#albtit' + index).toggle();
+		  $('#albson' + index).toggle();
 
-		if ($('#albson' + index).children().size() == 0) {
-			$('#albson' + index).load('album.view?view&mf=' + musicFiles[index - 1].join('&mf=') <c:if test="${not empty model.trackUri}">+ '&trackId=${model.trackUri}'</c:if>);
-		}
-    return false;
-    }(jQuery));
+		  if ($('#albson' + index).children().size() == 0) {
+		      $('#albson' + index).load('album.view?view&mf=' + musicFiles[index - 1].join('&mf=') <c:if test="${not empty model.trackUri}">+ '&trackId=${model.trackUri}'</c:if>);
+		  }
+		  return false;
+        }(jQuery));
 	}

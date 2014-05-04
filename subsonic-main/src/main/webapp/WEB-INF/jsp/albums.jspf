@@ -2,7 +2,7 @@
 	<c:choose>
 		<c:when test="${not empty album.coverArtUrl}"><c:set var="coverArtUrl">${album.coverArtUrl}</c:set></c:when>
 		<c:otherwise>
-			<sub:url value="coverArt.view" var="coverArtUrl">
+			<sub:url value="coverArt.view" var="coverArtUrl" hashurl="false">
 				<sub:param name="size" value="174"/>
 				<c:if test="${not empty album.coverArtPath}"><sub:param name="path" value="${album.coverArtPath}"/></c:if>
 			</sub:url>
@@ -15,9 +15,13 @@
 	       allowtransparency="true"></iframe>
 	</c:when>
 	<c:otherwise>
-	<div style="padding-top:5px" id="alb${i.count}">
+	<div style="padding-top:5px" id="alb${i.count}" meta-index="${i.count}" meta-album="${sub:hex(album.uri)}">
 		<div style="float:left">
-				<a href="#" onclick="return toggleAlbum(${i.count})">
+                <sub:url value="artist.view" var="albumUrl">
+                    <sub:param name="id" value="${album.artistUri}" />
+                    <sub:param name="albumId" value="${album.uri}" />
+                </sub:url>
+				<a href="${albumUrl}">
 					<span class="overlay">
 					<img class="img-thumbnail" id="albart${i.count}" width="87" height="87" src="${coverArtUrl}" alt="">
 					   <c:if test="${sub:isSpotify(album.uri)}">

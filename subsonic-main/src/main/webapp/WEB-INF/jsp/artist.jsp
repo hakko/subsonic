@@ -116,18 +116,21 @@ ${model.artistName}
 <%@ include file="albumsHeader.jspf" %>
 
 	function toggleArtist() {
-		$('#bioArt').attr('width', 126 + 63 - $('#bioArt').attr('width'));
-		$('#bioArt').attr('height', 126 + 63 - $('#bioArt').attr('height'));
+	   return $(function($) {
+            $('#bioArt').attr('width', 126 + 63 - $('#bioArt').attr('width'));
+            $('#bioArt').attr('height', 126 + 63 - $('#bioArt').attr('height'));
 
-		$('#bio0').toggle();
-		$('#bio1').toggle();
-    return false;
+            $('#bio0').toggle();
+            $('#bio1').toggle();
+        return false;
+       }(jQuery));
 	}
 
 		<c:forEach items="${model.albums}" var="album" varStatus="i">
 			<c:if test="${album.selected}">
 				toggleAlbum('${i.count}');
-				window.location.hash='alb${i.count}';
+				// TODO: How to do this?
+				//window.location.hash='alb${i.count}';
 			</c:if>
 		</c:forEach>
     init();
