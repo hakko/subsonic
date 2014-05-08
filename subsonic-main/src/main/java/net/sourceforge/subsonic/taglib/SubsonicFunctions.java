@@ -56,6 +56,13 @@ public class SubsonicFunctions {
 		return "'" + StringEscapeUtils.escapeJavaScript(object.toString()) + "'";
 	}
 	
+	/*
+	 * escapes colons for jquery 
+	 */
+	public static String jqesc(String unescaped) {
+		return unescaped.replace("" + ':', "" + '\\' + '\\' + ':');
+	}
+	
 	public static boolean isSpotify(Uri uri) {
 		return URIUtil.isSpotify(uri);
 	}

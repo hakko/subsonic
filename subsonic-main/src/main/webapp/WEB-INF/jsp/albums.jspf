@@ -15,7 +15,7 @@
 	       allowtransparency="true"></iframe>
 	</c:when>
 	<c:otherwise>
-	<div style="padding-top:5px" id="alb${i.count}" meta-index="${i.count}" meta-album="${sub:hex(album.uri)}">
+	<div style="padding-top:5px" id="alb${i.count}" data-index="${i.count}" data-album="${sub:hex(album.uri)}">
 		<div style="float:left">
                 <sub:url value="artist.view" var="albumUrl">
                     <sub:param name="id" value="${album.artistUri}" />
@@ -83,7 +83,7 @@
 		</div>
 		<div style="float:left;padding-left:10px;padding-bottom:15px">
 			<div>
-				<a href="#" onclick="toggleStar('alb', ${album.uri}, '#starImage${album.uri}'); return false;">
+				<a href="#" onclick="toggleStar('alb', ${sub:esc(album.uri)}, '${sub:jqesc("#starImage".concat(album.uri))}'); return false;">
 					<c:choose>
 						<c:when test="${model.isAlbumStarred[i.index]}">
 							<img id="starImage${album.uri}" src="<spring:theme code="ratingOnImage"/>" alt="">

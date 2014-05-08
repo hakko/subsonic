@@ -121,6 +121,11 @@
         <name>esc</name>
         <function-class>net.sourceforge.subsonic.taglib.SubsonicFunctions</function-class>
         <function-signature>String esc(java.lang.Object)</function-signature>
+    </function>
+    <function>
+        <name>jqesc</name>
+        <function-class>net.sourceforge.subsonic.taglib.SubsonicFunctions</function-class>
+        <function-signature>String jqesc(java.lang.String)</function-signature>
     </function>    
     <function>
         <name>isSpotify</name>

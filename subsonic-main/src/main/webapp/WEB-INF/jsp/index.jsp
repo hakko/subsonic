@@ -86,7 +86,7 @@
   <script text="text/javascript">
     ;(function($) {
       var router = Router(app.routes);
-      router.init("/");    
+      router.init("/"); 
     })(jQuery);
     
 

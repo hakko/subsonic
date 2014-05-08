@@ -8,14 +8,14 @@
 
 	<ul class="nav nav-tabs">
 		<li class="${empty model.filebased ? 'active' : ''}"><a
-			href="left.view?method=media">Media</a></li>
+			href="#" onclick="return loadLeft('?method=media');">Media</a></li>
 		<li class="${not empty model.filebased ? 'active' : ''}"><a
-			href="left.view?method=file">Files</a></li>
+			href="#" onclick="return loadLeft('?method=file');">Files</a></li>
 	</ul>
 
 	<div>
 		<c:forEach items="${model.indexes}" var="index">
-			<a href="#${index.key}" accesskey="${index.key}">${index.key}</a>
+			<a href="#${index.key}" accesskey="${index.key}" onclick="return scrollLetter('${index.key}');">${index.key}</a>
 		</c:forEach>
 	</div>
 
@@ -37,7 +37,7 @@
 			</c:if>
 			<c:if test="${model.indexing eq false}">Before you can use the full graphic interface, a library scan must be performed.<br />
 			</c:if>
-			<a href="musicCabinetSettings.view">Learn more.</a>
+			<a href="#/musicCabinetSettings">Learn more.</a>
 			<div id="leftMessage"></div>
 	</div>
 	</c:if>
@@ -71,10 +71,7 @@
 		<c:if test="${not empty model.tags}">
 			<select id="tag">
 				<c:forEach items="${model.tags}" var="tag">
-					<sub:url value="left.view" var="leftUrl">
-						<sub:param name="tag" value="${tag}" />
-					</sub:url>
-					<option value="${leftUrl}"
+					<option value="${tag}"
 						<c:if test="${tag eq model.currentTag}"> selected</c:if>>${fn:escapeXml(tag)}</option>
 				</c:forEach>
 			</select>
@@ -93,7 +90,7 @@
 					<th><a name="${index.key}"></a>
 						<h2>
 							<c:if test="${model.reluctantArtistLoading}">
-								<a href="left.view?indexLetter=${fn:replace(index.key,'#','0')}">
+								<a href="#" onclick="return loadLeft('?indexLetter=${fn:replace(index.key,'#','0')}');">
 							</c:if>
 							${index.key}
 							<c:if test="${model.reluctantArtistLoading}">
@@ -110,7 +107,7 @@
 					<span title="${fn:escapeXml(artist.name)}"> <sub:url
 							value="artist.view" var="artistUrl">
 							<sub:param name="id" value="${artist.uri}" />
-						</sub:url> <a href="${artistUrl}">${fn:escapeXml(artist.name)}</a>
+						</sub:url> <a href="${artistUrl}" data-artist="${sub:hex(artist.uri)}">${fn:escapeXml(artist.name)}</a>
 					</span>
 				</p>
 			</c:forEach>
@@ -147,11 +144,11 @@
 		<div></div>
 		<hr>
 		<c:if test="${model.uploadRole}">
-			<a href="more.view">Upload new music</a>
+			<a href="#/more">Upload new music</a>
 			<br>
 		</c:if>
 		<c:if test="${model.adminRole}">
-			<a href="missingAlbums.view">Missing albums</a>
+			<a href="#/missingAlbums">Missing albums</a>
 			<br>
 		</c:if>
 
@@ -180,7 +177,7 @@ window.location.hash='${fn:replace(model.indexedLetter,'#','#bottom')}';
 <script type="text/javascript">
         (function($) {
             $('#tag').change(function() {
-              $(".left").load($(this).val());
+                loadLeft("?tag=" + $(this).val());
             });
         }(jQuery));
 	</script>

@@ -3,7 +3,10 @@
 	<c:forEach items="${model.artists}" var="artistRecommendation" varStatus="loopStatus">
 	<div class="col-sm-6 col-md-6 col-lg-3">
 		<div>
-			  <a href="artist.view?id=${artistRecommendation.artistUri}">
+		      <sub:url value="artist.view" var="artistUrl">
+		          <sub:param name="id" value="${artistRecommendation.artistUri}" />
+		      </sub:url>
+			  <a href="${artistUrl}">
 					<img src="${artistRecommendation.imageUrl}" class="img-thumbnail">
 				</a>
 				<div class="detail caption no-overflow">

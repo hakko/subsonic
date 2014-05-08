@@ -3,6 +3,7 @@ package net.sourceforge.subsonic.controller;
 import static java.lang.Math.max;
 import static net.sourceforge.subsonic.util.StringUtil.utf8HexEncode;
 import static org.apache.commons.lang.StringUtils.defaultIfEmpty;
+import static org.springframework.web.bind.ServletRequestUtils.getIntParameter;
 import static org.springframework.web.bind.ServletRequestUtils.getRequiredStringParameter;
 
 import java.io.File;
@@ -218,6 +219,40 @@ public class RESTBrowseController extends RESTAbstractController {
         builder.endAll();
         response.getWriter().print(builder);
     }
+    
+    public void getGenres(HttpServletRequest request, HttpServletResponse response) throws Exception {
+        request = wrapRequest(request);
+        XMLBuilder builder = createXMLBuilder(request, response, true);
+
+        builder.add("genres", false);
+
+        List<String> tags = tagService.getTopTags();
+        for(String tag : tags) {
+        	builder.add("genre", (Iterable<Attribute>)null, tag, true);
+        }
+        builder.endAll();
+        response.getWriter().print(builder);
+    }
+    
+    public void getSongsByGenre(HttpServletRequest request, HttpServletResponse response) throws Exception {
+    	
+//        request = wrapRequest(request);
+//        Player player = playerService.getPlayer(request, response);
+//        String username = securityService.getCurrentUsername(request);
+//        String lastFmUsername = settingsService.getLastFmUsername(username);
+//        
+//        String genre = getRequiredStringParameter(request, "genre");
+//        int count = Math.min(500, getIntParameter(request, "count", 10));
+//        int offset = getIntParameter(request, "offset", 0);
+//
+//        XMLBuilder builder = createXMLBuilder(request, response, true);
+//        builder.add("songsByGenre", false);
+//        
+//    	
+//    	
+//    	libraryBrowserService.getStarredTrackUris(lastFmUsername, offset, count, genre)
+    }
+    
 
     public void getArtist(HttpServletRequest request, HttpServletResponse response) throws Exception {
         request = wrapRequest(request);

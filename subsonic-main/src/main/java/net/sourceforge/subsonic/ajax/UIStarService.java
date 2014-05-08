@@ -27,6 +27,7 @@ import org.directwebremoting.WebContext;
 import org.directwebremoting.WebContextFactory;
 
 import com.github.hakko.musiccabinet.configuration.Uri;
+import com.github.hakko.musiccabinet.dao.util.URIUtil;
 import com.github.hakko.musiccabinet.exception.ApplicationException;
 import com.github.hakko.musiccabinet.service.StarService;
 
@@ -43,44 +44,44 @@ public class UIStarService {
 	private SettingsService settingsService;
 	private StarService starService;
 
-	public void starArtist(Uri artistId) {
-		starService.starArtist(getUser(), artistId);
+	public void starArtist(String artistUri) {
+		starService.starArtist(getUser(), URIUtil.parseURI(artistUri));
 	}
 
-	public void unstarArtist(Uri artistId) {
-		starService.unstarArtist(getUser(), artistId);
+	public void unstarArtist(String artistUri) {
+		starService.unstarArtist(getUser(), URIUtil.parseURI(artistUri));
 	}
 
-	public void starAlbum(Uri albumId) {
+	public void starAlbum(String albumUri) {
 		try {
-			starService.starAlbum(getUser(), albumId);
+			starService.starAlbum(getUser(), URIUtil.parseURI(albumUri));
 		} catch (Exception e) {
 			LOG.error("Error starring album " + e.getMessage(), e);
 		}
 	}
 
-	public void unstarAlbum(Uri albumId) {
+	public void unstarAlbum(String albumUri) {
 		try {
 
-			starService.unstarAlbum(getUser(), albumId);
+			starService.unstarAlbum(getUser(), URIUtil.parseURI(albumUri));
 		} catch (Exception e) {
 			LOG.error("Error starring album " + e.getMessage(), e);
 		}
 
 	}
 
-	public void starTrack(Uri trackId) {
+	public void starTrack(String trackUri) {
 		try {
-			starService.starTrack(getUser(), trackId);
+			starService.starTrack(getUser(), URIUtil.parseURI(trackUri));
 		} catch (ApplicationException e) {
 			LOG.warn("Could not post starred track as loved song on last.fm!",
 					e);
 		}
 	}
 
-	public void unstarTrack(Uri trackId) {
+	public void unstarTrack(String trackUri) {
 		try {
-			starService.unstarTrack(getUser(), trackId);
+			starService.unstarTrack(getUser(), URIUtil.parseURI(trackUri));
 		} catch (ApplicationException e) {
 			LOG.warn(
 					"Could not post unstarred track as unloved song on last.fm!",

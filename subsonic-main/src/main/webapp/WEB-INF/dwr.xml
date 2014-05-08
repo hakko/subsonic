@@ -48,7 +48,8 @@
             <param name="beanName" value="ajaxDeviceLocatorService"/>
         </create>
         
-
+        <convert match="java.lang.Exception" converter="exception"/>
+        <convert match="java.lang.StackTraceElement" converter="bean"/>
         <convert converter="bean" match="net.sourceforge.subsonic.ajax.NetworkStatus"/>
         <convert converter="bean" match="net.sourceforge.subsonic.ajax.NowPlayingInfo"/>
         <convert converter="bean" match="net.sourceforge.subsonic.ajax.PlaylistInfo"/>

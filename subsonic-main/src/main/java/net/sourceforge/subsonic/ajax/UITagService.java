@@ -27,6 +27,7 @@ import net.sourceforge.subsonic.service.SettingsService;
 import org.directwebremoting.WebContext;
 import org.directwebremoting.WebContextFactory;
 
+import com.github.hakko.musiccabinet.dao.util.URIUtil;
 import com.github.hakko.musiccabinet.domain.model.music.Artist;
 import com.github.hakko.musiccabinet.service.TagUpdateService;
 
@@ -43,8 +44,8 @@ public class UITagService {
     private SettingsService settingsService;
     private TagUpdateService tagUpdateService;
     
-    public void tagArtist(int artistId, String artistName, String tagName, int tagCount, boolean increase) {
-    	Artist artist = new Artist(artistId, artistName);
+    public void tagArtist(String artistUri, String artistName, String tagName, int tagCount, boolean increase) {
+    	Artist artist = new Artist(URIUtil.parseURI(artistUri), artistName);
     	String lastFmUsername = getLastFmUsername();
     	LOG.debug(format("Tag %s as %s (%d) for %s", artistName, tagName, tagCount, lastFmUsername));
     	try {

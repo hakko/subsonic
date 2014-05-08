@@ -8,13 +8,13 @@
 <div style="padding: 15px;">
 
 <h1>
-<a href="#" onclick="toggleStar('art', ${model.artistUri}, '#starImage${model.artistUri}'); return false;">
+<a href="#" onclick="toggleStar('art', ${sub:esc(model.artistId)}, '${"#starImage".concat(sub:jqesc(model.artistId))}'); return false;">
 	<c:choose>
 		<c:when test="${model.artistStarred}">
-			<img id="starImage${model.artistUri}" src="<spring:theme code="ratingOnImage"/>" alt="">
+			<img id="starImage${model.artistId}" src="<spring:theme code="ratingOnImage"/>" alt="">
 		</c:when>
 		<c:otherwise>
-			<img id="starImage${model.artistUri}" src="<spring:theme code="ratingOffImage"/>" alt="">
+			<img id="starImage${model.artistId}" src="<spring:theme code="ratingOffImage"/>" alt="">
 		</c:otherwise>
 	</c:choose>
 </a>
@@ -50,29 +50,29 @@ ${model.artistName}
 </div>
 
 <sub:url value="artist.view" var="backUrl">
-	<sub:param name="id" value="${model.artistUri}"/>
+	<sub:param name="id" value="${model.artistId}"/>
 </sub:url>
 <div class="back"><a href="${backUrl}"><fmt:message key="common.back"/></a></div>
 
 <script type="text/javascript" language="javascript">
 
     function init() {
-        dwr.engine.setErrorHandler(null);
+        dwr.engine.setErrorHandler(dwrErrorHandler);
 	}
 
 	function add(name, count) {
-		$("#inp").append('<div style="display: block">\
+		jQuery("#inp").append('<div style="display: block">\
 			<img class="dec" src="<spring:theme code="removeImage"/>" alt="Decrease" style="float: left; padding-top: 4px">\
 			<div class="popularity" style="float: left"><div class="bar bgcolor3" style="width: ' + count + '%"></div><div class="genre">' + name + '</div></div>\
 			<img class="inc" src="<spring:theme code="plusImage"/>" alt="Increase" style="float: left; padding-top: 4px">\
 			<div style="clear:both;"></div></div>');
 		
-		$(".dec:last").click(function() {
-			set_width($(this), -25);
+		jQuery(".dec:last").click(function() {
+			set_width(jQuery(this), -25);
 		});
 
-		$(".inc:last").click(function() {
-			set_width($(this), 25);
+		jQuery(".inc:last").click(function() {
+			set_width(jQuery(this), 25);
 		});
 
 	}
@@ -85,23 +85,23 @@ ${model.artistName}
 		if (width > 500) { width = 500 };
 		if (width <=  0) {
 			element.parent().remove();
-			$("#genres").append("<option>" + genre + "</option>");
+			jQuery("#genres").append("<option>" + genre + "</option>");
 		} else {
 			bar.width(width);
 		}
-		uiTagService.tagArtist(${model.artistUri}, "${model.artistName}", genre, width / 5, diff > 0);
+		uiTagService.tagArtist('${model.artistId}', "${model.artistName}", genre, Math.round(width / 5), diff > 0);
 	}
 
-	$(document).ready(function() {
+	jQuery(function() {
 
 		<c:forEach items="${model.topTags}" var="tag">
 			add("${tag.name}", ${tag.count} - (${tag.count} % 5));
 		</c:forEach>
 		
-		$("#add").click(function() {
-			if ($("#genres option").length > 0) {
-				add($("#genres").val(), 50);
-				$(this).parent().find("option:selected").remove();
+		jQuery("#add").click(function() {
+			if (jQuery("#genres option").length > 0) {
+				add(jQuery("#genres").val(), 50);
+				jQuery(this).parent().find("option:selected").remove();
 			}
 		});
 	});

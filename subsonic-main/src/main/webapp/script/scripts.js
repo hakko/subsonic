@@ -162,6 +162,16 @@ var app = (function() {
     });
   }
   
+  module.loadLeft = function(params) {
+    if(!params) {
+      params = "";
+    }
+    $.when( $.ajax( "left.view" + params ) ).then(function( data, textStatus, jqXHR ) {
+      jQuery('div.left').html(data);
+    });
+    return false;
+  }
+  
   module.loadIndex = function(skipMain) {
     
     if($('div.upper').html().trim() != "") {
@@ -171,9 +181,7 @@ var app = (function() {
     $.when( $.ajax( "top.view" ) ).then(function( data, textStatus, jqXHR ) {
       jQuery('div.upper').html(data);
     });
-    $.when( $.ajax( "left.view" ) ).then(function( data, textStatus, jqXHR ) {
-      jQuery('div.left').html(data);
-    });
+    module.loadLeft();
     $.when( $.ajax( "right.view" ) ).then(function( data, textStatus, jqXHR ) {
       jQuery('div.right').html(data);
     });
@@ -196,8 +204,9 @@ var app = (function() {
       jQuery('div.main').html(data);
       // we should do the expansion here
       if(albumId) {
-        var id = $('div[meta-album="' + albumId + '"]').attr("id").replace("alb", "");
+        var id = $('div[data-album="' + albumId + '"]').attr("id").replace("alb", "");
         toggleAlbum(id);
+        scrollArtist(artistId);
       }
     });
   }
@@ -211,9 +220,27 @@ var app = (function() {
     }
     module.loadMain(url);
   }
-  module.loadGenres = function() {
-    module.loadMain("genres.view");
+  module.loadGenreByName = function(genre) {
+    module.loadGenres(genre, "genre");
   }
+  module.loadGenreById = function(genre) {
+    module.loadGenres(genre, "genreUtf8Hex");
+  }
+  module.loadGenres = function(genre, paramName) {
+    var url = "genres.view";
+    if(genre) {
+      url += "?" + paramName + "=" + genre;
+    }
+    module.loadMain(url);
+  }
+  module.loadArtistGenres = function(genre) {
+    var url = "artistGenres.view";
+    if(genre) {
+      url += "?idUtf8Hex=" + genre;
+    }
+    module.loadMain(url);
+  }
+  
   module.loadRadio = function() {
     module.loadMain("radio.view");
   }
@@ -247,6 +274,13 @@ var app = (function() {
   module.loadShareSettings = function() {
     module.loadMain("shareSettings.view");
   }
+  module.loadMusicCabinetSettings = function() {
+    module.loadMain("musicCabinetSettings.view");
+  }
+  
+  module.loadPath = function(pathId) {
+    module.loadMain("main.view?pathUtf8Hex=" + pathId);
+  }
   
   
   
@@ -256,6 +290,8 @@ var app = (function() {
       '/home/listType/:type': module.loadHome,
       '/home/listType/:type/listGroup/:group': module.loadHome,
       '/genres': module.loadGenres,
+      '/genres/genreUtf8Hex/:genre': module.loadGenreById,
+      '/genres/genre/:genre': module.loadGenreByName,
       '/radio': module.loadRadio,
       '/fileTree': module.loadFileTree,
       '/podcastReceiver': module.loadPodcastReceiver,
@@ -263,37 +299,34 @@ var app = (function() {
       '/settings': module.loadSettings,
       '/status': module.loadStatus,
       '/help': module.loadHelp,
+      '/more': module.loadMore,
+      '/missingAlbums': module.loadMissingAlbums,
       '/personalSettings': module.loadPersonalSettings,
       '/passwordSettings': module.loadPasswordSettings,
       '/playerSettings': module.loadPlayerSettings,
       '/shareSettings': module.loadShareSettings,
+      '/musicCabinetSettings': module.loadMusicCabinetSettings,
+      '/artistGenres/idUtf8Hex/:id': module.loadArtistGenres,
       '/artist/idUtf8Hex/:id': module.loadArtist,
-      '/artist/idUtf8Hex/:id/albumIdUtf8Hex/:album_id': module.loadArtist
+      '/artist/idUtf8Hex/:id/albumIdUtf8Hex/:album_id': module.loadArtist,
+      '/main/pathUtf8Hex/:path_id': module.loadPath
   };
   return module;
 })();
-
-    /*
-    $.when( $.ajax( "playlist.view" ) ).then(function( data, textStatus, jqXHR ) {
-      jQuery('div.playlist').html(data);
-    });
-    
-    this.load('artist.view?idUtf8Hex=' + artistId).then(function(output) {
-      // TODO: Scroll to this and highlight in left hand bar
-      this.app.swap(output);
-//      if(callback) {
-//        callback.call();
-//      }
-    })
-    */
-  /*
-  this.get('#/artist/idUtf8Hex/:id', function() {
-    this.loadArtist(this.params['id']);
-  });
-  
-  this.get('#/artist/idUtf8Hex/:id/albumIdUtf8Hex/:album_id', function(context) {
-    this.loadArtist(this.params['id'], function() {
-      context.log("I need to toggle the album")
-    });
-  });
-  */
+function loadLeft(params) {
+  return app.loadLeft(params);
+}
+function scrollLetter(letter) {
+  var parent = jQuery('div.left div.inner-scroll');
+  parent.scrollTop(0);
+  // 220 is magic and should be fixed.
+  parent.scrollTop(jQuery("a[name=" + letter + "]").offset().top - 220);
+  return false;
+}
+function scrollArtist(uri) {
+  var parent = jQuery('div.left div.inner-scroll');
+  parent.scrollTop(0);
+  // 220 is magic and should be fixed.
+  window.console.log(uri);
+  parent.scrollTop(jQuery("a[data-artist=" + uri + "]").offset().top - 228);
+}

@@ -8,7 +8,7 @@
 <div style="padding: 15px;">
 
 <h1>
-<a href="#" onclick="toggleStar('art', '${model.artistUri}', '#starImage${model.artistUri}'); return false;">
+<a href="#" onclick="toggleStar('art', '${model.artistUri}', '${sub:jqesc("#starImage".concat(model.artistUri))}'); return false;">
 	<c:choose>
 		<c:when test="${model.artistStarred}">
 			<img id="starImage${model.artistUri}" src="<spring:theme code="ratingOnImage"/>" alt="">
@@ -45,7 +45,11 @@ ${model.artistName}
 						<a href="${url}" class="btn btn-default btn-xs">${topTag.name}</a><c:if test="${i.count < fn:length(model.topTags)}"> </c:if>
 					</c:forEach>
 					<c:if test="${fn:length(model.topTags) > 0 and model.allowTopTagsEdit}">
-						<a href="artistGenres.view?id=${model.artistUri}">&raquo;</a>
+                        <sub:url var="url" value="artistGenres.view">
+                            <sub:param name="id" value="${model.artistUri}"/>
+                        </sub:url>
+					
+						<a href="${url}">&raquo;</a>
 					</c:if>
 				</div>
 			</div>
@@ -129,8 +133,6 @@ ${model.artistName}
 		<c:forEach items="${model.albums}" var="album" varStatus="i">
 			<c:if test="${album.selected}">
 				toggleAlbum('${i.count}');
-				// TODO: How to do this?
-				//window.location.hash='alb${i.count}';
 			</c:if>
 		</c:forEach>
     init();

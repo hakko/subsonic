@@ -14,7 +14,7 @@ PARAMETERS
 <sub:url value="/download.view" var="downloadUrl"><sub:param name="id" value="${param.uri}"/><sub:param name="name" value="${param.downloadName}"/></sub:url>
 <c:if test="${empty param.starDisabled}">
     <c:if test="${param.asTable}"><td class="play-add-download"></c:if>
-    <a href="#" onclick="toggleStar('t', ${sub:esc(param.starId)}, '#starImage${param.starId}'); return false;">
+    <a href="#" onclick="toggleStar('t', ${sub:esc(param.starId)}, '${"#starImage".concat(sub:jqesc(param.starId))}'); return false;">
         <c:choose>
             <c:when test="${param.starred}">
                 <img id="starImage${param.starId}" src="<spring:theme code="ratingOnImage"/>" alt="">
