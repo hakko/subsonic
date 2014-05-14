@@ -1,15 +1,14 @@
 <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
-<div class="table-responsive">
+<div class="table-responsive songs">
 <table class="table table-striped table-hover table-condensed">
 	<c:set var="cutoff" value="${model.visibility.captionCutoff}"/>
 <c:forEach items="${model.mediaFiles}" var="mediaFile" varStatus="loopStatus" >
 
 <c:if test="${mediaFile.metaData.discNumber gt 1 and mediaFile.metaData.trackNumber eq 1 and not empty model.albumView}"><tr><td></td></tr></c:if>
 
-<span class="detailSelected">
-<tr>
+<tr class="detailSelected">
 	<c:import url="playAddDownload.jsp">
-		<c:param name="uri" value="${sub:esc(mediaFile.uri)}"/>
+		<c:param name="uri" value="[${sub:esc(mediaFile.uri)}]"/>
 		<c:param name="starred" value="${model.isTrackStarred[loopStatus.index]}"/>
 		<c:param name="starId" value="${mediaFile.uri}"/>
 		<c:param name="starEnabled" value="${model.isTrackStarred[loopStatus.index]}"/>
@@ -35,7 +34,6 @@
 	<c:if test="${mediaFile.video and not empty mediaFile.metaData.width and not empty mediaFile.metaData.height}">(${mediaFile.metaData.width}x${mediaFile.metaData.height})</c:if></span></td></c:if>
 
 	</tr>
-</span>
 </c:forEach>
 </table>
 </div>

@@ -157,8 +157,8 @@
                 </c:choose>
             </td>
 
-            <c:if test="${model.visibility.albumVisible}"><td class="album"><a id="albumUrl" target="main"><span id="album" class="detail">Album</span></a></td></c:if>
-            <c:if test="${model.visibility.artistVisible}"><td class="artist"><a id="artistUrl" target="main"><span id="artist" class="detail">Artist</span></a></td></c:if>
+            <c:if test="${model.visibility.albumVisible}"><td class="album"><a id="albumUrl"><span id="album" class="detail">Album</span></a></td></c:if>
+            <c:if test="${model.visibility.artistVisible}"><td class="artist"><a id="artistUrl"><span id="artist" class="detail">Artist</span></a></td></c:if>
 			<c:if test="${model.visibility.composerVisible}"><td class="composer"><span id="composer" class="detail">Composer</span></td></c:if>
             <c:if test="${model.visibility.genreVisible}"><td class="genre"><span id="genre" class="detail">Genre</span></td></c:if>
             <c:if test="${model.visibility.yearVisible}"><td class="year"><span id="year" class="detail">Year</span></td></c:if>

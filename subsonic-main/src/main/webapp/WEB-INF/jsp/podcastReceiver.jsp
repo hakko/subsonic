@@ -188,7 +188,7 @@
                                 <str:truncateNicely upper="40">${episode.title}</str:truncateNicely>
                             </c:when>
                             <c:otherwise>
-                                <a target="main" href="${mainUrl}"><str:truncateNicely upper="40">${episode.title}</str:truncateNicely></a>
+                                <a href="${mainUrl}"><str:truncateNicely upper="40">${episode.title}</str:truncateNicely></a>
                             </c:otherwise>
                         </c:choose>
                     </span>

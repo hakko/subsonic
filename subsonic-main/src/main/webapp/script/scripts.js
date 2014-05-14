@@ -155,9 +155,12 @@ var app = (function() {
   $ = this.jQuery;
   var module = {};
   
-  module.loadMain = function(path) {
+  module.loadMain = function(path, type, data) {
+    if(!type) {
+      type = 'GET';
+    }
     module.loadIndex(true);
-    $.when($.ajax( path)).then(function( data, textStatus, jqXHR ) {
+    $.when($.ajax( path, {type: type, data: data})).then(function( data, textStatus, jqXHR ) {
       jQuery('div.main').html(data);
     });
   }
@@ -241,6 +244,15 @@ var app = (function() {
     module.loadMain(url);
   }
   
+  module.loadSearchSettings = function(type) {
+    var url = "searchSettings.view";
+    if(type) {
+      url += "?update=" + type;
+    }
+    module.loadMain(url);
+  }
+  
+  
   module.loadRadio = function() {
     module.loadMain("radio.view");
   }
@@ -278,9 +290,39 @@ var app = (function() {
     module.loadMain("musicCabinetSettings.view");
   }
   
+  module.loadSearch = function(query) {
+    window.console.log(query);
+    module.loadMain("search.view", 'POST', {query: query});
+  }
+  
   module.loadPath = function(pathId) {
     module.loadMain("main.view?pathUtf8Hex=" + pathId);
   }
+  
+  module.genericLoader = function(path) {
+    return function() {
+      module.loadMain(path);
+    };
+  }
+  module.changeCoverArt = function(albumId, artistId, albumId) {
+    var url = "changeCoverArt.view";
+    url += "?idUtf8Hex=" + albumId + "&artistIdUtf8Hex=" + artistId + "&albumIdUtf8Hex=" + albumId;
+    module.loadMain(url);
+  }
+  
+  module.editTags = function(id, albumId, artistId, albumId) {
+    var url = "editTags.view";
+    url += "?idsUtf8Hex=" + albumId + "&artistIdUtf8Hex=" + artistId + "&albumIdUtf8Hex=" + albumId;
+    module.loadMain(url);
+  }
+  
+  module.createShare = function(id) {
+    var url = "createShare.view";
+    url += "?idsUtf8Hex=" + id;
+    module.loadMain(url);
+  }
+  
+  
   
   
   
@@ -289,6 +331,9 @@ var app = (function() {
       '/home': module.loadHome,
       '/home/listType/:type': module.loadHome,
       '/home/listType/:type/listGroup/:group': module.loadHome,
+      '/changeCoverArt/idUtf8Hex/:id/artistIdUtf8Hex/:artistId/albumIdUtf8Hex/:albumId': module.changeCoverArt,
+      '/editTags/idsUtf8Hex/:id/artistIdUtf8Hex/:artistId/albumIdUtf8Hex/:albumId': module.editTags,
+      '/createShare/idsUtf8Hex/:id': module.createShare,
       '/genres': module.loadGenres,
       '/genres/genreUtf8Hex/:genre': module.loadGenreById,
       '/genres/genre/:genre': module.loadGenreByName,
@@ -301,6 +346,16 @@ var app = (function() {
       '/help': module.loadHelp,
       '/more': module.loadMore,
       '/missingAlbums': module.loadMissingAlbums,
+      '/generalSettings': module.genericLoader('generalSettings.view'),
+      '/advancedSettings': module.genericLoader('advancedSettings.view'),
+      '/userSettings': module.genericLoader('userSettings.view'),
+      '/networkSettings': module.genericLoader('networkSettings.view'),
+      '/transcodingSettings': module.genericLoader('transcodingSettings.view'),
+      '/internetRadioSettings': module.genericLoader('internetRadioSettings.view'),
+      '/podcastSettings': module.genericLoader('podcastSettings.view'),
+      '/searchSettings': module.loadSearchSettings,
+      '/searchSettings/update/:type': module.loadSearchSettings,
+      '/mediaFolderSettings': module.genericLoader('mediaFolderSettings.view'),
       '/personalSettings': module.loadPersonalSettings,
       '/passwordSettings': module.loadPasswordSettings,
       '/playerSettings': module.loadPlayerSettings,
@@ -308,6 +363,7 @@ var app = (function() {
       '/musicCabinetSettings': module.loadMusicCabinetSettings,
       '/artistGenres/idUtf8Hex/:id': module.loadArtistGenres,
       '/artist/idUtf8Hex/:id': module.loadArtist,
+      '/search/query/(.*)': module.loadSearch,
       '/artist/idUtf8Hex/:id/albumIdUtf8Hex/:album_id': module.loadArtist,
       '/main/pathUtf8Hex/:path_id': module.loadPath
   };

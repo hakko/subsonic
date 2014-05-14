@@ -36,7 +36,7 @@
     </thead>
         <c:forEach items="${command.artists}" var="artist" varStatus="loopStatus">
 
-            <sub:url value="/artist.view" var="artistUrl">
+            <sub:url value="artist.view" var="artistUrl">
                 <sub:param name="id" value="${artist.uri}"/>
             </sub:url>
 
@@ -59,11 +59,11 @@
     </thead>
         <c:forEach items="${command.albums}" var="album" varStatus="loopStatus">
 
-			<sub:url value="/artist.view" var="artistUrl">
+			<sub:url value="artist.view" var="artistUrl">
                 <sub:param name="id" value="${album.artist.uri}"/>
             </sub:url>
 
-            <sub:url value="/artist.view" var="albumUrl">
+            <sub:url value="artist.view" var="albumUrl">
                 <sub:param name="id" value="${album.artist.uri}"/>
                 <sub:param name="album-uri" value="${album.uri}"/>
             </sub:url>
@@ -91,11 +91,11 @@
     </thead>
         <c:forEach items="${command.songs}" var="track" varStatus="loopStatus">
 
-			<sub:url value="/artist.view" var="artistUrl">
+			<sub:url value="artist.view" var="artistUrl">
                 <sub:param name="id" value="${track.metaData.artistUri}"/>
             </sub:url>
 
-            <sub:url value="/artist.view" var="albumUrl">
+            <sub:url value="artist.view" var="albumUrl">
                 <sub:param name="id" value="${track.metaData.artistUri}"/>
                 <sub:param name="album-uri" value="${track.metaData.albumUri}"/>
             </sub:url>

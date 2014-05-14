@@ -61,7 +61,7 @@
 
 		</ul>
 		<form class="navbar-form navbar-left" role="search" method="POST"
-			action="#/search" data-target="main" name="searchForm" onsubmit="return submitForm(this);">
+			action="search.view" data-target="main" name="searchForm" onsubmit="return submitForm(this);">
 			<div class="form-group">
 				<input type="text" name="query" class="form-control"
 					placeholder="Search">

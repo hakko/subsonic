@@ -86,27 +86,8 @@
   <script text="text/javascript">
     ;(function($) {
       var router = Router(app.routes);
-      router.init("/"); 
+      router.init("/");
     })(jQuery);
-    
-
-/*    
-    jQuery("[data-src]").each(function() {
-      loadFrame(this);
-    });
-    jQuery(document).on("click", "a", function() {
-      var el = $(this);
-      if(el.attr("href").indexOf("#") === 0) {
-        return true;
-      }
-      if(el.attr("target") === "_top") {
-        return true;
-      }
-      loadInFrame(el, el.attr("href"));
-      return false;
-    })
-    */
-    
   </script>
 </body>
 </html>

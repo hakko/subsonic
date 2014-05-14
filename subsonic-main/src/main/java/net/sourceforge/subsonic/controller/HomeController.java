@@ -36,9 +36,11 @@ import net.sourceforge.subsonic.Logger;
 import net.sourceforge.subsonic.domain.Album;
 import net.sourceforge.subsonic.domain.ArtistLink;
 import net.sourceforge.subsonic.domain.MediaFile;
+import net.sourceforge.subsonic.domain.Player;
 import net.sourceforge.subsonic.domain.User;
 import net.sourceforge.subsonic.domain.UserSettings;
 import net.sourceforge.subsonic.service.MediaFileService;
+import net.sourceforge.subsonic.service.PlayerService;
 import net.sourceforge.subsonic.service.SecurityService;
 import net.sourceforge.subsonic.service.SettingsService;
 import net.sourceforge.subsonic.util.Util;
@@ -66,6 +68,7 @@ public class HomeController extends ParameterizableViewController {
     private static final Logger LOG = Logger.getLogger(HomeController.class);
 
     private SettingsService settingsService;
+    private PlayerService playerService;
     private SecurityService securityService;
     private UserTopArtistsService userTopArtistsService;
     private ArtistRecommendationService artistRecommendationService;
@@ -78,6 +81,8 @@ public class HomeController extends ParameterizableViewController {
     protected ModelAndView handleRequestInternal(HttpServletRequest request, HttpServletResponse response) throws Exception {
 
         Map<String, Object> map = new HashMap<String, Object>();
+        
+        Player player = playerService.getPlayer(request, response);
 
         User user = securityService.getCurrentUser(request);
         UserSettings userSettings = settingsService.getUserSettings(user.getUsername());
@@ -124,6 +129,7 @@ public class HomeController extends ParameterizableViewController {
         	setSongs(listType, query, page, userSettings, lastFmUsername, map);
         }
 
+        map.put("player", player);
         map.put("welcomeTitle", settingsService.getWelcomeTitle());
         map.put("welcomeSubtitle", settingsService.getWelcomeSubtitle());
         map.put("welcomeMessage", settingsService.getWelcomeMessage());
@@ -294,6 +300,10 @@ public class HomeController extends ParameterizableViewController {
 
     public void setSecurityService(SecurityService securityService) {
         this.securityService = securityService;
+    }
+    
+    public void setPlayerService(PlayerService playerService) {
+        this.playerService = playerService;
     }
 
     public void setUserTopArtistsService(UserTopArtistsService userTopArtistsService) {

@@ -1,28 +1,47 @@
 <div class="row">
 	<c:forEach items="${model.albums}" var="album" varStatus="loopStatus">
-		<div class="col-sm-6 col-md-6 col-lg-3">
+    <c:choose>
+    <c:when test="${model.player.web && sub:isSpotify(album.uri)}">
+       <iframe src="https://embed.spotify.com/?uri=${album.uri}&theme=light&view=coverart" 
+           width="250" height="80" frameborder="0" 
+           allowtransparency="true"></iframe>
+    </c:when>
+    <c:otherwise>
+                <c:choose>
+                    <c:when test="${not empty album.coverArtUrl}">
+                        <c:set var="coverArtUrl">${album.coverArtUrl}</c:set>
+                    </c:when>
+                    <c:otherwise>
+                        <sub:url value="coverArt.view" var="coverArtUrl" hashurl="false">
+                            <sub:param name="size" value="126" />
+                            <c:if test="${not empty album.coverArtPath}">
+                                <sub:param name="path" value="${album.coverArtPath}" />
+                            </c:if>
+                        </sub:url>
+                    </c:otherwise>
+                </c:choose>    
+		<div class="col-sm-6 col-md-6 col-lg-3 relative-container grid-item">
+		    <!--div class="grid-item-img" style="background-image: url(${coverArtUrl})"></div-->
             <sub:url value="artist.view" var="albumUrl">
                 <sub:param name="id" value="${album.artistUri}" />
                 <sub:param name="albumId" value="${album.uri}" />
             </sub:url>
-			<a href="${albumUrl}"> <c:choose>
-					<c:when test="${not empty album.coverArtUrl}">
-						<c:set var="coverArtUrl">${album.coverArtUrl}</c:set>
-					</c:when>
-					<c:otherwise>
-						<sub:url value="coverArt.view" var="coverArtUrl" hashurl="false">
-							<sub:param name="size" value="126" />
-							<c:if test="${not empty album.coverArtPath}">
-								<sub:param name="path" value="${album.coverArtPath}" />
-							</c:if>
-						</sub:url>
-					</c:otherwise>
-				</c:choose> <img class="img-thumbnail" width="126" height="126"
+			<a href="${albumUrl}">  <img class="img-thumbnail" 
 				src="${coverArtUrl}" alt=""
-				title="${album.artistName} - ${album.title}">
+				title="${album.artistName} - ${album.title}" width="100%" height="auto" />
 			</a>
 			<div class="detail play-label">
-			<div class="btn-group">
+                <c:import url="playAddDownload.jsp">
+                    <c:param name="uri" value="${sub:esc(album.trackUris)}"/>
+                    <c:param name="starDisabled" value="true"/>
+                    <c:param name="playEnabled" value="${model.user.streamRole}"/>
+                    <c:param name="enqueueEnabled" value="${model.user.streamRole}"/>
+                    <c:param name="addEnabled" value="${model.user.streamRole}"/>
+                    <c:param name="downloadEnabled" value="${model.user.downloadRole}"/>
+                    <c:param name="downloadName" value="${not empty model.artistName ? model.artistName : album.artistName} - ${album.title}"/>
+                    <c:param name="asTable" value="false"/>
+                </c:import>			
+			<!--div class="btn-group">
 			    <button class="btn btn-play-dd btn-default" href="#" onclick="return onPlay(${sub:esc(album.trackUris)}, 'P');"><img
                     src="<spring:theme code="playImage"/>" alt="Play All"
                     title="Play All" />
@@ -42,13 +61,15 @@
                     src="<spring:theme code="addImage"/>" alt="Add Last"
                     title="Add Last" />Add Last</a></li>
                 </ul>                        
-            </div>                    
+            </div-->                    
 			</div>
 				<div class="detail play-label">
-					<em><str:truncateNicely lower="14" upper="14">${album.artistName}</str:truncateNicely></em><br />
-					<str:truncateNicely lower="14" upper="14">${album.title}</str:truncateNicely>
+					<em>${album.artistName}</em><br />
+					${album.title}
 				</div>
 			
 		</div>
+    </c:otherwise>
+    </c:choose>		
 	</c:forEach>
 </div>

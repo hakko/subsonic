@@ -138,3 +138,29 @@ span.off:hover {
   float: left;
   padding-right: 5px;
 }
+.relative-container {
+  position: relative;
+}
+.grid-item {
+  min-height: 128px;
+
+}
+.play-label .btn-group {
+  position: absolute;
+  bottom: 30px;
+}
+.album-title {
+  width: 70%;
+}
+.play-label, .album-title {
+  float: none;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.btn-star {
+  padding: 4px 6px;
+}
+.songs {
+  overflow: visible !important;
+}

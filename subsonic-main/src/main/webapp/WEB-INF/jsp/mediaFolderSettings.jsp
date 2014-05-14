@@ -85,12 +85,12 @@
 				</div>
 				<div class="panel-body">
 					<div class="button-group">
-						<a class="btn btn-default" target="main"
-							href="searchSettings.view?update=offline">Offline scan</a> <a
-							class="btn btn-default" target="main"
-							href="searchSettings.view?update=normal">Normal scan</a> <a
-							class="btn btn-default" target="main"
-							href="searchSettings.view?update=full">Full scan</a>
+						<a class="btn btn-default" 
+							href="#/searchSettings/update/offline">Offline scan</a> <a
+							class="btn btn-default" 
+							href="#/searchSettings/update/normal">Normal scan</a> <a
+							class="btn btn-default" 
+							href="#/searchSettings/update/full">Full scan</a>
 					</div>
 
 				</div>

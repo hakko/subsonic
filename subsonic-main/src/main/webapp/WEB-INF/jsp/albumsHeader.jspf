@@ -13,6 +13,7 @@
 
 		  if ($('#albson' + index).children().size() == 0) {
 		      $('#albson' + index).load('album.view?view&mf=' + musicFiles[index - 1].join('&mf=') <c:if test="${not empty model.trackUri}">+ '&trackId=${model.trackUri}'</c:if>);
+		      setupZoom('<c:url value="/"/>');
 		  }
 		  return false;
         }(jQuery));

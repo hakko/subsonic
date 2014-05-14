@@ -1,3 +1,4 @@
+<div class="list-group">
 <c:forEach items="${model.albums}" var="album" varStatus="i">
 	<c:choose>
 		<c:when test="${not empty album.coverArtUrl}"><c:set var="coverArtUrl">${album.coverArtUrl}</c:set></c:when>
@@ -10,26 +11,28 @@
 	</c:choose>
 	<c:choose>
 	<c:when test="${model.player.web && sub:isSpotify(album.uri)}">
+	   <div class="list-group-item">
 	   <iframe src="https://embed.spotify.com/?uri=${album.uri}&theme=white&view=coverart" 
 	       width="300" height="80" frameborder="0" 
 	       allowtransparency="true"></iframe>
+       </div>	       
 	</c:when>
 	<c:otherwise>
-	<div style="padding-top:5px" id="alb${i.count}" data-index="${i.count}" data-album="${sub:hex(album.uri)}">
-		<div style="float:left">
+	<div class="list-group-item clearfix" style="padding-top:5px" id="alb${i.count}" data-index="${i.count}" data-album="${sub:hex(album.uri)}">
+		<div style="float:left; width: 30%">
                 <sub:url value="artist.view" var="albumUrl">
                     <sub:param name="id" value="${album.artistUri}" />
                     <sub:param name="albumId" value="${album.uri}" />
                 </sub:url>
-				<a href="${albumUrl}">
+				<a href="${albumUrl}" class="clearfix">
 					<span class="overlay">
-					<img class="img-thumbnail" id="albart${i.count}" width="87" height="87" src="${coverArtUrl}" alt="">
+					<img class="img-thumbnail" id="albart${i.count}" src="${coverArtUrl}" alt="">
 					   <c:if test="${sub:isSpotify(album.uri)}">
 				           <img class="spotify-icon" src="icons/spotify.png" width="16" height="16" />
 					   </c:if>
 					</span>
 				</a>
-			<div id="albcmd${i.count}" style="display:none;float:right;padding-right:10px;padding-bottom:15px;text-align:right" class="detail">
+			<div id="albcmd${i.count}" style="display:none;float:right;padding-right:10px;padding-bottom:15px;" class="detail">
 				<c:import url="playAddDownload.jsp">
 					<c:param name="uri" value="${sub:esc(album.trackUris)}"/>
 					<c:param name="starDisabled" value="true"/>
@@ -41,26 +44,25 @@
 					<c:param name="asTable" value="false"/>
 				</c:import>
 
+                <div class="btn-group btn-group-xs">
 				<c:choose>
-					<c:when test="${not empty album.coverArtZoomUrl or not empty album.coverArtUrl}">| <a rel="zoom" href="${album.coverArtZoomUrl}">Zoom</a></c:when>
+					<c:when test="${not empty album.coverArtZoomUrl or not empty album.coverArtUrl}"><a class="btn btn-default" rel="zoom" href="${album.coverArtZoomUrl}">Zoom</a></c:when>
 					<c:otherwise><c:choose>
 						<c:when test="${not empty album.coverArtPath}">
-							<sub:url value="/coverArt.view" var="zoomCoverArtUrl"><sub:param name="path" value="${album.coverArtPath}"/></sub:url>
-							| <a rel="zoom" href="${zoomCoverArtUrl}">Zoom</a>
+							<sub:url value="coverArt.view" var="zoomCoverArtUrl"  hashurl="false"><sub:param name="path" value="${album.coverArtPath}"/></sub:url>
+							<a class="btn btn-default" rel="zoom" href="${zoomCoverArtUrl}">Zoom</a>
 						</c:when>
-						<c:otherwise>| Zoom</c:otherwise>						
+						<c:otherwise><div class="btn btn-default" rel="zoom">Zoom</div></c:otherwise>						
 					</c:choose></c:otherwise>
 				</c:choose>
 
-				<br/>
-
 				<c:if test="${model.user.coverArtRole}">
-					<sub:url value="/changeCoverArt.view" var="changeCoverArtUrl">
+					<sub:url value="changeCoverArt.view" var="changeCoverArtUrl">
 						<sub:param name="id" value="${album.trackUris[0]}"/>
 						<sub:param name="artistId" value="${album.artistUri}"/>
 						<sub:param name="albumId" value="${album.uri}"/>
 					</sub:url>
-					<a href="${changeCoverArtUrl}">Art</a> |
+					<a class="btn btn-default" href="${changeCoverArtUrl}">Art</a>
 				</c:if>
 
 				<c:if test="${model.user.coverArtRole}">
@@ -69,20 +71,20 @@
 						<sub:param name="artistId" value="${album.artistUri}"/>
 						<sub:param name="albumId" value="${album.uri}"/>
 					</sub:url>
-					<a href="${editTagsUrl}">Tags</a> |
+					<a class="btn btn-default" href="${editTagsUrl}">Tags</a>
 				</c:if>
 				
 				<c:if test="${model.user.shareRole}">
 					<sub:url value="createShare.view" var="shareUrl">
 						<sub:param name="ids" value="${sub:esc(album.trackUris)}"/>
 					</sub:url>
-					<a href="${shareUrl}">Share</a>
+					<a class="btn btn-default" href="${shareUrl}">Share</a>
 				</c:if>
-				
+				</div>
 			</div>
 		</div>
-		<div style="float:left;padding-left:10px;padding-bottom:15px">
-			<div>
+		<div style="float:left;padding-left:10px;padding-bottom:15px; width: 70%;">
+			<div class="album-title">
 				<a href="#" onclick="toggleStar('alb', ${sub:esc(album.uri)}, '${sub:jqesc("#starImage".concat(album.uri))}'); return false;">
 					<c:choose>
 						<c:when test="${model.isAlbumStarred[i.index]}">
@@ -96,7 +98,7 @@
 				<a href="#" onclick="return toggleAlbum(${i.count})">
 					<b><c:if test="${not empty album.artistName}">${album.artistName} - </c:if>${album.title}</b><c:if test="${album.year > 0}"> <em>(${album.year})</em></c:if>
 				</a>
-				<c:if test="${album.artistUri != model.artistUri}"> <a href="artist.view?id=${album.artistUri}&albumId=${album.uri}">&raquo;</a></c:if>
+				<c:if test="${album.artistUri != model.artistUri}"> <a href="${albumUrl}">&raquo;</a></c:if>
 				<br>
 			</div>
 			<div id="albtit${i.count}">
@@ -119,3 +121,4 @@
 	<div style="clear:both;"></div>
 
 </c:forEach>		
+</div>

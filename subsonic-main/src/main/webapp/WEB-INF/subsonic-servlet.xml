@@ -280,6 +280,7 @@
     <bean id="homeController" class="net.sourceforge.subsonic.controller.HomeController">
         <property name="viewName" value="home"/>
         <property name="settingsService" ref="settingsService"/>
+        <property name="playerService" ref="playerService"/>
         <property name="securityService" ref="securityService"/>
         <property name="userTopArtistsService" ref="userTopArtistsService"/>
         <property name="artistRecommendationService" ref="artistRecommendationService"/>

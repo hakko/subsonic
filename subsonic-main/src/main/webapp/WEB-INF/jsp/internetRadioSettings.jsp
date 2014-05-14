@@ -1,4 +1,6 @@
-<%@ page language="java" contentType="text/html; charset=utf-8" pageEncoding="iso-8859-1" %>
+<%@ page language="java" contentType="text/html; charset=utf-8"
+    pageEncoding="iso-8859-1"%>
+<%@ include file="include.jspf"%>
 
 <div class="mainframe bgcolor1">
 
@@ -6,8 +8,14 @@
     <c:param name="cat" value="internetRadio"/>
 </c:import>
 
-<form method="post" action="internetRadioSettings.view">
-<table class="indent">
+    <form method="post" action="internetRadioSettings.view"
+        onsubmit="return submitForm(this, 'Settings saved.');">
+        <div class="statusMessage"></div>
+        <div class="panel panel-default">
+            <div class="panel-heading"><fmt:message key="settingsheader.internetRadio"/></div>
+
+
+            <table class="table table-striped table-hover table-condensed">
     <tr>
         <th><fmt:message key="internetradiosettings.name"/></th>
         <th><fmt:message key="internetradiosettings.streamurl"/></th>
@@ -45,6 +53,8 @@
         </td>
     </tr>
 </table>
+</div>
+</div>
 </form>
 
 
