@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:layout_width="fill_parent"
+              android:layout_height="fill_parent"
+              android:layout_gravity="top"
+              android:layout_margin="@dimen/widget_margin"
+              android:gravity="top"
+              android:orientation="vertical"
+              android:background="@drawable/appwidget_bg"
+              android:baselineAligned="false">
+
+    <LinearLayout
+            android:layout_width="fill_parent"
+            android:layout_height="@dimen/widget_album_art_size"
+            android:orientation="horizontal"
+            android:focusable="true"
+            android:baselineAligned="false">
+
+        <FrameLayout
+                android:layout_width="@dimen/widget_album_art_size"
+                android:layout_height="@dimen/widget_album_art_size"
+                android:focusable="true">
+            <ImageView android:id="@+id/widget_albumart"
+                       android:src="@drawable/appwidget_art_unknown"
+                       android:layout_width="@dimen/widget_album_art_size"
+                       android:layout_height="@dimen/widget_album_art_size"
+                       android:scaleType="centerInside"
+                       android:contentDescription="@null"/>
+        </FrameLayout>
+
+        <LinearLayout
+                android:layout_width="0.0dip"
+                android:layout_height="wrap_content"
+                android:layout_weight="1.0"
+                android:layout_gravity="center"
+                android:gravity="center_horizontal"
+                android:orientation="horizontal"
+                android:paddingLeft="16.0dip"
+                android:paddingRight="16.0dip"
+                android:focusable="true">
+
+            <ImageButton style="@style/WidgetButton" android:id="@+id/widget_prev" android:src="@drawable/media_backward"/>
+            <FrameLayout android:focusable="false" android:layout_width="0dip" android:layout_height="fill_parent" android:layout_weight="1.0"/>
+            <ImageButton style="@style/WidgetButton" android:id="@+id/widget_play" android:src="@drawable/media_start"/>
+            <ImageButton style="@style/WidgetButton" android:id="@+id/widget_pause" android:src="@drawable/media_pause" android:visibility="gone"/>
+            <FrameLayout android:focusable="false" android:layout_width="0dip" android:layout_height="fill_parent" android:layout_weight="1.0" />
+            <ImageButton style="@style/WidgetButton" android:id="@+id/widget_next" android:src="@drawable/media_forward"/>
+        </LinearLayout>
+    </LinearLayout>
+
+    <LinearLayout
+            android:layout_width="fill_parent"
+            android:layout_height="1.0dip"
+            android:background="#33ffffff"/>
+
+    <LinearLayout
+            android:id="@+id/widget_text_layout"
+            android:layout_width="fill_parent"
+            android:layout_height="0.0dip"
+            android:layout_weight="1.0"
+            android:layout_gravity="left"
+            android:gravity="top"
+            android:orientation="horizontal"
+            android:paddingLeft="8.0dip"
+            android:paddingTop="@dimen/widget_text_padding_top"
+            android:paddingRight="8.0dip"
+            android:focusable="true">
+
+        <TextView
+                android:id="@+id/widget_title"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textAppearance="?android:textAppearanceSmall"
+                android:textStyle="bold"
+                android:textColor="@color/appwidget_text_primary"
+                android:ellipsize="end"
+                android:singleLine="true" />
+
+        <TextView
+                android:id="@+id/widget_text_separator"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textAppearance="?android:textAppearanceSmall"
+                android:textStyle="bold"
+                android:textColor="@color/appwidget_text_secondary"
+                android:visibility="gone"
+                android:ellipsize="none"
+                android:paddingLeft="5.0dip"
+                android:paddingRight="5.0dip"
+                android:text="-"
+                android:singleLine="true" />
+
+        <TextView
+                android:id="@+id/widget_artist"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textAppearance="?android:textAppearanceSmall"
+                android:textColor="@color/appwidget_text_secondary"
+                android:ellipsize="none"
+                android:singleLine="true"/>
+
+    </LinearLayout>
+
+</LinearLayout>

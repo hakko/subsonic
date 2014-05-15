@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:orientation="vertical"
+              android:layout_width="fill_parent"
+              android:layout_height="wrap_content">
+
+    <LinearLayout
+            android:id="@+id/main_select_server"
+            android:orientation="horizontal"
+            android:paddingTop="2dip"
+            android:paddingBottom="2dip"
+            android:paddingLeft="6dp"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:minHeight="?android:attr/listPreferredItemHeight">
+
+        <ImageView
+                android:src="@drawable/navigate_down"
+                android:layout_gravity="center_vertical"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"/>
+
+        <LinearLayout
+                android:orientation="vertical"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content">
+
+            <TextView android:id="@+id/main.select_server_1"
+                      android:text="@string/main.select_server"
+                      android:layout_width="fill_parent"
+                      android:layout_height="wrap_content"
+                      android:layout_marginLeft="10dip"
+                      android:layout_marginTop="8dip"
+                      android:textAppearance="?android:attr/textAppearanceMedium"/>
+
+            <TextView android:id="@+id/main.select_server_2"
+                      android:layout_width="fill_parent"
+                      android:layout_height="wrap_content"
+                      android:layout_marginLeft="10dip"
+                      android:textAppearance="?android:attr/textAppearanceSmall"/>
+
+        </LinearLayout>
+    </LinearLayout>
+
+    <TextView style="@style/MainMenuTextView"
+              android:id="@+id/main_offline"
+              android:text="@string/main.use_offline"
+              android:drawablePadding="12dip"
+              android:drawableLeft="@drawable/collections_cloud"/>
+
+    <TextView style="@style/MainMenuTextView"
+              android:id="@+id/main_starred"
+              android:text="@string/main.starred"
+              android:drawablePadding="12dip"
+              android:drawableLeft="@drawable/starred"/>
+
+    <TextView style="@style/HeaderTextView" android:id="@+id/main_albums" android:text="@string/main.albums_title"/>
+    <TextView style="@style/MainMenuTextView.AlbumList" android:id="@+id/main_albums_newest" android:text="@string/main.albums_newest"/>
+    <TextView style="@style/MainMenuTextView.AlbumList" android:id="@+id/main_albums_recent" android:text="@string/main.albums_recent"/>
+    <TextView style="@style/MainMenuTextView.AlbumList" android:id="@+id/main_albums_frequent" android:text="@string/main.albums_frequent"/>
+    <TextView style="@style/MainMenuTextView.AlbumList" android:id="@+id/main_albums_highest" android:text="@string/main.albums_highest"/>
+    <TextView style="@style/MainMenuTextView.AlbumList" android:id="@+id/main_albums_random" android:text="@string/main.albums_random"/>
+
+</LinearLayout>
+

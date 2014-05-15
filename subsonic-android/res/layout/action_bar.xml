@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        android:layout_width="fill_parent"
+        android:layout_height="50dp">
+
+    <LinearLayout
+            android:id="@+id/actionbar_back_layout"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentTop="true"
+            android:layout_alignParentBottom="true"
+            android:layout_alignParentLeft="true"
+            android:orientation="horizontal">
+        <ImageView
+                android:id="@+id/actionbar_back"
+                android:src="@drawable/ic_ab_back_holo_dark"
+                android:visibility="invisible"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"/>
+
+        <ImageView
+                android:id="@+id/actionbar_icon"
+                android:src="@drawable/launch"
+                android:layout_width="48dip"
+                android:layout_height="48dip"
+                android:layout_gravity="center"/>
+    </LinearLayout>
+
+    <ImageButton
+            android:id="@+id/action_button_3"
+            android:src="@drawable/action_overflow"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentTop="true"
+            android:layout_alignParentBottom="true"
+            android:layout_alignParentRight="true"
+            android:padding="10dp"
+            android:background="@drawable/actionbar_button"/>
+
+    <ImageButton
+            android:id="@+id/action_button_2"
+            android:src="@drawable/action_search"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentTop="true"
+            android:layout_alignParentBottom="true"
+            android:layout_toLeftOf="@id/action_button_3"
+            android:padding="10dp"
+            android:background="@drawable/actionbar_button"/>
+
+    <ImageButton
+            android:id="@+id/action_button_1"
+            android:src="@drawable/action_shuffle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentTop="true"
+            android:layout_alignParentBottom="true"
+            android:layout_toLeftOf="@id/action_button_2"
+            android:padding="10dp"
+            android:background="@drawable/actionbar_button"/>
+
+    <TextView
+                android:id="@+id/actionbar_title_text"
+                android:text="Subsonic"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentTop="true"
+                android:layout_alignParentBottom="true"
+                android:layout_toLeftOf="@id/action_button_1"
+                android:layout_toRightOf="@id/actionbar_back_layout"
+                android:paddingLeft="6dip"
+                android:gravity="center_vertical"
+                android:textColor="#FFFFFF"
+                android:textSize="18sp"
+                android:singleLine="true"
+                android:ellipsize="end"
+                android:inputType="none"/>
+
+    <View
+            android:layout_width="fill_parent"
+            android:layout_height="2dp"
+            android:background="@color/dividerColor"
+            android:layout_alignParentBottom="true"/>
+
+</RelativeLayout>

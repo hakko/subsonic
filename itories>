@@ -1,0 +1,1924 @@
+[1mdiff --git a/.gitignore b/.gitignore[m
+[1mindex 1ff0378..78f172c 100644[m
+[1m--- a/.gitignore[m
+[1m+++ b/.gitignore[m
+[36m@@ -1 +1,2 @@[m
+ .metadata[m
+[32m+[m[32mbin[m
+[1mdiff --git a/pom.xml b/pom.xml[m
+[1mindex 68b91c6..2657539 100644[m
+[1m--- a/pom.xml[m
+[1m+++ b/pom.xml[m
+[36m@@ -1,16 +1,20 @@[m
+[31m-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"[m
+[31m-         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">[m
+[32m+[m[32m<?xml version="1.0" encoding="UTF-8"?>[m
+[32m+[m[32m<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">[m
+ [m
+     <modelVersion>4.0.0</modelVersion>[m
+     <groupId>net.sourceforge.subsonic</groupId>[m
+     <artifactId>subsonic</artifactId>[m
+[31m-    <version>0.7</version>[m
+[32m+[m[32m    <version>4.9</version>[m
+     <name>Subsonic</name>[m
+     <packaging>pom</packaging>[m
+[32m+[m[32m    <organization>[m
+[32m+[m[32m        <name>Subsonic</name>[m
+[32m+[m[32m        <url>http://subsonic.org/</url>[m
+[32m+[m[32m    </organization>[m
+     <inceptionYear>2004</inceptionYear>[m
+ [m
+     <properties>[m
+[31m-        <failOnDependencyWarning>false</failOnDependencyWarning>[m
+[32m+[m[32m        <failOnDependencyWarning>true</failOnDependencyWarning>[m
+         <project.build.sourceEncoding>iso-8859-1</project.build.sourceEncoding>[m
+     </properties>[m
+ [m
+[36m@@ -30,16 +34,57 @@[m
+             <name>download.java.net</name>[m
+             <url>http://download.java.net/maven/2/</url>[m
+         </repository>[m
+[32m+[m[32m        <repository>[m
+[32m+[m[32m            <id>teleal</id>[m
+[32m+[m[32m            <name>teleal</name>[m
+[32m+[m[32m            <url>http://teleal.org/m2</url>[m
+[32m+[m[32m        </repository>[m
+     </repositories>[m
+ [m
+     <pluginRepositories>[m
+         <pluginRepository>[m
+[32m+[m[32m            <id>local1</id>[m
+[32m+[m[32m            <name>Local Repository 1</name>[m
+[32m+[m[32m            <url>file:repo</url>[m
+[32m+[m[32m        </pluginRepository>[m
+[32m+[m[32m        <pluginRepository>[m
+[32m+[m[32m            <id>local2</id>[m
+[32m+[m[32m            <name>Local Repository 2</name>[m
+[32m+[m[32m            <url>file:../repo</url>[m
+[32m+[m[32m        </pluginRepository>[m
+[32m+[m[32m        <pluginRepository>[m
+             <id>Codehaus Repository</id>[m
+             <url>http://repository.codehaus.org/</url>[m
+         </pluginRepository>[m
+     </pluginRepositories>[m
+ [m
+[32m+[m[32m    <scm>[m
+[32m+[m[32m        <connection>scm:svn:svn+ssh://sindre_mehus@svn.code.sf.net/p/subsonic/code/trunk</connection>[m
+[32m+[m[32m        <developerConnection>scm:svn:svn+ssh://sindre_mehus@svn.code.sf.net/p/subsonic/code/trunk</developerConnection>[m
+[32m+[m[32m        <url>https://sourceforge.net/p/subsonic/code</url>[m
+[32m+[m[32m    </scm>[m
+[32m+[m
+[32m+[m[32m    <ciManagement>[m
+[32m+[m[32m        <system>continuum</system>[m
+[32m+[m[32m        <notifiers>[m
+[32m+[m[32m            <notifier>[m
+[32m+[m[32m                <type>mail</type>[m
+[32m+[m[32m                <configuration>[m
+[32m+[m[32m                    <address>sindre@activeobjects.no</address>[m
+[32m+[m[32m                </configuration>[m
+[32m+[m[32m            </notifier>[m
+[32m+[m[32m        </notifiers>[m
+[32m+[m[32m    </ciManagement>[m
+[32m+[m
+[32m+[m[32m    <developers>[m
+[32m+[m[32m        <developer>[m
+[32m+[m[32m            <name>Sindre Mehus</name>[m
+[32m+[m[32m            <email>sindre@activeobjects.no</email>[m
+[32m+[m[32m        </developer>[m
+[32m+[m[32m    </developers>[m
+[32m+[m
+     <modules>[m
+[32m+[m[32m        <module>subsonic-rest-api</module>[m
+         <module>subsonic-main</module>[m
+     </modules>[m
+ [m
+[36m@@ -52,6 +97,9 @@[m
+                 <module>subsonic-installer-mac</module>[m
+                 <module>subsonic-installer-debian</module>[m
+                 <module>subsonic-installer-rpm</module>[m
+[32m+[m[32m                <module>subsonic-backend</module>[m
+[32m+[m[32m                <module>subsonic-site</module>[m
+[32m+[m[32m                <module>subsonic-assembly</module>[m
+             </modules>[m
+         </profile>[m
+ [m
+[36m@@ -63,27 +111,27 @@[m
+                 <plugin>[m
+                     <groupId>org.apache.maven.plugins</groupId>[m
+                     <artifactId>maven-compiler-plugin</artifactId>[m
+[31m-                    <version>2.5.1</version>[m
+[32m+[m[32m                    <version>2.3.2</version>[m
+                 </plugin>[m
+                 <plugin>[m
+                     <groupId>org.apache.maven.plugins</groupId>[m
+                     <artifactId>maven-assembly-plugin</artifactId>[m
+[31m-                    <version>2.3</version>[m
+[32m+[m[32m                    <version>2.2.1</version>[m
+                 </plugin>[m
+                 <plugin>[m
+                     <groupId>org.apache.maven.plugins</groupId>[m
+                     <artifactId>maven-antrun-plugin</artifactId>[m
+[31m-                    <version>1.7</version>[m
+[32m+[m[32m                    <version>1.6</version>[m
+                 </plugin>[m
+                 <plugin>[m
+                     <groupId>org.apache.maven.plugins</groupId>[m
+                     <artifactId>maven-dependency-plugin</artifactId>[m
+[31m-                    <version>2.5.1</version>[m
+[32m+[m[32m                    <version>2.2</version>[m
+                 </plugin>[m
+                 <plugin>[m
+                     <groupId>org.codehaus.mojo</groupId>[m
+                     <artifactId>buildnumber-maven-plugin</artifactId>[m
+[31m-                    <version>1.1</version>[m
+[32m+[m[32m                    <version>1.0</version>[m
+                 </plugin>[m
+             </plugins>[m
+     </pluginManagement>[m
+[36m@@ -92,6 +140,19 @@[m
+ [m
+             <plugin>[m
+                 <groupId>org.apache.maven.plugins</groupId>[m
+[32m+[m[32m                <artifactId>maven-compiler-plugin</artifactId>[m
+[32m+[m[32m                <configuration>[m
+[32m+[m[32m                    <source>1.6</source>[m
+[32m+[m[32m                    <target>1.6</target>[m
+[32m+[m[32m                    <encoding>ISO-8859-1</encoding>[m
+[32m+[m[32m                    <verbose>false</verbose>[m
+[32m+[m[32m                    <compilerVersion>1.6</compilerVersion>[m
+[32m+[m[32m                    <showWarnings>true</showWarnings>[m
+[32m+[m[32m                </configuration>[m
+[32m+[m[32m            </plugin>[m
+[32m+[m
+[32m+[m[32m            <plugin>[m
+[32m+[m[32m                <groupId>org.apache.maven.plugins</groupId>[m
+                 <artifactId>maven-dependency-plugin</artifactId>[m
+                 <executions>[m
+                     <execution>[m
+[1mdiff --git a/subsonic-main/.classpath b/subsonic-main/.classpath[m
+[1mindex b6d7c5d..e69f071 100644[m
+[1m--- a/subsonic-main/.classpath[m
+[1m+++ b/subsonic-main/.classpath[m
+[36m@@ -23,15 +23,15 @@[m
+ 		</attributes>[m
+ 	</classpathentry>[m
+ 	<classpathentry kind="con" path="org.maven.ide.eclipse.MAVEN2_CLASSPATH_CONTAINER"/>[m
+[31m-	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-1.7">[m
+[32m+[m	[32m<classpathentry kind="con" path="org.eclipse.m2e.MAVEN2_CLASSPATH_CONTAINER">[m
+ 		<attributes>[m
+ 			<attribute name="maven.pomderived" value="true"/>[m
+[32m+[m			[32m<attribute name="org.eclipse.jst.component.dependency" value="/WEB-INF/lib"/>[m
+ 		</attributes>[m
+ 	</classpathentry>[m
+[31m-	<classpathentry kind="con" path="org.eclipse.m2e.MAVEN2_CLASSPATH_CONTAINER">[m
+[32m+[m	[32m<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-1.6">[m
+ 		<attributes>[m
+[31m-			<attribute name="maven.pomderived" value="true"/>[m
+[31m-			<attribute name="org.eclipse.jst.component.dependency" value="/WEB-INF/lib"/>[m
+[32m+[m			[32m<attribute name="owner.project.facets" value="java"/>[m
+ 		</attributes>[m
+ 	</classpathentry>[m
+ 	<classpathentry kind="output" path="target/classes"/>[m
+[1mdiff --git a/subsonic-main/.project b/subsonic-main/.project[m
+[1mindex 3f9c219..7c05a95 100644[m
+[1m--- a/subsonic-main/.project[m
+[1m+++ b/subsonic-main/.project[m
+[36m@@ -21,12 +21,12 @@[m
+ 			</arguments>[m
+ 		</buildCommand>[m
+ 		<buildCommand>[m
+[31m-			<name>org.eclipse.m2e.core.maven2Builder</name>[m
+[32m+[m			[32m<name>org.eclipse.wst.validation.validationbuilder</name>[m
+ 			<arguments>[m
+ 			</arguments>[m
+ 		</buildCommand>[m
+ 		<buildCommand>[m
+[31m-			<name>org.eclipse.wst.validation.validationbuilder</name>[m
+[32m+[m			[32m<name>org.eclipse.m2e.core.maven2Builder</name>[m
+ 			<arguments>[m
+ 			</arguments>[m
+ 		</buildCommand>[m
+[1mdiff --git a/subsonic-main/pom.xml b/subsonic-main/pom.xml[m
+[1mindex f9d67a2..afa9803 100644[m
+[1m--- a/subsonic-main/pom.xml[m
+[1m+++ b/subsonic-main/pom.xml[m
+[36m@@ -1,452 +1,432 @@[m
+ <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"[m
+[31m-	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">[m
+[31m-[m
+[31m-	<modelVersion>4.0.0</modelVersion>[m
+[31m-[m
+[31m-	<parent>[m
+[31m-		<groupId>net.sourceforge.subsonic</groupId>[m
+[31m-		<artifactId>subsonic</artifactId>[m
+[31m-		<version>0.7</version>[m
+[31m-	</parent>[m
+[31m-[m
+[31m-	<artifactId>subsonic-main</artifactId>[m
+[31m-	<packaging>war</packaging>[m
+[31m-[m
+[31m-	<name>Subsonic Main</name>[m
+[31m-[m
+[31m-	<properties>[m
+[31m-		<version.musiccabinet>0.7.24</version.musiccabinet>[m
+[31m-		<version.commons-lang>2.5</version.commons-lang>[m
+[31m-		<version.joda-time>2.0</version.joda-time>[m
+[31m-		<version.c3p0>0.9.1.2</version.c3p0>[m
+[31m-		<version.postgresql-jdbc>9.0-801.jdbc4</version.postgresql-jdbc>[m
+[31m-		<version.httpclient>4.2.1</version.httpclient>[m
+[31m-		<version.woodstox>4.1.2</version.woodstox>[m
+[31m-		<version.junit>4.8.2</version.junit>[m
+[31m-		<version.mockito>1.9.0</version.mockito>[m
+[31m-		<version.xmlunit>1.3</version.xmlunit>[m
+[31m-		<version.jetty>8.1.7.v20120910</version.jetty>[m
+[31m-		<version.springframework>3.1.0.RELEASE</version.springframework>[m
+[31m-		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>[m
+[31m-	</properties>[m
+[31m-[m
+[31m-	<dependencies>[m
+[31m-		<dependency>[m
+[31m-			<groupId>com.github.hakko.musiccabinet</groupId>[m
+[31m-			<artifactId>musiccabinet-server</artifactId>[m
+[31m-			<version>${version.musiccabinet}</version>[m
+[31m-		</dependency>[m
+[31m-[m
+[31m-		<dependency>[m
+[31m-			<groupId>cglib</groupId>[m
+[31m-			<artifactId>cglib</artifactId>[m
+[31m-			<version>2.2.2</version>[m
+[31m-			<scope>runtime</scope>[m
+[31m-		</dependency>[m
+[31m-[m
+[31m-		<dependency>[m
+[31m-			<groupId>commons-fileupload</groupId>[m
+[31m-			<artifactId>commons-fileupload</artifactId>[m
+[31m-			<version>1.2.2</version>[m
+[31m-		</dependency>[m
+[31m-[m
+[31m-		<dependency>[m
+[31m-			<groupId>commons-jxpath</groupId>[m
+[31m-			<artifactId>commons-jxpath</artifactId>[m
+[31m-			<version>1.3</version>[m
+[31m-			<exclusions>[m
+[31m-				<exclusion>[m
+[31m-					<groupId>xerces</groupId>[m
+[31m-					<artifactId>xerces</artifactId>[m
+[31m-				</exclusion>[m
+[31m-			</exclusions>[m
+[31m-		</dependency>[m
+[31m-[m
+[31m-		<dependency>[m
+[31m-			<groupId>commons-codec</groupId>[m
+[31m-			<artifactId>commons-codec</artifactId>[m
+[31m-			<version>1.7</version>[m
+[31m-		</dependency>[m
+[31m-[m
+[31m-		<dependency>[m
+[31m-			<groupId>commons-io</groupId>[m
+[31m-			<artifactId>commons-io</artifactId>[m
+[31m-			<version>2.4</version>[m
+[31m-		</dependency>[m
+[31m-[m
+[31m-		<dependency>[m
+[31m-			<groupId>commons-lang</groupId>[m
+[31m-			<artifactId>commons-lang</artifactId>[m
+[31m-			<version>${version.commons-lang}</version>[m
+[31m-		</dependency>[m
+[31m-[m
+[31m-		<dependency>[m
+[31m-			<groupId>org.apache.httpcomponents</groupId>[m
+[31m-			<artifactId>httpcore</artifactId>[m
+[31m-			<version>${version.httpclient}</version>[m
+[31m-		</dependency>[m
+[31m-[m
+[31m-		<dependency>[m
+[31m-			<groupId>org.apache.httpcomponents</groupId>[m
+[31m-			<artifactId>httpclient</artifactId>[m
+[31m-			<version>${version.httpclient}</version>[m
+[31m-		</dependency>[m
+[31m-[m
+[31m-		<dependency>[m
+[31m-			<groupId>hsqldb</groupId>[m
+[31m-			<artifactId>hsqldb</artifactId>[m
+[31m-			<version>1.8.0.10</version>[m
+[31m-			<scope>runtime</scope>[m
+[31m-		</dependency>[m
+[31m-[m
+[31m-		<dependency>[m
+[31m-			<groupId>radeox</groupId>[m
+[31m-			<artifactId>radeox</artifactId>[m
+[31m-			<version>1.0-b2</version>[m
+[31m-		</dependency>[m
+[31m-		<dependency>[m
+[31m-			<groupId>jahspotify</groupId>[m
+[31m-			<artifactId>jahspotify-api</artifactId>[m
+[31m-			<version>0.0.1-SNAPSHOT</version>[m
+[31m-			<!--scope>runtime</scope-->[m
+[31m-		</dependency>[m
+[31m-[m
+[31m-		<dependency>[m
+[31m-			<groupId>jahspotify</groupId>[m
+[31m-			<artifactId>jahspotify-native-jar</artifactId>[m
+[31m-			<version>0.0.1-SNAPSHOT</version>[m
+[31m-			<scope>runtime</scope>[m
+[31m-		</dependency>[m
+[31m-[m
+[31m-		<dependency>[m
+[31m-			<groupId>radeox</groupId>[m
+[31m-			<artifactId>radeox</artifactId>[m
+[31m-			<version>1.0-b2</version>[m
+[31m-		</dependency>[m
+[31m-[m
+[31m-		<dependency>[m
+[31m-			<groupId>log4j</groupId>[m
+[31m-			<artifactId>log4j</artifactId>[m
+[31m-			<version>1.2.16</version>[m
+[31m-			<scope>runtime</scope>[m
+[31m-		</dependency>[m
+[31m-[m
+[31m-		<dependency>[m
+[31m-			<groupId>org.slf4j</groupId>[m
+[31m-			<artifactId>slf4j-log4j12</artifactId>[m
+[31m-			<version>1.7.1</version>[m
+[31m-			<scope>runtime</scope>[m
+[31m-		</dependency>[m
+[31m-[m
+[31m-		<dependency>[m
+[31m-			<groupId>org.directwebremoting</groupId>[m
+[31m-			<artifactId>dwr</artifactId>[m
+[31m-			<version>3.0.0-rc3-SNAPSHOT</version>[m
+[31m-		</dependency>[m
+[31m-[m
+[31m-		<!--Needed by dwr -->[m
+[31m-		<!--TODO: really,why? -->[m
+[31m-		<dependency>[m
+[31m-			<groupId>com.yahoo.platform.yui</groupId>[m
+[31m-			<artifactId>yuicompressor</artifactId>[m
+[31m-			<version>2.4.7</version>[m
+[31m-			<scope>runtime</scope>[m
+[31m-		</dependency>[m
+[31m-[m
+[31m-		<dependency>[m
+[31m-			<groupId>ant</groupId>[m
+[31m-			<artifactId>ant</artifactId>[m
+[31m-			<version>1.6.2</version>[m
+[31m-		</dependency>[m
+[31m-[m
+[31m-		<dependency>[m
+[31m-			<groupId>org</groupId>[m
+[31m-			<artifactId>jaudiotagger</artifactId>[m
+[31m-			<version>2.0.2</version>[m
+[31m-		</dependency>[m
+[31m-[m
+[31m-		<dependency>[m
+[31m-			<groupId>jfree</groupId>[m
+[31m-			<artifactId>jfreechart</artifactId>[m
+[31m-			<version>1.0.11</version>[m
+[31m-			<exclusions>[m
+[31m-				<exclusion>[m
+[31m-					<groupId>junit</groupId>[m
+[31m-					<artifactId>junit</artifactId>[m
+[31m-				</exclusion>[m
+[31m-				<exclusion>[m
+[31m-					<groupId>gnujaxp</groupId>[m
+[31m-					<artifactId>gnujaxp</artifactId>[m
+[31m-				</exclusion>[m
+[31m-			</exclusions>[m
+[31m-		</dependency>[m
+[31m-[m
+[31m-		<dependency>[m
+[31m-			<groupId>org.jdom</groupId>[m
+[31m-			<artifactId>jdom</artifactId>[m
+[31m-			<version>1.1.3</version>[m
+[31m-		</dependency>[m
+[31m-[m
+[31m-		<dependency>[m
+[31m-			<groupId>net.sf.ehcache</groupId>[m
+[31m-			<artifactId>ehcache-core</artifactId>[m
+[31m-			<version>2.6.0</version>[m
+[31m-		</dependency>[m
+[31m-[m
+[31m-		<dependency>[m
+[31m-			<groupId>javax.servlet</groupId>[m
+[31m-			<artifactId>servlet-api</artifactId>[m
+[31m-			<version>2.5</version>[m
+[31m-			<scope>provided</scope>[m
+[31m-		</dependency>[m
+[31m-[m
+[31m-		<dependency>[m
+[31m-			<groupId>javax.servlet.jsp</groupId>[m
+[31m-			<artifactId>jsp-api</artifactId>[m
+[31m-			<version>2.1</version>[m
+[31m-			<scope>provided</scope>[m
+[31m-		</dependency>[m
+[31m-[m
+[31m-		<dependency>[m
+[31m-			<groupId>javax.servlet</groupId>[m
+[31m-			<artifactId>jstl</artifactId>[m
+[31m-			<version>1.2</version>[m
+[31m-		</dependency>[m
+[31m-[m
+[31m-		<dependency>[m
+[31m-			<groupId>taglibs</groupId>[m
+[31m-			<artifactId>string</artifactId>[m
+[31m-			<version>1.1.0</version>[m
+[31m-		</dependency>[m
+[31m-[m
+[31m-		<!-- net.sbbi:sbbi-upnplib:1.0.4 not available in trusted repositories, [m
+[31m-			copied to src -->[m
+[31m-		<!-- org.wetorrent:weupnp:2009-10-16 not available in trusted repositories, [m
+[31m-			copied to src -->[m
+[31m-		<!-- com.hoodcomputing:natpmp:0.1 taken from org.littleshoot:nat-pmp-0.1-SNAPSHOT -->[m
+[31m-[m
+[31m-		<dependency>[m
+[31m-			<groupId>org.littleshoot</groupId>[m
+[31m-			<artifactId>nat-pmp</artifactId>[m
+[31m-			<version>0.1-SNAPSHOT</version>[m
+[31m-		</dependency>[m
+[31m-[m
+[31m-		<dependency>[m
+[31m-			<groupId>org.json</groupId>[m
+[31m-			<artifactId>json</artifactId>[m
+[31m-			<version>20090211</version>[m
+[31m-		</dependency>[m
+[31m-[m
+[31m-		<dependency>[m
+[31m-			<groupId>junit</groupId>[m
+[31m-			<artifactId>junit</artifactId>[m
+[31m-			<version>${version.junit}</version>[m
+[31m-			<scope>test</scope>[m
+[31m-		</dependency>[m
+[31m-[m
+[31m-		<dependency>[m
+[31m-			<groupId>org.mockito</groupId>[m
+[31m-			<artifactId>mockito-core</artifactId>[m
+[31m-			<version>${version.mockito}</version>[m
+[31m-			<scope>test</scope>[m
+[31m-		</dependency>[m
+[31m-[m
+[31m-		<dependency>[m
+[31m-			<groupId>org.springframework</groupId>[m
+[31m-			<artifactId>spring-core</artifactId>[m
+[31m-			<version>${version.springframework}</version>[m
+[31m-		</dependency>[m
+[31m-[m
+[31m-		<dependency>[m
+[31m-			<groupId>org.springframework</groupId>[m
+[31m-			<artifactId>spring-webmvc</artifactId>[m
+[31m-			<version>${version.springframework}</version>[m
+[31m-		</dependency>[m
+[31m-[m
+[31m-		<dependency>[m
+[31m-			<groupId>org.springframework.security</groupId>[m
+[31m-			<artifactId>spring-security-core</artifactId>[m
+[31m-			<version>${version.springframework}</version>[m
+[31m-		</dependency>[m
+[31m-[m
+[31m-		<dependency>[m
+[31m-			<groupId>org.springframework.security</groupId>[m
+[31m-			<artifactId>spring-security-web</artifactId>[m
+[31m-			<version>${version.springframework}</version>[m
+[31m-		</dependency>[m
+[31m-[m
+[31m-		<dependency>[m
+[31m-			<groupId>org.springframework.security</groupId>[m
+[31m-			<artifactId>spring-security-ldap</artifactId>[m
+[31m-			<version>${version.springframework}</version>[m
+[31m-		</dependency>[m
+[31m-[m
+[31m-		<dependency>[m
+[31m-			<groupId>org.springframework.security</groupId>[m
+[31m-			<artifactId>spring-security-config</artifactId>[m
+[31m-			<version>${version.springframework}</version>[m
+[31m-		</dependency>[m
+[31m-[m
+[31m-		<dependency>[m
+[31m-			<groupId>org.springframework</groupId>[m
+[31m-			<artifactId>spring-test</artifactId>[m
+[31m-			<version>${version.springframework}</version>[m
+[31m-			<scope>test</scope>[m
+[31m-		</dependency>[m
+[31m-[m
+[31m-		<dependency>[m
+[31m-			<groupId>org.eclipse.jetty</groupId>[m
+[31m-			<artifactId>jetty-servlets</artifactId>[m
+[31m-			<version>${version.jetty}</version>[m
+[31m-		</dependency>[m
+[31m-[m
+[31m-		<dependency>[m
+[31m-			<groupId>xmlunit</groupId>[m
+[31m-			<artifactId>xmlunit</artifactId>[m
+[31m-			<version>${version.xmlunit}</version>[m
+[31m-			<scope>test</scope>[m
+[31m-		</dependency>[m
+[31m-		<dependency>[m
+[31m-			<groupId>de.ailis.usb4java</groupId>[m
+[31m-			<artifactId>usb4java</artifactId>[m
+[31m-			<version>1.0.0</version>[m
+[31m-		</dependency>[m
+[31m-[m
+[31m-	</dependencies>[m
+[31m-[m
+[31m-	<repositories>[m
+[31m-		<repository>[m
+[31m-			<id>ailis</id>[m
+[31m-			<name>Ailis Maven Releases</name>[m
+[31m-			<url>http://nexus.ailis.de/content/groups/public/</url>[m
+[31m-		</repository>[m
+[31m-		<repository>[m
+[31m-			<id>com.springsource.repository.bundles.release</id>[m
+[31m-			<name>EBR Spring Release Repository</name>[m
+[31m-			<url>http://repository.springsource.com/maven/bundles/release</url>[m
+[31m-		</repository>[m
+[31m-		<repository>[m
+[31m-			<id>com.springsource.repository.bundles.external</id>[m
+[31m-			<name>EBR External Release Repository</name>[m
+[31m-			<url>http://repository.springsource.com/maven/bundles/external</url>[m
+[31m-		</repository>[m
+[31m-		<repository>[m
+[31m-			<id>oss-sonatype-snapshots</id>[m
+[31m-			<name>OSS Sonatype Snapshots Repository</name>[m
+[31m-			<url>http://oss.sonatype.org/content/repositories/snapshots</url>[m
+[31m-		</repository>[m
+[31m-		<repository>[m
+[31m-			<id>jetty-releases</id>[m
+[31m-			<name>Jetty Releases</name>[m
+[31m-			<url>http://oss.sonatype.org/content/repositories/jetty-releases</url>[m
+[31m-		</repository>[m
+[31m-	</repositories>[m
+[31m-[m
+[31m-	<build>[m
+[31m-		<plugins>[m
+[31m-			<plugin>[m
+[31m-				<groupId>org.apache.maven.plugins</groupId>[m
+[31m-				<artifactId>maven-compiler-plugin</artifactId>[m
+[31m-				<configuration>[m
+[31m-					<source>1.7</source>[m
+[31m-					<target>1.7</target>[m
+[31m-				</configuration>[m
+[31m-			</plugin>[m
+[31m-			<plugin>[m
+[31m-				<artifactId>maven-antrun-plugin</artifactId>[m
+[31m-				<executions>[m
+[31m-					<execution>[m
+[31m-						<phase>generate-resources</phase>[m
+[31m-						<configuration>[m
+[31m-							<target>[m
+[31m-								<tstamp />[m
+[31m-								<copy[m
+[31m-									file="${basedir}/src/main/resources/net/sourceforge/subsonic/i18n/ResourceBundle_en.properties"[m
+[31m-									tofile="${project.build.directory}/classes/net/sourceforge/subsonic/i18n/ResourceBundle.properties" />[m
+[31m-								<echo file="${project.build.directory}/classes/build_number.txt">${version.musiccabinet}</echo>[m
+[31m-								<echo file="${project.build.directory}/classes/build_date.txt">${DSTAMP}</echo>[m
+[31m-								<echo file="${project.build.directory}/classes/version.txt">${project.version}</echo>[m
+[31m-							</target>[m
+[31m-						</configuration>[m
+[31m-						<goals>[m
+[31m-							<goal>run</goal>[m
+[31m-						</goals>[m
+[31m-					</execution>[m
+[31m-				</executions>[m
+[31m-			</plugin>[m
+[31m-[m
+[31m-			<plugin>[m
+[31m-				<groupId>org.mortbay.jetty</groupId>[m
+[31m-				<artifactId>jetty-maven-plugin</artifactId>[m
+[31m-				<version>8.1.7.v20120910</version>[m
+[31m-				<configuration>[m
+[31m-					<stopPort>9966</stopPort>[m
+[31m-					<stopKey>foo</stopKey>[m
+[31m-				</configuration>[m
+[31m-			</plugin>[m
+[31m-[m
+[31m-			<plugin>[m
+[31m-				<groupId>org.apache.maven.plugins</groupId>[m
+[31m-				<artifactId>maven-surefire-plugin</artifactId>[m
+[31m-				<version>2.8</version>[m
+[31m-				<configuration>[m
+[31m-					<forkMode>always</forkMode>[m
+[31m-					<argLine>-Djava.library.path=${basedir}/lib/[m
+[31m-						-Djava.library.path=/usr/local/lib/</argLine>[m
+[31m-				</configuration>[m
+[31m-			</plugin>[m
+[31m-		</plugins>[m
+[31m-	</build>[m
+[31m-[m
+[31m-	<profiles>[m
+[31m-		<profile>[m
+[31m-			<id>jetty</id>[m
+[31m-			<build>[m
+[31m-				<finalName>subsonic</finalName>[m
+[31m-				<plugins>[m
+[31m-					<plugin>[m
+[31m-						<groupId>org.mortbay.jetty</groupId>[m
+[31m-						<artifactId>jetty-jspc-maven-plugin</artifactId>[m
+[31m-						<version>8.1.7.v20120910</version>[m
+[31m-						<executions>[m
+[31m-							<execution>[m
+[31m-								<id>jspc</id>[m
+[31m-								<goals>[m
+[31m-									<goal>jspc</goal>[m
+[31m-								</goals>[m
+[31m-								<configuration>[m
+[31m-									<trimSpaces>true</trimSpaces>[m
+[31m-								</configuration>[m
+[31m-							</execution>[m
+[31m-						</executions>[m
+[31m-					</plugin>[m
+[31m-					<plugin>[m
+[31m-						<groupId>org.apache.maven.plugins</groupId>[m
+[31m-						<artifactId>maven-war-plugin</artifactId>[m
+[31m-						<version>2.2</version>[m
+[31m-						<configuration>[m
+[31m-							<webXml>${basedir}/target/web.xml</webXml>[m
+[31m-						</configuration>[m
+[31m-					</plugin>[m
+[31m-				</plugins>[m
+[31m-			</build>[m
+[31m-			<activation>[m
+[31m-				<activeByDefault>true</activeByDefault>[m
+[31m-			</activation>[m
+[31m-		</profile>[m
+[31m-		<profile>[m
+[31m-			<id>tomcat</id>[m
+[31m-			<build>[m
+[31m-				<finalName>subsonic-tomcat</finalName>[m
+[31m-				<plugins>[m
+[31m-					<plugin>[m
+[31m-						<groupId>org.apache.maven.plugins</groupId>[m
+[31m-						<artifactId>maven-war-plugin</artifactId>[m
+[31m-						<version>2.2</version>[m
+[31m-					</plugin>[m
+[31m-				</plugins>[m
+[31m-			</build>[m
+[31m-		</profile>[m
+[31m-	</profiles>[m
+[31m-[m
+[32m+[m[32m         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">[m
+[32m+[m
+[32m+[m[32m    <modelVersion>4.0.0</modelVersion>[m
+[32m+[m[32m    <groupId>net.sourceforge.subsonic</groupId>[m
+[32m+[m[32m    <artifactId>subsonic-main</artifactId>[m
+[32m+[m[32m    <packaging>war</packaging>[m
+[32m+[m[32m    <name>Subsonic Main</name>[m
+[32m+[m
+[32m+[m[32m       <properties>[m
+[32m+[m[32m               <version.musiccabinet>0.7.24</version.musiccabinet>[m
+[32m+[m[32m               <version.c3p0>0.9.1.2</version.c3p0>[m
+[32m+[m[32m               <version.postgresql-jdbc>9.0-801.jdbc4</version.postgresql-jdbc>[m
+[32m+[m[32m       </properties>[m
+[32m+[m
+[32m+[m
+[32m+[m[32m    <parent>[m
+[32m+[m[32m        <groupId>net.sourceforge.subsonic</groupId>[m
+[32m+[m[32m        <artifactId>subsonic</artifactId>[m
+[32m+[m[32m        <version>4.9</version>[m
+[32m+[m[32m    </parent>[m
+[32m+[m
+[32m+[m[32m    <dependencies>[m
+[32m+[m
+[32m+[m[32m        <dependency>[m
+[32m+[m[32m            <groupId>net.sourceforge.subsonic</groupId>[m
+[32m+[m[32m            <artifactId>subsonic-rest-api</artifactId>[m
+[32m+[m[32m            <version>${project.version}</version>[m
+[32m+[m[32m        </dependency>[m
+[32m+[m
+[32m+[m[32m               <dependency>[m
+[32m+[m[32m                       <groupId>org.springframework</groupId>[m
+[32m+[m[32m                       <artifactId>spring-core</artifactId>[m
+[32m+[m[32m                       <version>3.1.0.RELEASE</version>[m
+[32m+[m[32m               </dependency>[m
+[32m+[m
+[32m+[m[32m               <dependency>[m
+[32m+[m[32m                       <groupId>org.springframework</groupId>[m
+[32m+[m[32m                       <artifactId>spring-webmvc</artifactId>[m
+[32m+[m[32m                       <version>3.1.0.RELEASE</version>[m
+[32m+[m[32m               </dependency>[m
+[32m+[m[32m             <dependency>[m
+[32m+[m[32m                     <groupId>org.springframework.security</groupId>[m
+[32m+[m[32m                     <artifactId>spring-security-core</artifactId>[m
+[32m+[m[32m                     <version>3.1.0.RELEASE</version>[m
+[32m+[m[32m             </dependency>[m
+[32m+[m
+[32m+[m[32m             <dependency>[m
+[32m+[m[32m                     <groupId>org.springframework.security</groupId>[m
+[32m+[m[32m                     <artifactId>spring-security-web</artifactId>[m
+[32m+[m[32m                     <version>3.1.0.RELEASE</version>[m
+[32m+[m[32m             </dependency>[m
+[32m+[m
+[32m+[m[32m             <dependency>[m
+[32m+[m[32m                     <groupId>org.springframework.security</groupId>[m
+[32m+[m[32m                     <artifactId>spring-security-ldap</artifactId>[m
+[32m+[m[32m                     <version>3.1.0.RELEASE</version>[m
+[32m+[m[32m             </dependency>[m
+[32m+[m
+[32m+[m[32m             <dependency>[m
+[32m+[m[32m                     <groupId>org.springframework.security</groupId>[m
+[32m+[m[32m                     <artifactId>spring-security-config</artifactId>[m
+[32m+[m[32m                     <version>3.1.0.RELEASE</version>[m
+[32m+[m[32m             </dependency>[m
+[32m+[m
+[32m+[m[32m        <dependency>[m
+[32m+[m[32m            <groupId>org.apache.lucene</groupId>[m
+[32m+[m[32m            <artifactId>lucene-core</artifactId>[m
+[32m+[m[32m            <version>3.0.3</version>[m
+[32m+[m[32m        </dependency>[m
+[32m+[m
+[32m+[m[32m        <dependency>[m
+[32m+[m[32m            <groupId>cglib</groupId>[m
+[32m+[m[32m            <artifactId>cglib</artifactId>[m
+[32m+[m[32m            <version>2.1_3</version>[m
+[32m+[m[32m            <scope>runtime</scope>[m
+[32m+[m[32m        </dependency>[m
+[32m+[m
+[32m+[m[32m        <dependency>[m
+[32m+[m[32m            <groupId>commons-fileupload</groupId>[m
+[32m+[m[32m            <artifactId>commons-fileupload</artifactId>[m
+[32m+[m[32m            <version>1.2</version>[m
+[32m+[m[32m        </dependency>[m
+[32m+[m
+[32m+[m[32m        <dependency>[m
+[32m+[m[32m            <groupId>commons-jxpath</groupId>[m
+[32m+[m[32m            <artifactId>commons-jxpath</artifactId>[m
+[32m+[m[32m            <version>1.1</version>[m
+[32m+[m[32m            <exclusions>[m
+[32m+[m[32m                <exclusion>[m
+[32m+[m[32m                    <groupId>xerces</groupId>[m
+[32m+[m[32m                    <artifactId>xerces</artifactId>[m
+[32m+[m[32m                </exclusion>[m
+[32m+[m[32m            </exclusions>[m
+[32m+[m[32m            <scope>runtime</scope>[m
+[32m+[m[32m        </dependency>[m
+[32m+[m
+[32m+[m[32m        <dependency>[m
+[32m+[m[32m            <groupId>commons-codec</groupId>[m
+[32m+[m[32m            <artifactId>commons-codec</artifactId>[m
+[32m+[m[32m            <version>1.2</version>[m
+[32m+[m[32m        </dependency>[m
+[32m+[m
+[32m+[m[32m        <dependency>[m
+[32m+[m[32m            <groupId>commons-io</groupId>[m
+[32m+[m[32m            <artifactId>commons-io</artifactId>[m
+[32m+[m[32m            <version>1.3.1</version>[m
+[32m+[m[32m        </dependency>[m
+[32m+[m
+[32m+[m[32m        <dependency>[m
+[32m+[m[32m            <groupId>commons-lang</groupId>[m
+[32m+[m[32m            <artifactId>commons-lang</artifactId>[m
+[32m+[m[32m            <version>2.1</version>[m
+[32m+[m[32m        </dependency>[m
+[32m+[m
+[32m+[m[32m        <dependency>[m
+[32m+[m[32m            <groupId>org.apache.httpcomponents</groupId>[m
+[32m+[m[32m            <artifactId>httpcore</artifactId>[m
+[32m+[m[32m            <version>4.2.4</version>[m
+[32m+[m[32m        </dependency>[m
+[32m+[m
+[32m+[m[32m        <dependency>[m
+[32m+[m[32m            <groupId>org.apache.httpcomponents</groupId>[m
+[32m+[m[32m            <artifactId>httpclient</artifactId>[m
+[32m+[m[32m            <version>4.2.4</version>[m
+[32m+[m[32m        </dependency>[m
+[32m+[m
+[32m+[m[32m        <dependency>[m
+[32m+[m[32m            <groupId>hsqldb</groupId>[m
+[32m+[m[32m            <artifactId>hsqldb</artifactId>[m
+[32m+[m[32m            <version>1.8.0.7</version>[m
+[32m+[m[32m            <scope>runtime</scope>[m
+[32m+[m[32m        </dependency>[m
+[32m+[m
+[32m+[m[32m        <dependency>[m
+[32m+[m[32m            <groupId>radeox</groupId>[m
+[32m+[m[32m            <artifactId>radeox</artifactId>[m
+[32m+[m[32m            <version>1.0-b2</version>[m
+[32m+[m[32m        </dependency>[m
+[32m+[m
+[32m+[m[32m        <dependency>[m
+[32m+[m[32m            <groupId>log4j</groupId>[m
+[32m+[m[32m            <artifactId>log4j</artifactId>[m
+[32m+[m[32m            <version>1.2.16</version>[m
+[32m+[m[32m            <scope>runtime</scope>[m
+[32m+[m[32m        </dependency>[m
+[32m+[m
+[32m+[m[32m        <dependency>[m
+[32m+[m[32m            <groupId>org.slf4j</groupId>[m
+[32m+[m[32m            <artifactId>slf4j-log4j12</artifactId>[m
+[32m+[m[32m            <version>1.6.1</version>[m
+[32m+[m[32m            <scope>runtime</scope>[m
+[32m+[m[32m        </dependency>[m
+[32m+[m
+[32m+[m[32m        <dependency>[m
+[32m+[m[32m            <groupId>org.directwebremoting</groupId>[m
+[32m+[m[32m            <artifactId>dwr</artifactId>[m
+[32m+[m[32m            <version>3.0.0-rc3-SNAPSHOT</version>[m
+[32m+[m[32m        </dependency>[m
+[32m+[m
+[32m+[m[32m        <!--Needed by dwr-->[m
+[32m+[m[32m        <dependency>[m
+[32m+[m[32m            <groupId>com.yahoo.platform.yui</groupId>[m
+[32m+[m[32m            <artifactId>yuicompressor</artifactId>[m
+[32m+[m[32m            <version>2.3.6</version>[m
+[32m+[m[32m            <scope>runtime</scope>[m
+[32m+[m[32m        </dependency>[m
+[32m+[m
+[32m+[m[32m        <!--dependency>[m
+[32m+[m[32m            <groupId>ant-zip</groupId>[m
+[32m+[m[32m            <artifactId>ant-zip</artifactId>[m
+[32m+[m[32m            <version>1.6.2</version>[m
+[32m+[m[32m        </dependency-->[m
+[32m+[m
+[32m+[m[32m        <dependency>[m
+[32m+[m[32m            <groupId>org</groupId>[m
+[32m+[m[32m            <artifactId>jaudiotagger</artifactId>[m
+[32m+[m[32m            <version>2.0.2</version>[m
+[32m+[m[32m        </dependency>[m
+[32m+[m
+[32m+[m[32m        <dependency>[m
+[32m+[m[32m            <groupId>jfree</groupId>[m
+[32m+[m[32m            <artifactId>jfreechart</artifactId>[m
+[32m+[m[32m            <version>1.0.11</version>[m
+[32m+[m[32m            <exclusions>[m
+[32m+[m[32m                <exclusion>[m
+[32m+[m[32m                    <groupId>junit</groupId>[m
+[32m+[m[32m                    <artifactId>junit</artifactId>[m
+[32m+[m[32m                </exclusion>[m
+[32m+[m[32m                <exclusion>[m
+[32m+[m[32m                    <groupId>gnujaxp</groupId>[m
+[32m+[m[32m                    <artifactId>gnujaxp</artifactId>[m
+[32m+[m[32m                </exclusion>[m
+[32m+[m[32m            </exclusions>[m
+[32m+[m[32m        </dependency>[m
+[32m+[m
+[32m+[m[32m        <dependency>[m
+[32m+[m[32m            <groupId>jdom</groupId>[m
+[32m+[m[32m            <artifactId>jdom</artifactId>[m
+[32m+[m[32m            <version>1.0</version>[m
+[32m+[m[32m        </dependency>[m
+[32m+[m
+[32m+[m[32m        <dependency>[m
+[32m+[m[32m            <groupId>net.sf.ehcache</groupId>[m
+[32m+[m[32m            <artifactId>ehcache-core</artifactId>[m
+[32m+[m[32m            <version>2.5.0</version>[m
+[32m+[m[32m        </dependency>[m
+[32m+[m
+[32m+[m[32m        <dependency>[m
+[32m+[m[32m            <groupId>org.eclipse.persistence</groupId>[m
+[32m+[m[32m            <artifactId>org.eclipse.persistence.moxy</artifactId>[m
+[32m+[m[32m            <version>2.5.1</version>[m
+[32m+[m[32m        </dependency>[m
+[32m+[m
+[32m+[m[32m        <dependency>[m
+[32m+[m[32m            <groupId>javax.servlet</groupId>[m
+[32m+[m[32m            <artifactId>servlet-api</artifactId>[m
+[32m+[m[32m            <version>2.4</version>[m
+[32m+[m[32m            <scope>provided</scope>[m
+[32m+[m[32m        </dependency>[m
+[32m+[m
+[32m+[m[32m        <dependency>[m
+[32m+[m[32m            <groupId>javax.servlet</groupId>[m
+[32m+[m[32m            <artifactId>jsp-api</artifactId>[m
+[32m+[m[32m            <version>2.0</version>[m
+[32m+[m[32m            <scope>provided</scope>[m
+[32m+[m[32m        </dependency>[m
+[32m+[m
+[32m+[m[32m        <dependency>[m
+[32m+[m[32m            <groupId>javax.servlet</groupId>[m
+[32m+[m[32m            <artifactId>jstl</artifactId>[m
+[32m+[m[32m            <version>1.1.2</version>[m
+[32m+[m[32m            <scope>runtime</scope>[m
+[32m+[m[32m        </dependency>[m
+[32m+[m
+[32m+[m[32m        <dependency>[m
+[32m+[m[32m            <groupId>taglibs</groupId>[m
+[32m+[m[32m            <artifactId>standard</artifactId>[m
+[32m+[m[32m            <version>1.1.2</version>[m
+[32m+[m[32m        </dependency>[m
+[32m+[m
+[32m+[m[32m        <dependency>[m
+[32m+[m[32m            <groupId>taglibs</groupId>[m
+[32m+[m[32m            <artifactId>string</artifactId>[m
+[32m+[m[32m            <version>1.1.0</version>[m
+[32m+[m[32m            <!--scope>runtime</scope-->[m
+[32m+[m[32m        </dependency>[m
+[32m+[m
+[32m+[m[32m        <dependency>[m
+[32m+[m[32m            <groupId>com.hoodcomputing</groupId>[m
+[32m+[m[32m            <artifactId>natpmp</artifactId>[m
+[32m+[m[32m            <version>0.1</version>[m
+[32m+[m[32m        </dependency>[m
+[32m+[m
+[32m+[m[32m        <dependency>[m
+[32m+[m[32m            <groupId>junit</groupId>[m
+[32m+[m[32m            <artifactId>junit</artifactId>[m
+[32m+[m[32m            <version>4.1</version>[m
+[32m+[m[32m            <scope>test</scope>[m
+[32m+[m[32m        </dependency>[m
+[32m+[m
+[32m+[m[32m        <dependency>[m
+[32m+[m[32m            <groupId>org.fourthline.cling</groupId>[m
+[32m+[m[32m            <artifactId>cling-core</artifactId>[m
+[32m+[m[32m            <version>2.0-alpha2</version>[m
+[32m+[m[32m        </dependency>[m
+[32m+[m
+[32m+[m[32m        <dependency>[m
+[32m+[m[32m            <groupId>org.fourthline.cling</groupId>[m
+[32m+[m[32m            <artifactId>cling-support</artifactId>[m
+[32m+[m[32m            <version>2.0-alpha2</version>[m
+[32m+[m[32m        </dependency>[m
+[32m+[m
+[32m+[m[32m        <dependency>[m
+[32m+[m[32m            <groupId>org.seamless</groupId>[m
+[32m+[m[32m            <artifactId>seamless-util</artifactId>[m
+[32m+[m[32m            <version>1.0-alpha2</version>[m
+[32m+[m[32m        </dependency>[m
+[32m+[m
+[32m+[m[32m        <dependency>[m
+[32m+[m[32m            <groupId>net.tanesha.recaptcha4j</groupId>[m
+[32m+[m[32m            <artifactId>recaptcha4j</artifactId>[m
+[32m+[m[32m            <version>0.0.7</version>[m
+[32m+[m[32m        </dependency>[m
+[32m+[m[32m        <dependency>[m
+[32m+[m[32m          <groupId>commons-logging</groupId>[m
+[32m+[m[32m          <artifactId>commons-logging</artifactId>[m
+[32m+[m[32m          <version>1.1.1</version>[m
+[32m+[m[32m        </dependency>[m
+[32m+[m
+[32m+[m[32m        <dependency>[m
+[32m+[m[32m          <groupId>xml-apis</groupId>[m
+[32m+[m[32m          <artifactId>xml-apis</artifactId>[m
+[32m+[m[32m          <version>1.0.b2</version>[m
+[32m+[m[32m        </dependency>[m
+[32m+[m
+[32m+[m
+[32m+[m[32m               <dependency>[m
+[32m+[m[32m                       <groupId>org.eclipse.jetty</groupId>[m
+[32m+[m[32m                       <artifactId>jetty-servlets</artifactId>[m
+[32m+[m[32m                       <version>8.1.7.v20120910</version>[m
+[32m+[m[32m               </dependency>[m
+[32m+[m
+[32m+[m
+[32m+[m[41m   [m	[32m    <dependency>[m
+[32m+[m[41m    [m			[32m<groupId>com.github.hakko.musiccabinet</groupId>[m
+[32m+[m[41m    [m			[32m<artifactId>musiccabinet-server</artifactId>[m
+[32m+[m[41m    [m			[32m<version>${version.musiccabinet}</version>[m
+[32m+[m[41m    [m		[32m</dependency>[m
+[32m+[m
+[32m+[m[41m    [m		[32m<dependency>[m
+[32m+[m[41m    [m			[32m<groupId>jahspotify</groupId>[m
+[32m+[m[41m    [m			[32m<artifactId>jahspotify-api</artifactId>[m
+[32m+[m[41m    [m			[32m<version>0.0.1-SNAPSHOT</version>[m
+[32m+[m[41m    [m			[32m<!--scope>runtime</scope-->[m
+[32m+[m[41m    [m		[32m</dependency>[m
+[32m+[m[32m    </dependencies>[m
+[32m+[m
+[32m+[m[32m    <profiles>[m
+[32m+[m[32m        <profile>[m
+[32m+[m[32m            <id>full</id>[m
+[32m+[m[32m            <build>[m
+[32m+[m[32m                <plugins>[m
+[32m+[m[32m                    <plugin>[m
+[32m+[m[32m                        <groupId>org.codehaus.mojo</groupId>[m
+[32m+[m[32m                        <artifactId>buildnumber-maven-plugin</artifactId>[m
+[32m+[m[32m                        <executions>[m
+[32m+[m[32m                            <execution>[m
+[32m+[m[32m                                <phase>validate</phase>[m
+[32m+[m[32m                                <goals>[m
+[32m+[m[32m                                    <goal>create</goal>[m
+[32m+[m[32m                                </goals>[m
+[32m+[m[32m                            </execution>[m
+[32m+[m[32m                        </executions>[m
+[32m+[m[32m                        <configuration>[m
+[32m+[m[32m                            <doCheck>false</doCheck>[m
+[32m+[m[32m                            <doUpdate>false</doUpdate>[m
+[32m+[m[32m                        </configuration>[m
+[32m+[m[32m                    </plugin>[m
+[32m+[m[32m                </plugins>[m
+[32m+[m[32m            </build>[m
+[32m+[m[32m        </profile>[m
+[32m+[m[32m               <profile>[m
+[32m+[m[32m                       <id>jetty</id>[m
+[32m+[m[32m                       <build>[m
+[32m+[m[32m                               <finalName>subsonic</finalName>[m
+[32m+[m[32m                               <plugins>[m
+[32m+[m[32m                                       <plugin>[m
+[32m+[m[32m                                               <groupId>org.mortbay.jetty</groupId>[m
+[32m+[m[32m                                               <artifactId>jetty-jspc-maven-plugin</artifactId>[m
+[32m+[m[32m                                               <version>8.1.7.v20120910</version>[m
+[32m+[m[32m                                               <executions>[m
+[32m+[m[32m                                                       <execution>[m
+[32m+[m[32m                                                               <id>jspc</id>[m
+[32m+[m[32m                                                               <goals>[m
+[32m+[m[32m                                                                       <goal>jspc</goal>[m
+[32m+[m[32m                                                               </goals>[m
+[32m+[m[32m                                                               <configuration>[m
+[32m+[m[32m                                                                       <trimSpaces>true</trimSpaces>[m
+[32m+[m[32m                                                               </configuration>[m
+[32m+[m[32m                                                       </execution>[m
+[32m+[m[32m                                               </executions>[m
+[32m+[m[32m                                       </plugin>[m
+[32m+[m[32m                                       <plugin>[m
+[32m+[m[32m                                               <groupId>org.apache.maven.plugins</groupId>[m
+[32m+[m[32m                                               <artifactId>maven-war-plugin</artifactId>[m
+[32m+[m[32m                                               <version>2.2</version>[m
+[32m+[m[32m                                               <configuration>[m
+[32m+[m[32m                                                       <webXml>${basedir}/target/web.xml</webXml>[m
+[32m+[m[32m                                               </configuration>[m
+[32m+[m[32m                                       </plugin>[m
+[32m+[m[32m                               </plugins>[m
+[32m+[m[32m                       </build>[m
+[32m+[m[32m                       <activation>[m
+[32m+[m[32m                               <activeByDefault>true</activeByDefault>[m
+[32m+[m[32m                       </activation>[m
+[32m+[m[32m               </profile>[m
+[32m+[m[32m               <profile>[m
+[32m+[m[32m                       <id>tomcat</id>[m
+[32m+[m[32m                       <build>[m
+[32m+[m[32m                               <finalName>subsonic-tomcat</finalName>[m
+[32m+[m[32m                               <plugins>[m
+[32m+[m[32m                                       <plugin>[m
+[32m+[m[32m                                               <groupId>org.apache.maven.plugins</groupId>[m
+[32m+[m[32m                                               <artifactId>maven-war-plugin</artifactId>[m
+[32m+[m[32m                                               <version>2.2</version>[m
+[32m+[m[32m                                       </plugin>[m
+[32m+[m[32m                               </plugins>[m
+[32m+[m[32m                       </build>[m
+[32m+[m[32m               </profile>[m
+[32m+[m
+[32m+[m[32m    </profiles>[m
+[32m+[m
+[32m+[m[32m    <build>[m
+[32m+[m[32m        <finalName>subsonic</finalName>[m
+[32m+[m[32m        <plugins>[m
+[32m+[m
+[32m+[m[32m            <plugin>[m
+[32m+[m[32m                <artifactId>maven-antrun-plugin</artifactId>[m
+[32m+[m[32m                <executions>[m
+[32m+[m[32m                    <execution>[m
+[32m+[m[32m                        <phase>generate-resources</phase>[m
+[32m+[m[32m                        <configuration>[m
+[32m+[m[32m                            <target>[m
+[32m+[m[32m                                <tstamp/>[m
+[32m+[m[32m                                <copy file="${basedir}/src/main/resources/net/sourceforge/subsonic/i18n/ResourceBundle_en.properties"[m
+[32m+[m[32m                                      tofile="${project.build.directory}/classes/net/sourceforge/subsonic/i18n/ResourceBundle.properties"/>[m
+[32m+[m[32m                                <echo file="${project.build.directory}/classes/build_number.txt">${buildNumber}</echo>[m
+[32m+[m[32m                                <echo file="${project.build.directory}/classes/build_date.txt">${DSTAMP}</echo>[m
+[32m+[m[32m                                <echo file="${project.build.directory}/classes/version.txt">${project.version}</echo>[m
+[32m+[m[32m                            </target>[m
+[32m+[m[32m                        </configuration>[m
+[32m+[m[32m                        <goals>[m
+[32m+[m[32m                            <goal>run</goal>[m
+[32m+[m[32m                        </goals>[m
+[32m+[m[32m                    </execution>[m
+[32m+[m[32m                </executions>[m
+[32m+[m[32m            </plugin>[m
+[32m+[m[32m                    <plugin>[m
+[32m+[m[32m                               <groupId>org.mortbay.jetty</groupId>[m
+[32m+[m[32m                               <artifactId>jetty-maven-plugin</artifactId>[m
+[32m+[m[32m                               <version>8.1.7.v20120910</version>[m
+[32m+[m[32m                               <configuration>[m
+[32m+[m[32m                                       <stopPort>9966</stopPort>[m
+[32m+[m[32m                                       <stopKey>foo</stopKey>[m
+[32m+[m[32m                               </configuration>[m
+[32m+[m[32m                       </plugin>[m
+[32m+[m
+[32m+[m
+[32m+[m[32m        </plugins>[m
+[32m+[m[32m    </build>[m
+ </project>[m
+[1mdiff --git a/subsonic-main/src/main/java/net/sourceforge/subsonic/ajax/ChatService.java b/subsonic-main/src/main/java/net/sourceforge/subsonic/ajax/ChatService.java[m
+[1mindex b5a14be..ac90114 100644[m
+[1m--- a/subsonic-main/src/main/java/net/sourceforge/subsonic/ajax/ChatService.java[m
+[1m+++ b/subsonic-main/src/main/java/net/sourceforge/subsonic/ajax/ChatService.java[m
+[36m@@ -47,11 +47,11 @@[m [mimport java.util.concurrent.TimeUnit;[m
+ public class ChatService {[m
+ [m
+     private static final Logger LOG = Logger.getLogger(ChatService.class);[m
+[31m-    private static final Object CACHE_KEY = 1;[m
+[32m+[m[32m    private static final String CACHE_KEY = "1";[m
+     private static final int MAX_MESSAGES = 10;[m
+     private static final long TTL_MILLIS = 3L * 24L * 60L * 60L * 1000L; // 3 days.[m
+ [m
+[31m-    private LinkedList<Message> messages;[m
+[32m+[m[32m    private final LinkedList<Message> messages = new BoundedList<Message>(MAX_MESSAGES);[m
+     private SecurityService securityService;[m
+     private Ehcache chatCache;[m
+ [m
+[36m@@ -156,6 +156,7 @@[m [mpublic class ChatService {[m
+ [m
+     public static class Message implements Serializable {[m
+ [m
+[32m+[m[32m        private static final long serialVersionUID = -1907101191518133712L;[m
+         private final String content;[m
+         private final String username;[m
+         private final Date date;[m
+[1mdiff --git a/subsonic-main/src/main/java/net/sourceforge/subsonic/ajax/CoverArtService.java b/subsonic-main/src/main/java/net/sourceforge/subsonic/ajax/CoverArtService.java[m
+[1mindex 766eb12..90a64a2 100644[m
+[1m--- a/subsonic-main/src/main/java/net/sourceforge/subsonic/ajax/CoverArtService.java[m
+[1m+++ b/subsonic-main/src/main/java/net/sourceforge/subsonic/ajax/CoverArtService.java[m
+[36m@@ -75,6 +75,7 @@[m [mpublic class CoverArtService {[m
+ [m
+     private void saveCoverArt(Uri mediaFileUri, String url) throws Exception {[m
+         InputStream input = null;[m
+[32m+[m[32m        OutputStream output = null;[m
+         HttpClient client = new DefaultHttpClient();[m
+ [m
+         MediaFile mediaFile = mediaFileService.getMediaFile(mediaFileUri);[m
+[36m@@ -97,16 +98,17 @@[m [mpublic class CoverArtService {[m
+             }[m
+ [m
+             // Check permissions.[m
+[31m-            File newCoverFile = new File(path, "folder." + suffix);[m
+[32m+[m[32m            File newCoverFile = new File(path, "cover." + suffix);[m
+             if (!securityService.isWriteAllowed(newCoverFile)) {[m
+                 throw new Exception("Permission denied: " + StringUtil.toHtml(newCoverFile.getPath()));[m
+             }[m
+ [m
+             // If file exists, create a backup.[m
+[31m-            backup(newCoverFile, new File(path, "folder.backup." + suffix));[m
+[32m+[m[32m            backup(newCoverFile, new File(path, "cover.backup." + suffix));[m
+ [m
+             // Write file.[m
+[31m-            IOUtils.copy(input, new FileOutputStream(newCoverFile));[m
+[32m+[m[32m            output = new FileOutputStream(newCoverFile);[m
+[32m+[m[32m            IOUtils.copy(input, output);[m
+ [m
+             LOG.debug("Initialize scan of " + path);[m
+         	try {[m
+[36m@@ -118,10 +120,15 @@[m [mpublic class CoverArtService {[m
+ [m
+         } finally {[m
+             IOUtils.closeQuietly(input);[m
+[32m+[m[32m            IOUtils.closeQuietly(output);[m
+             client.getConnectionManager().shutdown();[m
+         }[m
+     }[m
+ [m
+[32m+[m[32m    private boolean isMediaFile(File file) {[m
+[32m+[m[32m        return !mediaFileService.filterMediaFiles(new File[]{file}).isEmpty();[m
+[32m+[m[32m    }[m
+[32m+[m
+     private void backup(File newCoverFile, File backup) {[m
+         if (newCoverFile.exists()) {[m
+             if (backup.exists()) {[m
+[36m@@ -139,7 +146,7 @@[m [mpublic class CoverArtService {[m
+         this.securityService = securityService;[m
+     }[m
+ [m
+[31m-    public void setmediaFileService(MediaFileService mediaFileService) {[m
+[32m+[m[32m    public void setMediaFileService(MediaFileService mediaFileService) {[m
+         this.mediaFileService = mediaFileService;[m
+     }[m
+ [m
+[1mdiff --git a/subsonic-main/src/main/java/net/sourceforge/subsonic/ajax/NowPlayingInfo.java b/subsonic-main/src/main/java/net/sourceforge/subsonic/ajax/NowPlayingInfo.java[m
+[1mindex e5cfddc..0491a19 100644[m
+[1m--- a/subsonic-main/src/main/java/net/sourceforge/subsonic/ajax/NowPlayingInfo.java[m
+[1m+++ b/subsonic-main/src/main/java/net/sourceforge/subsonic/ajax/NowPlayingInfo.java[m
+[36m@@ -32,26 +32,26 @@[m [mpublic class NowPlayingInfo {[m
+     private final String artist;[m
+     private final String title;[m
+     private final String tooltip;[m
+[32m+[m[32m    private final String streamUrl;[m
+     private final String albumUrl;[m
+     private final String lyricsUrl;[m
+     private final String coverArtUrl;[m
+     private final String coverArtZoomUrl;[m
+     private final String avatarUrl;[m
+[31m-    private final long firstRegistered;[m
+[32m+[m[32m    private final int minutesAgo;[m
+ [m
+[31m-    public NowPlayingInfo(Uri mediaFileUri, String user, String artist, String title, String tooltip, String albumUrl,[m
+[31m-                          String lyricsUrl, String coverArtUrl, String coverArtZoomUrl, String avatarUrl) {[m
+[31m-    	this.mediaFileUri = mediaFileUri;[m
+[31m-    	this.username = user;[m
+[32m+[m[32m    public NowPlayingInfo(Uri mediaFileUri, String user, String artist, String title, String tooltip, String streamUrl, String albumUrl,[m
+[32m+[m[32m                          String lyricsUrl, String coverArtUrl, String avatarUrl, int minutesAgo) {[m
+[32m+[m[32m        this.username = user;[m
+         this.artist = artist;[m
+         this.title = title;[m
+         this.tooltip = tooltip;[m
+[32m+[m[32m        this.streamUrl = streamUrl;[m
+         this.albumUrl = albumUrl;[m
+         this.lyricsUrl = lyricsUrl;[m
+         this.coverArtUrl = coverArtUrl;[m
+[31m-        this.coverArtZoomUrl = coverArtZoomUrl;[m
+         this.avatarUrl = avatarUrl;[m
+[31m-        this.firstRegistered = System.currentTimeMillis();[m
+[32m+[m[32m        this.minutesAgo = minutesAgo;[m
+     }[m
+ [m
+     public Uri getMediaFileUri() {[m
+[36m@@ -74,6 +74,10 @@[m [mpublic class NowPlayingInfo {[m
+         return tooltip;[m
+     }[m
+ [m
+[32m+[m[32m    public String getStreamUrl() {[m
+[32m+[m[32m        return streamUrl;[m
+[32m+[m[32m    }[m
+[32m+[m
+     public String getAlbumUrl() {[m
+         return albumUrl;[m
+     }[m
+[36m@@ -86,16 +90,12 @@[m [mpublic class NowPlayingInfo {[m
+         return coverArtUrl;[m
+     }[m
+ [m
+[31m-    public String getCoverArtZoomUrl() {[m
+[31m-        return coverArtZoomUrl;[m
+[31m-    }[m
+[31m-[m
+     public String getAvatarUrl() {[m
+         return avatarUrl;[m
+     }[m
+ [m
+     public int getMinutesAgo() {[m
+[31m-        return (int) ((System.currentTimeMillis() - firstRegistered) / 1000L / 60L);[m
+[32m+[m[32m        return minutesAgo;[m
+     }[m
+ [m
+ }[m
+\ No newline at end of file[m
+[1mdiff --git a/subsonic-main/src/main/java/net/sourceforge/subsonic/ajax/NowPlayingService.java b/subsonic-main/src/main/java/net/sourceforge/subsonic/ajax/NowPlayingService.java[m
+[1mindex 906c2d5..dd02919 100644[m
+[1m--- a/subsonic-main/src/main/java/net/sourceforge/subsonic/ajax/NowPlayingService.java[m
+[1m+++ b/subsonic-main/src/main/java/net/sourceforge/subsonic/ajax/NowPlayingService.java[m
+[36m@@ -60,10 +60,13 @@[m [mimport com.github.hakko.musiccabinet.service.lastfm.AlbumInfoService;[m
+  */[m
+ public class NowPlayingService {[m
+ [m
+[32m+[m[32m    private static final Logger LOG = Logger.getLogger(NowPlayingService.class);[m
+[32m+[m
+     private PlayerService playerService;[m
+     private StatusService statusService;[m
+[31m-    private MediaFileService mediaFileService;[m
+     private SettingsService settingsService;[m
+[32m+[m[32m    private MediaScannerService mediaScannerService;[m
+[32m+[m[32m    private MediaFileService mediaFileService;[m
+ [m
+     private AlbumInfoService albumInfoService;[m
+     private LibraryBrowserService libraryBrowserService;[m
+[36m@@ -92,10 +95,24 @@[m [mpublic class NowPlayingService {[m
+      * @return Details about what all users are currently playing.[m
+      */[m
+     public List<NowPlayingInfo> getNowPlaying() throws Exception {[m
+[31m-    	return convert(statusService.getAllStreamStatuses());[m
+[32m+[m[32m        try {[m
+[32m+[m[32m            return convert(statusService.getAllStreamStatuses());[m
+[32m+[m[32m        } catch (Throwable x) {[m
+[32m+[m[32m            LOG.error("Unexpected error in getNowPlaying: " + x, x);[m
+[32m+[m[32m            return Collections.emptyList();[m
+[32m+[m[32m        }[m
+[32m+[m[32m    }[m
+[32m+[m
+[32m+[m[32m    /**[m
+[32m+[m[32m     * Returns media folder scanning status.[m
+[32m+[m[32m     */[m
+[32m+[m[32m    public ScanInfo getScanningStatus() {[m
+[32m+[m[32m        return new ScanInfo(mediaScannerService.isScanning(), mediaScannerService.getScanCount());[m
+     }[m
+ [m
+     private List<NowPlayingInfo> convert(List<TransferStatus> statuses) throws Exception {[m
+[32m+[m[32m        HttpServletRequest request = WebContextFactory.get().getHttpServletRequest();[m
+[32m+[m[32m        String url = request.getRequestURL().toString();[m
+         List<NowPlayingInfo> result = new ArrayList<NowPlayingInfo>();[m
+         for (TransferStatus status : statuses) {[m
+ [m
+[36m@@ -103,7 +120,7 @@[m [mpublic class NowPlayingService {[m
+             Uri mediaFileUri = status.getMediaFileUri();[m
+ [m
+             if (status.getMillisSinceLastUpdate() / 1000L / 60L < 60 && [m
+[31m-            		player != null && player.getUsername() != null) {[m
+[32m+[m[41m            [m		[32mplayer != null && player.getUsername() != null && mediaFileUri != null) {[m
+             	[m
+                 String username = player.getUsername();[m
+                 UserSettings userSettings = settingsService.getUserSettings(username);[m
+[1mdiff --git a/subsonic-main/src/main/java/net/sourceforge/subsonic/ajax/PlaylistInfo.java b/subsonic-main/src/main/java/net/sourceforge/subsonic/ajax/PlaylistInfo.java[m
+[1mindex 93fe6d1..77d63c1 100644[m
+[1m--- a/subsonic-main/src/main/java/net/sourceforge/subsonic/ajax/PlaylistInfo.java[m
+[1m+++ b/subsonic-main/src/main/java/net/sourceforge/subsonic/ajax/PlaylistInfo.java[m
+[36m@@ -22,6 +22,8 @@[m [mimport static org.apache.commons.lang.StringUtils.trimToEmpty;[m
+ [m
+ import java.util.List;[m
+ [m
+[32m+[m[32mimport net.sourceforge.subsonic.domain.Playlist;[m
+[32m+[m
+ import com.github.hakko.musiccabinet.configuration.Uri;[m
+ [m
+ /**[m
+[36m@@ -31,44 +33,20 @@[m [mimport com.github.hakko.musiccabinet.configuration.Uri;[m
+  */[m
+ public class PlaylistInfo {[m
+ [m
+[32m+[m[32m    private final Playlist playlist;[m
+     private final List<Entry> entries;[m
+[31m-    private final int index;[m
+[31m-    private final boolean stopEnabled;[m
+[31m-    private final boolean repeatEnabled;[m
+[31m-    private final boolean sendM3U;[m
+[31m-    private final float gain;[m
+[31m-    [m
+[31m-    public PlaylistInfo(List<Entry> entries, int index, boolean stopEnabled, boolean repeatEnabled, boolean sendM3U, float gain) {[m
+[31m-        this.entries = entries;[m
+[31m-        this.index = index;[m
+[31m-        this.stopEnabled = stopEnabled;[m
+[31m-        this.repeatEnabled = repeatEnabled;[m
+[31m-        this.sendM3U = sendM3U;[m
+[31m-        this.gain = gain;[m
+[31m-    }[m
+[31m-[m
+[31m-    public List<Entry> getEntries() {[m
+[31m-        return entries;[m
+[31m-    }[m
+ [m
+[31m-    public int getIndex() {[m
+[31m-        return index;[m
+[31m-    }[m
+[31m-[m
+[31m-    public boolean isStopEnabled() {[m
+[31m-        return stopEnabled;[m
+[31m-    }[m
+[31m-[m
+[31m-    public boolean isSendM3U() {[m
+[31m-        return sendM3U;[m
+[32m+[m[32m    public PlaylistInfo(Playlist playlist, List<Entry> entries) {[m
+[32m+[m[32m        this.playlist = playlist;[m
+[32m+[m[32m        this.entries = entries;[m
+     }[m
+ [m
+[31m-    public boolean isRepeatEnabled() {[m
+[31m-        return repeatEnabled;[m
+[32m+[m[32m    public Playlist getPlaylist() {[m
+[32m+[m[32m        return playlist;[m
+     }[m
+ [m
+[31m-    public float getGain() {[m
+[31m-        return gain;[m
+[32m+[m[32m    public List<Entry> getEntries() {[m
+[32m+[m[32m        return entries;[m
+     }[m
+ [m
+     public static class Entry {[m
+[36m@@ -88,10 +66,11 @@[m [mpublic class PlaylistInfo {[m
+         private final String contentType;[m
+         private final String fileSize;[m
+         private final String streamUrl;[m
+[32m+[m[32m        private final boolean starred;[m
+ [m
+         public Entry(Integer trackNumber, String title, String artist, Uri artistUri, String album, Uri albumUri,[m
+         		String composer, String genre, String year, String bitRate, Integer duration, String durationAsString, [m
+[31m-        		String format, String contentType, String fileSize, String streamUrl) {[m
+[32m+[m[41m        [m		[32mString format, String contentType, String fileSize, String streamUrl, boolean starred) {[m
+             this.trackNumber = trackNumber;[m
+             this.title = title;[m
+             this.artist = artist;[m
+[36m@@ -108,6 +87,7 @@[m [mpublic class PlaylistInfo {[m
+             this.contentType = contentType;[m
+             this.fileSize = fileSize;[m
+             this.streamUrl = streamUrl;[m
+[32m+[m			[32mthis.starred = starred;[m
+          }[m
+ [m
+         public Integer getTrackNumber() {[m
+[36m@@ -173,6 +153,9 @@[m [mpublic class PlaylistInfo {[m
+         public String getStreamUrl() {[m
+             return streamUrl;[m
+         }[m
+[32m+[m[32m        public boolean isStarred() {[m
+[32m+[m[32m            return starred;[m
+[32m+[m[32m        }[m
+     }[m
+ [m
+ }[m
+\ No newline at end of file[m
+[1mdiff --git a/subsonic-main/src/main/webapp/WEB-INF/jsp/advancedSettings.jsp b/subsonic-main/src/main/webapp/WEB-INF/jsp/advancedSettings.jsp[m
+[1mindex 8e58992..0193fa2 100644[m
+[1m--- a/subsonic-main/src/main/webapp/WEB-INF/jsp/advancedSettings.jsp[m
+[1m+++ b/subsonic-main/src/main/webapp/WEB-INF/jsp/advancedSettings.jsp[m
+[36m@@ -24,7 +24,7 @@[m
+ 						</c:import>[m
+ 					</label>[m
+ [m
+[31m-					<form:input class="form-control" path="downsampleCommand" size="70" />[m
+[32m+[m					[32m<form:input cssClass="form-control" path="downsampleCommand" size="70" />[m
+ [m
+ [m
+ 				</div>[m
+[36m@@ -37,7 +37,7 @@[m
+ 							</c:import> <fmt:message key="advancedsettings.coverartlimit" />[m
+ 						</label>[m
+ [m
+[31m-						<form:input class="form-control" path="coverArtLimit" size="8" />[m
+[32m+[m						[32m<form:input cssClass="form-control" path="coverArtLimit" size="8" />[m
+ [m
+ 					</div>[m
+ 				</div>[m
+[36m@@ -52,7 +52,7 @@[m
+ [m
+ [m
+ [m
+[31m-						<form:input class="form-control" path="downloadLimit" size="8" />[m
+[32m+[m						[32m<form:input cssClass="form-control" path="downloadLimit" size="8" />[m
+ [m
+ 					</div>[m
+ 				</div>[m
+[36m@@ -64,7 +64,7 @@[m
+ 							</c:import> <fmt:message key="advancedsettings.uploadlimit" />[m
+ 						</label>[m
+ [m
+[31m-						<form:input class="form-control" path="uploadLimit" size="8" />[m
+[32m+[m						[32m<form:input cssClass="form-control" path="uploadLimit" size="8" />[m
+ [m
+ 					</div>[m
+ 				</div>[m
+[36m@@ -76,7 +76,7 @@[m
+ 							</c:import> <fmt:message key="advancedsettings.streamport" />[m
+ 						</label>[m
+ [m
+[31m-						<form:input class="form-control" path="streamPort" size="8" />[m
+[32m+[m						[32m<form:input cssClass="form-control" path="streamPort" size="8" />[m
+ [m
+ 					</div>[m
+ 				</div>[m
+[36m@@ -107,7 +107,7 @@[m
+ 								</c:import>[m
+ 							</label>[m
+ [m
+[31m-							<form:input class="form-control" path="ldapUrl" size="70" />[m
+[32m+[m							[32m<form:input cssClass="form-control" path="ldapUrl" size="70" />[m
+ [m
+ 						</div>[m
+ [m
+[36m@@ -120,7 +120,7 @@[m
+ [m
+ 							</label>[m
+ [m
+[31m-							<form:input class="form-control" path="ldapSearchFilter"[m
+[32m+[m							[32m<form:input cssClass="form-control" path="ldapSearchFilter"[m
+ 								size="70" />[m
+ [m
+ 						</div>[m
+[36m@@ -131,7 +131,7 @@[m
+ 										key="advancedsettings.ldapmanagerdn" />[m
+ 								</label>[m
+ [m
+[31m-								<form:input class="form-control" path="ldapManagerDn" size="20" />[m
+[32m+[m								[32m<form:input cssClass="form-control" path="ldapManagerDn" size="20" />[m
+ 							</div>[m
+ 							<div class="form-group col-xs-6">[m
+ 								<label for="ldapManagerPassword"> <fmt:message[m
+[36m@@ -141,7 +141,7 @@[m
+ 									</c:import>[m
+ [m
+ 								</label>[m
+[31m-								<form:password class="form-control" path="ldapManagerPassword"[m
+[32m+[m								[32m<form:password cssClass="form-control" path="ldapManagerPassword"[m
+ 									size="20" />[m
+ [m
+ 							</div>[m
+[1mdiff --git a/subsonic-main/src/main/webapp/WEB-INF/jsp/generalSettings.jsp b/subsonic-main/src/main/webapp/WEB-INF/jsp/generalSettings.jsp[m
+[1mindex 50edb5a..f3cf4a5 100644[m
+[1m--- a/subsonic-main/src/main/webapp/WEB-INF/jsp/generalSettings.jsp[m
+[1m+++ b/subsonic-main/src/main/webapp/WEB-INF/jsp/generalSettings.jsp[m
+[36m@@ -24,7 +24,7 @@[m
+ 							url="helpToolTip.jsp">[m
+ 							<c:param name="topic" value="playlistfolder" />[m
+ 						</c:import></label>[m
+[31m-					<form:input class="form-control" path="playlistFolder" size="70" />[m
+[32m+[m					[32m<form:input cssClass="form-control" path="playlistFolder" size="70" />[m
+ 				</div>[m
+ [m
+ 				<div class="form-group">[m
+[36m@@ -33,7 +33,7 @@[m
+ 							url="helpToolTip.jsp">[m
+ 							<c:param name="topic" value="musicmask" />[m
+ 						</c:import> </label>[m
+[31m-					<form:input class="form-control" path="musicFileTypes" size="70" />[m
+[32m+[m					[32m<form:input cssClass="form-control" path="musicFileTypes" size="70" />[m
+ 				</div>[m
+ [m
+ 				<div class="form-group">[m
+[36m@@ -43,7 +43,7 @@[m
+ 							<c:param name="topic" value="videomask" />[m
+ 						</c:import> </label>[m
+ [m
+[31m-					<form:input class="form-control" path="videoFileTypes" size="70" />[m
+[32m+[m					[32m<form:input cssClass="form-control" path="videoFileTypes" size="70" />[m
+ 				</div>[m
+ [m
+ 				<div class="form-group">[m
+[36m@@ -53,7 +53,7 @@[m
+ 							<c:param name="topic" value="imagemask" />[m
+ 						</c:import>[m
+ 					</label>[m
+[31m-					<form:input class="form-control" path="imageFileTypes" size="70" />[m
+[32m+[m					[32m<form:input cssClass="form-control" path="imageFileTypes" size="70" />[m
+ [m
+ 				</div>[m
+ [m
+[36m@@ -63,7 +63,7 @@[m
+ 							<c:param name="topic" value="index" />[m
+ 						</c:import>[m
+ 					</label>[m
+[31m-					<form:input class="form-control" path="index" size="70" />[m
+[32m+[m					[32m<form:input cssClass="form-control" path="index" size="70" />[m
+ 				</div>[m
+ [m
+ 				<div class="form-group">[m
+[36m@@ -74,7 +74,7 @@[m
+ 						</c:import>[m
+ 					</label>[m
+ [m
+[31m-					<form:input class="form-control" path="ignoredArticles" size="70" />[m
+[32m+[m					[32m<form:input cssClass="form-control" path="ignoredArticles" size="70" />[m
+ 				</div>[m
+ [m
+ 				<div class="form-group">[m
+[36m@@ -85,7 +85,7 @@[m
+ 						</c:import>[m
+ [m
+ 					</label>[m
+[31m-					<form:select class="form-control" path="localeIndex"[m
+[32m+[m					[32m<form:select cssClass="form-control" path="localeIndex"[m
+ 						cssStyle="width:15em">[m
+ 						<c:forEach items="${command.locales}" var="locale"[m
+ 							varStatus="loopStatus">[m
+[36m@@ -100,7 +100,7 @@[m
+ 							<c:param name="topic" value="theme" />[m
+ 						</c:import>[m
+ 					</label>[m
+[31m-					<form:select class="form-control" path="themeIndex"[m
+[32m+[m					[32m<form:select cssClass="form-control" path="themeIndex"[m
+ 						cssStyle="width:15em">[m
+ 						<c:forEach items="${command.themes}" var="theme"[m
+ 							varStatus="loopStatus">[m
+[36m@@ -122,7 +122,7 @@[m
+ 							url="helpToolTip.jsp">[m
+ 							<c:param name="topic" value="welcomemessage" />[m
+ 						</c:import> </label>[m
+[31m-					<form:input class="form-control" path="welcomeTitle" size="70" />[m
+[32m+[m					[32m<form:input cssClass="form-control" path="welcomeTitle" size="70" />[m
+ 				</div>[m
+ 				<div class="form-group">[m
+ 					<label for="welcomeSubtitle"> <fmt:message[m
+[36m@@ -131,7 +131,7 @@[m
+ 							<c:param name="topic" value="welcomemessage" />[m
+ 						</c:import>[m
+ 					</label>[m
+[31m-					<form:input class="form-control" path="welcomeSubtitle" size="70" />[m
+[32m+[m					[32m<form:input cssClass="form-control" path="welcomeSubtitle" size="70" />[m
+ 				</div>[m
+ 				<div class="form-group">[m
+ 					<label for="welcomeMessage"> <fmt:message[m
+[36m@@ -140,7 +140,7 @@[m
+ 							<c:param name="topic" value="welcomemessage" />[m
+ 						</c:import>[m
+ 					</label>[m
+[31m-					<form:textarea class="form-control" path="welcomeMessage" rows="5"[m
+[32m+[m					[32m<form:textarea cssClass="form-control" path="welcomeMessage" rows="5"[m
+ 						cols="70" />[m
+ 				</div>[m
+ 				<div class="form-group">[m
+[36m@@ -151,7 +151,7 @@[m
+ 						</c:import>[m
+ [m
+ 					</label>[m
+[31m-					<form:textarea class="form-control" path="loginMessage" rows="5"[m
+[32m+[m					[32m<form:textarea cssClass="form-control" path="loginMessage" rows="5"[m
+ 						cols="70" />[m
+ 					<fmt:message key="main.wiki" />[m
+ 				</div>[m
+[36m@@ -163,7 +163,7 @@[m
+ 						</c:import>[m
+ [m
+ 					</label>[m
+[31m-					<form:input class="form-control" path="shareUrlPrefix" size="70" />[m
+[32m+[m					[32m<form:input cssClass="form-control" path="shareUrlPrefix" size="70" />[m
+ 				</div>[m
+ 				<div class="form-group">[m
+ 					<label for="lyricsUrl"> <fmt:message[m
+[36m@@ -172,7 +172,7 @@[m
+ 							<c:param name="topic" value="lyricsurl" />[m
+ 						</c:import>[m
+ 					</label>[m
+[31m-					<form:input class="form-control" path="lyricsUrl" size="70" />[m
+[32m+[m					[32m<form:input cssClass="form-control" path="lyricsUrl" size="70" />[m
+ 				</div>[m
+ 				<div class="form-group">[m
+ 					<label for="restAlbumName"> <fmt:message[m
+[36m@@ -182,7 +182,7 @@[m
+ 						</c:import>[m
+ [m
+ 					</label>[m
+[31m-					<form:input class="form-control" path="restAlbumName" size="70" />[m
+[32m+[m					[32m<form:input cssClass="form-control" path="restAlbumName" size="70" />[m
+ 				</div>[m
+ 			</div>[m
+ 			<div class="panel-footer">[m
+[36m@@ -204,4 +204,4 @@[m
+     </script>[m
+ 	</c:if>[m
+ [m
+[31m-</div>[m
+\ No newline at end of file[m
+[32m+[m[32m</div>[m
+[1mdiff --git a/subsonic-main/src/main/webapp/WEB-INF/jsp/personalSettings.jsp b/subsonic-main/src/main/webapp/WEB-INF/jsp/personalSettings.jsp[m
+[1mindex b7087fc..2cf9c24 100644[m
+[1m--- a/subsonic-main/src/main/webapp/WEB-INF/jsp/personalSettings.jsp[m
+[1m+++ b/subsonic-main/src/main/webapp/WEB-INF/jsp/personalSettings.jsp[m
+[36m@@ -13,7 +13,7 @@[m
+ [m
+ 	<fmt:message key="common.default" var="defaultLabel" />[m
+ 	<form:form method="post" action="personalSettings.view"[m
+[31m-		commandName="command" class="form" role="form"[m
+[32m+[m		[32mcommandName="command" cssClass="form"[m
+ 		onsubmit="return submitForm(this, 'Personal settings saved.');">[m
+ 		<div class="statusMessage"></div>[m
+ 		<div class="panel panel-default">[m
+[36m@@ -34,7 +34,7 @@[m
+ 						</c:import>[m
+ [m
+ 						<form:select path="localeIndex" cssStyle="width:15em"[m
+[31m-							class="form-control">[m
+[32m+[m							[32mcssClass="form-control">[m
+ 							<form:option value="-1" label="${defaultLabel}" />[m
+ 							<c:forEach items="${command.locales}" var="locale"[m
+ 								varStatus="loopStatus">[m
+[36m@@ -53,7 +53,7 @@[m
+ 						</c:import>[m
+ [m
+ 						<form:select path="themeIndex" cssStyle="width:15em"[m
+[31m-							class="form-control">[m
+[32m+[m							[32mcssClass="form-control">[m
+ 							<form:option value="-1" label="${defaultLabel}" />[m
+ 							<c:forEach items="${command.themes}" var="theme"[m
+ 								varStatus="loopStatus">[m
+[36m@@ -72,7 +72,7 @@[m
+ 						</c:import>[m
+ [m
+ 						<form:select path="albumOrderByYear" cssStyle="width:15em"[m
+[31m-							class="form-control">[m
+[32m+[m							[32mcssClass="form-control">[m
+ 							<form:option value="true" label="By year" />[m
+ 							<form:option value="false" label="By name" />[m
+ 						</form:select>[m
+[36m@@ -87,7 +87,7 @@[m
+ 						</c:import>[m
+ [m
+ 						<form:select path="albumOrderAscending" cssStyle="width:15em"[m
+[31m-							class="form-control">[m
+[32m+[m							[32mcssClass="form-control">[m
+ 							<form:option value="true" label="Ascending" />[m
+ 							<form:option value="false" label="Descending" />[m
+ 						</form:select>[m
+[36m@@ -102,7 +102,7 @@[m
+ 						</c:import>[m
+ [m
+ 						<form:select path="defaultHomeView" cssStyle="width:15em"[m
+[31m-							class="form-control">[m
+[32m+[m							[32mcssClass="form-control">[m
+ 							<form:option value="newest" label="Recently added" />[m
+ 							<form:option value="recent+Artists"[m
+ 								label="Recently played - Artists" />[m
+[36m@@ -142,7 +142,7 @@[m
+ 						</c:import>[m
+ [m
+ 						<form:select path="viewStatsForAllUsers" cssStyle="width:15em"[m
+[31m-							class="form-control">[m
+[32m+[m							[32mcssClass="form-control">[m
+ 							<form:option value="false" label="Show only my activity" />[m
+ 							<form:option value="true" label="Show activity for all users" />[m
+ 						</form:select>[m
+[36m@@ -157,7 +157,7 @@[m
+ 						</c:import>[m
+ [m
+ 						<form:input path="defaultHomeArtists" size="3"[m
+[31m-							class="form-control" cssStyle="width:15em" />[m
+[32m+[m							[32mcssClass="form-control" cssStyle="width:15em" />[m
+ [m
+ [m
+ 					</div>[m
+[36m@@ -168,7 +168,7 @@[m
+ 							<c:param name="topic" value="defaulthomealbums" />[m
+ 						</c:import>[m
+ [m
+[31m-						<form:input path="defaultHomeAlbums" size="3" class="form-control" />[m
+[32m+[m						[32m<form:input path="defaultHomeAlbums" size="3" cssClass="form-control" />[m
+ [m
+ [m
+ 					</div>[m
+[36m@@ -179,7 +179,7 @@[m
+ 							<c:param name="topic" value="defaulthomesongs" />[m
+ 						</c:import>[m
+ [m
+[31m-						<form:input path="defaultHomeSongs" size="3" class="form-control" />[m
+[32m+[m						[32m<form:input path="defaultHomeSongs" size="3" cssClass="form-control" />[m
+ [m
+ [m
+ 					</div>[m
+[36m@@ -190,7 +190,7 @@[m
+ 							<c:param name="topic" value="artistgridwidth" />[m
+ 						</c:import>[m
+ [m
+[31m-						<form:input path="artistGridWidth" size="3" class="form-control" />[m
+[32m+[m						[32m<form:input path="artistGridWidth" size="3" cssClass="form-control" />[m
+ [m
+ [m
+ 					</div>[m
+[36m@@ -201,7 +201,7 @@[m
+ 							<c:param name="topic" value="albumgridlayout" />[m
+ 						</c:import>[m
+ [m
+[31m-						<form:select path="albumGridLayout" class="form-control">[m
+[32m+[m						[32m<form:select path="albumGridLayout" cssClass="form-control">[m
+ 							<form:option value="true" label="Yes" />[m
+ 							<form:option value="false" label="No" />[m
+ 						</form:select>[m
+[36m@@ -214,7 +214,7 @@[m
+ 							<c:param name="topic" value="relatedartists" />[m
+ 						</c:import>[m
+ [m
+[31m-						<form:select path="relatedArtists" class="form-control">[m
+[32m+[m						[32m<form:select path="relatedArtists" cssClass="form-control">[m
+ 							<c:forTokens items="8 9 10 11 12 13 14 15 16 17 18 19 20 21"[m
+ 								delims=" " var="i">[m
+ 								<form:option value="${i}" label="${i}" />[m
+[36m@@ -230,7 +230,7 @@[m
+ 							<c:param name="topic" value="recommendedartists" />[m
+ 						</c:import>[m
+ [m
+[31m-						<form:select path="recommendedArtists" class="form-control">[m
+[32m+[m						[32m<form:select path="recommendedArtists" cssClass="form-control">[m
+ 							<c:forTokens items="3 4 5 6 7 8 9 10" delims=" " var="i">[m
+ 								<form:option value="${i}" label="${i}" />[m
+ 							</c:forTokens>[m
+[36m@@ -246,7 +246,7 @@[m
+ 							<c:param name="topic" value="reluctantartistloading" />[m
+ 						</c:import>[m
+ [m
+[31m-						<form:select path="reluctantArtistLoading" class="form-control">[m
+[32m+[m						[32m<form:select path="reluctantArtistLoading" cssClass="form-control">[m
+ 							<form:option value="false" label="No" />[m
+ 							<form:option value="true" label="Yes" />[m
+ 						</form:select>[m
+[36m@@ -262,7 +262,7 @@[m
+ 						</c:import>[m
+ [m
+ 						<form:select path="onlyAlbumArtistRecommendations"[m
+[31m-							class="form-control">[m
+[32m+[m							[32mcssClass="form-control">[m
+ 							<form:option value="false" label="No" />[m
+ 							<form:option value="true" label="Yes" />[m
+ 						</form:select>[m
+[36m@@ -278,7 +278,7 @@[m
+ 						</c:import>[m
+ [m
+ 						<form:select path="useVariousArtistsShortlist"[m
+[31m-							class="form-control">[m
+[32m+[m							[32mcssClass="form-control">[m
+ 							<form:option value="false" label="No" />[m
+ 							<form:option value="true" label="Yes" />[m
+ 						</form:select>[m
+[36m@@ -481,7 +481,7 @@[m
+                 [m
+                 <div class="form-group">[m
+                     <label for="deviceMountPath">Music Path</label>[m
+[31m-                    <form:input path="deviceMountPath" class="form-control" />[m
+[32m+[m[32m                    <form:input path="deviceMountPath" cssClass="form-control" />[m
+                 </div>[m
+                 [m
+                     <div class="form-group">[m
+[36m@@ -491,7 +491,7 @@[m
+                         </c:import>[m
+ [m
+                         <form:input path="deviceSyncSize" size="3"[m
+[31m-                            class="form-control" cssStyle="width:15em" />[m
+[32m+[m[32m                            cssClass="form-control" cssStyle="width:15em" />[m
+ [m
+ [m
+                     </div>[m
+[1mdiff --git a/subsonic-main/src/main/webapp/WEB-INF/jsp/playerSettings.jsp b/subsonic-main/src/main/webapp/WEB-INF/jsp/playerSettings.jsp[m
+[1mindex 154c07f..6fdd567 100644[m
+[1m--- a/subsonic-main/src/main/webapp/WEB-INF/jsp/playerSettings.jsp[m
+[1m+++ b/subsonic-main/src/main/webapp/WEB-INF/jsp/playerSettings.jsp[m
+[36m@@ -15,7 +15,7 @@[m
+ 	<form:form commandName="command" method="post"[m
+ 		action="playerSettings.view"[m
+ 		onsubmit="return submitForm(this, 'Player settings saved.')"[m
+[31m-		role="form" class="form">[m
+[32m+[m		[32mcssClass="form">[m
+ 		<form:hidden path="playerId" />[m
+ 		<div class="panel panel-default">[m
+ 			<div class="panel-heading">Player settings</div>[m
+[36m@@ -105,7 +105,7 @@[m
+ 								<c:import url="helpToolTip.jsp">[m
+ 									<c:param name="topic" value="playername" />[m
+ 								</c:import></label>[m
+[31m-							<form:input path="name" size="16" class="form-control" />[m
+[32m+[m							[32m<form:input path="name" size="16" cssClass="form-control" />[m
+ 						</div>[m
+ [m
+ 						<tr>[m
+[1mdiff --git a/subsonic-main/src/main/webapp/WEB-INF/jsp/savePlaylist.jsp b/subsonic-main/src/main/webapp/WEB-INF/jsp/savePlaylist.jsp[m
+[1mindex f9b3c26..677be4d 100644[m
+[1m--- a/subsonic-main/src/main/webapp/WEB-INF/jsp/savePlaylist.jsp[m
+[1m+++ b/subsonic-main/src/main/webapp/WEB-INF/jsp/savePlaylist.jsp[m
+[36m@@ -4,14 +4,14 @@[m
+ <div class="mainframe bgcolor1">[m
+ [m
+ <h1><fmt:message key="playlist.save.title"/></h1>[m
+[31m-<form:form commandName="command" method="post" action="savePlaylist.view" class="form" role="form">[m
+[32m+[m[32m<form:form commandName="command" method="post" action="savePlaylist.view" cssClass="form">[m
+   <div class="form-group">[m
+     <label for="name"><fmt:message key="playlist.save.name"/></label>[m
+[31m-    <form:input path="name" size="30" class="form-control" />[m
+[32m+[m[32m    <form:input path="name" size="30" cssClass="form-control" />[m
+   </div>[m
+   <div class="form-group">[m
+     <label for="suffix"><fmt:message key="playlist.save.format"/></label>[m
+[31m-    <form:select path="suffix" class="form-control">[m
+[32m+[m[32m    <form:select path="suffix" cssClass="form-control">[m
+       <c:forEach items="${command.formats}" var="format" varStatus="loopStatus">[m
+         <form:option value="${format}" label="${format}"/>[m
+       </c:forEach>[m
+[1mdiff --git a/subsonic-main/src/main/webapp/WEB-INF/jsp/search.jsp b/subsonic-main/src/main/webapp/WEB-INF/jsp/search.jsp[m
+[1mindex 85da9af..cc963c6 100644[m
+[1m--- a/subsonic-main/src/main/webapp/WEB-INF/jsp/search.jsp[m
+[1m+++ b/subsonic-main/src/main/webapp/WEB-INF/jsp/search.jsp[m
+[36m@@ -10,11 +10,11 @@[m
+     <fmt:message key="search.title"/>[m
+ </h1>[m
+ [m
+[31m-<form:form role="form" commandName="command" method="post" action="search.view" name="searchForm" onSubmit="return submitForm(this)">[m
+[32m+[m[32m<form:form commandName="command" method="post" action="search.view" name="searchForm" onsubmit="return submitForm(this)">[m
+ <div class="form-group">[m
+ <label for="query"><fmt:message key="search.query"/></label>[m
+ [m
+[31m-<form:input path="query" size="35" class="form-control"/>[m
+[32m+[m[32m<form:input path="query" size="35" cssClass="form-control"/>[m
+ </div>[m
+ <input class="btn btn-default" type="button" onclick="return submitForm(this);" value="<fmt:message key="search.search"/>"/>[m
+ </form:form>[m
+[1mdiff --git a/subsonic-main/src/main/webapp/WEB-INF/jsp/userSettings.jsp b/subsonic-main/src/main/webapp/WEB-INF/jsp/userSettings.jsp[m
+[1mindex 87922c9..5326a61 100644[m
+[1m--- a/subsonic-main/src/main/webapp/WEB-INF/jsp/userSettings.jsp[m
+[1m+++ b/subsonic-main/src/main/webapp/WEB-INF/jsp/userSettings.jsp[m
+[36m@@ -179,7 +179,7 @@[m
+ 									key="usersettings.username" />[m
+ [m
+ 							</label>[m
+[31m-							<form:input path="username" class="form-control" />[m
+[32m+[m							[32m<form:input path="username" cssClass="form-control" />[m
+ 							<div class="has-error">[m
+ 								<form:errors path="username" />[m
+ 							</div>[m
+[36m@@ -188,7 +188,7 @@[m
+ 							<label for="email"> <fmt:message key="usersettings.email" />[m
+ [m
+ 							</label>[m
+[31m-							<form:input path="email" class="form-control" />[m
+[32m+[m							[32m<form:input path="email" cssClass="form-control" />[m
+ 							<div class="has-error">[m
+ 								<form:errors path="email" />[m
+ 							</div>[m
+[36m@@ -198,7 +198,7 @@[m
+ 									key="usersettings.password" />[m
+ [m
+ 							</label>[m
+[31m-							<form:password path="password" class="form-control" />[m
+[32m+[m							[32m<form:password path="password" cssClass="form-control" />[m
+ 							<div class="has-error">[m
+ 								<form:errors path="password" />[m
+ 							</div>[m
+[36m@@ -208,7 +208,7 @@[m
+ 									key="usersettings.confirmpassword" />[m
+ [m
+ 							</label>[m
+[31m-							<form:password path="confirmPassword" class="form-control" />[m
+[32m+[m							[32m<form:password path="confirmPassword" cssClass="form-control" />[m
+ 							<div class="has-error">[m
+ 								<form:errors path="confirmPassword" />[m
+ 							</div>[m
+[36m@@ -231,7 +231,7 @@[m
+ 								<label for="password"><fmt:message[m
+ 										key="usersettings.newpassword" /> </label>[m
+ 								<form:password path="password" id="password"[m
+[31m-									class="form-control" />[m
+[32m+[m									[32mcssClass="form-control" />[m
+ [m
+ 								<div class="has-error">[m
+ 									<form:errors path="password" />[m
+[36m@@ -242,7 +242,7 @@[m
+ 								<label for="confirmPassword"><fmt:message[m
+ 										key="usersettings.confirmpassword" /> </label>[m
+ 								<form:password path="confirmPassword" id="confirmPassword"[m
+[31m-									class="form-control" />[m
+[32m+[m									[32mcssClass="form-control" />[m
+ [m
+ 								<div class="has-error">[m
+ 									<form:errors path="confirmPassword" />[m
+[36m@@ -273,4 +273,4 @@[m
+ 	<script type="text/javascript">[m
+     enablePasswordChangeFields()[m
+   </script>[m
+[31m-</div>[m
+\ No newline at end of file[m
+[32m+[m[32m</div>[m

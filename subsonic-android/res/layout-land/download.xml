@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:orientation="vertical"
+              android:layout_width="fill_parent"
+              android:layout_height="fill_parent">
+
+    <LinearLayout
+            android:orientation="horizontal"
+            android:layout_width="fill_parent"
+            android:layout_height="0dip"
+            android:layout_weight="1">
+
+        <net.sourceforge.subsonic.androidapp.util.MyViewFlipper
+                android:id="@+id/download_playlist_flipper"
+                android:layout_width="0dp"
+                android:layout_height="fill_parent"
+                android:layout_weight="1">
+
+            <ImageView
+                    android:id="@+id/download_album_art_image"
+                    android:src="@drawable/unknown_album_large"
+                    android:layout_width="fill_parent"
+                    android:layout_height="fill_parent"
+                    android:layout_weight="1"
+                    android:scaleType="centerCrop"
+                    android:contentDescription="@null"/>
+
+            <include layout="@layout/download_playlist"/>
+
+        </net.sourceforge.subsonic.androidapp.util.MyViewFlipper>
+
+        <RelativeLayout
+                android:layout_width="0dp"
+                android:layout_height="fill_parent"
+                android:layout_weight="1"
+                android:background="@color/mediaControlBackground">
+
+            <include layout="@layout/download_song_info"
+                     android:layout_width="fill_parent"
+                     android:layout_height="wrap_content"
+                     android:layout_alignParentTop="true"/>
+
+            <LinearLayout
+                    android:id="@+id/download_visualizer_view_layout"
+                    android:layout_width="fill_parent"
+                    android:layout_height="60dip"
+                    android:layout_above="@+id/download_overlay_buttons"/>
+
+            <include layout="@layout/download_overlay_buttons"
+                     android:id="@+id/download_overlay_buttons"
+                     android:layout_width="fill_parent"
+                     android:layout_height="wrap_content"
+                     android:layout_above="@+id/download_media_controls"/>
+
+            <include layout="@layout/download_media_controls"
+                     android:id="@+id/download_media_controls"
+                     android:layout_width="fill_parent"
+                     android:layout_height="wrap_content"
+                     android:layout_alignParentBottom="true"/>
+
+        </RelativeLayout>
+
+    </LinearLayout>
+
+    <include layout="@layout/button_bar"/>
+
+</LinearLayout>
+

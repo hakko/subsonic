@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:orientation="vertical"
+              android:layout_width="fill_parent"
+              android:layout_height="wrap_content">
+
+    <TextView
+            android:id="@+id/search_no_match"
+            android:text="@string/search.no_match"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:gravity="center"
+            android:padding="12dp"/>
+
+    <TextView
+            style="@style/HeaderTextView"
+            android:id="@+id/search_artists"
+            android:text="@string/search.artists"/>
+
+    <TextView
+            style="@style/HeaderTextView"
+            android:id="@+id/search_albums"
+            android:text="@string/search.albums"/>
+
+    <TextView
+            android:id="@+id/search_songs"
+            android:text="@string/search.songs"
+            style="@style/HeaderTextView"/>
+
+    <TextView
+            android:id="@+id/search_more_artists"
+            android:text="@string/search.more"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceSmall"
+            android:gravity="center"
+            android:paddingTop="8dp"
+            android:paddingBottom="8dp"/>
+
+    <TextView
+            android:id="@+id/search_more_albums"
+            android:text="@string/search.more"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceSmall"
+            android:gravity="center"
+            android:paddingTop="8dp"
+            android:paddingBottom="8dp"/>
+
+    <TextView
+            android:id="@+id/search_more_songs"
+            android:text="@string/search.more"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceSmall"
+            android:gravity="center"
+            android:paddingTop="8dp"
+            android:paddingBottom="8dp"/>
+
+</LinearLayout>
+
