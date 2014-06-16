@@ -92,7 +92,7 @@ public class ShareService {
 
         shareDao.createShare(share);
         for (MediaFile file : files) {
-            shareDao.createSharedFiles(share.getId(), file.getId());
+            shareDao.createSharedFiles(share.getId(), file.getUri().getId());
         }
         LOG.info("Created share '" + share.getName() + "' with " + files.size() + " file(s).");
 

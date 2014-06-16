@@ -20,7 +20,9 @@ package net.sourceforge.subsonic.domain;
 
 import java.io.File;
 import java.io.FileFilter;
+import java.io.FileInputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -97,37 +99,22 @@ public class MediaFile implements Serializable, Comparable<MediaFile> {
 	public MediaFile(int id) {
 		this.uri = new SubsonicUri(id);
 		this.isFile = true;
-		this.metaData = new MetaData();
 	}
 	
 	public MediaFile(Uri uri) {
 		this.uri = uri;
 		this.isFile = true;
-		this.metaData = new MetaData();
 	}
 	
 
-	@Deprecated
-	public int getId() {
-		return uri.getId();
-	}
-	
 	public Uri getUri() {
 		return uri;
-	}
-	
-	public File getFile() {
-		return file;
-	}
-
-	public void setFile(File file) {
-		this.file = file;
 	}
 	
 	public boolean isFile() {
 		return isFile;
 	}
-
+	
 	/**
 	 * Returns whether this music file is a directory.
 	 * 
@@ -144,6 +131,10 @@ public class MediaFile implements Serializable, Comparable<MediaFile> {
 	 */
 	public boolean isVideo() {
 		return isVideo;
+	}
+	
+	public boolean isLocal() {
+		return file != null;
 	}
 
 	/**
@@ -180,6 +171,9 @@ public class MediaFile implements Serializable, Comparable<MediaFile> {
 	 *         the file does not exist
 	 */
 	public long length() {
+		if (file == null) {
+			return 0;
+		}
 		return file.length();
 	}
 
@@ -189,7 +183,7 @@ public class MediaFile implements Serializable, Comparable<MediaFile> {
 	 * @return Whether this music file exists.
 	 */
 	public boolean exists() {
-		if(isSpotify()) {
+		if(URIUtil.isRemote(uri)) {
 			return true;
 		}
 		return file.exists();
@@ -202,9 +196,19 @@ public class MediaFile implements Serializable, Comparable<MediaFile> {
 	 * @return The name of the music file.
 	 */
 	public String getName() {
+		if(file == null) {
+			return getUriPath();
+		}
 		return file.getName();
 	}
+	
+	public void setPath(String path) {
+		this.file = new File(path);
+	}
 
+	private String getUriPath() {
+		return this.getUri().getUri().toString();
+	}
 	/**
 	 * Same as {@link #getName}, but without file suffix (unless this music file
 	 * represents a directory).
@@ -226,6 +230,9 @@ public class MediaFile implements Serializable, Comparable<MediaFile> {
 	 * @return The file suffix.
 	 */
 	public String getSuffix() {
+		if(!isLocal()) {
+			return "mp3";
+		}
 		return FilenameUtils.getExtension(getName());
 	}
 
@@ -235,8 +242,27 @@ public class MediaFile implements Serializable, Comparable<MediaFile> {
 	 * @return The full pathname as a string.
 	 */
 	public String getPath() {
+		if (file == null) {
+			return getUriPath();
+		}
 		return file.getPath();
 	}
+	
+	public String getAbsolutePath() {
+		if (file == null) {
+			return getUriPath();
+		}
+		return file.getAbsolutePath();
+	}
+	
+	public InputStream getInputStream() throws IOException {
+		
+		if (file != null) {
+			return new FileInputStream(file);
+		}
+		return this.uri.getUri().toURL().openStream();
+	}
+	
 
 	/**
 	 * Returns meta data for this music file.
@@ -273,7 +299,10 @@ public class MediaFile implements Serializable, Comparable<MediaFile> {
 	 * @throws IOException
 	 *             If an I/O error occurs.
 	 */
-	public MediaFile getParent() throws IOException {
+	public MediaFile getParent() {
+		if (file == null) {
+			return null;
+		}
 		File parent = file.getParentFile();
 		return parent == null ? null : createMediaFile(parent);
 	}
@@ -289,6 +318,10 @@ public class MediaFile implements Serializable, Comparable<MediaFile> {
 	 *             If an I/O error occurs.
 	 */
 	public List<MediaFile> getChildren(FileFilter filter) throws IOException {
+		if(file == null) {
+			return new ArrayList<MediaFile>();
+		}
+		
 		File[] children = FileUtil.listFiles(file, filter);
 		List<MediaFile> result = new ArrayList<MediaFile>(children.length);
 
@@ -380,7 +413,7 @@ public class MediaFile implements Serializable, Comparable<MediaFile> {
 	public boolean isSpotify() {
 		return URIUtil.isSpotify(uri);
 	}
-
+	
 	@Override
 	public int compareTo(MediaFile mf) {
 

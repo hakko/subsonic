@@ -112,7 +112,7 @@ public class PlaylistInputStream extends InputStream {
             close();
         } else if (!file.equals(currentFile)) {
             close();
-            LOG.info(player.getUsername() + " listening to \"" + FileUtil.getShortPath(file.getFile()) + "\"");
+            LOG.info(player.getUsername() + " listening to \"" + file.getPath() + "\"");
             if (player.getClientId() == null) {  // Don't scrobble REST players.
                 audioScrobblerService.scrobble(player.getUsername(), file, false);
             }
@@ -121,7 +121,7 @@ public class PlaylistInputStream extends InputStream {
             currentInputStream = transcodingService.getTranscodedInputStream(parameters);
             currentFile = file;
             status.setMediaFileUri(file.getUri());
-            status.setFile(currentFile.getFile());
+            status.setFile(currentFile.getName());
         }
     }
 

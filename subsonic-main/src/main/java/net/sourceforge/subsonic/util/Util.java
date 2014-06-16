@@ -82,6 +82,12 @@ public final class Util {
      * @param length   The content length.
      */
     public static void setContentLength(HttpServletResponse response, long length) {
+    	
+   	
+    	if(length <= 0) {
+    		return;
+    	}
+    	
         if (length <= Integer.MAX_VALUE) {
             response.setContentLength((int) length);
         } else {

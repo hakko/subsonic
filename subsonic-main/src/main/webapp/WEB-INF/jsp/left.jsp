@@ -50,7 +50,7 @@
 		</h2>
 		<c:forEach items="${model.radios}" var="radio">
 			<p class="dense">
-				<a href="${radio.streamUrl}"> <img
+				<a href="#" onclick="return onPlay(['${radio.streamUrl}'], 'P');"> <img
 					src="<spring:theme code="playImage"/>"
 					alt="<fmt:message key="common.play"/>"
 					title="<fmt:message key="common.play"/>"></a>

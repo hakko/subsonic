@@ -307,9 +307,9 @@
 			<scope>test</scope>
 		</dependency>
 		<dependency>
-			<groupId>de.ailis.usb4java</groupId>
-			<artifactId>usb4java</artifactId>
-			<version>1.0.0</version>
+			<groupId>org.usb4java</groupId>
+			<artifactId>usb4java-javax</artifactId>
+			<version>1.2.0</version>
 		</dependency>
 
 	</dependencies>

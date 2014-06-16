@@ -67,7 +67,7 @@
             <div class="btn-group form-group">
             <c:if test="${model.player.web}">
                 <button type="button" class="btn btn-default btn-sm" onclick="return onPrevious()"><span class="fa fa-step-backward"></span></button>
-                <button type="button" class="btn btn-default btn-sm" onclick="return onNext(false)()"><span class="fa fa-step-forward"></span></button>
+                <button type="button" class="btn btn-default btn-sm" onclick="return onNext(false)"><span class="fa fa-step-forward"></span></button>
             </c:if>
 
             <button type="button" class="btn btn-default btn-sm" onclick="return onClear()" title="<fmt:message key="playlist.clear"/>"><span class="fa fa-ban"></span></button>
@@ -237,6 +237,12 @@
                 onNext(repeatEnabled);
             }
         );
+        jwplayer('mediaplayer').onError(
+            function(event) {
+                window.console.log(event);
+            }
+        );
+        
     }
 
     function getPlaylist() {

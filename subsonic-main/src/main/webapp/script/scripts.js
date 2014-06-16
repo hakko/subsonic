@@ -160,9 +160,13 @@ var app = (function() {
       type = 'GET';
     }
     module.loadIndex(true);
+    try {
     $.when($.ajax( path, {type: type, data: data})).then(function( data, textStatus, jqXHR ) {
       jQuery('div.main').html(data);
     });
+    } catch(e) {
+      window.console.log.error(e);
+    }
   }
   
   module.loadLeft = function(params) {
@@ -345,7 +349,7 @@ var app = (function() {
       '/status': module.loadStatus,
       '/help': module.loadHelp,
       '/more': module.loadMore,
-      '/missingAlbums': module.loadMissingAlbums,
+      '/missingAlbums': module.genericLoader('missingAlbums.view'),
       '/generalSettings': module.genericLoader('generalSettings.view'),
       '/advancedSettings': module.genericLoader('advancedSettings.view'),
       '/userSettings': module.genericLoader('userSettings.view'),

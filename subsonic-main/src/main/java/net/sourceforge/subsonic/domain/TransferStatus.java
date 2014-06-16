@@ -36,7 +36,7 @@ public class TransferStatus {
 
     private Player player;
     private Uri mediaFileUri;
-    private File file;
+    private String file;
     private long bytesTransfered;
     private long bytesSkipped;
     private long bytesTotal;
@@ -158,7 +158,7 @@ public class TransferStatus {
      *
      * @return The file that is currently being transferred.
      */
-    public synchronized File getFile() {
+    public synchronized String getFile() {
         return file;
     }
 
@@ -167,7 +167,7 @@ public class TransferStatus {
      *
      * @param file The file that is currently being transferred.
      */
-    public synchronized void setFile(File file) {
+    public synchronized void setFile(String file) {
         this.file = file;
     }
 

@@ -19,25 +19,42 @@
 package net.sourceforge.subsonic.controller;
 
 import static com.github.hakko.musiccabinet.service.library.LibraryUtil.set;
-import static java.util.Arrays.asList;
-import net.sourceforge.subsonic.*;
+
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.util.ArrayList;
+import java.util.Enumeration;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+import net.sourceforge.subsonic.Logger;
 import net.sourceforge.subsonic.ajax.LibraryStatusService;
-import net.sourceforge.subsonic.domain.*;
-import net.sourceforge.subsonic.upload.*;
-import net.sourceforge.subsonic.service.*;
-import net.sourceforge.subsonic.util.*;
-import org.apache.commons.fileupload.*;
-import org.apache.commons.fileupload.servlet.*;
-import org.apache.commons.io.*;
-import org.apache.tools.zip.*;
-import org.springframework.web.servlet.*;
-import org.springframework.web.servlet.mvc.*;
+import net.sourceforge.subsonic.domain.TransferStatus;
+import net.sourceforge.subsonic.domain.User;
+import net.sourceforge.subsonic.service.PlayerService;
+import net.sourceforge.subsonic.service.SecurityService;
+import net.sourceforge.subsonic.service.SettingsService;
+import net.sourceforge.subsonic.service.StatusService;
+import net.sourceforge.subsonic.upload.MonitoredDiskFileItemFactory;
+import net.sourceforge.subsonic.upload.UploadListener;
+import net.sourceforge.subsonic.util.StringUtil;
+
+import org.apache.commons.fileupload.FileItem;
+import org.apache.commons.fileupload.FileItemFactory;
+import org.apache.commons.fileupload.servlet.ServletFileUpload;
+import org.apache.commons.io.IOUtils;
+import org.apache.tools.zip.ZipEntry;
+import org.apache.tools.zip.ZipFile;
+import org.springframework.web.servlet.ModelAndView;
+import org.springframework.web.servlet.mvc.ParameterizableViewController;
 
 import com.github.hakko.musiccabinet.service.LibraryUpdateService;
-
-import javax.servlet.http.*;
-import java.io.*;
-import java.util.*;
 
 /**
  * Controller which receives uploaded files.
@@ -244,7 +261,7 @@ public class UploadController extends ParameterizableViewController {
         }
 
         public void start(String fileName) {
-            status.setFile(new File(fileName));
+            status.setFile(fileName);
         }
 
         public void bytesRead(long bytesRead) {

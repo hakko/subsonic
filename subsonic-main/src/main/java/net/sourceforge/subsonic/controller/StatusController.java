@@ -130,7 +130,7 @@ public class StatusController extends ParameterizableViewController {
         }
 
         public String getPath() {
-            return FileUtil.getShortPath(transferStatus.getFile());
+            return transferStatus.getFile();
         }
 
         public String getBytes() {

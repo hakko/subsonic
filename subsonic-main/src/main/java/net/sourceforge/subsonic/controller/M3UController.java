@@ -87,7 +87,7 @@ public class M3UController implements Controller {
                 duration = -1;
             }
             out.println("#EXTINF:" + duration + "," + metaData.getArtist() + " - " + metaData.getTitle());
-            out.println(url + "player=" + player.getId() + "&mfId=" + mediaFile.getId() + "&suffix=." + transcodingService.getSuffix(player, mediaFile, null));
+            out.println(url + "player=" + player.getId() + "&mfId=" + mediaFile.getUri() + "&suffix=." + transcodingService.getSuffix(player, mediaFile, null));
         }
     }
 

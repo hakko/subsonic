@@ -698,7 +698,7 @@ public class RESTBrowseController extends RESTAbstractController {
         for (TransferStatus status : statusService.getAllStreamStatuses()) {
 
             Player player = status.getPlayer();
-            File file = status.getFile();
+            String file = status.getFile();
             if (player != null && player.getUsername() != null && file != null) {
 
                 String username = player.getUsername();

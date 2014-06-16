@@ -31,6 +31,7 @@ import net.sourceforge.subsonic.Logger;
 import net.sourceforge.subsonic.domain.Album;
 import net.sourceforge.subsonic.domain.MediaFile;
 
+import com.github.hakko.musiccabinet.configuration.StreamUri;
 import com.github.hakko.musiccabinet.configuration.Uri;
 import com.github.hakko.musiccabinet.domain.model.library.MetaData;
 import com.github.hakko.musiccabinet.domain.model.music.Track;
@@ -78,8 +79,15 @@ public class MediaFileService {
     public void loadMediaFiles(List<? extends Uri> mediaFileIds) {
     	List<Uri> missingMediaFileUris = new ArrayList<>(mediaFileIds);
     	for (Iterator<Uri> it = missingMediaFileUris.iterator(); it.hasNext();) {
-    		if (mediaFileCache.isElementInMemory(it.next())) {
+    		Uri uri = it.next();
+    		if (uri instanceof StreamUri) {
+    			mediaFileCache.put(new Element(uri, new MediaFile(uri)));
     			it.remove();
+    			continue;
+    		}
+    		if (mediaFileCache.isElementInMemory(uri)) {
+    			it.remove();
+    			continue;
     		}
     	}
     	if (missingMediaFileUris.size() > 0) {
@@ -95,7 +103,7 @@ public class MediaFileService {
     	MetaData md = track.getMetaData();
     	mediaFile.getMetaData();
     	if(md.getPath() != null) {
-    		mediaFile.setFile(new File(md.getPath()));
+    		mediaFile.setPath(md.getPath());
     	}
     	mediaFile.getMetaData().setAlbum(md.getAlbum());
     	mediaFile.getMetaData().setAlbumUri(md.getAlbumUri());

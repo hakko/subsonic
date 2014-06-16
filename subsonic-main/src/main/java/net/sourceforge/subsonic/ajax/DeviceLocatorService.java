@@ -10,11 +10,10 @@ import javax.usb.UsbHostManager;
 import javax.usb.UsbHub;
 import javax.usb.UsbServices;
 
-import org.jfree.util.Log;
-
 import net.sourceforge.subsonic.Logger;
 import net.sourceforge.subsonic.service.SettingsService;
-import net.sourceforge.subsonic.service.sync.DeviceListenerService;
+
+import org.jfree.util.Log;
 
 public class DeviceLocatorService {
 	

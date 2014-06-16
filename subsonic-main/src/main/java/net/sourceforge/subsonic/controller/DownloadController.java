@@ -163,7 +163,7 @@ public class DownloadController implements Controller, LastModified {
      */
     private void downloadFile(HttpServletResponse response, TransferStatus status, File file, LongRange range) throws IOException {
         LOG.info("Starting to download '" + FileUtil.getShortPath(file) + "' to " + status.getPlayer());
-        status.setFile(file);
+        status.setFile(file.getName());
 
         response.setContentType("application/x-download");
         response.setHeader("Content-Disposition", "attachment; filename=\"" + file.getName() + '\"');
@@ -200,7 +200,9 @@ public class DownloadController implements Controller, LastModified {
         }
 
         for (MediaFile mediaFile : mediaFiles) {
-            zip(out, mediaFile.getParent().getFile(), mediaFile.getFile(), status, null);
+        	if (mediaFile.isLocal()) {
+              zip(out, new File(mediaFile.getParent().getAbsolutePath()), new File(mediaFile.getAbsolutePath()), status, null);
+        	}
         }
 
         out.close();
@@ -220,7 +222,10 @@ public class DownloadController implements Controller, LastModified {
      */
     private void downloadPlaylist(HttpServletResponse response, TransferStatus status, Playlist playlist, int[] indexes, LongRange range) throws IOException {
         if (indexes != null && indexes.length == 1) {
-            downloadFile(response, status, playlist.getFile(indexes[0]).getFile(), range);
+        	if(!playlist.getFile(indexes[0]).isLocal()) {
+        		return;
+        	}
+            downloadFile(response, status, new File(playlist.getFile(indexes[0]).getAbsolutePath()), range);
             return;
         }
 
@@ -244,7 +249,9 @@ public class DownloadController implements Controller, LastModified {
         }
 
         for (MediaFile mediaFile : mediaFiles) {
-            zip(out, mediaFile.getParent().getFile(), mediaFile.getFile(), status, range);
+        	if(mediaFile.isLocal()) {
+              zip(out, new File(mediaFile.getParent().getAbsolutePath()), new File(mediaFile.getAbsolutePath()), status, range);
+        	}
         }
 
         out.close();
@@ -334,7 +341,7 @@ public class DownloadController implements Controller, LastModified {
         String zipName = file.getCanonicalPath().substring(root.getCanonicalPath().length() + 1);
 
         if (file.isFile()) {
-            status.setFile(file);
+            status.setFile(file.getName());
 
             ZipEntry zipEntry = new ZipEntry(zipName);
             zipEntry.setSize(file.length());

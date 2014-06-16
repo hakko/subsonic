@@ -63,7 +63,6 @@
         <convert converter="bean" match="net.sourceforge.subsonic.ajax.DeviceLocatorService"/>
         <convert converter="string" match="com.github.hakko.musiccabinet.configuration.SubsonicUri"/>
         <convert converter="string" match="com.github.hakko.musiccabinet.configuration.SpotifyUri"/>
-        
-
+        <convert converter="string" match="com.github.hakko.musiccabinet.configuration.StreamUri"/>
     </allow>
 </dwr>

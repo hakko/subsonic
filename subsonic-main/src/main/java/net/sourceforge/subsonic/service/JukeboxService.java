@@ -34,7 +34,6 @@ import net.sourceforge.subsonic.domain.TransferStatus;
 import net.sourceforge.subsonic.domain.User;
 import net.sourceforge.subsonic.domain.VideoTranscodingSettings;
 import net.sourceforge.subsonic.service.jukebox.AudioPlayer;
-import net.sourceforge.subsonic.util.FileUtil;
 
 import org.apache.commons.io.IOUtils;
 
@@ -171,16 +170,16 @@ public class JukeboxService implements AudioPlayer.Listener, PlaybackListener {
     }
 
     private void onSongStart(MediaFile file) {
-        LOG.info(player.getUsername() + " starting jukebox for \"" + FileUtil.getShortPath(file.getFile()) + "\"");
+        LOG.info(player.getUsername() + " starting jukebox for \"" + file.getName() + "\"");
         status = statusService.createStreamStatus(player);
         status.setMediaFileUri(file.getUri());
-        status.setFile(file.getFile());
+        status.setFile(file.getName());
         status.addBytesTransfered(file.length());
         scrobble(file, false);
     }
 
     private void onSongEnd(MediaFile file) {
-        LOG.info(player.getUsername() + " stopping jukebox for \"" + FileUtil.getShortPath(file.getFile()) + "\"");
+        LOG.info(player.getUsername() + " stopping jukebox for \"" + file.getName() + "\"");
         if (status != null) {
             statusService.removeStreamStatus(status);
         }

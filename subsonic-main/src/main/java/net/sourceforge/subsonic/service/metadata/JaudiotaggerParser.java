@@ -18,6 +18,13 @@
  */
 package net.sourceforge.subsonic.service.metadata;
 
+import java.io.File;
+import java.util.SortedSet;
+import java.util.TreeSet;
+import java.util.logging.LogManager;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
 import net.sourceforge.subsonic.Logger;
 import net.sourceforge.subsonic.domain.MediaFile;
 import net.sourceforge.subsonic.domain.MetaData;
@@ -31,12 +38,6 @@ import org.jaudiotagger.tag.FieldKey;
 import org.jaudiotagger.tag.Tag;
 import org.jaudiotagger.tag.datatype.Artwork;
 import org.jaudiotagger.tag.reference.GenreTypes;
-
-import java.util.SortedSet;
-import java.util.TreeSet;
-import java.util.logging.LogManager;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 /**
  * Parses meta data from audio files using the Jaudiotagger library
@@ -70,24 +71,27 @@ public class JaudiotaggerParser extends MetaDataParser {
         MetaData metaData = getBasicMetaData(file);
 
         try {
-            AudioFile audioFile = AudioFileIO.read(file.getFile());
-            Tag tag = audioFile.getTag();
-            if (tag != null) {
-                metaData.setArtist(getTagField(tag, FieldKey.ARTIST));
-                metaData.setAlbum(getTagField(tag, FieldKey.ALBUM));
-                metaData.setTitle(getTagField(tag, FieldKey.TITLE));
-                metaData.setYear(getTagField(tag, FieldKey.YEAR));
-                metaData.setGenre(mapGenre(getTagField(tag, FieldKey.GENRE)));
-                metaData.setDiscNumber(parseDiscNumber(getTagField(tag, FieldKey.DISC_NO)));
-                metaData.setTrackNumber(parseTrackNumber(getTagField(tag, FieldKey.TRACK)));
-            }
+        	if(file.isLocal()) {
+	            AudioFile audioFile = AudioFileIO.read(new File(file.getAbsolutePath()));
+	            Tag tag = audioFile.getTag();
+	            if (tag != null) {
+	                metaData.setArtist(getTagField(tag, FieldKey.ARTIST));
+	                metaData.setAlbum(getTagField(tag, FieldKey.ALBUM));
+	                metaData.setTitle(getTagField(tag, FieldKey.TITLE));
+	                metaData.setYear(getTagField(tag, FieldKey.YEAR));
+	                metaData.setGenre(mapGenre(getTagField(tag, FieldKey.GENRE)));
+	                metaData.setDiscNumber(parseDiscNumber(getTagField(tag, FieldKey.DISC_NO)));
+	                metaData.setTrackNumber(parseTrackNumber(getTagField(tag, FieldKey.TRACK)));
+	            }
+	            
+	            AudioHeader audioHeader = audioFile.getAudioHeader();
+	            if (audioHeader != null) {
+	                metaData.setVariableBitRate(audioHeader.isVariableBitRate());
+	                metaData.setBitRate((int) audioHeader.getBitRateAsNumber());
+	                metaData.setDuration(audioHeader.getTrackLength());
+	            }
+        	}
 
-            AudioHeader audioHeader = audioFile.getAudioHeader();
-            if (audioHeader != null) {
-                metaData.setVariableBitRate(audioHeader.isVariableBitRate());
-                metaData.setBitRate((int) audioHeader.getBitRateAsNumber());
-                metaData.setDuration(audioHeader.getTrackLength());
-            }
 
 
         } catch (Throwable x) {
@@ -182,7 +186,10 @@ public class JaudiotaggerParser extends MetaDataParser {
     public void setMetaData(MediaFile file, MetaData metaData) {
 
         try {
-            AudioFile audioFile = AudioFileIO.read(file.getFile());
+        	if(!file.isLocal()) {
+        		return;
+        	}
+            AudioFile audioFile = AudioFileIO.read(new File(file.getAbsolutePath()));
             Tag tag = audioFile.getTagOrCreateAndSetDefault();
 
             tag.setField(FieldKey.ARTIST, StringUtils.trimToEmpty(metaData.getArtist()));
@@ -275,7 +282,10 @@ public class JaudiotaggerParser extends MetaDataParser {
     }
 
     private Artwork getArtwork(MediaFile file) throws Exception {
-        AudioFile audioFile = AudioFileIO.read(file.getFile());
+    	if (!file.isLocal()) {
+    		return null;
+    	}
+        AudioFile audioFile = AudioFileIO.read(new File(file.getAbsolutePath()));
         Tag tag = audioFile.getTag();
         return tag == null ? null : tag.getFirstArtwork();
     }

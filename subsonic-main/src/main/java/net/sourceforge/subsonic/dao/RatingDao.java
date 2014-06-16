@@ -21,11 +21,9 @@ package net.sourceforge.subsonic.dao;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.springframework.dao.EmptyResultDataAccessException;
-
 import net.sourceforge.subsonic.domain.MediaFile;
 
-import static net.sourceforge.subsonic.domain.MediaFile.MediaType.ALBUM;
+import org.springframework.dao.EmptyResultDataAccessException;
 
 /**
  * Provides database services for ratings.
@@ -45,12 +43,13 @@ public class RatingDao extends AbstractDao {
         if (count < 1) {
             return new ArrayList<String>();
         }
-
-        String sql = "select user_rating.path from user_rating, media_file " +
-                "where user_rating.path=media_file.path and media_file.present and media_file.type=?" +
-                "group by path " +
-                "order by avg(rating) desc limit ? offset ?";
-        return queryForStrings(sql, ALBUM.name(), count, offset);
+//
+//        String sql = "select user_rating.path from user_rating, media_file " +
+//                "where user_rating.path=media_file.path and media_file.present and media_file.type=?" +
+//                "group by path " +
+//                "order by avg(rating) desc limit ? offset ?";
+//        return queryForStrings(sql, ALBUM.name(), count, offset);
+        return null;
     }
 
     /**

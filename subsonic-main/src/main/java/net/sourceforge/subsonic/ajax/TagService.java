@@ -129,7 +129,7 @@ public class TagService {
     public void scanUpdatedFolders() {
     	Set<String> updatedDirectories = new HashSet<>();
     	for (Uri musicFileUri : updatedMusicFileUris) {
-    		updatedDirectories.add(mediaFileService.getMediaFile(musicFileUri).getFile().getParent());
+    		updatedDirectories.add(mediaFileService.getMediaFile(musicFileUri).getParent().getAbsolutePath());
     	}
     	updatedMusicFileUris.clear(); // possible synchronization issue if multiple clients updates tags
     	LOG.debug("Updated directories: " + updatedDirectories);

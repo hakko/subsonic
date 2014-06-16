@@ -253,6 +253,10 @@ public class StreamController implements Controller {
 
 	private long getFileLength(TranscodingService.Parameters parameters) {
 		MediaFile file = parameters.getMediaFile();
+		
+		if (!file.isLocal()) {
+			return -1;
+		}
 
 		if (!parameters.isDownsample() && !parameters.isTranscode()) {
 			return file.length();

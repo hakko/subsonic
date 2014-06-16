@@ -39,6 +39,8 @@ import net.sourceforge.subsonic.service.SecurityService;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.ParameterizableViewController;
 
+import com.github.hakko.musiccabinet.configuration.Uri;
+
 /**
  * Controller for the main page.
  */
@@ -60,10 +62,10 @@ public class MainController extends ParameterizableViewController {
         MediaFile dir = mediaFileService.getNonIndexedMediaFile(path);
         List<MediaFile> subDirectories = dir.getChildren(DIRECTORY);
         List<MediaFile> files = dir.getChildren(FILE);
-        List<Integer> trackIds = new ArrayList<>(files.size());
+        List<Uri> trackIds = new ArrayList<>(files.size());
 
         for (MediaFile file : files) {
-        	trackIds.add(file.getId());
+        	trackIds.add(file.getUri());
         }
         
         map.put("player", player);

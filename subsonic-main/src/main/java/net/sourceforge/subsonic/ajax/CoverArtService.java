@@ -79,7 +79,11 @@ public class CoverArtService {
         HttpClient client = new DefaultHttpClient();
 
         MediaFile mediaFile = mediaFileService.getMediaFile(mediaFileUri);
-        String path = mediaFile.getFile().getParent();
+        MediaFile parentFile = mediaFile.getParent();
+        if (parentFile == null) {
+        	return;
+        }
+        String path = parentFile.getPath();
         
         try {
             HttpConnectionParams.setConnectionTimeout(client.getParams(), 20 * 1000); // 20 seconds

@@ -80,7 +80,7 @@ public class PodcastReceiverController extends ParameterizableViewController {
     		for (PodcastEpisode episode : channels.get(channel)) {
     			if (episode.getPath() != null) {
     				MediaFile mf = mediaFileService.getNonIndexedMediaFile(episode.getPath());
-    				episode.setMediaFileId(mf.getId());
+    				episode.setMediaFileId(mf.getUri().getId());
     			}
     		}
     	}

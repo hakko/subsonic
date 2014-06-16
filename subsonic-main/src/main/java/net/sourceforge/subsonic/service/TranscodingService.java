@@ -241,7 +241,7 @@ public class TranscodingService {
             LOG.warn("Failed to transcode " + parameters.getMediaFile() + ". Using original.", x);
         }
 
-        return new FileInputStream(parameters.getMediaFile().getFile());
+        return parameters.getMediaFile().getInputStream();
     }
 
 
@@ -362,7 +362,7 @@ public class TranscodingService {
 
                 // Work-around for filename character encoding problem on Windows.
                 // Create temporary file, and feed this to the transcoder.
-                String path = mediaFile.getFile().getAbsolutePath();
+                String path = mediaFile.getAbsolutePath();
                 if (Util.isWindows() && !mediaFile.isVideo() && !StringUtils.isAsciiPrintable(path)) {
                     tmpFile = File.createTempFile("subsonic", "." + FilenameUtils.getExtension(path));
                     tmpFile.deleteOnExit();
