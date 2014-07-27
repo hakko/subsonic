@@ -471,6 +471,16 @@
 		</div>
 		
         <div class="panel panel-default">
+            <div class="panel-heading">Spotify</div>
+            <div class="panel-body">
+                <div class="form-group">
+                    <label for="spotifyUsername">Username</label>
+                    <form:input path="spotifyUsername" class="form-control" />
+                </div>
+            </div>
+        </div>
+		
+        <div class="panel panel-default">
             <div class="panel-heading">Device Sync</div>
             <div class="panel-body">
             

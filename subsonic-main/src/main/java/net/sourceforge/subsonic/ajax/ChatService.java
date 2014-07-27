@@ -18,16 +18,6 @@
  */
 package net.sourceforge.subsonic.ajax;
 
-import net.sf.ehcache.Ehcache;
-import net.sf.ehcache.Element;
-import net.sourceforge.subsonic.Logger;
-import net.sourceforge.subsonic.service.SecurityService;
-import net.sourceforge.subsonic.util.BoundedList;
-import org.apache.commons.lang.StringUtils;
-import org.directwebremoting.WebContext;
-import org.directwebremoting.WebContextFactory;
-
-import javax.servlet.http.HttpServletRequest;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Date;
@@ -37,6 +27,18 @@ import java.util.List;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
+
+import javax.servlet.http.HttpServletRequest;
+
+import net.sf.ehcache.Ehcache;
+import net.sf.ehcache.Element;
+import net.sourceforge.subsonic.Logger;
+import net.sourceforge.subsonic.service.SecurityService;
+import net.sourceforge.subsonic.util.BoundedList;
+
+import org.apache.commons.lang.StringUtils;
+import org.directwebremoting.WebContext;
+import org.directwebremoting.WebContextFactory;
 
 /**
  * Provides AJAX-enabled services for the chatting.

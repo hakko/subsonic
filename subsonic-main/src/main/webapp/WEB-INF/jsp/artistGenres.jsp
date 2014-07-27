@@ -8,7 +8,7 @@
 <div style="padding: 15px;">
 
 <h1>
-<a href="#" onclick="toggleStar('art', ${sub:esc(model.artistId)}, '${"#starImage".concat(sub:jqesc(model.artistId))}'); return false;">
+<a href="#" onclick="toggleStar('art', ${sub:esc(model.artistId)}, '#starImage${sub:jqesc(model.artistId)}'); return false;">
 	<c:choose>
 		<c:when test="${model.artistStarred}">
 			<img id="starImage${model.artistId}" src="<spring:theme code="ratingOnImage"/>" alt="">
@@ -54,7 +54,7 @@ ${model.artistName}
 </sub:url>
 <div class="back"><a href="${backUrl}"><fmt:message key="common.back"/></a></div>
 
-<script type="text/javascript" language="javascript">
+<script type="text/javascript">
 
     function init() {
         dwr.engine.setErrorHandler(dwrErrorHandler);
@@ -110,4 +110,5 @@ ${model.artistName}
 </script>
 
 
+</div>
 </div>

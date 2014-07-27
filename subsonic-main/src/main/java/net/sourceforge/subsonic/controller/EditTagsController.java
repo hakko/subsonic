@@ -18,10 +18,6 @@
  */
 package net.sourceforge.subsonic.controller;
 
-import static org.apache.commons.lang.StringUtils.removeEnd;
-import static org.apache.commons.lang.StringUtils.removeStart;
-import static org.apache.commons.lang.StringUtils.split;
-
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -31,18 +27,15 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import net.sourceforge.subsonic.domain.MediaFile;
-import net.sourceforge.subsonic.domain.MetaData;
 import net.sourceforge.subsonic.service.MediaFileService;
 import net.sourceforge.subsonic.service.metadata.JaudiotaggerParser;
 
-import org.json.JSONArray;
-import org.json.JSONException;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.ParameterizableViewController;
 
 import com.github.hakko.musiccabinet.configuration.SubsonicUri;
 import com.github.hakko.musiccabinet.configuration.Uri;
-import com.github.hakko.musiccabinet.dao.util.URIUtil;
+import com.github.hakko.musiccabinet.domain.model.library.MetaData;
 
 /**
  * Controller for the page used to edit MP3 tags.
@@ -91,7 +84,7 @@ public class EditTagsController extends ParameterizableViewController {
         Song song = new Song();
         song.setUri(mf.getUri());
         song.setFileName(mf.getName());
-        song.setTrack(metaData.getTrackNumber());
+        song.setTrack(metaData.getTrackNr());
         song.setSuggestedTrack(index + 1);
         song.setTitle(metaData.getTitle());
         song.setSuggestedTitle(mf.getNameWithoutSuffix());
@@ -99,8 +92,9 @@ public class EditTagsController extends ParameterizableViewController {
         song.setAlbumArtist(metaData.getAlbumArtist());
         song.setComposer(metaData.getComposer());
         song.setAlbum(metaData.getAlbum());
-        song.setYear(metaData.getYear());
+        song.setYear(metaData.getYearAsString());
         song.setGenre(metaData.getGenre());
+        song.setExplicit(metaData.getExplicit());
         return song;
     }
 
@@ -115,7 +109,7 @@ public class EditTagsController extends ParameterizableViewController {
         private Uri uri;
         private String fileName;
         private Integer suggestedTrack;
-        private Integer track;
+        private Short track;
         private String suggestedTitle;
         private String title;
         private String artist;
@@ -124,6 +118,7 @@ public class EditTagsController extends ParameterizableViewController {
         private String album;
         private String year;
         private String genre;
+        private Integer explicit;
 
         @Deprecated
         public int getId() {
@@ -150,11 +145,11 @@ public class EditTagsController extends ParameterizableViewController {
             this.suggestedTrack = suggestedTrack;
         }
 
-        public Integer getTrack() {
+        public Short getTrack() {
             return track;
         }
 
-        public void setTrack(Integer track) {
+        public void setTrack(Short track) {
             this.track = track;
         }
 
@@ -239,9 +234,14 @@ public class EditTagsController extends ParameterizableViewController {
 		public void setUri(Uri uri) {
 			this.uri = uri;
 		}
-		
-		
-        
+
+		public Integer getExplicit() {
+			return explicit;
+		}
+
+		public void setExplicit(Integer explicit) {
+			this.explicit = explicit;
+		}		
     }
 
 }

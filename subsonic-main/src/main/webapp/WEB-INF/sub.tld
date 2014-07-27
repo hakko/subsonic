@@ -130,7 +130,12 @@
     <function>
         <name>isSpotify</name>
         <function-class>net.sourceforge.subsonic.taglib.SubsonicFunctions</function-class>
-        <function-signature>boolean isSpotify(com.github.hakko.musiccabinet.configuration.Uri)</function-signature>
+        <function-signature>boolean isSpotify(net.sourceforge.subsonic.domain.Album)</function-signature>
+    </function>
+    <function>
+        <name>isSpotifyFile</name>
+        <function-class>net.sourceforge.subsonic.taglib.SubsonicFunctions</function-class>
+        <function-signature>boolean isSpotifyFile(net.sourceforge.subsonic.domain.MediaFile)</function-signature>
     </function>
     <function>
         <name>dehex</name>

@@ -18,8 +18,8 @@
  */
 package net.sourceforge.subsonic.upload;
 
-import java.io.OutputStream;
 import java.io.IOException;
+import java.io.OutputStream;
 
 /**
  * Extension of Commons FileUpload for monitoring the upload progress.

@@ -30,6 +30,7 @@
         <property name="securityService" ref="securityService"/>
         <property name="playerService" ref="playerService"/>
         <property name="mediaFileService" ref="mediaFileService"/>
+        <property name="settingsService" ref="settingsService"/>
     </bean>
     <bean id="artistController" class="net.sourceforge.subsonic.controller.ArtistController">
         <property name="viewName" value="artist"/>
@@ -52,6 +53,7 @@
         <property name="tagService" ref="tagService"/>
     </bean>
     <bean id="albumController" class="net.sourceforge.subsonic.controller.AlbumController">
+        <property name="playerService" ref="playerService"/>
         <property name="securityService" ref="securityService"/>
         <property name="settingsService" ref="settingsService"/>
         <property name="mediaFileService" ref="mediaFileService"/>

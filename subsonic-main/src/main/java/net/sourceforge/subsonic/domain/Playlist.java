@@ -91,10 +91,6 @@ public class Playlist {
             setStatus(Status.STOPPED);
             return null;
         } else {
-        	StringBuilder sb = new StringBuilder();
-        	for (MediaFile mf : files) {
-        		sb.append(" " + mf.getName());
-        	}
             MediaFile file = files.get(index);
 
             // Remove file from playlist if it doesn't exist.
@@ -270,8 +266,8 @@ public class Playlist {
             public int compare(MediaFile a, MediaFile b) {
                 switch (sortOrder) {
                     case TRACK:
-                        Integer trackA = a.getMetaData().getTrackNumber();
-                        Integer trackB = b.getMetaData().getTrackNumber();
+                        Short trackA = a.getMetaData().getTrackNr();
+                        Short trackB = b.getMetaData().getTrackNr();
                         if (trackA == null) {
                             trackA = 0;
                         }

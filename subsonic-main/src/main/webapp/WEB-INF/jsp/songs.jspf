@@ -1,12 +1,22 @@
+<%@ taglib prefix="sub" uri="http://subsonic.org/taglib/sub" %>
 <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
+
 <div class="table-responsive songs">
 <table class="table table-striped table-hover table-condensed">
 	<c:set var="cutoff" value="${model.visibility.captionCutoff}"/>
 <c:forEach items="${model.mediaFiles}" var="mediaFile" varStatus="loopStatus" >
 
-<c:if test="${mediaFile.metaData.discNumber gt 1 and mediaFile.metaData.trackNumber eq 1 and not empty model.albumView}"><tr><td></td></tr></c:if>
+<c:if test="${mediaFile.metaData.discNr gt 1 and mediaFile.metaData.trackNr eq 1 and not empty model.albumView}"><tr><td></td></tr></c:if>
 
 <tr class="detailSelected">
+    <c:choose>
+    <c:when test="${model.player.web && sub:isSpotifyFile(mediaFile)}">
+        <iframe src="https://embed.spotify.com/?uri=${mediaFile.nameWithoutSuffix}&theme=light&view=coverart" 
+          width="100%" height="81px" frameborder="0" 
+          allowtransparency="true" ></iframe>
+    
+    </c:when>
+    <c:otherwise>
 	<c:import url="playAddDownload.jsp">
 		<c:param name="uri" value="[${sub:esc(mediaFile.uri)}]"/>
 		<c:param name="starred" value="${model.isTrackStarred[loopStatus.index]}"/>
@@ -19,8 +29,7 @@
 	</c:import>
 	
 	<c:set var="spanClass" value="detail"/><c:if test="${model.trackUri eq mediaFile.uri}"><c:set var="spanClass" value="detailSelected"/></c:if>
-	
-	<c:if test="${model.visibility.trackNumberVisible}"><td class="trackNumber"><span class="${spanClass}">${mediaFile.metaData.trackNumber}</span></td></c:if>
+	<c:if test="${model.visibility.trackNumberVisible}"><td class="trackNumber"><span class="${spanClass}">${mediaFile.metaData.trackNr}</span></td></c:if>
 	<td class="title"><span class="${spanClass}" title="${mediaFile.title}"><str:truncateNicely upper="${cutoff}">${fn:escapeXml(mediaFile.title)}</str:truncateNicely></span></td>
 	<c:if test="${model.visibility.albumVisible}"><td class="album"><span class="${spanClass}" title="${mediaFile.metaData.album}"><str:truncateNicely upper="${cutoff}">${fn:escapeXml(mediaFile.metaData.album)}</str:truncateNicely></span></td></c:if>
 	<c:if test="${model.visibility.artistVisible and model.multipleArtists}"><td class="artist"><span class="${spanClass}" title="${mediaFile.metaData.artist}"><str:truncateNicely upper="${cutoff}">${fn:escapeXml(mediaFile.metaData.artist)}</str:truncateNicely></span></td></c:if>
@@ -32,6 +41,8 @@
 	<c:if test="${model.visibility.durationVisible}"><td class="duration"><span class="${spanClass}">${mediaFile.metaData.durationAsString}</span></td></c:if>
 	<c:if test="${model.visibility.bitRateVisible}"><td class="bitRate"><span class="${spanClass}"><c:if test="${not empty mediaFile.metaData.bitRate}">${mediaFile.metaData.bitRate} Kbps ${mediaFile.metaData.variableBitRate ? "vbr" : ""}</c:if>
 	<c:if test="${mediaFile.video and not empty mediaFile.metaData.width and not empty mediaFile.metaData.height}">(${mediaFile.metaData.width}x${mediaFile.metaData.height})</c:if></span></td></c:if>
+    </c:otherwise>
+    </c:choose>
 
 	</tr>
 </c:forEach>

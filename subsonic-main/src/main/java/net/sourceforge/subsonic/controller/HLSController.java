@@ -56,7 +56,7 @@ public class HLSController implements Controller {
             response.sendError(HttpServletResponse.SC_NOT_FOUND, "Media file not found: " + uri);
             return null;
         }
-        Integer duration = mediaFile.getMetaData().getDuration();
+        Short duration = mediaFile.getMetaData().getDuration();
         if (duration == null || duration == 0) {
             response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "Unknown duration for media file: " + uri);
             return null;

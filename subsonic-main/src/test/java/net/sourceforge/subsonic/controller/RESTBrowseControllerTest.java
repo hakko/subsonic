@@ -92,7 +92,7 @@ public class RESTBrowseControllerTest {
         metaData.setAlbumUri(album.getUri());
         metaData.setDuration((short) 352);
         metaData.setBitrate((short) 128);
-        metaData.setSize(5624132);
+        metaData.setSize((long) 5624132);
         metaData.setDiscNr((short) 1);
         metaData.setTrackNr((short) 1);
         metaData.setPath("/path/to/file.mp3");

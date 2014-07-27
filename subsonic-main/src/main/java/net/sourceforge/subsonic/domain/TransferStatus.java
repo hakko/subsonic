@@ -18,8 +18,6 @@
  */
 package net.sourceforge.subsonic.domain;
 
-import java.io.File;
-
 import net.sourceforge.subsonic.util.BoundedList;
 
 import com.github.hakko.musiccabinet.configuration.Uri;

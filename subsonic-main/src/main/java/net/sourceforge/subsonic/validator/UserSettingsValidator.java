@@ -22,6 +22,7 @@ import net.sourceforge.subsonic.command.UserSettingsCommand;
 import net.sourceforge.subsonic.controller.UserSettingsController;
 import net.sourceforge.subsonic.service.SecurityService;
 import net.sourceforge.subsonic.service.SettingsService;
+
 import org.apache.commons.lang.StringUtils;
 import org.springframework.validation.Errors;
 import org.springframework.validation.Validator;

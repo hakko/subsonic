@@ -108,7 +108,6 @@
 			<groupId>jahspotify</groupId>
 			<artifactId>jahspotify-api</artifactId>
 			<version>0.0.1-SNAPSHOT</version>
-			<!--scope>runtime</scope-->
 		</dependency>
 
 		<dependency>
@@ -333,12 +332,12 @@
 		<repository>
 			<id>oss-sonatype-snapshots</id>
 			<name>OSS Sonatype Snapshots Repository</name>
-			<url>http://oss.sonatype.org/content/repositories/snapshots</url>
+			<url>https://oss.sonatype.org/content/repositories/snapshots</url>
 		</repository>
 		<repository>
 			<id>jetty-releases</id>
 			<name>Jetty Releases</name>
-			<url>http://oss.sonatype.org/content/repositories/jetty-releases</url>
+			<url>https://oss.sonatype.org/content/repositories/jetty-releases</url>
 		</repository>
 	</repositories>
 

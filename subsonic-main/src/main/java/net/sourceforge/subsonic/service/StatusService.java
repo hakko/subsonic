@@ -18,15 +18,15 @@
  */
 package net.sourceforge.subsonic.service;
 
-import net.sourceforge.subsonic.domain.Player;
-import net.sourceforge.subsonic.domain.TransferStatus;
-
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+
+import net.sourceforge.subsonic.domain.Player;
+import net.sourceforge.subsonic.domain.TransferStatus;
 
 /**
  * Provides services for maintaining the list of stream, download and upload statuses.

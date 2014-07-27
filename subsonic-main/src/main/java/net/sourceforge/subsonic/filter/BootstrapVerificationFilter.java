@@ -18,7 +18,8 @@
  */
 package net.sourceforge.subsonic.filter;
 
-import net.sourceforge.subsonic.service.SettingsService;
+import java.io.File;
+import java.io.IOException;
 
 import javax.servlet.Filter;
 import javax.servlet.FilterChain;
@@ -27,8 +28,8 @@ import javax.servlet.ServletException;
 import javax.servlet.ServletOutputStream;
 import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
-import java.io.File;
-import java.io.IOException;
+
+import net.sourceforge.subsonic.service.SettingsService;
 
 /**
  * This filter is executed very early in the filter chain. It verifies that

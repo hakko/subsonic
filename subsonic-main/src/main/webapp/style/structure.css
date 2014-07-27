@@ -164,3 +164,21 @@ span.off:hover {
 .songs {
   overflow: visible !important;
 }
+#pleaseWaitDialog {
+display: block;
+margin: auto;
+width: 400px;
+margin-top: 150px;
+background: white;
+height: 150px;
+overflow: hidden;
+box-shadow: 5px 5px 5px #333;
+}
+.left {
+  display: none;
+  position: absolute;
+  top: 95px;
+  z-index: 10000;
+  box-shadow: 5px 5px 5px #333;
+  background: white;
+}

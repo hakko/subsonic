@@ -3,7 +3,6 @@ package net.sourceforge.subsonic.controller;
 import static java.lang.Math.max;
 import static net.sourceforge.subsonic.util.StringUtil.utf8HexEncode;
 import static org.apache.commons.lang.StringUtils.defaultIfEmpty;
-import static org.springframework.web.bind.ServletRequestUtils.getIntParameter;
 import static org.springframework.web.bind.ServletRequestUtils.getRequiredStringParameter;
 
 import java.io.File;
@@ -20,7 +19,6 @@ import javax.servlet.http.HttpServletResponse;
 
 import net.sourceforge.subsonic.domain.MediaFile;
 import net.sourceforge.subsonic.domain.MediaFolder;
-import net.sourceforge.subsonic.domain.MetaData;
 import net.sourceforge.subsonic.domain.Player;
 import net.sourceforge.subsonic.domain.TransferStatus;
 import net.sourceforge.subsonic.domain.UserSettings;
@@ -46,6 +44,7 @@ import com.github.hakko.musiccabinet.configuration.Uri;
 import com.github.hakko.musiccabinet.dao.util.URIUtil;
 import com.github.hakko.musiccabinet.domain.model.aggr.ArtistRecommendation;
 import com.github.hakko.musiccabinet.domain.model.library.Directory;
+import com.github.hakko.musiccabinet.domain.model.library.MetaData;
 import com.github.hakko.musiccabinet.domain.model.music.Album;
 import com.github.hakko.musiccabinet.domain.model.music.Artist;
 import com.github.hakko.musiccabinet.domain.model.music.ArtistInfo;
@@ -771,11 +770,11 @@ public class RESTBrowseController extends RESTAbstractController {
 
         if (mediaFile.isFile()) {
             MetaData metaData = mediaFile.getMetaData();
-            Integer duration = metaData.getDuration();
+            Short duration = metaData.getDuration();
             if (duration != null) {
                 attributes.add("duration", duration);
             }
-            Integer bitRate = metaData.getBitRate();
+            Short bitRate = metaData.getBitrate();
             if (bitRate != null) {
                 attributes.add("bitRate", bitRate);
             }
@@ -784,12 +783,12 @@ public class RESTBrowseController extends RESTAbstractController {
                 attributes.add("album", metaData.getAlbum());
                 attributes.add("artist", metaData.getArtist());
 
-                Integer track = metaData.getTrackNumber();
+                Short track = metaData.getTrackNr();
                 if (track != null) {
                     attributes.add("track", track);
                 }
 
-                Integer year = metaData.getYearAsInteger();
+                Integer year = metaData.getYear();
                 if (year != null) {
                     attributes.add("year", year);
                 }
@@ -800,7 +799,7 @@ public class RESTBrowseController extends RESTAbstractController {
                 }
             }
 
-            attributes.add("size", mediaFile.getMetaData().getFileSize());
+            attributes.add("size", mediaFile.getMetaData().getSize());
             String suffix = mediaFile.getSuffix();
             attributes.add("suffix", suffix);
             attributes.add("contentType", StringUtil.getMimeType(suffix));

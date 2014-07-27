@@ -1,4 +1,4 @@
-
+<%@ taglib prefix="sub" uri="http://subsonic.org/taglib/sub" %>
     var musicFiles = ${sub:esc(model.albums)};
 	
 	function toggleAlbum(index) {

@@ -18,11 +18,14 @@
  */
 package net.sourceforge.subsonic.io;
 
-import net.sourceforge.subsonic.*;
+import java.io.File;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
 
-import org.apache.commons.io.*;
+import net.sourceforge.subsonic.Logger;
 
-import java.io.*;
+import org.apache.commons.io.IOUtils;
 
 /**
  * Subclass of {@link InputStream} which provides on-the-fly transcoding.

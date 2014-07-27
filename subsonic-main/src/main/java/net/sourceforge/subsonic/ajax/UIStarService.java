@@ -26,7 +26,6 @@ import net.sourceforge.subsonic.service.SettingsService;
 import org.directwebremoting.WebContext;
 import org.directwebremoting.WebContextFactory;
 
-import com.github.hakko.musiccabinet.configuration.Uri;
 import com.github.hakko.musiccabinet.dao.util.URIUtil;
 import com.github.hakko.musiccabinet.exception.ApplicationException;
 import com.github.hakko.musiccabinet.service.StarService;

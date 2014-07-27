@@ -47,12 +47,22 @@
  */
 package net.sbbi.upnp;
 
-import java.net.*;
-import java.io.*;
-import java.util.*;
+import java.io.IOException;
+import java.net.DatagramPacket;
+import java.net.Inet4Address;
+import java.net.InetAddress;
+import java.net.InetSocketAddress;
+import java.net.NetworkInterface;
+import java.net.URL;
+import java.util.Enumeration;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.Map;
 
-import net.sbbi.upnp.devices.*;
-import org.apache.commons.logging.*;
+import net.sbbi.upnp.devices.UPNPRootDevice;
+
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 
 /**
  * Class to discover an UPNP device on the network.</br>

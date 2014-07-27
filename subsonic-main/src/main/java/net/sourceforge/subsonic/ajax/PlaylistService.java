@@ -30,7 +30,6 @@ import javax.servlet.http.HttpServletResponse;
 
 import net.sourceforge.subsonic.Logger;
 import net.sourceforge.subsonic.domain.MediaFile;
-import net.sourceforge.subsonic.domain.MetaData;
 import net.sourceforge.subsonic.domain.Player;
 import net.sourceforge.subsonic.domain.Playlist;
 import net.sourceforge.subsonic.service.JukeboxService;
@@ -45,6 +44,7 @@ import org.springframework.web.servlet.support.RequestContextUtils;
 
 import com.github.hakko.musiccabinet.configuration.Uri;
 import com.github.hakko.musiccabinet.dao.util.URIUtil;
+import com.github.hakko.musiccabinet.domain.model.library.MetaData;
 import com.github.hakko.musiccabinet.service.PlaylistGeneratorService;
 
 /**
@@ -128,7 +128,7 @@ public class PlaylistService {
         }
         if (player.isWeb()) {
             removeVideoFiles(mediaFiles);
-            removeSpotifyFiles(mediaFiles);
+            //removeSpotifyFiles(mediaFiles);
         }
         player.getPlaylist().addFiles(mode, mediaFiles);
         return convert(request, player, true);
@@ -392,7 +392,11 @@ public class PlaylistService {
         Playlist playlist = player.getPlaylist();
         for (MediaFile file : playlist.getFiles()) {
             MetaData metaData = file.getMetaData();
+            
             String streamUrl = url.replaceFirst("/dwr/.*", "/stream?player=" + player.getId() + "&mfId=" + file.getUri());
+            if(player.isWeb() && file.isSpotify()) {
+            	streamUrl = file.getName();
+            }
 
             // Rewrite URLs in case we're behind a proxy.
             if (settingsService.isRewriteUrlEnabled()) {
@@ -401,11 +405,11 @@ public class PlaylistService {
             }
 
             String format = formatFormat(player, file);
-            entries.add(new PlaylistInfo.Entry(metaData.getTrackNumber(), metaData.getTitle(), metaData.getArtist(),
+            entries.add(new PlaylistInfo.Entry(metaData.getTrackNr(), metaData.getTitle(), metaData.getArtist(),
             		metaData.getArtistUri(), metaData.getAlbum(), metaData.getAlbumUri(), metaData.getComposer(),
-            		metaData.getGenre(), metaData.getYear(), formatBitRate(metaData), metaData.getDuration(),
+            		metaData.getGenre(), metaData.getYearAsString(), formatBitRate(metaData), metaData.getDuration(),
             		metaData.getDurationAsString(), format, formatContentType(format),
-            		formatFileSize(metaData.getFileSize(), locale), streamUrl));
+            		formatFileSize(metaData.getSize(), locale), streamUrl));
         }
         boolean isStopEnabled = playlist.getStatus() == Playlist.Status.PLAYING && !player.isExternalWithPlaylist();
         float gain = jukeboxService.getGain();
@@ -428,13 +432,13 @@ public class PlaylistService {
     }
 
     private String formatBitRate(MetaData metaData) {
-        if (metaData.getBitRate() == null) {
+        if (metaData.getBitrate() == null) {
             return null;
         }
-        if (Boolean.TRUE.equals(metaData.getVariableBitRate())) {
-            return metaData.getBitRate() + " Kbps vbr";
+        if (Boolean.TRUE.equals(metaData.isVbr())) {
+            return metaData.getBitrate() + " Kbps vbr";
         }
-        return metaData.getBitRate() + " Kbps";
+        return metaData.getBitrate() + " Kbps";
     }
 
     private Player getCurrentPlayer(HttpServletRequest request, HttpServletResponse response) {

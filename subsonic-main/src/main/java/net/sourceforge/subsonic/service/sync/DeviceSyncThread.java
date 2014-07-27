@@ -54,10 +54,6 @@ public class DeviceSyncThread implements Runnable {
 					} else {
 						LOG.debug("Can't write to "
 								+ mountDirectory.getAbsolutePath());
-						LOG.debug("Can't exists to " + mountDirectory.exists());
-						LOG.debug("Can't directory to "
-								+ mountDirectory.isDirectory());
-						LOG.debug("Can't write to " + mountDirectory.canWrite());
 					}
 					userSettings.setDeviceLastSync(new Date());
 					deviceListenerService.getSettingsService().updateUserSettings(userSettings);

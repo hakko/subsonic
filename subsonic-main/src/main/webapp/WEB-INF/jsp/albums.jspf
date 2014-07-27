@@ -1,3 +1,4 @@
+<%@ taglib prefix="sub" uri="http://subsonic.org/taglib/sub" %>
 <div class="list-group">
 <c:forEach items="${model.albums}" var="album" varStatus="i">
 	<c:choose>
@@ -9,40 +10,46 @@
 			</sub:url>
 		</c:otherwise>
 	</c:choose>
-	<c:choose>
-	<c:when test="${model.player.web && sub:isSpotify(album.uri)}">
-	   <div class="list-group-item">
-	   <iframe src="https://embed.spotify.com/?uri=${album.uri}&theme=white&view=coverart" 
-	       width="300" height="80" frameborder="0" 
-	       allowtransparency="true"></iframe>
-       </div>	       
-	</c:when>
-	<c:otherwise>
 	<div class="list-group-item clearfix" style="padding-top:5px" id="alb${i.count}" data-index="${i.count}" data-album="${sub:hex(album.uri)}">
-		<div style="float:left; width: 30%">
+		<div class="col-sm-6 col-md-6 col-lg-3 relative-container grid-item">
                 <sub:url value="artist.view" var="albumUrl">
                     <sub:param name="id" value="${album.artistUri}" />
                     <sub:param name="albumId" value="${album.uri}" />
                 </sub:url>
-				<a href="${albumUrl}" class="clearfix">
+				<a href="${albumUrl}">
 					<span class="overlay">
-					<img class="img-thumbnail" id="albart${i.count}" src="${coverArtUrl}" alt="">
-					   <c:if test="${sub:isSpotify(album.uri)}">
+					<img class="img-thumbnail" id="albart${i.count}" src="${fn:replace(coverArtUrl, 'spotify:image:', 'https://d3rt1990lpmkn.cloudfront.net/unbranded/')}" alt="">
+					   <c:if test="${not model.player.web && sub:isSpotify(album)}">
 				           <img class="spotify-icon" src="icons/spotify.png" width="16" height="16" />
 					   </c:if>
 					</span>
 				</a>
-			<div id="albcmd${i.count}" style="display:none;float:right;padding-right:10px;padding-bottom:15px;" class="detail">
-				<c:import url="playAddDownload.jsp">
-					<c:param name="uri" value="${sub:esc(album.trackUris)}"/>
-					<c:param name="starDisabled" value="true"/>
-					<c:param name="playEnabled" value="${model.user.streamRole}"/>
-					<c:param name="enqueueEnabled" value="${model.user.streamRole}"/>
-					<c:param name="addEnabled" value="${model.user.streamRole}"/>
-					<c:param name="downloadEnabled" value="${model.user.downloadRole}"/>
-					<c:param name="downloadName" value="${not empty model.artistName ? model.artistName : album.artistName} - ${album.title}"/>
-					<c:param name="asTable" value="false"/>
-				</c:import>
+                <c:choose>
+                    <c:when test="${model.player.web && sub:isSpotify(album)}">
+                    <div class="detail play-label" style="margin-top: -85px; padding-right:20px; padding-left: 5px; position: absolute;">
+                      <iframe src="https://embed.spotify.com/?uri=${album.spotifyUri}&theme=light&view=coverart" 
+                        width="100%" height="80px" frameborder="0" 
+                        allowtransparency="true" ></iframe>
+                        </div>
+    
+                    </c:when>
+                    <c:otherwise>
+                        <div class="detail play-label">
+                        <c:import url="playAddDownload.jsp">
+                            <c:param name="uri" value="${sub:esc(album.trackUris)}"/>
+                            <c:param name="starDisabled" value="true"/>
+                            <c:param name="playEnabled" value="${model.user.streamRole}"/>
+                            <c:param name="enqueueEnabled" value="${model.user.streamRole}"/>
+                            <c:param name="addEnabled" value="${model.user.streamRole}"/>
+                            <c:param name="downloadEnabled" value="${model.user.downloadRole}"/>
+                            <c:param name="downloadName" value="${not empty model.artistName ? model.artistName : album.artistName} - ${album.title}"/>
+                            <c:param name="asTable" value="false"/>
+                        </c:import>         
+                        </div>
+                    </c:otherwise>
+                </c:choose>
+				
+			<div id="albcmd${i.count}" style="display:none; position:absolute;padding-right:10px;padding-bottom:15px;margin-top: -29px;" class="detail">
 
                 <div class="btn-group btn-group-xs">
 				<c:choose>
@@ -85,7 +92,7 @@
 		</div>
 		<div style="float:left;padding-left:10px;padding-bottom:15px; width: 70%;">
 			<div class="album-title">
-				<a href="#" onclick="toggleStar('alb', ${sub:esc(album.uri)}, '${sub:jqesc("#starImage".concat(album.uri))}'); return false;">
+				<a href="#" onclick="toggleStar('alb', ${sub:esc(album.uri)}, '#starImage${sub:jqesc(album.uri)}'); return false;">
 					<c:choose>
 						<c:when test="${model.isAlbumStarred[i.index]}">
 							<img id="starImage${album.uri}" src="<spring:theme code="ratingOnImage"/>" alt="">
@@ -101,23 +108,9 @@
 				<c:if test="${album.artistUri != model.artistUri}"> <a href="${albumUrl}">&raquo;</a></c:if>
 				<br>
 			</div>
-			<div id="albtit${i.count}">
-				<c:import url="playAddDownload.jsp">
-					<c:param name="uri" value="${sub:esc(album.trackUris)}"/>
-					<c:param name="starDisabled" value="true"/>
-					<c:param name="playEnabled" value="${model.user.streamRole}"/>
-					<c:param name="enqueueEnabled" value="${model.user.streamRole}"/>
-					<c:param name="addEnabled" value="${model.user.streamRole}"/>
-					<c:param name="downloadEnabled" value="${model.user.downloadRole}"/>
-					<c:param name="downloadName" value="${not empty model.artistName ? model.artistName : album.artistName} - ${album.title}"/>
-					<c:param name="asTable" value="false"/>
-				</c:import>
-			</div>
 			<div id="albson${i.count}" style="display:none"></div>
 		</div>
 	</div>
-	</c:otherwise>
-	</c:choose>
 	<div style="clear:both;"></div>
 
 </c:forEach>		

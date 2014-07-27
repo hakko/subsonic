@@ -169,11 +169,16 @@
     <bean id="metaDataParserFactory" class="net.sourceforge.subsonic.service.metadata.MetaDataParserFactory" init-method="init">
         <property name="parsers">
             <list>
-                <bean class="net.sourceforge.subsonic.service.metadata.JaudiotaggerParser"/>
+                <bean class="net.sourceforge.subsonic.service.metadata.JaudiotaggerParser">
+                    <property name="libraryAdditionDao" ref="libraryAdditionDao"/>
+                </bean>
                 <bean class="net.sourceforge.subsonic.service.metadata.FFmpegParser">
                     <property name="transcodingService" ref="transcodingService"/>
+                    <property name="libraryAdditionDao" ref="libraryAdditionDao"/>
                 </bean>
-                <bean class="net.sourceforge.subsonic.service.metadata.DefaultMetaDataParser"/>
+                <bean class="net.sourceforge.subsonic.service.metadata.DefaultMetaDataParser">
+                    <property name="libraryAdditionDao" ref="libraryAdditionDao"/>
+                </bean>
             </list>
         </property>
     </bean>
@@ -493,6 +498,23 @@
         <property name="spotifyService" ref="spotifyService" />
     </bean>
     
+    <bean id="spotifyMissingAlbumService" class="com.github.hakko.musiccabinet.service.spotify.MissingAlbumService">
+        <property name="spotifyService" ref="spotifyService" />
+        <property name="spotifyLibraryBrowserDao" ref="spotifyLibraryBrowserDao" />
+        <property name="jdbcLibraryBrowserDao" ref="jdbcLibraryBrowserDao" />
+        <property name="webserviceHistoryService" ref="webserviceHistoryService"/>
+        <property name="libraryAdditionDao" ref="libraryAdditionDao"/>
+    </bean>
+    
+    <bean id="spotifyMissingArtistService" class="com.github.hakko.musiccabinet.service.spotify.MissingArtistService">
+        <property name="spotifyService" ref="spotifyService" />
+        <property name="spotifyLibraryBrowserDao" ref="spotifyLibraryBrowserDao" />
+        <property name="jdbcLibraryBrowserDao" ref="jdbcLibraryBrowserDao" />
+        <property name="webserviceHistoryService" ref="webserviceHistoryService"/>
+        <property name="libraryAdditionDao" ref="libraryAdditionDao"/>
+    </bean>
+    
+    
     <bean id="compositeNameSearchService" class="com.github.hakko.musiccabinet.service.CompositeNameSearchService">
         <property name="services">
           <set>
@@ -531,6 +553,8 @@
         <property name="userTopArtistsService" ref="userTopArtistsService"/>
         <property name="userRecommendedArtistsService" ref="userRecommendedArtistsService"/>
         <property name="userLovedTracksService" ref="userLovedTracksService"/>
+        <property name="missingArtistService" ref="spotifyMissingArtistService" />
+        <property name="missingAlbumService" ref="spotifyMissingAlbumService" />
         <property name="searchIndexUpdateExecutorService" ref="searchIndexUpdateExecutorService"/>
         <property name="searchIndexUpdateSettingsService" ref="searchIndexUpdateSettingsService"/>
     </bean>

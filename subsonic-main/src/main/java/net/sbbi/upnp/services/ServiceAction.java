@@ -47,7 +47,9 @@
  */
 package net.sbbi.upnp.services;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
 
 /**
  * An object to represent a service action proposed by an UPNP service

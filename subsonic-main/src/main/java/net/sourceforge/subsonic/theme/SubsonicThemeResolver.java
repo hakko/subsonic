@@ -18,12 +18,18 @@
  */
 package net.sourceforge.subsonic.theme;
 
-import net.sourceforge.subsonic.service.*;
-import net.sourceforge.subsonic.domain.*;
-import org.springframework.web.servlet.*;
+import java.util.HashSet;
+import java.util.Set;
 
-import javax.servlet.http.*;
-import java.util.*;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+import net.sourceforge.subsonic.domain.Theme;
+import net.sourceforge.subsonic.domain.UserSettings;
+import net.sourceforge.subsonic.service.SecurityService;
+import net.sourceforge.subsonic.service.SettingsService;
+
+import org.springframework.web.servlet.ThemeResolver;
 
 /**
  * Theme resolver implementation which returns the theme selected in the settings.

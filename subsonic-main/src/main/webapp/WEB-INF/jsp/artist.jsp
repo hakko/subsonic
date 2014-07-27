@@ -8,7 +8,7 @@
 <div style="padding: 15px;">
 
 <h1>
-<a href="#" onclick="toggleStar('art', '${model.artistUri}', '${sub:jqesc("#starImage".concat(model.artistUri))}'); return false;">
+<a href="#" onclick="toggleStar('art', '${model.artistUri}', '#starImage${sub:jqesc(model.artistUri)}'); return false;">
 	<c:choose>
 		<c:when test="${model.artistStarred}">
 			<img id="starImage${model.artistUri}" src="<spring:theme code="ratingOnImage"/>" alt="">
@@ -80,7 +80,7 @@ ${model.artistName}
   		<a class="btn btn-default btn-xs" href="${detailsUrl}">Details</a>
   	</c:if>
   	<c:if test="${model.user.coverArtRole and not empty model.artistInfo}">
-  		<sub:url value="/editArtist.view" var="editArtistUrl"><sub:param name="id" value="${model.artistUri}"/><sub:param name="artist" value="${model.artistName}"/></sub:url>
+  		<sub:url value="editArtist.view" var="editArtistUrl"><sub:param name="id" value="${model.artistUri}"/><sub:param name="artist" value="${model.artistName}"/></sub:url>
   		<a class="btn btn-default btn-xs" href="${editArtistUrl}">Edit</a>
   	</c:if>
   </div>

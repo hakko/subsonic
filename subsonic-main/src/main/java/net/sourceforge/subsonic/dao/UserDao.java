@@ -23,9 +23,6 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.List;
 
-import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.jdbc.core.simple.ParameterizedRowMapper;
-
 import net.sourceforge.subsonic.Logger;
 import net.sourceforge.subsonic.domain.AvatarScheme;
 import net.sourceforge.subsonic.domain.TranscodeScheme;
@@ -33,6 +30,9 @@ import net.sourceforge.subsonic.domain.User;
 import net.sourceforge.subsonic.domain.UserSettings;
 import net.sourceforge.subsonic.domain.UserSettings.Visibility;
 import net.sourceforge.subsonic.util.StringUtil;
+
+import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.simple.ParameterizedRowMapper;
 
 /**
  * Provides user-related database services.
@@ -50,7 +50,7 @@ public class UserDao extends AbstractDao {
             "default_home_albums, default_home_songs, artist_grid_width, album_grid_layout, related_artists, " +
             "recommended_artists, reluctant_artist_loading, only_album_artist_recommendations, " +
             "various_artists_shortlist, view_stats_for_all_users, device_serial, device_mount_path, device_sync_size, " +
-            "device_last_sync";
+            "device_last_sync, spotify_username";
     private static final String USER_VISIBILITY_COLUMNS = "username, type, caption_cutoff, track_number, artist, " +
             "album, composer, genre, year, bit_rate, duration, format, file_size";
 
@@ -95,6 +95,12 @@ public class UserDao extends AbstractDao {
     	String sql = "select distinct LAST_FM_USERNAME from user_settings where LAST_FM_USERNAME is not null";
     	return getJdbcTemplate().queryForList(sql, String.class);
     }
+    
+    public List<String> getAllSpotifyUsers() {
+    	String sql = "select distinct SPOTIFY_USERNAME from user_settings where SPOTIFY_USERNAME is not null";
+    	return getJdbcTemplate().queryForList(sql, String.class);
+    }
+    
     
     public List<String> getAllUserDevices() {
     	String sql = "select distinct DEVICE_SERIAL from user_settings where DEVICE_SERIAL is not null";
@@ -215,7 +221,7 @@ public class UserDao extends AbstractDao {
                 settings.getRecommendedArtists(), settings.isReluctantArtistLoading(), 
                 settings.isOnlyAlbumArtistRecommendations(), settings.isUseVariousArtistShortlist(),
                 settings.isViewStatsForAllUsers(),
-                settings.getDeviceName(), settings.getDeviceMountPath(), settings.getDeviceSyncSize(), settings.getDeviceLastSync()});
+                settings.getDeviceName(), settings.getDeviceMountPath(), settings.getDeviceSyncSize(), settings.getDeviceLastSync(), settings.getSpotifyUsername()});
         
         template.update("delete from user_visibility where username=?", new Object[]{settings.getUsername()});
 
@@ -376,6 +382,7 @@ public class UserDao extends AbstractDao {
             settings.setDeviceMountPath(rs.getString(col++));
             settings.setDeviceSyncSize(rs.getLong(col++));
             settings.setDeviceLastSync(rs.getTimestamp(col++));
+            settings.setSpotifyUsername(rs.getString(col++));
             
             return settings;
         }

@@ -47,7 +47,9 @@
  */
 package net.sbbi.upnp;
 
-import java.util.*;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.StringTokenizer;
 
 /**
  * A class to parse an HTTP response message.

@@ -18,15 +18,17 @@
  */
 package net.sourceforge.subsonic.controller;
 
-import net.sourceforge.subsonic.command.DonateCommand;
-import net.sourceforge.subsonic.service.SettingsService;
-import org.springframework.validation.BindException;
-import org.springframework.web.servlet.ModelAndView;
-import org.springframework.web.servlet.mvc.SimpleFormController;
+import java.util.Date;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.util.Date;
+
+import net.sourceforge.subsonic.command.DonateCommand;
+import net.sourceforge.subsonic.service.SettingsService;
+
+import org.springframework.validation.BindException;
+import org.springframework.web.servlet.ModelAndView;
+import org.springframework.web.servlet.mvc.SimpleFormController;
 
 /**
  * Controller for the donation page.

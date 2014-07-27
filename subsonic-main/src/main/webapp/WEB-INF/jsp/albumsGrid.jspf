@@ -1,12 +1,6 @@
+<%@ taglib prefix="sub" uri="http://subsonic.org/taglib/sub" %>
 <div class="row">
 	<c:forEach items="${model.albums}" var="album" varStatus="loopStatus">
-    <c:choose>
-    <c:when test="${model.player.web && sub:isSpotify(album.uri)}">
-       <iframe src="https://embed.spotify.com/?uri=${album.uri}&theme=light&view=coverart" 
-           width="250" height="80" frameborder="0" 
-           allowtransparency="true"></iframe>
-    </c:when>
-    <c:otherwise>
                 <c:choose>
                     <c:when test="${not empty album.coverArtUrl}">
                         <c:set var="coverArtUrl">${album.coverArtUrl}</c:set>
@@ -30,46 +24,37 @@
 				src="${coverArtUrl}" alt=""
 				title="${album.artistName} - ${album.title}" width="100%" height="auto" />
 			</a>
-			<div class="detail play-label">
-                <c:import url="playAddDownload.jsp">
-                    <c:param name="uri" value="${sub:esc(album.trackUris)}"/>
-                    <c:param name="starDisabled" value="true"/>
-                    <c:param name="playEnabled" value="${model.user.streamRole}"/>
-                    <c:param name="enqueueEnabled" value="${model.user.streamRole}"/>
-                    <c:param name="addEnabled" value="${model.user.streamRole}"/>
-                    <c:param name="downloadEnabled" value="${model.user.downloadRole}"/>
-                    <c:param name="downloadName" value="${not empty model.artistName ? model.artistName : album.artistName} - ${album.title}"/>
-                    <c:param name="asTable" value="false"/>
-                </c:import>			
-			<!--div class="btn-group">
-			    <button class="btn btn-play-dd btn-default" href="#" onclick="return onPlay(${sub:esc(album.trackUris)}, 'P');"><img
-                    src="<spring:theme code="playImage"/>" alt="Play All"
-                    title="Play All" />
-                    </button>
-                <button type="button" class="btn btn-play-dd btn-default dropdown-toggle" data-toggle="dropdown">
-                    <span class="caret"></span>
-                    <span class="sr-only">Toggle Dropdown</span>
-                </button>			
-                <ul class="dropdown-menu" role="menu">
-                    <li><a href="#" onclick="return onPlay(${sub:esc(album.trackUris)}, 'P');"><img
-                    src="<spring:theme code="playImage"/>" alt="Play All"
-                    title="Play All" />Play</a></li>
-                    <li><a href="#" onclick="return onPlay(${sub:esc(album.trackUris)}, 'E');"><img
-                    src="<spring:theme code="enqueueImage"/>" alt="Enqueue All"
-                    title="Enqueue All" />Enqueue</a></li>
-                    <li><a href="#" onclick="return onPlay(${sub:esc(album.trackUris)}, 'A');"><img
-                    src="<spring:theme code="addImage"/>" alt="Add Last"
-                    title="Add Last" />Add Last</a></li>
-                </ul>                        
-            </div-->                    
-			</div>
+			
+			    <c:choose>
+                    <c:when test="${model.player.web && sub:isSpotify(album)}">
+                    <div class="detail play-label" style="margin-top: -85px; padding:5px">
+                      <iframe src="https://embed.spotify.com/?uri=${album.spotifyUri}&theme=light&view=coverart" 
+                        width="100%" height="80px" frameborder="0" 
+                        allowtransparency="true" ></iframe>
+                        </div>
+    
+                    </c:when>
+                    <c:otherwise>
+			            <div class="detail play-label">
+                        <c:import url="playAddDownload.jsp">
+                            <c:param name="uri" value="${sub:esc(album.trackUris)}"/>
+                            <c:param name="starDisabled" value="true"/>
+                            <c:param name="playEnabled" value="${model.user.streamRole}"/>
+                            <c:param name="enqueueEnabled" value="${model.user.streamRole}"/>
+                            <c:param name="addEnabled" value="${model.user.streamRole}"/>
+                            <c:param name="downloadEnabled" value="${model.user.downloadRole}"/>
+                            <c:param name="downloadName" value="${not empty model.artistName ? model.artistName : album.artistName} - ${album.title}"/>
+                            <c:param name="asTable" value="false"/>
+                        </c:import>			
+                        </div>
+                    </c:otherwise>
+                </c:choose>
+                
 				<div class="detail play-label">
 					<em>${album.artistName}</em><br />
 					${album.title}
 				</div>
 			
 		</div>
-    </c:otherwise>
-    </c:choose>		
 	</c:forEach>
 </div>

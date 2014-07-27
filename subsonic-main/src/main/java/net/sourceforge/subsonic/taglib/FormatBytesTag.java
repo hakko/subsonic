@@ -18,14 +18,17 @@
  */
 package net.sourceforge.subsonic.taglib;
 
-import net.sourceforge.subsonic.util.*;
-import org.springframework.web.servlet.support.*;
+import java.io.IOException;
+import java.util.Locale;
 
-import javax.servlet.http.*;
-import javax.servlet.jsp.*;
-import javax.servlet.jsp.tagext.*;
-import java.io.*;
-import java.util.*;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.jsp.JspException;
+import javax.servlet.jsp.JspTagException;
+import javax.servlet.jsp.tagext.BodyTagSupport;
+
+import net.sourceforge.subsonic.util.StringUtil;
+
+import org.springframework.web.servlet.support.RequestContextUtils;
 
 /**
  * Converts a byte-count to a formatted string suitable for display to the user, with respect

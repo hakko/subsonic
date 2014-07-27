@@ -28,8 +28,8 @@ import com.github.hakko.musiccabinet.domain.model.aggr.ArtistRecommendation;
 import com.github.hakko.musiccabinet.service.ArtistRecommendationService;
 import com.github.hakko.musiccabinet.service.LastFmService;
 import com.github.hakko.musiccabinet.service.LibraryBrowserService;
-import com.github.hakko.musiccabinet.service.lastfm.TagInfoService;
 import com.github.hakko.musiccabinet.service.TagService;
+import com.github.hakko.musiccabinet.service.lastfm.TagInfoService;
 
 /**
  * Controller for the genres browser / tag cloud.

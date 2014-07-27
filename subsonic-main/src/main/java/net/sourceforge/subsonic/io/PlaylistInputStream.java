@@ -18,18 +18,17 @@
  */
 package net.sourceforge.subsonic.io;
 
+import java.io.IOException;
+import java.io.InputStream;
+
 import net.sourceforge.subsonic.Logger;
-import net.sourceforge.subsonic.domain.VideoTranscodingSettings;
-import net.sourceforge.subsonic.util.FileUtil;
 import net.sourceforge.subsonic.domain.MediaFile;
 import net.sourceforge.subsonic.domain.Player;
 import net.sourceforge.subsonic.domain.Playlist;
 import net.sourceforge.subsonic.domain.TransferStatus;
+import net.sourceforge.subsonic.domain.VideoTranscodingSettings;
 import net.sourceforge.subsonic.service.AudioScrobblerService;
 import net.sourceforge.subsonic.service.TranscodingService;
-
-import java.io.IOException;
-import java.io.InputStream;
 
 /**
  * Implementation of {@link InputStream} which reads from a {@link Playlist}.

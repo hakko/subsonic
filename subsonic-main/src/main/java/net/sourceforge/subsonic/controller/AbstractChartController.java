@@ -18,13 +18,14 @@
  */
 package net.sourceforge.subsonic.controller;
 
-import org.springframework.web.servlet.support.*;
-import org.springframework.web.servlet.mvc.*;
-import org.springframework.ui.context.*;
+import java.awt.Color;
+import java.util.Locale;
 
-import javax.servlet.http.*;
-import java.awt.*;
-import java.util.*;
+import javax.servlet.http.HttpServletRequest;
+
+import org.springframework.ui.context.Theme;
+import org.springframework.web.servlet.mvc.Controller;
+import org.springframework.web.servlet.support.RequestContextUtils;
 
 /**
  * Abstract super class for controllers which generate charts.

@@ -18,9 +18,9 @@
  */
 package net.sourceforge.subsonic.dao.schema;
 
-import org.springframework.jdbc.core.JdbcTemplate;
-
 import net.sourceforge.subsonic.Logger;
+
+import org.springframework.jdbc.core.JdbcTemplate;
 
 /**
  * Used for creating and evolving the database schema.

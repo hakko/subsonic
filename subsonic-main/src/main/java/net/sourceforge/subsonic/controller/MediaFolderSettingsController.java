@@ -21,7 +21,6 @@ package net.sourceforge.subsonic.controller;
 import static org.apache.commons.lang.StringUtils.defaultIfEmpty;
 import static org.apache.commons.lang.StringUtils.trimToNull;
 import jahspotify.AbstractConnectionListener;
-import jahspotify.JahSpotify;
 
 import java.io.File;
 import java.util.Date;
@@ -109,10 +108,16 @@ public class MediaFolderSettingsController extends
 		if (spotifyService.isSpotifyAvailable()) {
 			map.put("spotifyAvailable", true);
 			map.put("spotifyLoggedIn", false);
-			if (spotifyService.getSpotify().isLoggedIn()) {
-				map.put("spotifyLoggedIn", true);
-				map.put("spotifyUsername", spotifyService.getSpotify()
-						.getUser().getDisplayName());
+			if (spotifyService.isLoggedIn()) {
+				try {
+					if (spotifyService.lock()) {
+						map.put("spotifyLoggedIn", true);
+						map.put("spotifyUsername", spotifyService.getSpotify()
+								.getUser().getDisplayName());
+					}
+				} finally {
+					spotifyService.unlock();
+				}
 			}
 		}
 
@@ -191,24 +196,18 @@ public class MediaFolderSettingsController extends
 		}
 	}
 
-	private void updateSpotifyFromRequest(HttpServletRequest request, Map<String, Object> response) {
-		if (!spotifyService.isSpotifyAvailable()) {
-			return;
-		}
-		final JahSpotify spotify = spotifyService.getSpotify();
-		if (spotify.isLoggedIn()) {
-			return;
-		}
+	private void updateSpotifyFromRequest(HttpServletRequest request,
+			Map<String, Object> response) {
 
 		final String username = request.getParameter("spotify_username");
 		final String password = request.getParameter("spotify_password");
 		if (StringUtils.isEmpty(username) || StringUtils.isEmpty(password)) {
 			return;
 		}
-		
+
 		final BlockingRequest<Boolean> blockingRequest = new BlockingRequest<Boolean>() {
 			@Override
-			public void run() {		
+			public void run() {
 				spotifyService.login(username, password, null);
 			}
 		};
@@ -218,14 +217,18 @@ public class MediaFolderSettingsController extends
 				blockingRequest.finish(success);
 			}
 		};
-		
+
+		Boolean loggedIn = Boolean.FALSE;
 		spotifyService.registerListener(loginListener);
-		Boolean loggedIn = blockingRequest.start();
-		if(!loggedIn) {
-			response.put("error", "Invalid username or password.");
+		try {
+			loggedIn = blockingRequest.start();
+			if (!loggedIn) {
+				response.put("error", "Invalid username or password.");
+			}
+		} finally {
+			LOG.debug("Logged in: " + loggedIn);
+			spotifyService.removeListener(loginListener);
 		}
-		LOG.debug("Logged in: " + loggedIn);
-		spotifyService.removeListener(loginListener);
 	}
 
 	private boolean hasIndexedParentFolder(String folder) {

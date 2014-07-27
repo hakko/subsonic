@@ -18,17 +18,23 @@
  */
 package net.sourceforge.subsonic.filter;
 
-import net.sourceforge.subsonic.Logger;
-import net.sourceforge.subsonic.util.StringUtil;
-
-import javax.servlet.*;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletRequestWrapper;
 import java.io.IOException;
 import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Vector;
+
+import javax.servlet.Filter;
+import javax.servlet.FilterChain;
+import javax.servlet.FilterConfig;
+import javax.servlet.ServletException;
+import javax.servlet.ServletRequest;
+import javax.servlet.ServletResponse;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletRequestWrapper;
+
+import net.sourceforge.subsonic.Logger;
+import net.sourceforge.subsonic.util.StringUtil;
 
 /**
  * Servlet filter which decodes HTTP request parameters.  If a parameter name ends with

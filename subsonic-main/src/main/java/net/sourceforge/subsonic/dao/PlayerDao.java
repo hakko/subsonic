@@ -26,14 +26,14 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.springframework.jdbc.core.simple.ParameterizedRowMapper;
-
 import net.sourceforge.subsonic.Logger;
 import net.sourceforge.subsonic.domain.CoverArtScheme;
 import net.sourceforge.subsonic.domain.Player;
 import net.sourceforge.subsonic.domain.PlayerTechnology;
 import net.sourceforge.subsonic.domain.Playlist;
 import net.sourceforge.subsonic.domain.TranscodeScheme;
+
+import org.springframework.jdbc.core.simple.ParameterizedRowMapper;
 
 /**
  * Provides player-related database services.

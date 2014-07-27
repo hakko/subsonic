@@ -18,13 +18,20 @@
  */
 package net.sourceforge.subsonic;
 
-import net.sourceforge.subsonic.service.*;
-import net.sourceforge.subsonic.util.*;
-import org.apache.commons.lang.exception.*;
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.PrintWriter;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.Collections;
+import java.util.Date;
+import java.util.List;
 
-import java.io.*;
-import java.text.*;
-import java.util.*;
+import net.sourceforge.subsonic.service.SettingsService;
+import net.sourceforge.subsonic.util.BoundedList;
+
+import org.apache.commons.lang.exception.ExceptionUtils;
 
 /**
  * Logger implementation which logs to SUBSONIC_HOME/subsonic.log.

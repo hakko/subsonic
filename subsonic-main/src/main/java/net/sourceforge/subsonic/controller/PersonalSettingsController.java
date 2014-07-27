@@ -70,6 +70,7 @@ public class PersonalSettingsController extends SimpleFormController {
         command.setHomeVisibility(userSettings.getHomeVisibility());
         command.setLastFmEnabled(userSettings.isLastFmEnabled());
         command.setLastFmUsername(userSettings.getLastFmUsername());
+        command.setSpotifyUsername(userSettings.getSpotifyUsername());
         command.setAlbumOrderAscending(userSettings.isAlbumOrderAscending());
         command.setAlbumOrderByYear(userSettings.isAlbumOrderByYear());
         command.setDefaultHomeView(userSettings.getDefaultHomeView());
@@ -143,6 +144,7 @@ public class PersonalSettingsController extends SimpleFormController {
         settings.setHomeVisibility(command.getHomeVisibility());
         settings.setLastFmEnabled(command.isLastFmEnabled());
         settings.setLastFmUsername(command.getLastFmUsername());
+        settings.setSpotifyUsername(command.getSpotifyUsername());
         settings.setSystemAvatarId(getSystemAvatarId(command));
         settings.setAvatarScheme(getAvatarScheme(command));
         settings.setAlbumOrderAscending(command.isAlbumOrderAscending());

@@ -18,20 +18,30 @@
  */
 package net.sourceforge.subsonic.controller;
 
+import java.io.File;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
 import net.sourceforge.subsonic.Logger;
-import net.sourceforge.subsonic.service.*;
-import net.sourceforge.subsonic.domain.*;
+import net.sourceforge.subsonic.domain.MediaFile;
+import net.sourceforge.subsonic.domain.Player;
+import net.sourceforge.subsonic.domain.Playlist;
+import net.sourceforge.subsonic.service.PlayerService;
+import net.sourceforge.subsonic.service.PlaylistService;
+import net.sourceforge.subsonic.service.SecurityService;
 import net.sourceforge.subsonic.util.StringUtil;
 
 import org.apache.commons.lang.StringUtils;
 import org.springframework.web.bind.ServletRequestUtils;
-import org.springframework.web.servlet.*;
-import org.springframework.web.servlet.mvc.multiaction.*;
-import org.springframework.web.servlet.view.*;
-
-import javax.servlet.http.*;
-import java.io.*;
-import java.util.*;
+import org.springframework.web.servlet.ModelAndView;
+import org.springframework.web.servlet.mvc.multiaction.MultiActionController;
+import org.springframework.web.servlet.view.RedirectView;
 
 /**
  * Controller for listing, loading, appending and deleting playlists.

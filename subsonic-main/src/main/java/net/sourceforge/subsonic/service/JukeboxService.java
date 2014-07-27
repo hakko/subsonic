@@ -22,6 +22,7 @@ import static net.sourceforge.subsonic.service.jukebox.AudioPlayer.State.EOM;
 import jahspotify.JahSpotify.PlayerStatus;
 import jahspotify.PlaybackListener;
 import jahspotify.media.Link;
+import jahspotify.services.MediaPlayer;
 
 import java.io.InputStream;
 
@@ -82,7 +83,13 @@ public class JukeboxService implements AudioPlayer.Listener, PlaybackListener {
             play(player.getPlaylist().getCurrentFile(), offset);
         } else {
         	if(this.currentPlayingFile != null && this.currentPlayingFile.isSpotify()) {
-        		spotifyService.getSpotify().pause();
+        		try {
+        			if(spotifyService.lock()) {
+        				spotifyService.getSpotify().pause();        				
+        			}
+        		} finally {
+        			spotifyService.unlock();
+        		}
         	}
         	else if (audioPlayer != null) {
                 audioPlayer.pause();
@@ -98,13 +105,19 @@ public class JukeboxService implements AudioPlayer.Listener, PlaybackListener {
             boolean sameFile = file != null && file.equals(currentPlayingFile);
             boolean paused = false;
             if(currentPlayingFile != null && currentPlayingFile.isSpotify()) {
-            	paused = spotifyService.getSpotify().getStatus().equals(PlayerStatus.PAUSED);
+            	paused = spotifyService.getStatus().equals(PlayerStatus.PAUSED);
             } else {
             	paused = audioPlayer != null && audioPlayer.getState() == AudioPlayer.State.PAUSED;
             }
             if (sameFile && paused && offset == 0) {
             	if(currentPlayingFile.isSpotify()) {
-            		spotifyService.getSpotify().resume();
+            		try {
+            			if(spotifyService.lock()) {
+            				spotifyService.getSpotify().resume();        				
+            			}
+            		} finally {
+            			spotifyService.unlock();
+            		}
             	} else {
             		audioPlayer.play();
             	}
@@ -118,11 +131,19 @@ public class JukeboxService implements AudioPlayer.Listener, PlaybackListener {
                 }
 
                 if (file != null && file.isSpotify()) {
-                	if(!spotifyListening) {
-                		spotifyService.getSpotify().addPlaybackListener(this);
-                		spotifyListening = true;
-                	}
-                	spotifyService.getSpotify().play(URIUtil.getSpotifyLink(file.getUri().toString()));
+            		try {
+            			if(spotifyService.lock()) {
+                        	if(!spotifyListening) {
+                        		spotifyService.getSpotify().addPlaybackListener(this);
+                        		spotifyListening = true;
+                        	}
+                        	
+                        	spotifyService.getSpotify().play(URIUtil.getSpotifyLink(file.getName()));
+            			}
+            		} finally {
+            			spotifyService.unlock();
+            		}
+                	
                 }
                 else if (file != null) {
                     int duration = file.getMetaData().getDuration() == null ? 0 : file.getMetaData().getDuration() - offset;
@@ -157,6 +178,9 @@ public class JukeboxService implements AudioPlayer.Listener, PlaybackListener {
     }
 
     public synchronized int getPosition() {
+    	if(this.currentPlayingFile != null && this.currentPlayingFile.isSpotify()) {
+    		return MediaPlayer.getInstance().getPosition() / 1000;
+    	}
         return audioPlayer == null ? 0 : offset + audioPlayer.getPosition();
     }
 
@@ -208,17 +232,17 @@ public class JukeboxService implements AudioPlayer.Listener, PlaybackListener {
 	}
 
 	public void setStatusService(StatusService statusService) {
-        this.statusService = statusService;
-    }
+		this.statusService = statusService;
+	}
 
-    public void setSettingsService(SettingsService settingsService) {
-        this.settingsService = settingsService;
-    }
+	public void setSettingsService(SettingsService settingsService) {
+		this.settingsService = settingsService;
+	}
 
-    public void setSecurityService(SecurityService securityService) {
-        this.securityService = securityService;
-    }
-    
+	public void setSecurityService(SecurityService securityService) {
+		this.securityService = securityService;
+	}
+
 	public void setSpotifyService(SpotifyService spotifyService) {
 		this.spotifyService = spotifyService;
 	}
@@ -226,29 +250,39 @@ public class JukeboxService implements AudioPlayer.Listener, PlaybackListener {
 	@Override
 	public void trackStarted(Link link) {
 		// NOOP
+		LOG.debug("Track started: " + link.toString());
 	}
 
 	@Override
 	public void trackEnded(Link link, boolean forcedEnd) {
+		LOG.debug("Track ended: " + link.toString());
 		stateChanged(audioPlayer, EOM);
 	}
 
 	@Override
 	public Link nextTrackToPreload() {
-		// NOOP
+		
+		
+		Playlist playlist = player.getPlaylist();
+		int nextIndex = playlist.getIndex() + 1;
+		MediaFile mediaFile = playlist.getFile(nextIndex);
+		if(mediaFile.isSpotify()) {
+			LOG.debug("Requesting preload of: " + mediaFile.getName());
+			return URIUtil.getSpotifyLink(mediaFile.getName());
+		}
 		return null;
 	}
 
 	@Override
 	public void playTokenLost() {
 		// NOOP
-		
+
 	}
 
 	@Override
 	public void setAudioFormat(int rate, int channels) {
 		// NOOP
-		
+
 	}
 
 	@Override

@@ -18,14 +18,14 @@
  */
 package net.sourceforge.subsonic.command;
 
+import java.util.Date;
+import java.util.List;
+
 import net.sourceforge.subsonic.controller.PersonalSettingsController;
 import net.sourceforge.subsonic.domain.Avatar;
 import net.sourceforge.subsonic.domain.Theme;
 import net.sourceforge.subsonic.domain.User;
 import net.sourceforge.subsonic.domain.UserSettings;
-
-import java.util.Date;
-import java.util.List;
 
 /**
  * Command used in {@link PersonalSettingsController}.
@@ -50,6 +50,7 @@ public class PersonalSettingsCommand {
 	private boolean nowPlayingAllowed;
 	private boolean lastFmEnabled;
 	private String lastFmUsername;
+	private String spotifyUsername;
 	private boolean albumOrderAscending;
 	private boolean albumOrderByYear;
 	private String defaultHomeView;
@@ -357,5 +358,13 @@ public class PersonalSettingsCommand {
 
 	public void setReloadNeeded(boolean reloadNeeded) {
 		isReloadNeeded = reloadNeeded;
+	}
+
+	public String getSpotifyUsername() {
+		return spotifyUsername;
+	}
+
+	public void setSpotifyUsername(String spotifyUsername) {
+		this.spotifyUsername = spotifyUsername;
 	}
 }

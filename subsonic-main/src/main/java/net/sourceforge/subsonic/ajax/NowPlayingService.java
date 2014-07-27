@@ -33,7 +33,6 @@ import java.util.Map;
 import net.sourceforge.subsonic.Logger;
 import net.sourceforge.subsonic.domain.AvatarScheme;
 import net.sourceforge.subsonic.domain.MediaFile;
-import net.sourceforge.subsonic.domain.MetaData;
 import net.sourceforge.subsonic.domain.Player;
 import net.sourceforge.subsonic.domain.TransferStatus;
 import net.sourceforge.subsonic.domain.UserSettings;
@@ -48,6 +47,7 @@ import org.directwebremoting.WebContext;
 import org.directwebremoting.WebContextFactory;
 
 import com.github.hakko.musiccabinet.configuration.Uri;
+import com.github.hakko.musiccabinet.domain.model.library.MetaData;
 import com.github.hakko.musiccabinet.domain.model.music.AlbumInfo;
 import com.github.hakko.musiccabinet.service.LibraryBrowserService;
 import com.github.hakko.musiccabinet.service.lastfm.AlbumInfoService;
@@ -157,6 +157,10 @@ public class NowPlayingService {
     }
     
     private Artwork getArtwork(MediaFile mediaFile, boolean preferLastFm) {
+    	if(mediaFile == null || mediaFile.getMetaData() == null) {
+    		return new Artwork();
+    	}
+    	
     	Uri albumId = mediaFile.getMetaData().getAlbumUri();
     	if (preferLastFm) {
     		AlbumInfo albumInfo = albumInfoService.getAlbumInfosForAlbumIds(asList(albumId)).get(albumId);

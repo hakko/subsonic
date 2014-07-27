@@ -18,22 +18,23 @@
  */
 package net.sourceforge.subsonic.controller;
 
-import net.sourceforge.subsonic.domain.Player;
-import net.sourceforge.subsonic.domain.TransferStatus;
-import net.sourceforge.subsonic.service.StatusService;
-import net.sourceforge.subsonic.util.FileUtil;
-import net.sourceforge.subsonic.util.StringUtil;
-import org.springframework.web.servlet.ModelAndView;
-import org.springframework.web.servlet.mvc.ParameterizableViewController;
-import org.springframework.web.servlet.support.RequestContextUtils;
-
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+import net.sourceforge.subsonic.domain.Player;
+import net.sourceforge.subsonic.domain.TransferStatus;
+import net.sourceforge.subsonic.service.StatusService;
+import net.sourceforge.subsonic.util.StringUtil;
+
+import org.springframework.web.servlet.ModelAndView;
+import org.springframework.web.servlet.mvc.ParameterizableViewController;
+import org.springframework.web.servlet.support.RequestContextUtils;
 
 /**
  * Controller for the status page.

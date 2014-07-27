@@ -18,8 +18,8 @@
  */
 package net.sourceforge.subsonic.taglib;
 
-import javax.servlet.jsp.tagext.*;
-import javax.servlet.jsp.*;
+import javax.servlet.jsp.JspTagException;
+import javax.servlet.jsp.tagext.TagSupport;
 
 /**
  * A tag representing an URL query parameter.

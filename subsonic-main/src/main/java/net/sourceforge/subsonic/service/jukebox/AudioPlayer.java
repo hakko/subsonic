@@ -18,6 +18,11 @@
  */
 package net.sourceforge.subsonic.service.jukebox;
 
+import static net.sourceforge.subsonic.service.jukebox.AudioPlayer.State.CLOSED;
+import static net.sourceforge.subsonic.service.jukebox.AudioPlayer.State.EOM;
+import static net.sourceforge.subsonic.service.jukebox.AudioPlayer.State.PAUSED;
+import static net.sourceforge.subsonic.service.jukebox.AudioPlayer.State.PLAYING;
+
 import java.io.BufferedInputStream;
 import java.io.InputStream;
 import java.util.concurrent.atomic.AtomicReference;
@@ -27,12 +32,10 @@ import javax.sound.sampled.AudioSystem;
 import javax.sound.sampled.FloatControl;
 import javax.sound.sampled.SourceDataLine;
 
-import org.apache.commons.io.IOUtils;
-
 import net.sourceforge.subsonic.Logger;
 import net.sourceforge.subsonic.service.JukeboxService;
 
-import static net.sourceforge.subsonic.service.jukebox.AudioPlayer.State.*;
+import org.apache.commons.io.IOUtils;
 
 /**
  * A simple wrapper for playing sound from an input stream.

@@ -115,11 +115,13 @@ public class RESTMediaRetrievalController extends RESTAbstractController {
 
         int timeOffset = ServletRequestUtils.getIntParameter(request, "timeOffset", 0);
         timeOffset = Math.max(0, timeOffset);
-        Integer duration = file.getMetaData().getDuration();
+        Short duration = file.getMetaData().getDuration();
+        short durationSeconds = 0;
         if (duration != null) {
+        	durationSeconds = duration.shortValue();
             map.put("skipOffsets", VideoPlayerController.createSkipOffsets(duration));
-            timeOffset = Math.min(duration, timeOffset);
-            duration -= timeOffset;
+            timeOffset = Math.min(durationSeconds, timeOffset);
+            durationSeconds -= timeOffset;
         }
 
         map.put("id", request.getParameter("id"));
@@ -129,7 +131,7 @@ public class RESTMediaRetrievalController extends RESTAbstractController {
         map.put("v", request.getParameter("v"));
         map.put("video", file);
         map.put("maxBitRate", ServletRequestUtils.getIntParameter(request, "maxBitRate", VideoPlayerController.DEFAULT_BIT_RATE));
-        map.put("duration", duration);
+        map.put("duration", durationSeconds);
         map.put("timeOffset", timeOffset);
         map.put("bitRates", VideoPlayerController.BIT_RATES);
         map.put("autoplay", ServletRequestUtils.getBooleanParameter(request, "autoplay", true));

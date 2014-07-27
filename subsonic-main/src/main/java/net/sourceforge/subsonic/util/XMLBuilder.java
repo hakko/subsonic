@@ -18,11 +18,6 @@
  */
 package net.sourceforge.subsonic.util;
 
-import org.apache.commons.lang.StringEscapeUtils;
-import org.json.JSONException;
-import org.json.JSONObject;
-import org.json.XML;
-
 import java.io.IOException;
 import java.io.StringWriter;
 import java.io.Writer;
@@ -32,6 +27,11 @@ import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Stack;
+
+import org.apache.commons.lang.StringEscapeUtils;
+import org.json.JSONException;
+import org.json.JSONObject;
+import org.json.XML;
 
 
 /**

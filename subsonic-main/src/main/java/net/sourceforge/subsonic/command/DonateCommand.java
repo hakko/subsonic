@@ -18,9 +18,9 @@
  */
 package net.sourceforge.subsonic.command;
 
-import net.sourceforge.subsonic.controller.DonateController;
-
 import java.util.Date;
+
+import net.sourceforge.subsonic.controller.DonateController;
 
 import org.apache.commons.lang.StringUtils;
 

@@ -18,21 +18,21 @@
  */
 package net.sourceforge.subsonic.util;
 
-import net.sourceforge.subsonic.Logger;
+import java.net.Inet4Address;
+import java.net.InetAddress;
+import java.net.NetworkInterface;
+import java.util.Enumeration;
+import java.util.List;
 
 import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletResponse;
+
+import net.sourceforge.subsonic.Logger;
 
 import org.apache.commons.lang.StringUtils;
 
 import com.github.hakko.musiccabinet.domain.model.aggr.ArtistRecommendation;
 import com.github.hakko.musiccabinet.domain.model.music.ArtistInfo;
-
-import java.net.InetAddress;
-import java.net.NetworkInterface;
-import java.net.Inet4Address;
-import java.util.Enumeration;
-import java.util.List;
 
 /**
  * Miscellaneous general utility methods.

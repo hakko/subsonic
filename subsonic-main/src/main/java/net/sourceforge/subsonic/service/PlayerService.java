@@ -18,20 +18,21 @@
  */
 package net.sourceforge.subsonic.service;
 
-import net.sourceforge.subsonic.dao.PlayerDao;
-import net.sourceforge.subsonic.domain.Player;
-import net.sourceforge.subsonic.domain.Transcoding;
-import net.sourceforge.subsonic.domain.TransferStatus;
-import net.sourceforge.subsonic.util.StringUtil;
-import org.apache.commons.lang.StringUtils;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
 
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
+import net.sourceforge.subsonic.dao.PlayerDao;
+import net.sourceforge.subsonic.domain.Player;
+import net.sourceforge.subsonic.domain.Transcoding;
+import net.sourceforge.subsonic.domain.TransferStatus;
+import net.sourceforge.subsonic.util.StringUtil;
+
+import org.apache.commons.lang.StringUtils;
 
 /**
  * Provides services for maintaining the set of players.

@@ -18,14 +18,14 @@
  */
 package net.sourceforge.subsonic.io;
 
+import java.io.IOException;
+import java.io.OutputStream;
+import java.io.UnsupportedEncodingException;
+
 import net.sourceforge.subsonic.Logger;
 import net.sourceforge.subsonic.domain.MediaFile;
 import net.sourceforge.subsonic.domain.Playlist;
 import net.sourceforge.subsonic.service.SettingsService;
-
-import java.io.IOException;
-import java.io.OutputStream;
-import java.io.UnsupportedEncodingException;
 
 import org.apache.commons.lang.StringUtils;
 

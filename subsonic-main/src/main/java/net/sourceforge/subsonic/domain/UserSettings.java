@@ -38,6 +38,7 @@ public class UserSettings {
 	private Visibility homeVisibility = new Visibility();
 	private boolean lastFmEnabled;
 	private String lastFmUsername;
+	private String spotifyUsername;
 	private TranscodeScheme transcodeScheme = TranscodeScheme.OFF;
 	private boolean partyModeEnabled;
 	private boolean nowPlayingAllowed;
@@ -455,5 +456,13 @@ public class UserSettings {
 		public void setFileSizeVisible(boolean fileSizeVisible) {
 			isFileSizeVisible = fileSizeVisible;
 		}
+	}
+
+	public String getSpotifyUsername() {
+		return spotifyUsername;
+	}
+
+	public void setSpotifyUsername(String spotifyUsername) {
+		this.spotifyUsername = spotifyUsername;
 	}
 }

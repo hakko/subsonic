@@ -18,12 +18,13 @@
  */
 package net.sourceforge.subsonic.controller;
 
+import javax.servlet.http.HttpServletRequest;
+
 import net.sourceforge.subsonic.command.AdvancedSettingsCommand;
 import net.sourceforge.subsonic.service.SettingsService;
-import org.springframework.web.servlet.mvc.SimpleFormController;
-import org.apache.commons.lang.StringUtils;
 
-import javax.servlet.http.HttpServletRequest;
+import org.apache.commons.lang.StringUtils;
+import org.springframework.web.servlet.mvc.SimpleFormController;
 
 /**
  * Controller for the page used to administrate advanced settings.

@@ -18,10 +18,10 @@
  */
 package net.sourceforge.subsonic.domain;
 
-import net.sbbi.upnp.impls.InternetGatewayDevice;
-
 import java.io.IOException;
 import java.net.InetAddress;
+
+import net.sbbi.upnp.impls.InternetGatewayDevice;
 
 /**
  * @author Sindre Mehus

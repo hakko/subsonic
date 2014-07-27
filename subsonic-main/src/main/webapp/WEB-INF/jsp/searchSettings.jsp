@@ -7,7 +7,7 @@
 
 <c:if test="${command.creatingIndex}">
 	<script type="text/javascript">
-		window.location.replace('musicCabinetSettings.view');
+		app.loadMain('musicCabinetSettings.view');
 	</script>
 </c:if>
 

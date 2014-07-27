@@ -30,8 +30,10 @@ import javax.servlet.http.HttpServletResponse;
 
 import net.sourceforge.subsonic.Logger;
 import net.sourceforge.subsonic.domain.MediaFile;
+import net.sourceforge.subsonic.domain.Player;
 import net.sourceforge.subsonic.domain.UserSettings;
 import net.sourceforge.subsonic.service.MediaFileService;
+import net.sourceforge.subsonic.service.PlayerService;
 import net.sourceforge.subsonic.service.SecurityService;
 import net.sourceforge.subsonic.service.SettingsService;
 
@@ -48,6 +50,7 @@ import com.github.hakko.musiccabinet.service.StarService;
 public class AlbumController extends ParameterizableViewController {
 
     private SecurityService securityService;
+    private PlayerService playerService;
     private SettingsService settingsService;
 	private MediaFileService mediaFileService;
 	private StarService starService;
@@ -59,6 +62,8 @@ public class AlbumController extends ParameterizableViewController {
         Map<String, Object> map = new HashMap<String, Object>();
 
         Set<Uri> artistIds = new HashSet<>();
+        
+        Player player = playerService.getPlayer(request, response);
 
         MediaFile mediaFile;
         List<MediaFile> mediaFiles = new ArrayList<>();
@@ -77,6 +82,7 @@ public class AlbumController extends ParameterizableViewController {
         		getTrackUris(mediaFiles)));
         map.put("trackId", request.getParameter("trackId"));
         map.put("albumView", true);
+        map.put("player", player);
 
         ModelAndView result = super.handleRequestInternal(request, response);
         result.addObject("model", map);
@@ -92,6 +98,10 @@ public class AlbumController extends ParameterizableViewController {
     }
     
     // Spring setters
+    
+    public void setPlayerService(PlayerService playerService) {
+        this.playerService = playerService;
+    }
 
     public void setSettingsService(SettingsService settingsService) {
         this.settingsService = settingsService;

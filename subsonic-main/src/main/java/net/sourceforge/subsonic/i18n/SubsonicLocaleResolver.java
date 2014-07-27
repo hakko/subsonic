@@ -18,12 +18,19 @@
  */
 package net.sourceforge.subsonic.i18n;
 
-import net.sourceforge.subsonic.service.*;
-import net.sourceforge.subsonic.domain.*;
-import org.springframework.web.servlet.*;
+import java.util.Arrays;
+import java.util.HashSet;
+import java.util.Locale;
+import java.util.Set;
 
-import javax.servlet.http.*;
-import java.util.*;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+import net.sourceforge.subsonic.domain.UserSettings;
+import net.sourceforge.subsonic.service.SecurityService;
+import net.sourceforge.subsonic.service.SettingsService;
+
+import org.springframework.web.servlet.LocaleResolver;
 
 /**
  * Locale resolver implementation which returns the locale selected in the settings.

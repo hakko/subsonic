@@ -25,17 +25,21 @@
   <link rel="alternate" type="application/rss+xml" title="Subsonic Podcast" href="podcast.view?suffix=.rss">
 </head>
 
+<c:set var="showRight" value="${model.showRight}" />
 <body class="bgcolor1 container">
   <div class="upper col-lg-12" data-src="top.view?" data-target="upper">
   </div>
   <div class="lower row">
     <div class="left col-lg-2" data-src="left.view?" data-target="left">
     </div>
-    <div class="middle col-lg-10">
+    <div class="middle col-lg-12">
       <div class="row">
-        <div class="main col-lg-8" data-src="nowPlaying.view?" data-target="main">
+        <div class="main col-lg-${showRight ? '8' : '12'}" data-src="nowPlaying.view?" data-target="main">
         </div>
+        <c:if test="${showRight}">
         <div class="right col-lg-4" data-src="right.view?" data-target="right">
+        </div>
+        </c:if>
         </div>
       </div>
       <div class="playlist" data-src="playlist.view?" data-target="playlist">

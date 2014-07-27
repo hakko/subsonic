@@ -1,7 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=utf-8" pageEncoding="iso-8859-1" %>
 
 	<%@ include file="include.jspf" %>
-<dv class="mainframe bgcolor1">
+<div class="mainframe bgcolor1">
 
 <%@ include file="toggleStar.jspf" %>
 
@@ -9,7 +9,7 @@
 <div style="padding: 15px;">
 
 <h1>
-<a href="#" onclick="toggleStar('art', ${model.artistUri}, '${"#starImage".concat(sub:jqesc(model.artistUri))}'); return false;">
+<a href="#" onclick="toggleStar('art', ${model.artistUri}, '#starImage${sub:jqesc(model.artistUri)}'); return false;">
 	<c:choose>
 		<c:when test="${model.artistStarred}">
 			<img id="starImage${model.artistUri}" src="<spring:theme code="ratingOnImage"/>" alt="">
@@ -105,12 +105,14 @@ ${model.artistName}
 	<sub:param name="id" value="${model.artistUri}"/>
 </sub:url>
 
-<div style="padding-top:15px"/>
+<div style="padding-top:15px">
+
+</div>
 <div class="back"><a href="${artistUrl}"><fmt:message key="common.back"/></a></div>
 
 </div>
 
-<script type="text/javascript" language="javascript">
+<script type="text/javascript">
     function init() {
         dwr.engine.setErrorHandler(null);
   	}

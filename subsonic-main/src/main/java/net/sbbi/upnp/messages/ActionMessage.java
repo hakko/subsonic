@@ -47,17 +47,31 @@
  */
 package net.sbbi.upnp.messages;
 
-import java.util.*;
-import java.io.*;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.io.StringReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.Iterator;
+import java.util.List;
+
+import javax.xml.parsers.ParserConfigurationException;
+import javax.xml.parsers.SAXParser;
+import javax.xml.parsers.SAXParserFactory;
+
+import net.sbbi.upnp.services.ISO8601Date;
+import net.sbbi.upnp.services.ServiceAction;
+import net.sbbi.upnp.services.ServiceActionArgument;
+import net.sbbi.upnp.services.ServiceStateVariable;
+import net.sbbi.upnp.services.UPNPService;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.xml.sax.*;
-import net.sbbi.upnp.services.*;
-
-import javax.xml.parsers.*;
+import org.xml.sax.InputSource;
+import org.xml.sax.SAXException;
 
 /**
  * Message object for an UPNP action, simply call setInputParameter() to add

@@ -18,13 +18,14 @@
  */
 package net.sourceforge.subsonic.dao.schema;
 
-import net.sourceforge.subsonic.Logger;
-import org.apache.commons.io.IOUtils;
-import org.springframework.jdbc.core.JdbcTemplate;
-
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Date;
+
+import net.sourceforge.subsonic.Logger;
+
+import org.apache.commons.io.IOUtils;
+import org.springframework.jdbc.core.JdbcTemplate;
 
 /**
  * Used for creating and evolving the database schema.

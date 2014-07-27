@@ -56,7 +56,7 @@ public class MultiController extends MultiActionController {
             return new ModelAndView(new RedirectView("j_spring_security_check?j_username=" + username +
                     "&j_password=" + password + "&_spring_security_remember_me=checked"));
         }
-
+        
         Map<String, Object> map = new HashMap<String, Object>();
         map.put("logout", request.getParameter("logout") != null);
         map.put("error", request.getParameter("error") != null);

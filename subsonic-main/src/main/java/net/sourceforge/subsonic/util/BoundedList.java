@@ -18,7 +18,7 @@
  */
 package net.sourceforge.subsonic.util;
 
-import java.util.*;
+import java.util.LinkedList;
 
 /**
  * Simple implementation of a bounded list. If the maximum size is reached, adding a new element will

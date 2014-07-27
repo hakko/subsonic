@@ -19,6 +19,7 @@
 package net.sourceforge.subsonic.dao.schema;
 
 import net.sourceforge.subsonic.Logger;
+
 import org.springframework.jdbc.core.JdbcTemplate;
 
 /**

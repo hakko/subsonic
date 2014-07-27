@@ -22,10 +22,10 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.List;
 
-import org.springframework.jdbc.core.simple.ParameterizedRowMapper;
-
 import net.sourceforge.subsonic.Logger;
 import net.sourceforge.subsonic.domain.Transcoding;
+
+import org.springframework.jdbc.core.simple.ParameterizedRowMapper;
 
 /**
  * Provides database services for transcoding configurations.

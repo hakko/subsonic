@@ -261,7 +261,7 @@ public class StreamController implements Controller {
 		if (!parameters.isDownsample() && !parameters.isTranscode()) {
 			return file.length();
 		}
-		Integer duration = file.getMetaData().getDuration();
+		Short duration = file.getMetaData().getDuration();
 		Integer maxBitRate = parameters.getMaxBitRate();
 
 		if (duration == null) {
@@ -304,8 +304,8 @@ public class StreamController implements Controller {
 		}
 
 		try {
-			Integer duration = file.getMetaData().getDuration();
-			Long fileSize = file.getMetaData().getFileSize();
+			Short duration = file.getMetaData().getDuration();
+			Long fileSize = file.getMetaData().getSize();
 			if (duration == null || fileSize == null) {
 				return null;
 			}

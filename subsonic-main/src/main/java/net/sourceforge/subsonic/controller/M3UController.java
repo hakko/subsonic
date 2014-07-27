@@ -18,22 +18,25 @@
  */
 package net.sourceforge.subsonic.controller;
 
+import java.io.IOException;
+import java.io.PrintWriter;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
 import net.sourceforge.subsonic.Logger;
 import net.sourceforge.subsonic.domain.MediaFile;
-import net.sourceforge.subsonic.domain.MetaData;
 import net.sourceforge.subsonic.domain.Player;
 import net.sourceforge.subsonic.domain.Playlist;
 import net.sourceforge.subsonic.service.PlayerService;
 import net.sourceforge.subsonic.service.SettingsService;
 import net.sourceforge.subsonic.service.TranscodingService;
 import net.sourceforge.subsonic.util.StringUtil;
+
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.Controller;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import java.io.IOException;
-import java.io.PrintWriter;
+import com.github.hakko.musiccabinet.domain.model.library.MetaData;
 
 /**
  * Controller which produces the M3U playlist.
@@ -82,7 +85,7 @@ public class M3UController implements Controller {
         out.println("#EXTM3U");
         for (MediaFile mediaFile : player.getPlaylist().getFiles()) {
             MetaData metaData = mediaFile.getMetaData();
-            Integer duration = metaData.getDuration();
+            Short duration = metaData.getDuration();
             if (duration == null) {
                 duration = -1;
             }

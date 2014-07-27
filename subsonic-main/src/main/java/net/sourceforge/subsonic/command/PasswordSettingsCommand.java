@@ -18,7 +18,7 @@
  */
 package net.sourceforge.subsonic.command;
 
-import net.sourceforge.subsonic.controller.*;
+import net.sourceforge.subsonic.controller.PasswordSettingsController;
 
 /**
  * Command used in {@link PasswordSettingsController}.

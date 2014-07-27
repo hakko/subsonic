@@ -26,6 +26,9 @@ import java.util.List;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import net.sourceforge.subsonic.domain.User;
+import net.sourceforge.subsonic.service.SecurityService;
+
 import org.jfree.chart.ChartFactory;
 import org.jfree.chart.ChartUtilities;
 import org.jfree.chart.JFreeChart;
@@ -39,9 +42,6 @@ import org.jfree.chart.renderer.category.BarRenderer;
 import org.jfree.data.category.CategoryDataset;
 import org.jfree.data.category.DefaultCategoryDataset;
 import org.springframework.web.servlet.ModelAndView;
-
-import net.sourceforge.subsonic.domain.User;
-import net.sourceforge.subsonic.service.SecurityService;
 
 /**
  * Controller for generating a chart showing bitrate vs time.

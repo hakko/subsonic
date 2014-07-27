@@ -18,15 +18,6 @@
  */
 package net.sourceforge.subsonic.controller;
 
-import net.sourceforge.subsonic.domain.Playlist;
-import net.sourceforge.subsonic.service.PlaylistService;
-import net.sourceforge.subsonic.service.SettingsService;
-import net.sourceforge.subsonic.util.StringUtil;
-import org.springframework.web.servlet.ModelAndView;
-import org.springframework.web.servlet.mvc.ParameterizableViewController;
-
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 import java.io.File;
 import java.net.URLEncoder;
 import java.text.DateFormat;
@@ -37,6 +28,17 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+import net.sourceforge.subsonic.domain.Playlist;
+import net.sourceforge.subsonic.service.PlaylistService;
+import net.sourceforge.subsonic.service.SettingsService;
+import net.sourceforge.subsonic.util.StringUtil;
+
+import org.springframework.web.servlet.ModelAndView;
+import org.springframework.web.servlet.mvc.ParameterizableViewController;
 
 /**
  * Controller for the page used to generate the Podcast XML file.

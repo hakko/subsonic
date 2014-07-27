@@ -23,9 +23,6 @@ import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
 
-import org.apache.commons.lang.StringUtils;
-import org.springframework.web.servlet.mvc.SimpleFormController;
-
 import net.sourceforge.subsonic.command.PlayerSettingsCommand;
 import net.sourceforge.subsonic.domain.CoverArtScheme;
 import net.sourceforge.subsonic.domain.Player;
@@ -36,6 +33,9 @@ import net.sourceforge.subsonic.domain.User;
 import net.sourceforge.subsonic.service.PlayerService;
 import net.sourceforge.subsonic.service.SecurityService;
 import net.sourceforge.subsonic.service.TranscodingService;
+
+import org.apache.commons.lang.StringUtils;
+import org.springframework.web.servlet.mvc.SimpleFormController;
 
 /**
  * Controller for the player settings page.

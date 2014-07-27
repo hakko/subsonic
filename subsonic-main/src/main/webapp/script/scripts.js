@@ -155,14 +155,25 @@ var app = (function() {
   $ = this.jQuery;
   var module = {};
   
+  module.pleaseWaitDiv = $('<div class="modal" id="pleaseWaitDialog" data-backdrop="static" data-keyboard="false"><div class="modal-header"><h1>Loading...</h1></div><div class="modal-body"><div class="progress progress-striped active"><div class="bar" style="width: 100%;"></div></div></div></div>');
+  module.showPleaseWait = function() {
+          module.pleaseWaitDiv.modal();
+  };
+  module.hidePleaseWait = function () {
+          module.pleaseWaitDiv.modal('hide');
+  };
+  
   module.loadMain = function(path, type, data) {
     if(!type) {
       type = 'GET';
     }
     module.loadIndex(true);
     try {
+      module.showPleaseWait();
     $.when($.ajax( path, {type: type, data: data})).then(function( data, textStatus, jqXHR ) {
+      jQuery('div.left').hide();
       jQuery('div.main').html(data);
+      module.hidePleaseWait();
     });
     } catch(e) {
       window.console.log.error(e);
@@ -208,6 +219,7 @@ var app = (function() {
     }
     // we should test if this is already loaded
     $.when( $.ajax( url ) ).then(function( data, textStatus, jqXHR ) {
+      jQuery('div.left').hide();
       jQuery('div.main').html(data);
       // we should do the expansion here
       if(albumId) {
@@ -217,13 +229,19 @@ var app = (function() {
       }
     });
   }
-  module.loadHome = function(listType, listGroup) {
+  module.loadHome = function(listType, listGroup, query, page) {
     var url = "home.view";
-    if(listType) {
+    if (listType) {
       url += "?listType=" + listType;
     }
-    if(listGroup) {
+    if (listGroup) {
       url += "&listGroup=" + listGroup;
+    }
+    if (query) {
+      url += "&query=" + query;
+    }
+    if (page) {
+      url += "&page=" + page;
     }
     module.loadMain(url);
   }
@@ -314,9 +332,9 @@ var app = (function() {
     module.loadMain(url);
   }
   
-  module.editTags = function(id, albumId, artistId, albumId) {
+  module.editTags = function(id, albumId, artistId) {
     var url = "editTags.view";
-    url += "?idsUtf8Hex=" + albumId + "&artistIdUtf8Hex=" + artistId + "&albumIdUtf8Hex=" + albumId;
+    url += "?idsUtf8Hex=" + id + "&artistIdUtf8Hex=" + artistId + "&albumIdUtf8Hex=" + albumId;
     module.loadMain(url);
   }
   
@@ -335,6 +353,7 @@ var app = (function() {
       '/home': module.loadHome,
       '/home/listType/:type': module.loadHome,
       '/home/listType/:type/listGroup/:group': module.loadHome,
+      '/home/listType/:type/listGroup/:group/query/:query/page/:page': module.loadHome,
       '/changeCoverArt/idUtf8Hex/:id/artistIdUtf8Hex/:artistId/albumIdUtf8Hex/:albumId': module.changeCoverArt,
       '/editTags/idsUtf8Hex/:id/artistIdUtf8Hex/:artistId/albumIdUtf8Hex/:albumId': module.editTags,
       '/createShare/idsUtf8Hex/:id': module.createShare,
@@ -389,4 +408,10 @@ function scrollArtist(uri) {
   // 220 is magic and should be fixed.
   window.console.log(uri);
   parent.scrollTop(jQuery("a[data-artist=" + uri + "]").offset().top - 228);
+}
+function toggleLeft() {
+  jQuery('div.left').height($('body').height() - 93);
+  jQuery('div.left').toggle('slide', {'direction': 'left'}, 1000);
+  jQuery('div.left').toggle();
+  return false;
 }

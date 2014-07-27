@@ -42,6 +42,14 @@
             dwr.util.setValue("genre" + i, genre);
         }
     }
+    
+    function setExplicit() {
+        var explicit = dwr.util.getValue("explicitAll");
+        for (i = 0; i < fileCount; i++) {
+            dwr.util.setValue("explicit" + i, explicit);
+        }
+    }
+    
     function suggestTitle() {
         for (i = 0; i < fileCount; i++) {
             var title = dwr.util.getValue("suggestedTitle" + i);
@@ -85,8 +93,11 @@
         var title = dwr.util.getValue("title" + index);
         var year = dwr.util.getValue("year" + index);
         var genre = dwr.util.getValue("genre" + index);
+        var explicitArray = dwr.util.getValue("explicit" + index);
+        var explicit = explicitArray[0];
+        window.console.log(explicit);
         dwr.util.setValue("status" + index, "<fmt:message key="edittags.working"/>");
-        tagService.setTags(id, track, artist, albumartist, composer, album, title, year, genre, setTagsCallback);
+        tagService.setTags(id, track, artist, albumartist, composer, album, title, year, genre, explicit, setTagsCallback);
     }
     function setTagsCallback(result) {
         var message;
@@ -105,19 +116,22 @@
         if (index < fileCount) {
             updateNextTag();
         } else {
-            document.getElementById("save").disabled = false;
+            tagService.scanUpdatedFolders(finishedCallback);
         }
+    }
+    function finishedCallback(result) {
+      document.getElementById("save").disabled = false;
     }
 </script>
 
 <h1><fmt:message key="edittags.title"/></h1>
 <sub:url value="artist.view" var="backUrl">
-	<sub:param name="id" value="${model.artistUri}"/>
-	<sub:param name="albumId" value="${model.albumUri}"/>
+	<sub:param name="id" value="${model.artistId}"/>
+	<sub:param name="albumId" value="${model.albumId}"/>
 </sub:url>
 <div class="back"><a href="${backUrl}"><fmt:message key="common.back"/></a></div>
 
-<table class="ruleTable indent">
+<table class="ruleTable indent table-condensed table-hover">
     <tr>
         <th class="ruleTableHeader"><fmt:message key="edittags.file"/></th>
         <th class="ruleTableHeader"><fmt:message key="edittags.track"/></th>
@@ -128,6 +142,7 @@
         <th class="ruleTableHeader"><fmt:message key="edittags.album"/></th>
         <th class="ruleTableHeader"><fmt:message key="edittags.year"/></th>
         <th class="ruleTableHeader"><fmt:message key="edittags.genre"/></th>
+        <th class="ruleTableHeader"><fmt:message key="edittags.explicit"/></th>
         <th class="ruleTableHeader" width="60pt"><fmt:message key="edittags.status"/></th>
     </tr>
     <tr>
@@ -151,13 +166,11 @@
 
             <a href="javascript:setGenre()"><fmt:message key="edittags.set"/></a>
         </th>
+        <th class="ruleTableHeader" style="white-space: nowrap"><input type="checkbox" name="explicitAll" onkeypress="dwr.util.onReturn(event, setExplicit)" value="${model.defaultExplicit}"/>&nbsp;<a href="javascript:setExplicit()"><fmt:message key="edittags.set"/></a></th>
         <th class="ruleTableHeader"/>
     </tr>
 
 	<c:forEach items="${model.songs}" var="song" varStatus="loopStatus">
-	<tr>
-	  <td colspan="10" class="ruleTableCell" title="${song.fileName}"><str:truncateNicely lower="25" upper="25" var="fileName">${song.fileName}</str:truncateNicely> ${fileName}</td>
-	  </tr>
 	<tr>
             <str:truncateNicely lower="25" upper="25" var="fileName">${song.fileName}</str:truncateNicely>
             <input type="hidden" name="id${loopStatus.count - 1}" value="${song.uri}"/>
@@ -174,6 +187,7 @@
             <td class="ruleTableCell"><input type="text" size="15" name="album${loopStatus.count - 1}" value="${song.album}"/></td>
             <td class="ruleTableCell"><input type="text" size="5"  name="year${loopStatus.count - 1}" value="${song.year}"/></td>
             <td class="ruleTableCell"><input type="text" name="genre${loopStatus.count - 1}" value="${song.genre}" style="width:7em"/></td>
+            <td class="ruleTableCell"><input type="checkbox" name="explicit${loopStatus.count - 1}" value="1" ${song.explicit == 1 ? 'explicit="explicit"' : ''}/>${song.explicit}</td>
             <td class="ruleTableCell"><div id="status${loopStatus.count - 1}"/></td>
 	</tr>
 	</c:forEach>

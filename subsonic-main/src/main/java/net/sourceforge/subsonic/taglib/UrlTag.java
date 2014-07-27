@@ -18,21 +18,23 @@
  */
 package net.sourceforge.subsonic.taglib;
 
-import net.sourceforge.subsonic.Logger;
-import net.sourceforge.subsonic.filter.ParameterDecodingFilter;
-import net.sourceforge.subsonic.util.StringUtil;
-import org.apache.taglibs.standard.tag.common.core.UrlSupport;
-import org.apache.commons.lang.CharUtils;
-
-import javax.servlet.jsp.JspException;
-import javax.servlet.jsp.JspTagException;
-import javax.servlet.jsp.PageContext;
-import javax.servlet.jsp.tagext.BodyTagSupport;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.List;
+
+import javax.servlet.jsp.JspException;
+import javax.servlet.jsp.JspTagException;
+import javax.servlet.jsp.PageContext;
+import javax.servlet.jsp.tagext.BodyTagSupport;
+
+import net.sourceforge.subsonic.Logger;
+import net.sourceforge.subsonic.filter.ParameterDecodingFilter;
+import net.sourceforge.subsonic.util.StringUtil;
+
+import org.apache.commons.lang.CharUtils;
+import org.apache.taglibs.standard.tag.common.core.UrlSupport;
 
 /**
  * Creates a URL with optional query parameters. Similar to 'c:url', but

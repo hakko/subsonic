@@ -19,9 +19,10 @@
 package net.sourceforge.subsonic.service.metadata;
 
 import static org.apache.commons.lang.StringUtils.defaultIfEmpty;
-
 import net.sourceforge.subsonic.domain.MediaFile;
-import net.sourceforge.subsonic.domain.MetaData;
+
+import com.github.hakko.musiccabinet.dao.LibraryAdditionDao;
+import com.github.hakko.musiccabinet.domain.model.library.MetaData;
 
 /**
  * Parses meta data from media files.
@@ -29,6 +30,8 @@ import net.sourceforge.subsonic.domain.MetaData;
  * @author Sindre Mehus
  */
 public abstract class MetaDataParser {
+
+	private LibraryAdditionDao libraryAdditionDao;
 
     /**
      * Parses meta data for the given music file.
@@ -42,6 +45,12 @@ public abstract class MetaDataParser {
         String artist = defaultIfEmpty(metaData.getArtist(), "[unknown artist]");
         String album = defaultIfEmpty(metaData.getAlbum(), "[unknown album]");
         String title = defaultIfEmpty(metaData.getTitle(), file.getName());
+        if(title.endsWith("[Explicit]")) {
+        	metaData.setExplicit(1);
+        }
+        else if(title.endsWith("[Clean]")) {
+        	metaData.setExplicit(2);
+        }
 
         metaData.setArtist(artist);
         metaData.setAlbum(album);
@@ -64,7 +73,9 @@ public abstract class MetaDataParser {
      * @param file     The music file to update.
      * @param metaData The new meta data.
      */
-    public abstract void setMetaData(MediaFile file, MetaData metaData);
+    public void setMetaData(MediaFile file, MetaData metaData) {
+    	libraryAdditionDao.updateMetadata(file.getParent().getPath(), file.getName(), metaData);
+    }
 
     /**
      * Returns whether this parser is applicable to the given file.
@@ -89,9 +100,17 @@ public abstract class MetaDataParser {
      */
     protected MetaData getBasicMetaData(MediaFile file) {
         MetaData metaData = new MetaData();
-        metaData.setFileSize(file.length());
-        metaData.setFormat(file.getSuffix());
+        metaData.setSize(file.length());
+        metaData.setMediaType(file.getSuffix());
         return metaData;
     }
+
+	public LibraryAdditionDao getLibraryAdditionDao() {
+		return libraryAdditionDao;
+	}
+
+	public void setLibraryAdditionDao(LibraryAdditionDao libraryAdditionDao) {
+		this.libraryAdditionDao = libraryAdditionDao;
+	}
 
 }

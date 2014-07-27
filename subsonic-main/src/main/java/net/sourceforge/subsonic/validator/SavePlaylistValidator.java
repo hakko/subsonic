@@ -18,12 +18,14 @@
  */
 package net.sourceforge.subsonic.validator;
 
-import net.sourceforge.subsonic.command.*;
-import net.sourceforge.subsonic.controller.*;
-import net.sourceforge.subsonic.service.*;
-import org.springframework.validation.*;
+import java.io.File;
 
-import java.io.*;
+import net.sourceforge.subsonic.command.SavePlaylistCommand;
+import net.sourceforge.subsonic.controller.SavePlaylistController;
+import net.sourceforge.subsonic.service.PlaylistService;
+
+import org.springframework.validation.Errors;
+import org.springframework.validation.Validator;
 
 /**
  * Validator for {@link SavePlaylistController}.

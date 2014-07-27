@@ -20,7 +20,8 @@ package net.sourceforge.subsonic.dao;
 
 import java.util.List;
 
-import org.springframework.jdbc.core.*;
+import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.RowMapper;
 
 /**
  * Abstract superclass for all DAO's.

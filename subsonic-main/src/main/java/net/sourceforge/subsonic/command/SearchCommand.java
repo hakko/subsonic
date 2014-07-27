@@ -20,6 +20,7 @@ package net.sourceforge.subsonic.command;
 
 import java.util.List;
 
+import net.sourceforge.subsonic.controller.SearchController;
 import net.sourceforge.subsonic.domain.Player;
 import net.sourceforge.subsonic.domain.User;
 

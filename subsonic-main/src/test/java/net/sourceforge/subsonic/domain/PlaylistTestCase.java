@@ -30,6 +30,8 @@ import net.sourceforge.subsonic.domain.Playlist.Status;
 
 import org.junit.Test;
 
+import com.github.hakko.musiccabinet.domain.model.library.MetaData;
+
 /**
  * Unit test of {@link Playlist}.
  *
@@ -229,20 +231,20 @@ public class PlaylistTestCase {
     @Test
     public void testOrder() throws IOException {
         Playlist playlist = new Playlist();
-        playlist.addFiles(Playlist.ADD, new TestMediaFile(2, "Artist A", "Album B"));
-        playlist.addFiles(Playlist.ADD, new TestMediaFile(1, "Artist C", "Album C"));
-        playlist.addFiles(Playlist.ADD, new TestMediaFile(3, "Artist B", "Album A"));
+        playlist.addFiles(Playlist.ADD, new TestMediaFile((short)2, "Artist A", "Album B"));
+        playlist.addFiles(Playlist.ADD, new TestMediaFile((short)1, "Artist C", "Album C"));
+        playlist.addFiles(Playlist.ADD, new TestMediaFile((short)3, "Artist B", "Album A"));
         playlist.addFiles(Playlist.ADD, new TestMediaFile(null, "Artist D", "Album D"));
         playlist.setIndex(2);
-        assertEquals("Error in sort.", new Integer(3), playlist.getCurrentFile().getMetaData().getTrackNumber());
+        assertEquals("Error in sort.", new Short((short)3), playlist.getCurrentFile().getMetaData().getTrackNr());
 
         // Order by track.
         playlist.sort(SortOrder.TRACK);
-        assertEquals("Error in sort().", null, playlist.getFile(0).getMetaData().getTrackNumber());
-        assertEquals("Error in sort().", new Integer(1), playlist.getFile(1).getMetaData().getTrackNumber());
-        assertEquals("Error in sort().", new Integer(2), playlist.getFile(2).getMetaData().getTrackNumber());
-        assertEquals("Error in sort().", new Integer(3), playlist.getFile(3).getMetaData().getTrackNumber());
-        assertEquals("Error in sort().", new Integer(3), playlist.getCurrentFile().getMetaData().getTrackNumber());
+        assertEquals("Error in sort().", null, playlist.getFile(0).getMetaData().getTrackNr());
+        assertEquals("Error in sort().", new Short((short)1), playlist.getFile(1).getMetaData().getTrackNr());
+        assertEquals("Error in sort().", new Short((short)2), playlist.getFile(2).getMetaData().getTrackNr());
+        assertEquals("Error in sort().", new Short((short)3), playlist.getFile(3).getMetaData().getTrackNr());
+        assertEquals("Error in sort().", new Short((short)3), playlist.getCurrentFile().getMetaData().getTrackNr());
 
         // Order by artist.
         playlist.sort(SortOrder.ARTIST);
@@ -250,7 +252,7 @@ public class PlaylistTestCase {
         assertEquals("Error in sort().", "Artist B", playlist.getFile(1).getMetaData().getArtist());
         assertEquals("Error in sort().", "Artist C", playlist.getFile(2).getMetaData().getArtist());
         assertEquals("Error in sort().", "Artist D", playlist.getFile(3).getMetaData().getArtist());
-        assertEquals("Error in sort().", new Integer(3), playlist.getCurrentFile().getMetaData().getTrackNumber());
+        assertEquals("Error in sort().", new Short((short)3), playlist.getCurrentFile().getMetaData().getTrackNr());
 
         // Order by album.
         playlist.sort(SortOrder.ALBUM);
@@ -258,7 +260,7 @@ public class PlaylistTestCase {
         assertEquals("Error in sort().", "Album B", playlist.getFile(1).getMetaData().getAlbum());
         assertEquals("Error in sort().", "Album C", playlist.getFile(2).getMetaData().getAlbum());
         assertEquals("Error in sort().", "Album D", playlist.getFile(3).getMetaData().getAlbum());
-        assertEquals("Error in sort().", new Integer(3), playlist.getCurrentFile().getMetaData().getTrackNumber());
+        assertEquals("Error in sort().", new Short((short)3), playlist.getCurrentFile().getMetaData().getTrackNr());
     }
 
     private void assertPlaylistEquals(Playlist playlist, int index, String... songs) {
@@ -295,10 +297,10 @@ public class PlaylistTestCase {
             this.name = name;
         }
 
-        TestMediaFile(Integer track, String artist, String album) {
+        TestMediaFile(Short track, String artist, String album) {
             metaData = new MetaData();
             if (track != null) {
-                metaData.setTrackNumber(track);
+                metaData.setTrackNr(track);
             }
             metaData.setArtist(artist);
             metaData.setAlbum(album);

@@ -11,7 +11,6 @@
     var slider = null;
 </script>
 
-
 <div class="bgcolor2 playlistframe">
 
 
@@ -232,6 +231,10 @@
                 getPlaylist();
             }
         );        
+        jwplayer('mediaplayer').onPlaylistItem(function(e) {
+          var item = this.getPlaylistItem(e.index);
+          return false;
+        });
         jwplayer('mediaplayer').onComplete(
             function(event) {
                 onNext(repeatEnabled);

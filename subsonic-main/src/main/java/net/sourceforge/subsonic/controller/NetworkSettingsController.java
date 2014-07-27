@@ -22,12 +22,12 @@ import java.util.Random;
 
 import javax.servlet.http.HttpServletRequest;
 
-import org.apache.commons.lang.StringUtils;
-import org.springframework.web.servlet.mvc.SimpleFormController;
-
 import net.sourceforge.subsonic.command.NetworkSettingsCommand;
 import net.sourceforge.subsonic.service.NetworkService;
 import net.sourceforge.subsonic.service.SettingsService;
+
+import org.apache.commons.lang.StringUtils;
+import org.springframework.web.servlet.mvc.SimpleFormController;
 
 /**
  * Controller for the page used to change the network settings.

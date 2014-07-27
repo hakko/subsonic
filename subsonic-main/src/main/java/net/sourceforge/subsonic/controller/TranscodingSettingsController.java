@@ -18,17 +18,19 @@
  */
 package net.sourceforge.subsonic.controller;
 
-import net.sourceforge.subsonic.domain.Transcoding;
-import net.sourceforge.subsonic.service.TranscodingService;
-import net.sourceforge.subsonic.service.SettingsService;
-import org.apache.commons.lang.StringUtils;
-import org.springframework.web.servlet.ModelAndView;
-import org.springframework.web.servlet.mvc.ParameterizableViewController;
+import java.util.HashMap;
+import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.util.HashMap;
-import java.util.Map;
+
+import net.sourceforge.subsonic.domain.Transcoding;
+import net.sourceforge.subsonic.service.SettingsService;
+import net.sourceforge.subsonic.service.TranscodingService;
+
+import org.apache.commons.lang.StringUtils;
+import org.springframework.web.servlet.ModelAndView;
+import org.springframework.web.servlet.mvc.ParameterizableViewController;
 
 /**
  * Controller for the page used to administrate the set of transcoding configurations.

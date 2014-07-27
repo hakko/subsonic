@@ -18,9 +18,10 @@
  */
 package net.sourceforge.subsonic.command;
 
-import net.sourceforge.subsonic.controller.*;
-import net.sourceforge.subsonic.domain.*;
-import org.springframework.util.*;
+import net.sourceforge.subsonic.controller.SavePlaylistController;
+import net.sourceforge.subsonic.domain.Playlist;
+
+import org.springframework.util.StringUtils;
 
 /**
  * Command used in {@link SavePlaylistController}.

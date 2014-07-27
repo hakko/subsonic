@@ -18,9 +18,9 @@
  */
 package net.sourceforge.subsonic.domain;
 
-import org.apache.commons.lang.StringUtils;
-
 import java.util.Date;
+
+import org.apache.commons.lang.StringUtils;
 
 /**
  * Represens a remote player.  A player has a unique ID, a user-defined name, a logged-on user,

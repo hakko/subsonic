@@ -24,12 +24,12 @@ import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import net.sourceforge.subsonic.domain.UserSettings;
+import net.sourceforge.subsonic.service.SecurityService;
+import net.sourceforge.subsonic.service.SettingsService;
+
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.ParameterizableViewController;
-
-import net.sourceforge.subsonic.domain.UserSettings;
-import net.sourceforge.subsonic.service.SettingsService;
-import net.sourceforge.subsonic.service.SecurityService;
 
 /**
  * Controller for the right frame.

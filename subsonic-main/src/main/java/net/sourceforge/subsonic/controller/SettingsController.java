@@ -18,13 +18,15 @@
  */
 package net.sourceforge.subsonic.controller;
 
-import net.sourceforge.subsonic.domain.*;
-import net.sourceforge.subsonic.service.*;
-import org.springframework.web.servlet.*;
-import org.springframework.web.servlet.view.*;
-import org.springframework.web.servlet.mvc.*;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
-import javax.servlet.http.*;
+import net.sourceforge.subsonic.domain.User;
+import net.sourceforge.subsonic.service.SecurityService;
+
+import org.springframework.web.servlet.ModelAndView;
+import org.springframework.web.servlet.mvc.AbstractController;
+import org.springframework.web.servlet.view.RedirectView;
 
 /**
  * Controller for the main settings page.

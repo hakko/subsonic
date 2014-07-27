@@ -72,18 +72,20 @@ public class VideoPlayerController extends ParameterizableViewController {
 
         int timeOffset = ServletRequestUtils.getIntParameter(request, "timeOffset", 0);
         timeOffset = Math.max(0, timeOffset);
-        Integer duration = file.getMetaData().getDuration();
+        Short duration = file.getMetaData().getDuration();
+        short durationSeconds = 0;
         if (duration != null) {
+        	durationSeconds = duration.shortValue();
             map.put("skipOffsets", createSkipOffsets(duration));
             timeOffset = Math.min(duration, timeOffset);
-            duration -= timeOffset;
+            durationSeconds -= timeOffset;
         }
 
         map.put("video", file);
         map.put("player", playerService.getPlayer(request, response).getId());
         map.put("maxBitRate", ServletRequestUtils.getIntParameter(request, "maxBitRate", DEFAULT_BIT_RATE));
         map.put("popout", ServletRequestUtils.getBooleanParameter(request, "popout", false));
-        map.put("duration", duration);
+        map.put("duration", durationSeconds);
         map.put("timeOffset", timeOffset);
         map.put("bitRates", BIT_RATES);
 

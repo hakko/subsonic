@@ -18,11 +18,12 @@
  */
 package net.sourceforge.subsonic.ajax;
 
-import net.sourceforge.subsonic.domain.*;
-import net.sourceforge.subsonic.controller.*;
-import org.directwebremoting.*;
+import javax.servlet.http.HttpSession;
 
-import javax.servlet.http.*;
+import net.sourceforge.subsonic.controller.UploadController;
+import net.sourceforge.subsonic.domain.TransferStatus;
+
+import org.directwebremoting.WebContextFactory;
 
 /**
  * Provides AJAX-enabled services for retrieving the status of ongoing transfers.

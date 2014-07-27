@@ -47,16 +47,21 @@
  */
 package net.sbbi.upnp.devices;
 
-import java.net.*;
-import java.util.*;
-import java.io.*;
-
-import org.apache.commons.jxpath.*;
-import org.apache.commons.jxpath.xml.*;
-import org.apache.commons.logging.*;
+import java.io.IOException;
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.util.ArrayList;
 
 import net.sbbi.upnp.JXPathParser;
-import net.sbbi.upnp.services.*;
+import net.sbbi.upnp.services.UPNPService;
+
+import org.apache.commons.jxpath.Container;
+import org.apache.commons.jxpath.JXPathContext;
+import org.apache.commons.jxpath.JXPathException;
+import org.apache.commons.jxpath.Pointer;
+import org.apache.commons.jxpath.xml.DocumentContainer;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 
 /**
  * Root UPNP device that is contained in a device definition file.

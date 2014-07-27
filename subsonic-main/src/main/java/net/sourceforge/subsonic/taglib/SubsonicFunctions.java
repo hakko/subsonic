@@ -4,12 +4,11 @@ package net.sourceforge.subsonic.taglib;
 import java.util.List;
 
 import net.sourceforge.subsonic.domain.Album;
+import net.sourceforge.subsonic.domain.MediaFile;
 import net.sourceforge.subsonic.util.StringUtil;
 
 import org.apache.commons.lang.StringEscapeUtils;
-
-import com.github.hakko.musiccabinet.configuration.Uri;
-import com.github.hakko.musiccabinet.dao.util.URIUtil;
+import org.apache.commons.lang3.StringUtils;
 
 
 public class SubsonicFunctions {
@@ -63,8 +62,12 @@ public class SubsonicFunctions {
 		return unescaped.replace("" + ':', "" + '\\' + '\\' + ':');
 	}
 	
-	public static boolean isSpotify(Uri uri) {
-		return URIUtil.isSpotify(uri);
+	public static boolean isSpotify(Album album) {
+		return album.getSpotifyUri() != null && StringUtils.isNotBlank(album.getSpotifyUri().toString());
+	}
+	
+	public static boolean isSpotifyFile(MediaFile file) {
+		return file.isSpotify();
 	}
 	
 	public static String hex(String unescaped) {

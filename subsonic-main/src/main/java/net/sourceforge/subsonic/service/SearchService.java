@@ -131,6 +131,7 @@ public class SearchService {
 		
 		spotifySettingsService.setSpotifyCache(settingsService.getSpotifyCache());
 		spotifySettingsService.setSpotifyUserName(settingsService.getSpotifyUserName());
+		spotifySettingsService.setSpotifyUsers(settingsService.getAllSpotifyUsers());
     }
 
     /**
