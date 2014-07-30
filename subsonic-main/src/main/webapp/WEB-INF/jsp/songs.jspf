@@ -30,7 +30,11 @@
 	
 	<c:set var="spanClass" value="detail"/><c:if test="${model.trackUri eq mediaFile.uri}"><c:set var="spanClass" value="detailSelected"/></c:if>
 	<c:if test="${model.visibility.trackNumberVisible}"><td class="trackNumber"><span class="${spanClass}">${mediaFile.metaData.trackNr}</span></td></c:if>
-	<td class="title"><span class="${spanClass}" title="${mediaFile.title}"><str:truncateNicely upper="${cutoff}">${fn:escapeXml(mediaFile.title)}</str:truncateNicely></span></td>
+	<td class="title"><span class="${spanClass}" title="${mediaFile.title}"><str:truncateNicely upper="${cutoff}">${fn:escapeXml(fn:replace(mediaFile.title, '[Explicit]',''))}</str:truncateNicely></span>
+    <c:if test="${mediaFile.metaData.explicit}">
+      <span class="btn-xs btn-danger">EXPLICIT</span>
+    </c:if>
+  </td>
 	<c:if test="${model.visibility.albumVisible}"><td class="album"><span class="${spanClass}" title="${mediaFile.metaData.album}"><str:truncateNicely upper="${cutoff}">${fn:escapeXml(mediaFile.metaData.album)}</str:truncateNicely></span></td></c:if>
 	<c:if test="${model.visibility.artistVisible and model.multipleArtists}"><td class="artist"><span class="${spanClass}" title="${mediaFile.metaData.artist}"><str:truncateNicely upper="${cutoff}">${fn:escapeXml(mediaFile.metaData.artist)}</str:truncateNicely></span></td></c:if>
 	<c:if test="${model.visibility.composerVisible}"><td class="composer"><span class="${spanClass}" title="${mediaFile.metaData.composer}"><str:truncateNicely upper="${cutoff}">${fn:escapeXml(mediaFile.metaData.composer)}</str:truncateNicely></span></td></c:if>
