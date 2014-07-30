@@ -3,7 +3,9 @@
 	<c:forEach items="${model.albums}" var="album" varStatus="loopStatus">
                 <c:choose>
                     <c:when test="${not empty album.coverArtUrl}">
-                        <c:set var="coverArtUrl">${album.coverArtUrl}</c:set>
+                        <sub:url value="coverArt.view" var="coverArtUrl" hashurl="false">
+                            <sub:param name="path" value="${album.coverArtUrl}" />
+                        </sub:url>
                     </c:when>
                     <c:otherwise>
                         <sub:url value="coverArt.view" var="coverArtUrl" hashurl="false">

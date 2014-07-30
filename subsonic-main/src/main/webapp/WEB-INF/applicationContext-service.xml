@@ -504,6 +504,7 @@
         <property name="jdbcLibraryBrowserDao" ref="jdbcLibraryBrowserDao" />
         <property name="webserviceHistoryService" ref="webserviceHistoryService"/>
         <property name="libraryAdditionDao" ref="libraryAdditionDao"/>
+        <property name="albumInfoDao" ref="albumInfoDao"/>
     </bean>
     
     <bean id="spotifyMissingArtistService" class="com.github.hakko.musiccabinet.service.spotify.MissingArtistService">
@@ -512,6 +513,7 @@
         <property name="jdbcLibraryBrowserDao" ref="jdbcLibraryBrowserDao" />
         <property name="webserviceHistoryService" ref="webserviceHistoryService"/>
         <property name="libraryAdditionDao" ref="libraryAdditionDao"/>
+        <property name="albumInfoDao" ref="albumInfoDao"/>
     </bean>
     
     

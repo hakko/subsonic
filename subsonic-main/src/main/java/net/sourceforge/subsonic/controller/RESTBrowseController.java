@@ -274,7 +274,7 @@ public class RESTBrowseController extends RESTAbstractController {
             builder.add("album", true,
                     new Attribute("id", ALBUM_ID + album.getUri()),
                     new Attribute("name", album.getTitle()),
-                    new Attribute("coverArt", StringUtil.utf8HexEncode(album.getCoverArtPath())),
+                    new Attribute("coverArt", album.getCoverArtUrl() != null ? StringUtil.utf8HexEncode(album.getCoverArtUrl()) : StringUtil.utf8HexEncode(album.getCoverArtPath())),
                     new Attribute("artist", artistInfo.getArtist().getName()),
                     new Attribute("artistId", ARTIST_ID + artistUri));
         }
@@ -405,7 +405,7 @@ public class RESTBrowseController extends RESTAbstractController {
                     new Attribute("parent", ARTIST_ID + artistUri),
                     new Attribute("title", getAlbumName(album.getTitle(), album.getYear())),
                     new Attribute("isDir", true),
-                    new Attribute("coverArt", StringUtil.utf8HexEncode(album.getCoverArtPath())));
+                    new Attribute("coverArt", album.getCoverArtUrl() != null ? StringUtil.utf8HexEncode(album.getCoverArtUrl()) : StringUtil.utf8HexEncode(album.getCoverArtPath())));
         }
 
         builder.add("child", true,
@@ -569,7 +569,7 @@ public class RESTBrowseController extends RESTAbstractController {
                     new Attribute("album", album.getName()),
                     new Attribute("artist", album.getArtist().getName()),
                     new Attribute("isDir", true),
-                    new Attribute("coverArt", StringUtil.utf8HexEncode(album.getCoverArtPath())));
+                    new Attribute("coverArt", album.getCoverArtURL() != null ? StringUtil.utf8HexEncode(album.getCoverArtURL()) : StringUtil.utf8HexEncode(album.getCoverArtPath())));
         }
     }
 
@@ -641,8 +641,19 @@ public class RESTBrowseController extends RESTAbstractController {
             String type = ServletRequestUtils.getRequiredStringParameter(request, "type").toLowerCase();
             String username = securityService.getCurrentUsername(request);
             String lastFmUsername = settingsService.getLastFmUsername(username);
+            
 
-            List<Album> albums = homeController.getAlbums(type, null, offset, size, lastFmUsername);
+            int fromYear = -1, toYear = -1;
+            String genre = null;
+            if(type.equals("bygenre")) {
+            	genre = ServletRequestUtils.getRequiredStringParameter(request, "genre");
+            }
+            else if(type.equals("byyear")) {
+                fromYear = ServletRequestUtils.getRequiredIntParameter(request, "fromYear");
+                toYear = ServletRequestUtils.getRequiredIntParameter(request, "toYear");
+            }
+
+            List<Album> albums = homeController.getAlbums(type, null, offset, size, lastFmUsername, genre, fromYear, toYear);
 
             if (albums != null) {
                 addAlbums(builder, albums);

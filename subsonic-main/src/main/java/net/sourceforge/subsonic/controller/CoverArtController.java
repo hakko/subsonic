@@ -32,6 +32,8 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.net.URL;
+import java.net.URLConnection;
 import java.nio.file.FileSystems;
 import java.nio.file.Files;
 
@@ -143,14 +145,16 @@ public class CoverArtController implements Controller, LastModified {
 
 		// Check access.
 		file = (path == null || path.length() == 0) ? null : new File(path);
-		if (file != null && !isSpotify && !securityService.isReadAllowed(file)) {
+		boolean isRemote = path.startsWith("http");
+			
+		if (file != null && !isSpotify && !isRemote && !securityService.isReadAllowed(file)) {
 			response.sendError(HttpServletResponse.SC_FORBIDDEN);
 			return null;
 		}
 
 		// Optimize if no scaling is required.
 		if (size == null) {
-			sendUnscaled(file, response);
+			sendUnscaled(path, response);
 			return null;
 		}
 
@@ -162,7 +166,7 @@ public class CoverArtController implements Controller, LastModified {
 		}
 
 		// Send cached image, creating it if necessary.
-		File cachedImage = getCachedImage(file, size);
+		File cachedImage = getCachedImage(path, size);
 		sendImage(cachedImage, response);
 
 		return null;
@@ -191,28 +195,28 @@ public class CoverArtController implements Controller, LastModified {
 		}
 	}
 
-	private void sendUnscaled(File file, HttpServletResponse response)
+	private void sendUnscaled(String path, HttpServletResponse response)
 			throws IOException, ApplicationException {
 		InputStream in = null;
 		try {
-			in = getImageInputStream(file);
+			in = getImageInputStream(path);
 			IOUtils.copy(in, response.getOutputStream());
 		} finally {
 			IOUtils.closeQuietly(in);
 		}
 	}
 
-	private File getCachedImage(File file, int size) throws IOException {
-		String md5 = DigestUtils.md5Hex(file.getPath());
+	private File getCachedImage(String path, int size) throws IOException {
+		String md5 = DigestUtils.md5Hex(path);
 		File cachedImage = new File(getImageCacheDirectory(size), md5 + ".jpeg");
 
 		// Is cache missing or obsolete?
 		if (!cachedImage.exists()
-				|| file.lastModified() > cachedImage.lastModified()) {
+				|| new File(path).lastModified() > cachedImage.lastModified()) {
 			InputStream in = null;
 			OutputStream out = null;
 			try {
-				in = getImageInputStream(file);
+				in = getImageInputStream(path);
 				out = new FileOutputStream(cachedImage);
 				BufferedImage image = ImageIO.read(in);
 				if (image == null) {
@@ -224,10 +228,10 @@ public class CoverArtController implements Controller, LastModified {
 
 			} catch (Throwable x) {
 				// Delete corrupt (probably empty) thumbnail cache.
-				LOG.warn("Failed to create thumbnail for " + file, x);
+				LOG.warn("Failed to create thumbnail for " + path, x);
 				IOUtils.closeQuietly(out);
 				cachedImage.delete();
-				throw new IOException("Failed to create thumbnail for " + file
+				throw new IOException("Failed to create thumbnail for " + path
 						+ ". " + x.getMessage());
 
 			} finally {
@@ -245,14 +249,18 @@ public class CoverArtController implements Controller, LastModified {
 	 * @throws ApplicationException
 	 * @throws IOException
 	 */
-	private InputStream getImageInputStream(File file)
+	private InputStream getImageInputStream(String path)
 			throws ApplicationException, IOException {
-		String extension = FilenameUtils.getExtension(file.getName());
+		String extension = FilenameUtils.getExtension(path);
 		if (audioTagService.isAudioFile(extension)) {
-			return new ByteArrayInputStream(audioTagService.getArtwork(file)
+			return new ByteArrayInputStream(audioTagService.getArtwork(new File(path))
 					.getBinaryData());
+		} else if(path.startsWith("http")) {
+			URL url = new URL(path);
+            URLConnection connection = url.openConnection();
+            return connection.getInputStream();
 		} else {
-			return new FileInputStream(file);
+			return new FileInputStream(new File(path));
 		}
 	}
 

@@ -162,12 +162,12 @@
           <p><a href="tagSettings.view">Tag settings</a> | <a href="groupSettings.view">Group settings</a></p>
 
 		<script type="text/javascript" language="javascript">
-		['artistRadioTotalCount', 'artistRadioArtistCount', 'artistTopTracksTotalCount',
-		 'genreRadioTotalCount', 'genreRadioArtistCount'].each(function(item) {
-			Event.observe(item, 'keyup', function(e) {
+		jQuery(['#artistRadioTotalCount', '#artistRadioArtistCount', '#artistTopTracksTotalCount',
+		 '#genreRadioTotalCount', '#genreRadioArtistCount']).each(function(index, item) {
+		    jQuery(item).keyup(function(e) {
 				this.value = this.value.replace(/[^0-9]/g,'');
 				return true;
-			})
+			});
 		});
 		</script>
 

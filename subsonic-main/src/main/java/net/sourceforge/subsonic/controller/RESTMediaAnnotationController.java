@@ -97,7 +97,7 @@ public class RESTMediaAnnotationController extends RESTAbstractController {
 
         if (lastFmUsername != null) {
             restBrowseController.addArtists(builder, starService.getStarredArtists(lastFmUsername));
-            restBrowseController.addAlbums(builder, homeController.getAlbums("starred", null, 0, MAX_VALUE, lastFmUsername));
+            restBrowseController.addAlbums(builder, homeController.getAlbums("starred", null, 0, MAX_VALUE, lastFmUsername, null, -1, -1));
             List<Track> tracks = libraryBrowserService.getTracks(
                     libraryBrowserService.getStarredTrackUris(lastFmUsername, 0, MAX_VALUE, null));
             restBrowseController.addTracks(builder, tracks, null, player, "song");

@@ -221,7 +221,7 @@ public class HomeController extends ParameterizableViewController {
     	int offset = page * ALBUMS, limit = ALBUMS + 1;
 
     	List<Album> albums = mediaFileService.getAlbums(
-    			getAlbums(listType, query, offset, limit, lastFmUsername));
+    			getAlbums(listType, query, offset, limit, lastFmUsername, null, -1, -1));
 
     	if (albums.size() > ALBUMS) {
     		map.put("morePages", true);
@@ -243,13 +243,17 @@ public class HomeController extends ParameterizableViewController {
     }
 
     public List<com.github.hakko.musiccabinet.domain.model.music.Album> getAlbums(
-    		String listType, String query, int offset, int limit, String lastFmUsername) {
+    		String listType, String query, int offset, int limit, String lastFmUsername, String genre, int fromYear, int toYear) {
     	switch (listType) {
 		case "newest": return libraryBrowserService.getRecentlyAddedAlbums(offset, limit, query);
 		case "recent": return libraryBrowserService.getRecentlyPlayedAlbums(lastFmUsername, offset, limit, query);
 		case "frequent": return libraryBrowserService.getMostPlayedAlbums(lastFmUsername, offset, limit, query);
 		case "starred": return libraryBrowserService.getStarredAlbums(lastFmUsername, offset, limit, query);
 		case "random": return libraryBrowserService.getRandomAlbums(limit);
+		case "alphabeticalbyname":  return libraryBrowserService.getAlbumsByName(lastFmUsername, offset, limit, query);
+		case "alphabeticalbyartist":  return libraryBrowserService.getAlbumsByArtist(lastFmUsername, offset, limit, query);
+		case "byyear":  return libraryBrowserService.getAlbumsByYear(lastFmUsername, offset, limit, query, fromYear, toYear);
+		case "bygenre":  return libraryBrowserService.getAlbumsByGenre(lastFmUsername, offset, limit, query, genre);
 		}
     	return null;
     }
