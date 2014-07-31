@@ -10,7 +10,7 @@
 <p style="padding-top:1em"><b>MusicCabinet configuration</b></p>
 
 <form:form method="post" action="musicCabinetSettings.view" commandName="command" onsubmit="return submitForm(this, 'MusicCabinet settings saved.');">
-
+    <div class="statusMessage"></div>
 <c:choose>
  <c:when test="${command.databaseRunning}">
   <c:choose>

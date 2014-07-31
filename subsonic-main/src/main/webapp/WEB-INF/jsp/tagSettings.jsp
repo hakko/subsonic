@@ -4,16 +4,21 @@
  	
 <div class="mainframe bgcolor1">
 
+<c:import url="settingsHeader.jsp">
+    <c:param name="cat" value="musicCabinet"/>
+</c:import>
+
+
 <script type="text/javascript" language="javascript">
 	function toggleCheckbox(h) {
-		$('tagSettings').getInputs('checkbox').each(function(e) { if (e.name != 'toggle') e.checked = h });
+	    jQuery("#tagSettings input[type=checkbox]").each(function(index) {  if (this.name != 'toggle') this.checked = h });
 	}
 </script>
 
 <p style="padding-top:1em"><b>Tag configuration</b></p>
 
-<form:form method="post" action="tagSettings.view" commandName="command" id="tagSettings">
-
+<form:form method="post" action="tagSettings.view" commandName="command" id="tagSettings" onsubmit="return submitForm(this, 'Tag settings saved.');">
+    <div class="statusMessage"></div>
 <div style="width:60%">
 
 <c:choose>

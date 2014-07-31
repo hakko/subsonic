@@ -376,6 +376,7 @@ var app = (function() {
       '/transcodingSettings': module.genericLoader('transcodingSettings.view'),
       '/internetRadioSettings': module.genericLoader('internetRadioSettings.view'),
       '/podcastSettings': module.genericLoader('podcastSettings.view'),
+      '/tagSettings': module.genericLoader('tagSettings.view'),
       '/searchSettings': module.loadSearchSettings,
       '/searchSettings/update/:type': module.loadSearchSettings,
       '/mediaFolderSettings': module.genericLoader('mediaFolderSettings.view'),

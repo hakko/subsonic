@@ -14,6 +14,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import javax.servlet.ServletRequest;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
@@ -235,21 +236,22 @@ public class RESTBrowseController extends RESTAbstractController {
     
     public void getSongsByGenre(HttpServletRequest request, HttpServletResponse response) throws Exception {
     	
-//        request = wrapRequest(request);
-//        Player player = playerService.getPlayer(request, response);
-//        String username = securityService.getCurrentUsername(request);
-//        String lastFmUsername = settingsService.getLastFmUsername(username);
-//        
-//        String genre = getRequiredStringParameter(request, "genre");
-//        int count = Math.min(500, getIntParameter(request, "count", 10));
-//        int offset = getIntParameter(request, "offset", 0);
-//
-//        XMLBuilder builder = createXMLBuilder(request, response, true);
-//        builder.add("songsByGenre", false);
-//        
-//    	
-//    	
-//    	libraryBrowserService.getStarredTrackUris(lastFmUsername, offset, count, genre)
+        request = wrapRequest(request);
+        Player player = playerService.getPlayer(request, response);
+        String username = securityService.getCurrentUsername(request);
+        
+        String genre = getRequiredStringParameter(request, "genre");
+        int count = Math.min(500, ServletRequestUtils.getIntParameter( request, "count", 10));
+        int offset = ServletRequestUtils.getIntParameter(request, "offset", 0);
+
+        XMLBuilder builder = createXMLBuilder(request, response, true);
+        builder.add("songsByGenre", false);
+        
+        List<Track> tracks = libraryBrowserService.getTracksByGenre(genre, offset, count);
+        addTracks(builder, tracks, null, player, "song");
+    	
+        builder.endAll();
+        response.getWriter().print(builder);
     }
     
 
