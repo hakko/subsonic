@@ -128,6 +128,15 @@ public class JukeboxService implements AudioPlayer.Listener, PlaybackListener {
                     if (currentPlayingFile != null) {
                         onSongEnd(currentPlayingFile);
                     }
+                } else if(currentPlayingFile != null && currentPlayingFile.isSpotify() && spotifyService.getStatus().equals(PlayerStatus.PLAYING)) {
+                	try {
+                		if(spotifyService.lock()) {
+                			spotifyService.getSpotify().stop();
+                		}
+                	} finally {
+                		spotifyService.unlock();
+                	}
+                	onSongEnd(currentPlayingFile);
                 }
 
                 if (file != null && file.isSpotify()) {

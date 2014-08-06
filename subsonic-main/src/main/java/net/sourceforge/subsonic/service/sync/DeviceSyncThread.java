@@ -4,7 +4,7 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
-import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -40,7 +40,7 @@ public class DeviceSyncThread implements Runnable {
 					LOG.debug("Processing sync for " + serial + "\n");
 					UserSettings userSettings = deviceListenerService
 							.getUserSettings(serial);
-					if(userSettings.getDeviceLastSync().getTime() > System.currentTimeMillis() + (1000 * 60 * 60 * 24)) {
+					if(userSettings.getDeviceLastSync() != null && userSettings.getDeviceLastSync().getTime() > System.currentTimeMillis() + (1000 * 60 * 60 * 24)) {
 						LOG.debug("Skipping sync for " + serial + "\n");
 						continue;
 					}
@@ -84,50 +84,75 @@ public class DeviceSyncThread implements Runnable {
 
 		List<Uri> tracks = new ArrayList<Uri>();
 		List<Album> starredAlbums = libraryBrowserService.getStarredAlbums(
-				userSettings.getLastFmUsername(), 0, 1000000, null);
+				userSettings.getLastFmUsername(), 0, 1000000000, null);
 		for (Album album : starredAlbums) {
-			tracks.addAll(album.getTrackUris());
+			if(album.getSpotifyUri() == null) {
+				tracks.addAll(album.getTrackUris());
+			}
 		}
 
 		List<ArtistRecommendation> starredArtists = libraryBrowserService
 				.getStarredArtists(userSettings.getLastFmUsername(), 0,
-						1000000, null);
+						1000000000, null);
 		for (ArtistRecommendation artist : starredArtists) {
 			new ArrayList<Album>();
 			List<Album> albums = libraryBrowserService.getAlbums(
 					new Artist(artist.getArtistUri(), artist.getArtistName()), false);
 			for (Album album : albums) {
-				tracks.addAll(album.getTrackUris());
+				if(album.getSpotifyUri() == null) {
+					tracks.addAll(album.getTrackUris());
+				}
 			}
 		}
 		
 		List<Album> mostPlayedAlumbs = libraryBrowserService
 				.getMostPlayedAlbums(userSettings.getLastFmUsername(), 0,
-						1000000, null);
+						1000000000, null);
 		for (Album album : mostPlayedAlumbs) {
-			tracks.addAll(album.getTrackUris());
+			if(album.getSpotifyUri() == null) {
+				tracks.addAll(album.getTrackUris());
+			}
 		}
 
 		List<Track> starredTracks = libraryBrowserService
 				.getTracks(libraryBrowserService.getStarredTrackUris(
-						userSettings.getLastFmUsername(), 0, 1000000, null));
+						userSettings.getLastFmUsername(), 0, 1000000000, null));
 		for (Track track : starredTracks) {
 			// this should probably have an exception for various artists
 			Album album = libraryBrowserService.getAlbum(track.getMetaData()
 					.getAlbumUri());
-			tracks.addAll(album.getTrackUris());
+			if(album.getSpotifyUri() == null) {
+				tracks.addAll(album.getTrackUris());
+			}
 		}
 
 
 		List<Album> recentlyAdded = libraryBrowserService
-				.getRecentlyAddedAlbums(0, 1000000, null);
+				.getRecentlyAddedAlbums(0, 1000000000, null);
 		for (Album album : recentlyAdded) {
-			tracks.addAll(album.getTrackUris());
+			if(album.getSpotifyUri() == null) {
+				tracks.addAll(album.getTrackUris());
+			}
 		}
+		
+		List<Album> byName = libraryBrowserService.getAlbumsByName(userSettings.getLastFmUsername(), 0, 1000000000, null);
+		for (Album album : byName) {
+			if(album.getSpotifyUri() == null) {
+				tracks.addAll(album.getTrackUris());
+			}
+		}
+		
+		List<Album> byArtist = libraryBrowserService.getAlbumsByArtist(userSettings.getLastFmUsername(), 0, 1000000000, null);
+		for (Album album : byArtist) {
+			if(album.getSpotifyUri() == null) {
+				tracks.addAll(album.getTrackUris());
+			}
+		}
+		
 
 		List<String> alreadyMade = new ArrayList<String>();
 		List<String> toSkip = new ArrayList<String>();
-		Map<String, File> toCopy = new HashMap<String, File>();
+		Map<String, File> toCopy = new LinkedHashMap<String, File>();
 		long batches = (tracks.size() / 100);
 		for (int i = 0; i <= batches; i++) {
 			// stop attempting to copy batches at 5MB
