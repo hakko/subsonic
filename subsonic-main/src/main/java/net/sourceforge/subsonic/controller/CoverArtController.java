@@ -145,7 +145,7 @@ public class CoverArtController implements Controller, LastModified {
 
 		// Check access.
 		file = (path == null || path.length() == 0) ? null : new File(path);
-		boolean isRemote = path.startsWith("http");
+		boolean isRemote = path != null && path.startsWith("http");
 			
 		if (file != null && !isSpotify && !isRemote && !securityService.isReadAllowed(file)) {
 			response.sendError(HttpServletResponse.SC_FORBIDDEN);

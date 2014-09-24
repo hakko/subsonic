@@ -317,6 +317,17 @@ public class SettingsService {
 	private File getPropertyFile() {
 		return new File(getSubsonicHome(), "subsonic.properties");
 	}
+	
+	public static synchronized File getSubsonicLog() {
+        File subsonicHome = SettingsService.getSubsonicHome();
+        
+		String overrideLog = System.getProperty("subsonic.log");
+		if (overrideLog != null) {
+			return new File(overrideLog);
+		}
+        
+        return new File(subsonicHome, "subsonic.log");
+	}
 
 	/**
 	 * Returns the Subsonic home directory.

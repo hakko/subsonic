@@ -48,7 +48,7 @@ public class Logger {
     private String category;
 
     private static List<Entry> entries = Collections.synchronizedList(new BoundedList<Entry>(50));
-    private static PrintWriter writer;
+    private static PrintWriter writer;    
 
     /**
      * Creates a logger for the given class.
@@ -172,15 +172,14 @@ public class Logger {
     }
 
     public static File getLogFile() {
-        File subsonicHome = SettingsService.getSubsonicHome();
-        return new File(subsonicHome, "subsonic.log");
+    	return SettingsService.getSubsonicLog();
     }
 
     /**
     * Log level.
     */
     public enum Level {
-        DEBUG, INFO, WARN, ERROR
+        ALL, DEBUG, INFO, WARN, ERROR
     }
 
     /**

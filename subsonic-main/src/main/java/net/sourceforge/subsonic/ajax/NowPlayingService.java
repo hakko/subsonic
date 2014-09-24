@@ -115,6 +115,10 @@ public class NowPlayingService {
                 if ((npi = lastPlayingInfo.get(player.getId())) == null ||
                 		!npi.getMediaFileUri().equals(mediaFileUri)) {
                 	MediaFile mediaFile = mediaFileService.getMediaFile(mediaFileUri);
+                	if (mediaFile == null || mediaFile.getMetaData() == null) {
+                		continue;
+                	}
+                	
                     Artwork artwork = getArtwork(mediaFile, settingsService.isPreferLastFmArtwork());
 					lastPlayingInfo.put(player.getId(), npi = 
 							getNowPlayingInfo(username, userSettings, mediaFile, artwork));
