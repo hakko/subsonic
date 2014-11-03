@@ -110,7 +110,7 @@ public class RESTMediaAnnotationController extends RESTAbstractController {
 					starService.getStarredArtists(lastFmUsername));
 			restBrowseController.addAlbums(builder, homeController
 					.getAlbums("starred", null, 0, MAX_VALUE, lastFmUsername,
-							null, -1, -1));
+							null, -1, -1, player.isSpotifyEnabled()));
 			List<Track> tracks = libraryBrowserService
 					.getTracks(libraryBrowserService.getStarredTrackUris(
 							lastFmUsername, 0, MAX_VALUE, null));

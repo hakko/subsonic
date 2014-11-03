@@ -634,6 +634,8 @@ public class RESTBrowseController extends RESTAbstractController {
         builder.add(nodeName, false);
 
         try {
+        	Player player = playerService.getPlayer(request, response);
+        	
             int size = ServletRequestUtils.getIntParameter(request, "size", 10);
             int offset = ServletRequestUtils.getIntParameter(request, "offset", 0);
 
@@ -655,7 +657,8 @@ public class RESTBrowseController extends RESTAbstractController {
                 toYear = ServletRequestUtils.getRequiredIntParameter(request, "toYear");
             }
 
-            List<Album> albums = homeController.getAlbums(type, null, offset, size, lastFmUsername, genre, fromYear, toYear);
+            System.err.println(request.getParameter("player") + ":" + player.getName() + ":" + player.isSpotifyEnabled());
+            List<Album> albums = homeController.getAlbums(type, null, offset, size, lastFmUsername, genre, fromYear, toYear, player.isSpotifyEnabled());
 
             if (albums != null) {
                 addAlbums(builder, albums);
@@ -762,7 +765,7 @@ public class RESTBrowseController extends RESTAbstractController {
                     new Attribute("name", rec.getArtistName()),
                     new Attribute("id", ARTIST_ID + rec.getArtistUri()));
         }
-        addAlbums(builder, libraryBrowserService.getStarredAlbums(
+        addAlbums(builder, libraryBrowserService.getStarredAlbums(player.isSpotifyEnabled(),
                 lastFmUsername, 0, Short.MAX_VALUE, null));
         List<Track> tracks = libraryBrowserService.getTracks(libraryBrowserService
                 .getStarredTrackUris(lastFmUsername, 0, Short.MAX_VALUE, null));

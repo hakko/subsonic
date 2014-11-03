@@ -54,6 +54,7 @@ public class PlayerSettingsCommand {
     private Player[] players;
     private boolean isAdmin;
     private boolean isReloadNeeded;
+    private boolean isSpotifyEnabled;
 
     public String getPlayerId() {
         return playerId;
@@ -227,7 +228,15 @@ public class PlayerSettingsCommand {
         isReloadNeeded = reloadNeeded;
     }
 
-    /**
+    public boolean isSpotifyEnabled() {
+		return isSpotifyEnabled;
+	}
+
+	public void setSpotifyEnabled(boolean isSpotifyEnabled) {
+		this.isSpotifyEnabled = isSpotifyEnabled;
+	}
+
+	/**
      * Holds the transcoding and whether it is active for the given player.
      */
     public static class TranscodingHolder {

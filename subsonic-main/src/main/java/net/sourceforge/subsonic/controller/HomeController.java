@@ -124,7 +124,7 @@ public class HomeController extends ParameterizableViewController {
         if ("topartists".equals(listType) || "recommended".equals(listType) || "Artists".equals(listGroup)) {
         	setArtists(listType, listGroup, query, page, userSettings, lastFmUsername, map);
         } else if ("newest".equals(listType) || "Albums".equals(listGroup)) {
-        	setAlbums(listType, query, page, userSettings, lastFmUsername, map);
+        	setAlbums(player, listType, query, page, userSettings, lastFmUsername, map);
         } else if ("Songs".equals(listGroup)) {
         	setSongs(listType, query, page, userSettings, lastFmUsername, map);
         }
@@ -215,13 +215,13 @@ public class HomeController extends ParameterizableViewController {
     	return null;
     }
 
-    private void setAlbums(String listType, String query, int page,
+    private void setAlbums(Player player, String listType, String query, int page,
     		UserSettings userSettings, String lastFmUsername, Map<String, Object> map) {
     	final int ALBUMS = userSettings.getDefaultHomeAlbums();
     	int offset = page * ALBUMS, limit = ALBUMS + 1;
 
     	List<Album> albums = mediaFileService.getAlbums(
-    			getAlbums(listType, query, offset, limit, lastFmUsername, null, -1, -1));
+    			getAlbums(listType, query, offset, limit, lastFmUsername, null, -1, -1, player.isSpotifyEnabled()));
 
     	if (albums.size() > ALBUMS) {
     		map.put("morePages", true);
@@ -242,18 +242,18 @@ public class HomeController extends ParameterizableViewController {
     	return albumIds;
     }
 
-    public List<com.github.hakko.musiccabinet.domain.model.music.Album> getAlbums(
-    		String listType, String query, int offset, int limit, String lastFmUsername, String genre, int fromYear, int toYear) {
+    public List<com.github.hakko.musiccabinet.domain.model.music.Album> getAlbums( 
+    		String listType, String query, int offset, int limit, String lastFmUsername, String genre, int fromYear, int toYear, boolean spotifyEnabled) {
     	switch (listType) {
-		case "newest": return libraryBrowserService.getRecentlyAddedAlbums(offset, limit, query);
-		case "recent": return libraryBrowserService.getRecentlyPlayedAlbums(lastFmUsername, offset, limit, query);
-		case "frequent": return libraryBrowserService.getMostPlayedAlbums(lastFmUsername, offset, limit, query);
-		case "starred": return libraryBrowserService.getStarredAlbums(lastFmUsername, offset, limit, query);
-		case "random": return libraryBrowserService.getRandomAlbums(limit);
-		case "alphabeticalbyname":  return libraryBrowserService.getAlbumsByName(lastFmUsername, offset, limit, query);
-		case "alphabeticalbyartist":  return libraryBrowserService.getAlbumsByArtist(lastFmUsername, offset, limit, query);
-		case "byyear":  return libraryBrowserService.getAlbumsByYear(lastFmUsername, offset, limit, query, fromYear, toYear);
-		case "bygenre":  return libraryBrowserService.getAlbumsByGenre(lastFmUsername, offset, limit, query, genre);
+		case "newest": return libraryBrowserService.getRecentlyAddedAlbums(spotifyEnabled, offset, limit, query);
+		case "recent": return libraryBrowserService.getRecentlyPlayedAlbums(spotifyEnabled, lastFmUsername, offset, limit, query);
+		case "frequent": return libraryBrowserService.getMostPlayedAlbums(spotifyEnabled, lastFmUsername, offset, limit, query);
+		case "starred": return libraryBrowserService.getStarredAlbums(spotifyEnabled, lastFmUsername, offset, limit, query);
+		case "random": return libraryBrowserService.getRandomAlbums(spotifyEnabled, limit);
+		case "alphabeticalbyname":  return libraryBrowserService.getAlbumsByName(spotifyEnabled, lastFmUsername, offset, limit, query);
+		case "alphabeticalbyartist":  return libraryBrowserService.getAlbumsByArtist(spotifyEnabled, lastFmUsername, offset, limit, query);
+		case "byyear":  return libraryBrowserService.getAlbumsByYear(spotifyEnabled, lastFmUsername, offset, limit, query, fromYear, toYear);
+		case "bygenre":  return libraryBrowserService.getAlbumsByGenre(spotifyEnabled, lastFmUsername, offset, limit, query, genre);
 		}
     	return null;
     }

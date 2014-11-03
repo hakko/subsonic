@@ -39,6 +39,7 @@ public class Player {
     private String ipAddress;
     private boolean isDynamicIp = true;
     private boolean isAutoControlEnabled = true;
+    private boolean spotifyEnabled = true;
     private Date lastSeen;
     private CoverArtScheme coverArtScheme = CoverArtScheme.MEDIUM;
     private TranscodeScheme transcodeScheme = TranscodeScheme.OFF;
@@ -335,4 +336,12 @@ public class Player {
     public String toString() {
         return getDescription();
     }
+
+	public boolean isSpotifyEnabled() {
+		return spotifyEnabled;
+	}
+
+	public void setSpotifyEnabled(boolean spotifyEnabled) {
+		this.spotifyEnabled = spotifyEnabled;
+	}
 }

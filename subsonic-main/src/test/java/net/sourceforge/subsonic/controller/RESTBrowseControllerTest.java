@@ -229,7 +229,7 @@ public class RESTBrowseControllerTest {
         LibraryBrowserService libraryBrowserService = mock(LibraryBrowserService.class);
         when(libraryBrowserService.getStarredArtists(lastFmUser, 0, MAX_VALUE, null)).thenReturn(
                 asList(new ArtistRecommendation(artist.getName(), new SubsonicUri(artistId))));
-        when(libraryBrowserService.getStarredAlbums(lastFmUser, 0, MAX_VALUE, null)).thenReturn(
+        when(libraryBrowserService.getStarredAlbums(true, lastFmUser, 0, MAX_VALUE, null)).thenReturn(
                 asList(album));
         when(libraryBrowserService.getStarredTrackUris(lastFmUser, 0, MAX_VALUE, null)).thenReturn(
                 trackUris);

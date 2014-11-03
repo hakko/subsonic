@@ -83,7 +83,7 @@ public class DeviceSyncThread implements Runnable {
 				.getLibraryBrowserService();
 
 		List<Uri> tracks = new ArrayList<Uri>();
-		List<Album> starredAlbums = libraryBrowserService.getStarredAlbums(
+		List<Album> starredAlbums = libraryBrowserService.getStarredAlbums(false,
 				userSettings.getLastFmUsername(), 0, 1000000000, null);
 		for (Album album : starredAlbums) {
 			if(album.getSpotifyUri() == null) {
@@ -106,7 +106,7 @@ public class DeviceSyncThread implements Runnable {
 		}
 		
 		List<Album> mostPlayedAlumbs = libraryBrowserService
-				.getMostPlayedAlbums(userSettings.getLastFmUsername(), 0,
+				.getMostPlayedAlbums(false, userSettings.getLastFmUsername(), 0,
 						1000000000, null);
 		for (Album album : mostPlayedAlumbs) {
 			if(album.getSpotifyUri() == null) {
@@ -128,21 +128,21 @@ public class DeviceSyncThread implements Runnable {
 
 
 		List<Album> recentlyAdded = libraryBrowserService
-				.getRecentlyAddedAlbums(0, 1000000000, null);
+				.getRecentlyAddedAlbums(false, 0, 1000000000, null);
 		for (Album album : recentlyAdded) {
 			if(album.getSpotifyUri() == null) {
 				tracks.addAll(album.getTrackUris());
 			}
 		}
 		
-		List<Album> byName = libraryBrowserService.getAlbumsByName(userSettings.getLastFmUsername(), 0, 1000000000, null);
+		List<Album> byName = libraryBrowserService.getAlbumsByName(false, userSettings.getLastFmUsername(), 0, 1000000000, null);
 		for (Album album : byName) {
 			if(album.getSpotifyUri() == null) {
 				tracks.addAll(album.getTrackUris());
 			}
 		}
 		
-		List<Album> byArtist = libraryBrowserService.getAlbumsByArtist(userSettings.getLastFmUsername(), 0, 1000000000, null);
+		List<Album> byArtist = libraryBrowserService.getAlbumsByArtist(false, userSettings.getLastFmUsername(), 0, 1000000000, null);
 		for (Album album : byArtist) {
 			if(album.getSpotifyUri() == null) {
 				tracks.addAll(album.getTrackUris());

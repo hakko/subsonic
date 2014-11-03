@@ -75,7 +75,8 @@ public class PlayerSettingsController extends SimpleFormController {
             command.setCoverArtSchemeName(player.getCoverArtScheme().name());
             command.setTranscodeSchemeName(player.getTranscodeScheme().name());
             command.setTechnologyName(player.getTechnology().name());
-            command.setAllTranscodings(transcodingService.getAllTranscodings());
+            command.setAllTranscodings(transcodingService.getAllTranscodings());            
+            command.setSpotifyEnabled(player.isSpotifyEnabled());
             List<Transcoding> activeTranscodings = transcodingService.getTranscodingsForPlayer(player);
             int[] activeTranscodingIds = new int[activeTranscodings.size()];
             for (int i = 0; i < activeTranscodings.size(); i++) {
@@ -100,6 +101,7 @@ public class PlayerSettingsController extends SimpleFormController {
         PlayerSettingsCommand command = (PlayerSettingsCommand) comm;
         Player player = playerService.getPlayerById(command.getPlayerId());
 
+        player.setSpotifyEnabled(command.isSpotifyEnabled());
         player.setAutoControlEnabled(command.isAutoControlEnabled());
         player.setCoverArtScheme(CoverArtScheme.valueOf(command.getCoverArtSchemeName()));
         player.setDynamicIp(command.isDynamicIp());

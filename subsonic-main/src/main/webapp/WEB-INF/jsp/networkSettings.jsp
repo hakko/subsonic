@@ -80,20 +80,23 @@
         function updateStatus(networkStatus) {
             (function($) {
               $("#portForwardingStatus").html(networkStatus.portForwardingStatusText);
-              $("#urlRedirectionStatus".html(networkStatus.urlRedirectionStatusText);
+              $("#urlRedirectionStatus").html(networkStatus.urlRedirectionStatusText);
               window.setTimeout("refreshStatus()", 1000);
             }(jQuery));
         }
 
         function enableUrlRedirectionFields() {
-            var checkbox = $("urlRedirectionEnabled");
-            var field = $("urlRedirectFrom");
+          (function($) {
+            var checkbox = $("#urlRedirectionEnabled");
+            var field = $("#urlRedirectFrom");
 
-            if (checkbox && checkbox.checked) {
-                field.enable();
+            if (checkbox && checkbox.prop('checked')) {
+            
+                field.prop('disabled', false);
             } else {
-                field.disable();
+                field.prop('disabled', true);
             }
+          }(jQuery));
         }
 
             enableUrlRedirectionFields();

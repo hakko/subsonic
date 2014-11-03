@@ -158,6 +158,14 @@
 										<c:param name="topic" value="dynamicip" />
 									</c:import></td>
 							</tr>
+              <tr>
+                <td><form:checkbox path="spotifyEnabled" id="spotifyEnabled"
+                    cssClass="checkbox" /> <label for="spotifyEnabled"><fmt:message
+                      key="playersettings.spotifyenabled" /></label></td>
+                <td><c:import url="helpToolTip.jsp">
+                    <c:param name="topic" value="spotifyenabled" />
+                  </c:import></td>
+              </tr>							
 
 							<tr>
 								<td><form:checkbox path="autoControlEnabled"
