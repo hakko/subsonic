@@ -65,7 +65,7 @@ do_start()
     [ -e /var/subsonic ] && chown -R $SUBSONIC_USER /var/subsonic
     [ -e /tmp/subsonic ] && chown -R $SUBSONIC_USER /tmp/subsonic
 
-    start-stop-daemon --start -c $SUBSONIC_USER --pidfile $PIDFILE --exec $DAEMON -- $DAEMON_ARGS || return 2
+    start-stop-daemon --start -c $SUBSONIC_USER --pidfile $PIDFILE --exec /usr/bin/env SUBSONIC_JRE_ARGS="${SUBSONIC_JRE_ARGS}" $DAEMON -- $DAEMON_ARGS || return 2
 }
 
 #

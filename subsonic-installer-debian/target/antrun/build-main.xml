@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<project name="maven-antrun-" default="main"  >
+<target name="main">
+  <echo>Creating Debian package...</echo>
+  <copy todir="/home/tthomas/git/subsonic/subsonic-installer-debian/target/deb">
+    <fileset dir="/home/tthomas/git/subsonic/subsonic-installer-debian/src"/>
+    <filterset>
+      <filter token="VERSION" value="5.0"/>
+    </filterset>
+  </copy>
+  <copy todir="/home/tthomas/git/subsonic/subsonic-installer-debian/target/deb/usr/share/subsonic" file="../subsonic-booter/src/main/script/subsonic.sh"/>
+  <copy todir="/home/tthomas/git/subsonic/subsonic-installer-debian/target/deb/usr/share/subsonic" file="../subsonic-booter/target/subsonic-booter-jar-with-dependencies.jar"/>
+  <copy todir="/home/tthomas/git/subsonic/subsonic-installer-debian/target/deb/usr/share/subsonic" file="../libjahspotify/native/target/libjahspotify.so"/>
+  <copy todir="/home/tthomas/git/subsonic/subsonic-installer-debian/target/deb/usr/share/subsonic" file="../subsonic-main/target/subsonic.war"/>
+  <copy todir="/home/tthomas/git/subsonic/subsonic-installer-debian/target/deb/var/subsonic/transcode" file="../subsonic-transcode/linux/ffmpeg"/>
+  <copy todir="/home/tthomas/git/subsonic/subsonic-installer-debian/target/deb/var/subsonic/transcode" file="../subsonic-transcode/linux/lame"/>
+  <exec executable="chmod">
+    <arg value="oug+x"/>
+    <arg value="/home/tthomas/git/subsonic/subsonic-installer-debian/target/deb/DEBIAN/preinst"/>
+    <arg value="/home/tthomas/git/subsonic/subsonic-installer-debian/target/deb/DEBIAN/postinst"/>
+    <arg value="/home/tthomas/git/subsonic/subsonic-installer-debian/target/deb/DEBIAN/prerm"/>
+    <arg value="/home/tthomas/git/subsonic/subsonic-installer-debian/target/deb/DEBIAN/postrm"/>
+    <arg value="/home/tthomas/git/subsonic/subsonic-installer-debian/target/deb/usr/share/subsonic/subsonic.sh"/>
+    <arg value="/home/tthomas/git/subsonic/subsonic-installer-debian/target/deb/etc/init.d/subsonic"/>
+    <arg value="/home/tthomas/git/subsonic/subsonic-installer-debian/target/deb/var/subsonic/transcode/ffmpeg"/>
+    <arg value="/home/tthomas/git/subsonic/subsonic-installer-debian/target/deb/var/subsonic/transcode/lame"/>
+  </exec>
+  <exec executable="sleep">
+    <arg value="2"/>
+  </exec>
+  <exec executable="fakeroot">
+    <arg value="dpkg"/>
+    <arg value="--build"/>
+    <arg value="/home/tthomas/git/subsonic/subsonic-installer-debian/target/deb"/>
+    <arg value="/home/tthomas/git/subsonic/subsonic-installer-debian/target/subsonic-5.0.deb"/>
+  </exec>
+  <exec executable="lintian">
+    <arg value="/home/tthomas/git/subsonic/subsonic-installer-debian/target/subsonic-5.0.deb"/>
+  </exec>
+</target>
+</project>

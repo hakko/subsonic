@@ -23,3 +23,7 @@ SUBSONIC_ARGS="--max-memory=150"
 # the music directories, otherwise changing album art and tags will fail.
 
 SUBSONIC_USER=root
+
+# Any additional JRE args, you probably want to specify your postgres 
+# connection parameters here
+SUBSONIC_JRE_ARGS="-Dmusiccabinet.jdbc.driverClassName=org.postgresql.Driver -Dmusiccabinet.jdbc.url=jdbc:postgresql://localhost:5432/musiccabinet -Dmusiccabinet.jdbc.initialurl=jdbc:postgresql://localhost:5432/template1 -Dmusiccabinet.jdbc.username=postgres -Dmusiccabinet.jdbc.password=postgres"

@@ -119,7 +119,9 @@ ${JAVA} -Xmx${SUBSONIC_MAX_MEMORY}m \
   -Dsubsonic.defaultMusicFolder=${SUBSONIC_DEFAULT_MUSIC_FOLDER} \
   -Dsubsonic.defaultPodcastFolder=${SUBSONIC_DEFAULT_PODCAST_FOLDER} \
   -Dsubsonic.defaultPlaylistFolder=${SUBSONIC_DEFAULT_PLAYLIST_FOLDER} \
+  -Djahspotify.lib=`pwd`/libjahspotify.so \
   -Djava.awt.headless=true \
+  ${SUBSONIC_JRE_ARGS} \
   -verbose:gc \
   -jar subsonic-booter-jar-with-dependencies.jar > ${LOG} 2>&1 &
 

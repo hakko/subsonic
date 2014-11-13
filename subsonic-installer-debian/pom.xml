@@ -10,7 +10,7 @@
     <parent>
         <groupId>net.sourceforge.subsonic</groupId>
         <artifactId>subsonic</artifactId>
-        <version>4.9</version>
+        <version>5.0</version>
     </parent>
 
     <profiles>
@@ -43,6 +43,7 @@
 
                                         <copy file="../subsonic-booter/src/main/script/subsonic.sh" todir="${project.build.directory}/deb/usr/share/subsonic"/>
                                         <copy file="../subsonic-booter/target/subsonic-booter-jar-with-dependencies.jar" todir="${project.build.directory}/deb/usr/share/subsonic"/>
+                                        <copy file="../libjahspotify/native/target/libjahspotify.so" todir="${project.build.directory}/deb/usr/share/subsonic"/>
                                         <copy file="../subsonic-main/target/subsonic.war" todir="${project.build.directory}/deb/usr/share/subsonic"/>
                                         <copy file="../subsonic-transcode/linux/ffmpeg" todir="${project.build.directory}/deb/var/subsonic/transcode"/>
                                         <copy file="../subsonic-transcode/linux/lame" todir="${project.build.directory}/deb/var/subsonic/transcode"/>
