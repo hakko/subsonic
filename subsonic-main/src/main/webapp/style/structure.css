@@ -175,7 +175,9 @@ overflow: hidden;
 box-shadow: 5px 5px 5px #333;
 }
 .left {
-  display: none;
+  /*display: none;*/
+  transition: left 0.1s ease-in-out;
+  left: -1000;
   position: absolute;
   top: 95px;
   z-index: 10000;

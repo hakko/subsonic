@@ -62,6 +62,7 @@ public class EditTagsController extends ParameterizableViewController {
             map.put("defaultYear", metaData.getYear());
             map.put("defaultGenre", metaData.getGenre());
         }
+        // TODO: This should get all my damn genres out of the database
         map.put("allGenres", JaudiotaggerParser.getID3V1Genres());
 
         List<Song> songs = new ArrayList<Song>();

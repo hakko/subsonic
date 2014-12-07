@@ -411,8 +411,12 @@ function scrollArtist(uri) {
   parent.scrollTop(jQuery("a[data-artist=" + uri + "]").offset().top - 228);
 }
 function toggleLeft() {
+  jQuery('div.left').show();
   jQuery('div.left').height($('body').height() - 93);
-  jQuery('div.left').toggle('slide', {'direction': 'left'}, 1000);
-  jQuery('div.left').toggle();
+  if($('div.left').position().left === 0) {
+    $('div.left').offset({left: -$('div.left').outerWidth()});
+  } else {
+    $('div.left').css('left', '0');
+  }
   return false;
 }
