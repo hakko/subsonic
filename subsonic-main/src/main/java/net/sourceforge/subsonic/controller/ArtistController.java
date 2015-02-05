@@ -86,7 +86,10 @@ public class ArtistController extends ParameterizableViewController {
 
         ArtistInfo artistInfo = setArtistInfo(artistUri, map);
         boolean variousArtists = isVariousArtists(artistInfo);
-        setAlbums(new Artist(artistUri, artistInfo.getArtist().getName()), variousArtists, userSettings, map, albumIds);
+        
+        if (artistInfo != null) {
+        	setAlbums(new Artist(artistUri, artistInfo.getArtist().getName()), variousArtists, userSettings, map, albumIds);
+        }
 
         map.put("trackId", request.getParameter("trackId"));
         map.put("artistStarred", starService.isArtistStarred(userSettings.getLastFmUsername(), artistUri));
@@ -103,11 +106,17 @@ public class ArtistController extends ParameterizableViewController {
 
     private void setAlbums(Artist artist, boolean variousArtists, UserSettings userSettings,
     		Map<String, Object> map, String[] selectedAlbumIds) {
-        List<Album> albums = mediaFileService.getAlbums(
-        		variousArtists && isNotEmpty(selectedAlbumIds) ?
-        		asList(libraryBrowserService.getAlbum(URIUtil.parseURI(selectedAlbumIds[0]))) :
-        		libraryBrowserService.getAlbums(artist,
-        		userSettings.isAlbumOrderByYear(), userSettings.isAlbumOrderAscending()));
+    	
+    	List<Album> albums = null;
+    	if (variousArtists && isNotEmpty(selectedAlbumIds)) {
+    		albums = mediaFileService.getAlbums(asList(libraryBrowserService.getAlbum(URIUtil.parseURI(selectedAlbumIds[0]))));
+    	} else if(URIUtil.isSpotify(artist.getUri()) && isNotEmpty(selectedAlbumIds)) {
+    		// only get the specific album in question if we're looking at a spotify artist and not a local one
+    		albums = mediaFileService.getAlbums(asList(libraryBrowserService.getAlbum(URIUtil.parseURI(selectedAlbumIds[0]))));
+    	} else {
+    		albums = mediaFileService.getAlbums(libraryBrowserService.getAlbums(artist,
+            		userSettings.isAlbumOrderByYear(), userSettings.isAlbumOrderAscending()));
+    	}
         List<Uri> albumUris = new ArrayList<>();
         List<Uri> trackUris = new ArrayList<>();
 
@@ -144,6 +153,9 @@ public class ArtistController extends ParameterizableViewController {
 
 	private ArtistInfo setArtistInfo(Uri artistUri, Map<String, Object> map) throws ApplicationException {
         ArtistInfo artistInfo = artistInfoService.getArtistInfo(artistUri);
+        if (artistInfo == null) {
+        	return null;
+        }
         map.put("artistUri", artistUri);
         map.put("artistName", artistInfo.getArtist().getName());
         map.put("isInSearchIndex", artistInfo.isInSearchIndex() && !isVariousArtists(artistInfo));
@@ -166,6 +178,9 @@ public class ArtistController extends ParameterizableViewController {
     }
 
 	private boolean isVariousArtists(ArtistInfo artistInfo) {
+		if (artistInfo == null) {
+			return false;
+		}
 		String artistName = upperCase(artistInfo.getArtist().getName());
 		return "VARIOUS ARTISTS".equals(artistName) || "VA".equals(artistName);
 	}

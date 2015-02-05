@@ -138,6 +138,17 @@ span.off:hover {
   float: left;
   padding-right: 5px;
 }
+.search.play-label {
+	float: none;
+}
+.search.play-label .btn-group {
+	position: static;
+}
+.search .dropdown-menu {
+	top: inherit; 
+  left: 53px;
+  margin: 22px 0 0;
+}
 .relative-container {
   position: relative;
 }

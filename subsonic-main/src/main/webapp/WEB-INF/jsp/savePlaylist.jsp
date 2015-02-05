@@ -4,7 +4,8 @@
 <div class="mainframe bgcolor1">
 
 <h1><fmt:message key="playlist.save.title"/></h1>
-<form:form commandName="command" method="post" action="savePlaylist.view" class="form" role="form">
+<form:form commandName="command" method="post" action="savePlaylist.view" class="form" role="form" onsubmit="return submitForm(this, 'Playlist saved.');">
+  <div class="statusMessage"></div>
   <div class="form-group">
     <label for="name"><fmt:message key="playlist.save.name"/></label>
     <form:input path="name" size="30" class="form-control" />

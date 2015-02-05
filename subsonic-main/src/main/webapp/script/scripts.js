@@ -206,44 +206,36 @@ var app = (function() {
     if(!skipMain) {
       module.loadMain("nowPlaying.view");
     }
-    $.when( $.ajax( "playlist.view" ) ).then(function( data, textStatus, jqXHR ) {
+    module.reloadPlaylist("playlist.view");
+  };
+  
+  module.reloadPlaylist = function(view) {
+    $.when( $.ajax( view ) ).then(function( data, textStatus, jqXHR ) {
       jQuery('div.playlist').html(data);
-    });
+    });    
   };
 
-  module.loadArtist = function(artistId, albumId) {
+  module.loadArtist = function(params) {
     module.loadIndex(true);
-    var url ="artist.view?idUtf8Hex=" + artistId;
-    if(albumId) {
-      url += "&albumIdUtf8Hex=" + albumId;
-    }
+    var url ="artist.view" + params;
+    
     // we should test if this is already loaded
     $.when( $.ajax( url ) ).then(function( data, textStatus, jqXHR ) {
       jQuery('div.left').hide();
       jQuery('div.main').html(data);
+      /*
       // we should do the expansion here
       if(albumId) {
         var id = $('div[data-album="' + albumId + '"]').attr("id").replace("alb", "");
         toggleAlbum(id);
         scrollArtist(artistId);
       }
+      */
     });
   }
-  module.loadHome = function(listType, listGroup, query, page) {
+  module.loadHome = function(query) {
     var url = "home.view";
-    if (listType) {
-      url += "?listType=" + listType;
-    }
-    if (listGroup) {
-      url += "&listGroup=" + listGroup;
-    }
-    if (query) {
-      url += "&query=" + query;
-    }
-    if (page) {
-      url += "&page=" + page;
-    }
-    module.loadMain(url);
+    module.loadMain(url + query);
   }
   module.loadGenreByName = function(genre) {
     module.loadGenres(genre, "genre");
@@ -342,24 +334,20 @@ var app = (function() {
     var url = "createShare.view";
     url += "?idsUtf8Hex=" + id;
     module.loadMain(url);
-  }
+  };
   
-  
-  
-  
+  module.loadPage = function(page, query) {
+    window.console.log("Loading page: " + page);
+    module.loadMain(page + ".view" + query);
+  };
   
   module.routes = {
       '/': module.loadIndex,
-      '/home': module.loadHome,
-      '/home/listType/:type': module.loadHome,
-      '/home/listType/:type/listGroup/:group': module.loadHome,
-      '/home/listType/:type/listGroup/:group/query/:query/page/:page': module.loadHome,
+      '/home(.*)': module.loadHome,
       '/changeCoverArt/idUtf8Hex/:id/artistIdUtf8Hex/:artistId/albumIdUtf8Hex/:albumId': module.changeCoverArt,
       '/editTags/idsUtf8Hex/:id/artistIdUtf8Hex/:artistId/albumIdUtf8Hex/:albumId': module.editTags,
       '/createShare/idsUtf8Hex/:id': module.createShare,
-      '/genres': module.loadGenres,
-      '/genres/genreUtf8Hex/:genre': module.loadGenreById,
-      '/genres/genre/:genre': module.loadGenreByName,
+      '/genres(.*)': module.loadGenres,
       '/radio': module.loadRadio,
       '/fileTree': module.loadFileTree,
       '/podcastReceiver': module.loadPodcastReceiver,
@@ -388,7 +376,8 @@ var app = (function() {
       '/artistGenres/idUtf8Hex/:id': module.loadArtistGenres,
       '/artist/idUtf8Hex/:id': module.loadArtist,
       '/search/query/(.*)': module.loadSearch,
-      '/artist/idUtf8Hex/:id/albumIdUtf8Hex/:album_id': module.loadArtist,
+      '/(loadPlaylistConfirm)(.*)': module.loadPage,
+      '/artist(.*)': module.loadArtist,
       '/main/pathUtf8Hex/:path_id': module.loadPath
   };
   return module;

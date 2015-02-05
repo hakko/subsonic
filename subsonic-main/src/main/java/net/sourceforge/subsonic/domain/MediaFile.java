@@ -429,6 +429,11 @@ public class MediaFile implements Serializable, Comparable<MediaFile> {
 		if (file != null && file.getParent() != null && file.getParent().equals("spotify:")) {
 			return true;
 		}
+		
+		if (file.getPath().startsWith("spotify:")) {
+			return true;
+		}
+		
 		return false;
 	}
 

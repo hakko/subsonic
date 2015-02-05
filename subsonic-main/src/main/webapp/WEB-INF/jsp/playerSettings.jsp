@@ -31,10 +31,10 @@
 					</c:when>
 					<c:otherwise>
 
-						<c:url value="playerSettings.view" var="deleteUrl">
+						<c:url value="#/playerSettings.view" var="deleteUrl">
 							<c:param name="delete" value="${command.playerId}" />
 						</c:url>
-						<c:url value="playerSettings.view" var="cloneUrl">
+						<c:url value="#/playerSettings.view" var="cloneUrl">
 							<c:param name="clone" value="${command.playerId}" />
 						</c:url>
 

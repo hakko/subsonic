@@ -65,7 +65,7 @@
 
             <sub:url value="artist.view" var="albumUrl">
                 <sub:param name="id" value="${album.artist.uri}"/>
-                <sub:param name="album-uri" value="${album.uri}"/>
+                <sub:param name="albumId" value="${album.uri}"/>
             </sub:url>
 
             <tr>
@@ -97,7 +97,7 @@
 
             <sub:url value="artist.view" var="albumUrl">
                 <sub:param name="id" value="${track.metaData.artistUri}"/>
-                <sub:param name="album-uri" value="${track.metaData.albumUri}"/>
+                <sub:param name="albumId" value="${track.metaData.albumUri}"/>
             </sub:url>
 
             <tr>

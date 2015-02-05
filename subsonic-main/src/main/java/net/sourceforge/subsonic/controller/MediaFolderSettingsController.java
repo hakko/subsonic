@@ -222,7 +222,7 @@ public class MediaFolderSettingsController extends
 		spotifyService.registerListener(loginListener);
 		try {
 			loggedIn = blockingRequest.start();
-			if (!loggedIn) {
+			if (loggedIn == null || !loggedIn) {
 				response.put("error", "Invalid username or password.");
 			}
 		} finally {

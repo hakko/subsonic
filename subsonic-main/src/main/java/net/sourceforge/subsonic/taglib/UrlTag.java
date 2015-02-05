@@ -96,7 +96,7 @@ public class UrlTag extends BodyTagSupport {
         	result.append(baseUrl);
         }
         if (!parameters.isEmpty()) {
-            result.append(hashurl ? "/" : "?");
+            result.append("?");
 
             for (int i = 0; i < parameters.size(); i++) {
                 Parameter parameter = parameters.get(i);
@@ -106,12 +106,12 @@ public class UrlTag extends BodyTagSupport {
                         result.append(ParameterDecodingFilter.PARAM_SUFFIX);
                     }
 
-                    result.append(hashurl ? '/' : "=");
+                    result.append("=");
                     if (parameter.getValue() != null) {
                         result.append(encode(parameter.getValue()));
                     }
                     if (i < parameters.size() - 1) {
-                        result.append(hashurl ? "/" : "&");
+                        result.append("&");
                     }
 
                 } catch (UnsupportedEncodingException x) {
