@@ -138,6 +138,11 @@
         <function-signature>boolean isSpotifyFile(net.sourceforge.subsonic.domain.MediaFile)</function-signature>
     </function>
     <function>
+        <name>toSpotifyLink</name>
+        <function-class>net.sourceforge.subsonic.taglib.SubsonicFunctions</function-class>
+        <function-signature>java.lang.String toSpotifyLink(java.lang.String)</function-signature>
+    </function>
+    <function>
         <name>dehex</name>
         <function-class>net.sourceforge.subsonic.taglib.SubsonicFunctions</function-class>
         <function-signature>String deHex(java.lang.String)</function-signature>

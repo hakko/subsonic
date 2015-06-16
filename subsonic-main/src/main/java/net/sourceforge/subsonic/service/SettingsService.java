@@ -123,7 +123,10 @@ public class SettingsService {
 	private static final String KEY_SERVER_ID = "ServerId";
 	private static final String KEY_SETTINGS_CHANGED = "SettingsChanged";
 	private static final String KEY_SPOTIFY_CACHE = "SpotifyCache";
+	private static final String KEY_SPOTIFY_KEY = "SpotifyKey";
 	private static final String KEY_SPOTIFY_USERNAME = "SpotifyUsername";
+	private static final String KEY_SPOTIFY_PASSWORD = "SpotifyPassword";
+
 
 	private static final String KEY_MUSICCABINET_LASTFM_USERNAME = "MusicCabinetLastFMUsername";
 	private static final String KEY_MUSICCABINET_JDBC_PASSWORD = "MusicCabinetJDBCPassword";
@@ -201,6 +204,7 @@ public class SettingsService {
 	private static final String DEFAULT_SERVER_ID = null;
 	private static final long DEFAULT_SETTINGS_CHANGED = 0L;
 	private static final String DEFAULT_SPOTIFY_CACHE = "libspotify";
+	private static final String DEFAULT_SPOTIFY_KEY = "spotify_appkey.key";
 
 	private static final int DEFAULT_MUSICCABINET_ARTIST_RADIO_ARTIST_COUNT = 3;
 	private static final int DEFAULT_MUSICCABINET_ARTIST_RADIO_TOTAL_COUNT = 20;
@@ -288,7 +292,9 @@ public class SettingsService {
 		ServiceLocator.setSettingsService(this);
 		validateLicenseAsync();
 		spotifySettingsService.setSpotifyCache(getSpotifyCache());
+		spotifySettingsService.setSpotifyKey(new File(getSpotifyKey()));
 		spotifySettingsService.setSpotifyUserName(getSpotifyUserName());
+		spotifySettingsService.setSpotifyPassword(getSpotifyPassword());
 	}
 
 	public void save() {
@@ -1511,6 +1517,16 @@ public class SettingsService {
 	public void setSpotifyCache(String spotifyCache) {
 		setProperty(KEY_SPOTIFY_CACHE, spotifyCache);
 	}
+	
+	public String getSpotifyKey() {
+		return properties.getProperty(KEY_SPOTIFY_KEY, getSubsonicHome()
+				+ File.separator + SettingsService.DEFAULT_SPOTIFY_KEY);
+	}
+
+	public void setSpotifyKey(String spotifyKey) {
+		setProperty(KEY_SPOTIFY_KEY, spotifyKey);
+	}
+	
 
 	public String getSpotifyUserName() {
 		return properties.getProperty(KEY_SPOTIFY_USERNAME);
@@ -1518,6 +1534,14 @@ public class SettingsService {
 
 	public void setSpotifyUserName(String spotifyUserName) {
 		setProperty(KEY_SPOTIFY_USERNAME, spotifyUserName);
+	}
+
+	public String getSpotifyPassword() {
+		return properties.getProperty(KEY_SPOTIFY_PASSWORD);
+	}
+
+	public void setSpotifyPassword(String spotifyPassword) {
+		setProperty(KEY_SPOTIFY_PASSWORD, spotifyPassword);
 	}
 
 	public void setSpotifySettingsService(

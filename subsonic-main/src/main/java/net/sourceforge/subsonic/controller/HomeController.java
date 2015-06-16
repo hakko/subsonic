@@ -41,6 +41,7 @@ import net.sourceforge.subsonic.domain.User;
 import net.sourceforge.subsonic.domain.UserSettings;
 import net.sourceforge.subsonic.service.MediaFileService;
 import net.sourceforge.subsonic.service.PlayerService;
+import net.sourceforge.subsonic.service.RatingService;
 import net.sourceforge.subsonic.service.SecurityService;
 import net.sourceforge.subsonic.service.SettingsService;
 import net.sourceforge.subsonic.util.Util;
@@ -76,6 +77,8 @@ public class HomeController extends ParameterizableViewController {
     private LibraryBrowserService libraryBrowserService;
     private MediaFileService mediaFileService;
     private StarService starService;
+    private RatingService ratingService;
+
 
     @Override
     protected ModelAndView handleRequestInternal(HttpServletRequest request, HttpServletResponse response) throws Exception {
@@ -244,16 +247,18 @@ public class HomeController extends ParameterizableViewController {
 
     public List<com.github.hakko.musiccabinet.domain.model.music.Album> getAlbums( 
     		String listType, String query, int offset, int limit, String lastFmUsername, String genre, int fromYear, int toYear, boolean spotifyEnabled) {
+    	
     	switch (listType) {
+    	case "highest": return ratingService.getHighestRatedAlbums(offset, limit);
+    	case "frequent": return libraryBrowserService.getMostPlayedAlbums(spotifyEnabled, lastFmUsername, offset, limit, query);
+    	case "recent": return libraryBrowserService.getRecentlyPlayedAlbums(spotifyEnabled, lastFmUsername, offset, limit, query);
 		case "newest": return libraryBrowserService.getRecentlyAddedAlbums(spotifyEnabled, offset, limit, query);
-		case "recent": return libraryBrowserService.getRecentlyPlayedAlbums(spotifyEnabled, lastFmUsername, offset, limit, query);
-		case "frequent": return libraryBrowserService.getMostPlayedAlbums(spotifyEnabled, lastFmUsername, offset, limit, query);
 		case "starred": return libraryBrowserService.getStarredAlbums(spotifyEnabled, lastFmUsername, offset, limit, query);
-		case "random": return libraryBrowserService.getRandomAlbums(spotifyEnabled, limit);
-		case "alphabeticalbyname":  return libraryBrowserService.getAlbumsByName(spotifyEnabled, lastFmUsername, offset, limit, query);
 		case "alphabeticalbyartist":  return libraryBrowserService.getAlbumsByArtist(spotifyEnabled, lastFmUsername, offset, limit, query);
+		case "alphabeticalbyname":  return libraryBrowserService.getAlbumsByName(spotifyEnabled, lastFmUsername, offset, limit, query);
+		case "bygenre":  return libraryBrowserService.getAlbumsByGenre(spotifyEnabled, lastFmUsername, offset, limit, query, genre);		
 		case "byyear":  return libraryBrowserService.getAlbumsByYear(spotifyEnabled, lastFmUsername, offset, limit, query, fromYear, toYear);
-		case "bygenre":  return libraryBrowserService.getAlbumsByGenre(spotifyEnabled, lastFmUsername, offset, limit, query, genre);
+		case "random": return libraryBrowserService.getRandomAlbums(spotifyEnabled, limit);
 		}
     	return null;
     }
@@ -332,6 +337,10 @@ public class HomeController extends ParameterizableViewController {
 
 	public void setStarService(StarService starService) {
 		this.starService = starService;
+	}
+
+	public void setRatingService(RatingService ratingService) {
+		this.ratingService = ratingService;
 	}
 
 }

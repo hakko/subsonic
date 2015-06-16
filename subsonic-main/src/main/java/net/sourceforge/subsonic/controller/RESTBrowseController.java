@@ -581,14 +581,14 @@ public class RESTBrowseController extends RESTAbstractController {
 
     protected void addTracks(XMLBuilder builder, List<Track> tracks, Album album, Player player, String nodeName) throws IOException {
         String coverArtPath = album == null ? null : album.getCoverArtPath();
-        if (album == null || album.getCoverArtPath() == null) {
+        if (album == null || (album.getCoverArtPath() == null && album.getCoverArtURL() == null)) {
             libraryBrowserService.addArtwork(tracks);
         }
         mediaFileService.loadMediaFiles(getMediaFileUris(tracks));
         for (Track track : tracks) {
             String suffix = track.getMetaData().getMediaType().getFilesuffix().toLowerCase();
             MediaFile mediaFile = mediaFileService.getMediaFile(track.getUri());
-
+            
             AttributeSet attributes = new AttributeSet();
             attributes.add(new Attribute("id", track.getUri()));
             attributes.add(new Attribute("parent", ALBUM_ID +
@@ -607,7 +607,10 @@ public class RESTBrowseController extends RESTAbstractController {
             attributes.add(new Attribute("suffix", suffix));
             attributes.add(new Attribute("duration", track.getMetaData().getDuration()));
             attributes.add(new Attribute("bitRate", track.getMetaData().getBitrate()));
-            attributes.add(new Attribute("path", getRelativePath(mediaFile)));
+            attributes.add(new Attribute("path", getRelativePath(mediaFile)));     
+            if (album != null) {
+            	attributes.add(new Attribute("coverArt", album.getCoverArtURL() != null ? StringUtil.utf8HexEncode(album.getCoverArtURL()) : StringUtil.utf8HexEncode(album.getCoverArtPath())));
+            }
 
             if (transcodingService.isTranscodingRequired(mediaFile, player)) {
                 String transcodingSuffix = transcodingService.getSuffix(player, mediaFile, null);

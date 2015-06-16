@@ -13,7 +13,7 @@
 
 @import "sigelsonic/jquery-ui-1.9.2.custom.css";
 
-@import url(http://fonts.googleapis.com/css?family=Fjalla+One);
+@import url(//fonts.googleapis.com/css?family=Fjalla+One);
 
 
 *,html{outline: 0;}

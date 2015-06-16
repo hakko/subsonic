@@ -2,14 +2,23 @@
 	pageEncoding="iso-8859-1"%>
 
 <%@ include file="include.jspf"%>
-<div class="mainframe bgcolor1">
+<spring:theme code="panel.primary" var="themePanelPrimary" scope="page" />
+<div class="mainframe bgcolor1 panel panel-primary ${themePanelPrimary}">
+
+<div class="panel-heading">
+  <i class="fa fa-cog"></i>
+  <fmt:message key="settingsheader.title"/>
+</div>
+<div class="panel-body">
 
 	<c:import url="settingsHeader.jsp">
 		<c:param name="cat" value="mediaFolder" />
 	</c:import>
 
-	<form method="post" action="mediaFolderSettings.view"
-		onsubmit="return submitForm(this, 'Settings saved.');">
+<form method="post" action="mediaFolderSettings.view"
+                enctype="multipart/form-data"
+                encoding="multipart/form-data"
+               onsubmit="return submitForm(this, 'Settings saved.');">
 		<div class="statusMessage"></div>
 		<div class="panel panel-default">
 			<div class="panel-heading">Media Folders</div>
@@ -28,9 +37,11 @@
 							value="${folder.name}" /></td>
 						<td><input type="text" name="path[${folder.id}]" size="40"
 							value="${folder.path.path}" /></td>
-						<td align="center" style="padding-left: 1em"><input
+						<td align="center" style="padding-left: 1em">
+						<input
 							type="checkbox" ${folder.indexed ? "checked" : ""}
-							name="indexed[${folder.id}]" class="checkbox" /></td>
+							name="indexed[${folder.id}]" class="checkbox" />
+							</td>
 						<td align="center" style="padding-left: 1em"><input
 							type="checkbox" name="delete[${folder.id}]" class="checkbox"
 							<c:if test="${model.indexBeingCreated}">disabled title="Media folders cannot be deleted during library scanning."</c:if> /></td>
@@ -121,8 +132,23 @@
 									name="spotify_password" id="spotify_password"
 									class="form-control" />
 							</div>
+							
+							<c:if test="${model.spotifyKeyExists}">
+							  <p>A spotify key has already been uploaded.</p> 
+							  <p>
+							  <a href="#" onclick="jQuery('#spotifyKeyField').removeClass('hidden'); return false;">Upload another key.</a>
+							  </p>
+							
+							</c:if>
+              <div class="form-group ${model.spotifyKeyExists ? 'hidden' : ''}" id="spotifyKeyField">
+                      <label for="spotify_key"><fmt:message
+                          key="spotifysettings.key" /> </label> <input type="file"
+                        name="spotify_key" id="spotify_key"
+                        class="form-control" />
+              </div>
+							
 
-							<button class="btn btn-primary">
+							<button class="btn btn-primary" type="submit">
 								<fmt:message key="common.ok" />
 							</button>
 						</c:when>
@@ -165,5 +191,6 @@
       </c:if>
     </script>
 	</c:if>
-
+</div>
+</div>
 </div>

@@ -1,15 +1,36 @@
 {
-  "name": "mustache",
+  "name": "mustache.js",
+  "main": "mustache.js",
+  "version": "2.0.0",
   "homepage": "https://github.com/janl/mustache.js",
-  "version": "0.8.1",
-  "_release": "0.8.1",
+  "authors": [
+    "mustache.js Authors <http://github.com/janl/mustache.js>"
+  ],
+  "description": "Logic-less {{mustache}} templates with JavaScript",
+  "keywords": [
+    "mustache",
+    "template",
+    "templates",
+    "ejs"
+  ],
+  "moduleType": [
+    "amd",
+    "globals",
+    "node"
+  ],
+  "license": "MIT",
+  "ignore": [
+    "**/.*",
+    "test"
+  ],
+  "_release": "2.0.0",
   "_resolution": {
     "type": "version",
-    "tag": "0.8.1",
-    "commit": "58f77330ef9f092c3e2fc82a33cdff927031a1bd"
+    "tag": "v2.0.0",
+    "commit": "c52df34ee05ed9b0ffac945eb86e814c84b29b07"
   },
   "_source": "git://github.com/janl/mustache.js.git",
-  "_target": "~0.8.1",
+  "_target": "2.0.0",
   "_originalSource": "mustache",
   "_direct": true
 }

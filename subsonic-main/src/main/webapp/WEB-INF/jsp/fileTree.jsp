@@ -1,7 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=utf-8" pageEncoding="utf-8"%>
 
     <%@ include file="include.jspf" %>
-<div class="mainframe bgcolor1">
+<div class="mainframe bgcolor1 well page">
 
 <%@ include file="toggleStar.jspf" %>
 
@@ -24,8 +24,8 @@
 		<li>${directory}</li>
 	</c:forEach>
 	</ul>
-	<div class="forward"><a href="fileTree.view?id=${model.directoryId}&action=scan&from=subdir&type=offline">Offline scan</a></div>
-	<div class="forward"><a href="fileTree.view?id=${model.directoryId}&action=scan&from=subdir&type=normal">Normal scan</a></div>
+	<div class="forward"><a href="#/fileTree?id=${model.directoryId}&action=scan&from=subdir&type=offline">Offline scan</a></div>
+	<div class="forward"><a href="#/fileTree?id=${model.directoryId}&action=scan&from=subdir&type=normal">Normal scan</a></div>
 	<br>
 	</c:if>
 
@@ -36,8 +36,8 @@
 		<li>${file.filename}</li>
 	</c:forEach>
 	</ul>
-	<div class="forward"><a href="fileTree.view?id=${model.directoryId}&action=scan&from=dir&type=offline">Offline scan</a></div>
-	<div class="forward"><a href="fileTree.view?id=${model.directoryId}&action=scan&from=dir&type=normal">Normal scan</a></div>
+	<div class="forward"><a href="#/fileTree?id=${model.directoryId}&action=scan&from=dir&type=offline">Offline scan</a></div>
+	<div class="forward"><a href="#/fileTree?id=${model.directoryId}&action=scan&from=dir&type=normal">Normal scan</a></div>
 	<br>
 	</c:if>
 
@@ -55,14 +55,14 @@
 
 	<ul style="list-style-type: none; margin-left: 5px; padding: 5px;">
 	<c:if test="${not empty model.parentId}">
-		<li><a href="fileTree.view?id=${model.parentId}">[..]</a></li>
+		<li><a href="#/fileTree?id=${model.parentId}">[..]</a></li>
 	</c:if>
 	<c:forEach items="${model.directories}" var="directory">
 		<li>
 		<c:if test="${model.user.adminRole}">
-			<a href="fileTree.view?id=${directory.id}&action=add"><img src="<spring:theme code="plusImage"/>" alt="Look for added files" title="Look for added files"></a>
+			<a href="#/fileTree?id=${directory.id}&action=add"><img src="<spring:theme code="plusImage"/>" alt="Look for added files" title="Look for added files"></a>
 		</c:if>
-		<a href="fileTree.view?id=${directory.id}">${directory.name}</a></li>
+		<a href="#/fileTree?id=${directory.id}">${directory.name}</a></li>
 	</c:forEach>
 	</ul>
 

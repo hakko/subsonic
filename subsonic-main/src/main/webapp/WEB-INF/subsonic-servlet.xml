@@ -111,6 +111,10 @@
         <property name="playerService" ref="playerService"/>
         <property name="securityService" ref="securityService"/>
     </bean>
+    <bean id="setRatingController" class="net.sourceforge.subsonic.controller.SetRatingController">
+        <property name="ratingService" ref="ratingService"/>
+        <property name="securityService" ref="securityService"/>
+    </bean>
     <bean id="loadPlaylistController" class="net.sourceforge.subsonic.controller.LoadPlaylistController">
         <property name="securityService" ref="securityService"/>
         <property name="playlistService" ref="playlistService"/>
@@ -261,6 +265,11 @@
         <property name="settingsService" ref="settingsService"/>
         <property name="securityService" ref="securityService"/>
     </bean>
+    <bean id="spotifyKeyUploadController" class="net.sourceforge.subsonic.controller.SpotifyKeyUploadController">
+        <property name="viewName" value="avatarUploadResult"/>
+        <property name="settingsService" ref="settingsService"/>
+        <property name="securityService" ref="securityService"/>
+    </bean>
     <bean id="userSettingsController" class="net.sourceforge.subsonic.controller.UserSettingsController">
         <property name="sessionForm" value="true"/>
         <property name="commandClass" value="net.sourceforge.subsonic.command.UserSettingsCommand"/>
@@ -290,6 +299,7 @@
         <property name="libraryBrowserService" ref="libraryBrowserService"/>
         <property name="mediaFileService" ref="mediaFileService"/>
         <property name="starService" ref="starService"/>
+        <property name="ratingService" ref="ratingService"/>
     </bean>
     <bean id="editTagsController" class="net.sourceforge.subsonic.controller.EditTagsController">
         <property name="viewName" value="editTags"/>
@@ -577,6 +587,7 @@
                 <prop key="/more.view">moreController</prop>
                 <prop key="/upload.view">uploadController</prop>
                 <prop key="/createShare.view">shareManagementController</prop>
+                <prop key="/setRating.view">setRatingController</prop>
                 <prop key="/top.view">topController</prop>
                 <prop key="/loadPlaylist.view">loadPlaylistController</prop>
                 <prop key="/loadPlaylistConfirm.view">loadPlaylistController</prop>
@@ -609,6 +620,7 @@
                 <prop key="/personalSettings.view">personalSettingsController</prop>
                 <prop key="/lastFmSettings.view">lastFmSettingsController</prop>
                 <prop key="/avatarUpload.view">avatarUploadController</prop>
+                <prop key="/spotifyKeyUpload.view">spotifyKeyUploadController</prop>
                 <prop key="/userSettings.view">userSettingsController</prop>
                 <prop key="/passwordSettings.view">passwordSettingsController</prop>
                 <prop key="/home.view">homeController</prop>

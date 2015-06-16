@@ -3,10 +3,12 @@
 <%@ include file="include.jspf"%>
 
 
-
-<div class="bgcolor2 leftframe">
-
-	<ul class="nav nav-tabs">
+<div class="bgcolor2 leftframe panel panel-default">
+<div class="panel-heading">
+<!-- what to put in here? Can we always have this displayed? -->
+</div>
+<div class="panel-body">
+  <ul class="nav nav-tabs <spring:theme code="tabs.primary" />">
 		<li class="${empty model.filebased ? 'active' : ''}"><a
 			href="#" onclick="return loadLeft('?method=media');">Media</a></li>
 		<li class="${not empty model.filebased ? 'active' : ''}"><a
@@ -182,4 +184,4 @@ window.location.hash='${fn:replace(model.indexedLetter,'#','#bottom')}';
         }(jQuery));
 	</script>
 </div>
-
+</div>

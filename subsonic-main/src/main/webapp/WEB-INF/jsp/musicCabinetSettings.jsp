@@ -1,7 +1,15 @@
 <%@ page language="java" contentType="text/html; charset=utf-8" pageEncoding="iso-8859-1" %>
 
     <%@ include file="include.jspf" %>
-<div class="mainframe bgcolor1">
+<spring:theme code="panel.primary" var="themePanelPrimary" scope="page" />
+<div class="mainframe bgcolor1 panel panel-primary ${themePanelPrimary}">
+
+<div class="panel-heading">
+  <i class="fa fa-cog"></i>
+  <fmt:message key="settingsheader.title"/>
+</div>
+<div class="panel-body">
+
 
 <c:import url="settingsHeader.jsp">
     <c:param name="cat" value="musicCabinet"/>
@@ -159,7 +167,7 @@
           </table>
           <input type="submit" value="Save" style="margin-right:0.3em"/>
           <br/><br/><br/>
-          <p><a href="tagSettings.view">Tag settings</a> | <a href="groupSettings.view">Group settings</a></p>
+          <p><a href="#/tagSettings">Tag settings</a> | <a href="#/groupSettings">Group settings</a></p>
 
 		<script type="text/javascript" language="javascript">
 		jQuery(['#artistRadioTotalCount', '#artistRadioArtistCount', '#artistTopTracksTotalCount',
@@ -216,4 +224,5 @@
 </c:choose>
 
 </form:form>
+</div>
 </div>

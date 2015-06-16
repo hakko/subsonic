@@ -60,15 +60,39 @@ function submitForm(el, msg) {
   }
 
   var action = form.attr("action");
-  jQuery.post(action, form.serialize(), function(data) {
+  var success = function(data) {
     target = findTarget(el);
     jQuery("." + target).html(data);
     if(msg) {
       var statusMessage = jQuery("." + target).find(".statusMessage").html('<button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>' + msg).addClass("alert alert-success alert-dismissable");
     }
-  }).fail(function(jqXHR, textStatus, errorThrown) {
+  };
+  var fail = function(jqXHR, textStatus, errorThrown) {
     var statusMessage = jQuery("." + target).find(".statusMessage").html('<button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>' + errorThrown).addClass("alert alert-danger alert-dismissable");
-  })
+  };
+  
+  try {
+  if (form.attr('enctype') && form.attr('enctype').indexOf('multipart') === 0) {
+    var formData = new FormData(form[0]);
+    console.log(formData);
+    $.ajax({
+      url: action,
+      type: 'POST',
+      data: formData,
+      async: false,
+      cache: false,
+      contentType: false,
+      processData: false
+    }).done(success).fail(fail);
+  } else {
+    jQuery.post(action, form.serialize(), success).fail(fail);    
+  }
+  } catch(e) {
+    console.trace(e);
+  }
+  
+  
+
   return false;
 }
 function search(el, page) {
@@ -171,9 +195,13 @@ var app = (function() {
     try {
       module.showPleaseWait();
     $.when($.ajax( path, {type: type, data: data})).then(function( data, textStatus, jqXHR ) {
-      jQuery('div.left').hide();
-      jQuery('div.main').html(data);
-      module.hidePleaseWait();
+      try {
+        jQuery('div.left').hide();
+        jQuery('div.main').html(data);
+        module.hidePleaseWait();
+      } catch(e) {
+        console.trace(e);
+      }
     });
     } catch(e) {
       window.console.log.error(e);
@@ -234,6 +262,7 @@ var app = (function() {
     });
   }
   module.loadHome = function(query) {
+    console.log("Loading home " + query, this);
     var url = "home.view";
     module.loadMain(url + query);
   }
@@ -250,11 +279,8 @@ var app = (function() {
     }
     module.loadMain(url);
   }
-  module.loadArtistGenres = function(genre) {
-    var url = "artistGenres.view";
-    if(genre) {
-      url += "?idUtf8Hex=" + genre;
-    }
+  module.loadArtistGenres = function(params) {
+    var url = "artistGenres.view" + params;
     module.loadMain(url);
   }
   
@@ -270,8 +296,8 @@ var app = (function() {
   module.loadRadio = function() {
     module.loadMain("radio.view");
   }
-  module.loadFileTree = function() {
-    module.loadMain("fileTree.view");
+  module.loadFileTree = function(params) {
+    module.loadMain("fileTree.view" + params);
   }
   module.loadPodcastReceiver = function() {
     module.loadMain("podcastReceiver.view");
@@ -337,7 +363,7 @@ var app = (function() {
   };
   
   module.loadPage = function(page, query) {
-    window.console.log("Loading page: " + page);
+    window.console.log("Loading page: " + page + ":" + query, this);
     module.loadMain(page + ".view" + query);
   };
   
@@ -349,7 +375,7 @@ var app = (function() {
       '/createShare/idsUtf8Hex/:id': module.createShare,
       '/genres(.*)': module.loadGenres,
       '/radio': module.loadRadio,
-      '/fileTree': module.loadFileTree,
+      '/(fileTree)(.*)': module.loadPage,
       '/podcastReceiver': module.loadPodcastReceiver,
       '/nowPlaying': module.loadNowPlaying,
       '/settings': module.loadSettings,
@@ -364,6 +390,7 @@ var app = (function() {
       '/transcodingSettings': module.genericLoader('transcodingSettings.view'),
       '/internetRadioSettings': module.genericLoader('internetRadioSettings.view'),
       '/podcastSettings': module.genericLoader('podcastSettings.view'),
+      '/(setRating)(.*)': module.loadPage,
       '/tagSettings': module.genericLoader('tagSettings.view'),
       '/searchSettings': module.loadSearchSettings,
       '/searchSettings/update/:type': module.loadSearchSettings,
@@ -373,9 +400,10 @@ var app = (function() {
       '/playerSettings': module.loadPlayerSettings,
       '/shareSettings': module.loadShareSettings,
       '/musicCabinetSettings': module.loadMusicCabinetSettings,
-      '/artistGenres/idUtf8Hex/:id': module.loadArtistGenres,
+      '/artistGenres(.*)': module.loadArtistGenres,
       '/artist/idUtf8Hex/:id': module.loadArtist,
       '/search/query/(.*)': module.loadSearch,
+      '/(groupSettings)(.*)': module.loadPage,
       '/(loadPlaylistConfirm)(.*)': module.loadPage,
       '/artist(.*)': module.loadArtist,
       '/main/pathUtf8Hex/:path_id': module.loadPath

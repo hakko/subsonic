@@ -89,6 +89,7 @@ public class PersonalSettingsController extends SimpleFormController {
         command.setDeviceLastSync(userSettings.getDeviceLastSync());
         command.setDeviceMountPath(userSettings.getDeviceMountPath());
         command.setDeviceSyncSize(userSettings.getDeviceSyncSize());
+        command.setSongNotificationEnabled(userSettings.isSongNotificationEnabled());
         
         Locale currentLocale = userSettings.getLocale();
         Locale[] locales = settingsService.getAvailableLocales();
@@ -166,6 +167,7 @@ public class PersonalSettingsController extends SimpleFormController {
         settings.setDeviceMountPath(command.getDeviceMountPath());
         // force a new sync
         settings.setDeviceLastSync(new Date(0));
+        settings.setSongNotificationEnabled(command.isSongNotificationEnabled());
         
         settings.setChanged(new Date());
         settingsService.updateUserSettings(settings);

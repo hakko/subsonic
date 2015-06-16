@@ -8,7 +8,15 @@
 	xmlns:str="http://jakarta.apache.org/taglibs/string-1.1" version="2.1">
 	<jsp:directive.page session="false" />
 	<jsp:directive.page contentType="text/html; charset=utf-8" />
-	<div class="mainframe bgcolor1">
+<spring:theme code="panel.primary" var="themePanelPrimary" scope="page" />
+<div class="mainframe bgcolor1 panel panel-primary ${themePanelPrimary}">
+
+<div class="panel-heading">
+  <i class="fa fa-cog"></i>
+  <fmt:message key="settingsheader.title"/>
+</div>
+<div class="panel-body">
+
 
 		<c:import url="settingsHeader.jsp">
 			<c:param name="cat" value="share" />
@@ -95,5 +103,6 @@
 				<fmt:message key="common.cancel" />
 			</button>
 		</form>
+	</div>
 	</div>
 </jsp:root>

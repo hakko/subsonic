@@ -20,6 +20,7 @@ public class Album implements Comparable<Album> {
 	private String coverArtUrl;
 	private String coverArtZoomUrl;
 	private Uri spotifyUri;
+	private Integer rating;
 
 	private List<? extends Uri> trackUris;
 	private List<MediaFile> mediaFiles = new ArrayList<>();
@@ -155,6 +156,14 @@ public class Album implements Comparable<Album> {
 
 	public void setSpotifyUri(Uri spotifyUri) {
 		this.spotifyUri = spotifyUri;
+	}
+
+	public Integer getRating() {
+		return rating;
+	}
+
+	public void setRating(Integer rating) {
+		this.rating = rating;
 	}
 	
 

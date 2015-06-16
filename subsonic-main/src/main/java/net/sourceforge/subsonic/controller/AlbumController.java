@@ -67,7 +67,7 @@ public class AlbumController extends ParameterizableViewController {
 
         MediaFile mediaFile;
         List<MediaFile> mediaFiles = new ArrayList<>();
-        for (String param : request.getParameterValues("mf")) {
+        for (String param : request.getParameterValues("mf[]")) {
         	mediaFiles.add(mediaFile = mediaFileService.getMediaFile(URIUtil.parseURI(param)));
         	artistIds.add(mediaFile.getMetaData().getArtistUri());
         }

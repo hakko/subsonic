@@ -3,7 +3,15 @@
 <%@ include file="include.jspf"%>
 
 
-<div class="mainframe bgcolor1">
+<spring:theme code="panel.primary" var="themePanelPrimary" scope="page" />
+<div class="mainframe bgcolor1 panel panel-primary ${themePanelPrimary}">
+
+<div class="panel-heading">
+  <i class="fa fa-cog"></i>
+  <fmt:message key="settingsheader.title"/>
+</div>
+<div class="panel-body">
+
 
 	<c:import url="settingsHeader.jsp">
 		<c:param name="cat" value="user" />
@@ -273,4 +281,5 @@
 	<script type="text/javascript">
     enablePasswordChangeFields()
   </script>
+</div>
 </div>

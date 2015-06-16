@@ -1,0 +1,47 @@
+a {
+  color: #01579b;
+}
+.play-label .btn-group {
+	background-color: white;
+	bottom: 52px;
+  left: 25px;
+}
+.play-label.detail {
+	color: #757575;
+	margin-top: 10px;
+}
+.play-label.detail em {
+  color: #424242;
+}
+#playlistBody .btn-group input[type=checkbox] {
+  margin: auto;
+}
+#playlistBody .playlist-row {
+  clear: both;
+  line-height: 22px;
+}
+.table-body .striped-row:nth-child(odd) {
+   background-color: #f9f9f9;
+}
+.table-body .striped-row:nth-child(even) {
+   /*background-color: #f9f9f9;*/
+}
+.table-body .btn-group {
+	margin: 10px 8px;
+}
+.table-body .buttons {
+	float: left;
+	width: 50px;
+}
+.table-body .playlist-item {
+	margin-top: 6px;
+	margin-left: 20px;
+	float: left;
+	overflow: hidden;
+	text-overflow: ellipsis;
+}
+.spotify-icon {
+  right: 9px;
+  position: absolute;
+  top: 50%;
+}

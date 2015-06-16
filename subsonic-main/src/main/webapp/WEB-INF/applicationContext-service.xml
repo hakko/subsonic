@@ -58,7 +58,7 @@
     <bean id="avatarDao" class="net.sourceforge.subsonic.dao.AvatarDao">
         <property name="daoHelper" ref="daoHelper"/>
     </bean>
-
+    
     <bean id="shareDao" class="net.sourceforge.subsonic.dao.ShareDao">
         <property name="daoHelper" ref="daoHelper"/>
     </bean>
@@ -97,6 +97,11 @@
         <property name="versionService" ref="versionService"/>
         <property name="spotifySettingsService" ref="spotifySettingsService" />
     </bean>
+    
+    <bean id="ratingService" class="net.sourceforge.subsonic.service.RatingService">
+        <property name="ratingDao" ref="ratingDao"/>
+    </bean>
+    
 
     <bean id="mediaFolderService" class="net.sourceforge.subsonic.service.MediaFolderService" init-method="init">
         <property name="mediaFolderDao" ref="mediaFolderDao"/>
@@ -698,7 +703,11 @@
     <bean id="musicDao" class="com.github.hakko.musiccabinet.dao.jdbc.JdbcMusicDao">
         <property name="dataSource" ref="dataSource"/>
     </bean>
-
+    
+    <bean id="ratingDao" class="com.github.hakko.musiccabinet.dao.jdbc.JdbcRatingDao">
+        <property name="dataSource" ref="dataSource"/>
+    </bean>
+    
     <bean id="starDao" class="com.github.hakko.musiccabinet.dao.jdbc.JdbcStarDao">
         <property name="dataSource" ref="dataSource"/>
     </bean>

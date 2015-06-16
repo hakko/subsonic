@@ -1,7 +1,14 @@
 <%@ page language="java" contentType="text/html; charset=utf-8" pageEncoding="iso-8859-1" %>
 
     <%@ include file="include.jspf" %>
-<div class="mainframe bgcolor1">
+ <spring:theme code="panel.primary" var="themePanelPrimary" scope="page" />
+<div class="mainframe bgcolor1 panel panel-primary ${themePanelPrimary}">
+
+<div class="panel-heading">
+  <i class="fa fa-cog"></i>
+  Group Settings
+</div>
+<div class="panel-body">
 
 <script type="text/javascript">
 	function add(group) {
@@ -47,4 +54,5 @@
 	<input type="button" value="<fmt:message key="common.cancel"/>" onclick="location.href='nowPlaying.view'">
 
 </form>
+</div>
 </div>

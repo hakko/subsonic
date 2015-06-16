@@ -1,7 +1,12 @@
 <%@ page language="java" contentType="text/html; charset=utf-8" pageEncoding="utf-8"%>
 
     <%@ include file="include.jspf" %>
-<div class="mainframe bgcolor1">
+<div class="mainframe bgcolor1 panel panel-primary <spring:theme code="panel.primary" />">
+
+<div class="panel-heading">
+    <i class="fa fa-cloud"></i>
+    Genres
+</div>
 
 <div style="line-height: 1.5; padding: 15px;">
 

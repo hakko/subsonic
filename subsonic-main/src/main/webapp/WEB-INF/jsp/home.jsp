@@ -6,10 +6,12 @@
 <%@ include file="toggleStar.jspf" %>
 
 
-<h1>
-    <img src="<spring:theme code="homeImage"/>" alt="">
-    ${model.welcomeTitle}
-</h1>
+<div class="mainframe bgcolor1 panel panel-primary <spring:theme code="panel.primary" />">
+<div class="panel-heading">
+  <i class="fa fa-home"></i>
+  ${model.welcomeTitle}
+</div>
+<div class="panel-body">
 
 <c:if test="${not empty model.welcomeSubtitle}">
     <h2>${model.welcomeSubtitle}</h2>
@@ -23,7 +25,7 @@
 	Last.fm scrobbling not configured! For full statistics and personal music recommendations, <a href="lastFmSettings.view">click here</a>.
 </c:if>
 
-<ul class="nav nav-tabs nav-justified">
+<ul class="nav nav-tabs nav-justified <spring:theme code="tabs.primary" />">
     <c:forTokens items="newest recent frequent starred topartists random recommended" delims=" " var="cat" varStatus="loopStatus">
         <sub:url var="url" value="home.view">
             <sub:param name="listType" value="${cat}"/>
@@ -58,4 +60,5 @@
 <script type="text/javascript" language="javascript">
         dwr.engine.setErrorHandler(null);
 </script>
+</div>
 </div>

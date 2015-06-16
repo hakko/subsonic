@@ -62,6 +62,7 @@ public class UserSettings {
 	private String deviceMountPath;
 	private long deviceSyncSize;
 	private Date deviceLastSync;
+	private boolean songNotificationEnabled;
 
 	public Date getDeviceLastSync() {
 		return deviceLastSync;
@@ -464,5 +465,13 @@ public class UserSettings {
 
 	public void setSpotifyUsername(String spotifyUsername) {
 		this.spotifyUsername = spotifyUsername;
+	}
+
+	public boolean isSongNotificationEnabled() {
+		return songNotificationEnabled;
+	}
+
+	public void setSongNotificationEnabled(boolean songNotificationEnabled) {
+		this.songNotificationEnabled = songNotificationEnabled;
 	}
 }

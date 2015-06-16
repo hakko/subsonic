@@ -30,6 +30,7 @@ import java.util.concurrent.atomic.AtomicReference;
 import javax.sound.sampled.AudioFormat;
 import javax.sound.sampled.AudioSystem;
 import javax.sound.sampled.FloatControl;
+import javax.sound.sampled.Mixer;
 import javax.sound.sampled.SourceDataLine;
 
 import net.sourceforge.subsonic.Logger;
@@ -55,12 +56,13 @@ public class AudioPlayer {
     private final AtomicReference<State> state = new AtomicReference<State>(PAUSED);
     private FloatControl gainControl;
 
-    public AudioPlayer(InputStream in, Listener listener) throws Exception {
+    public AudioPlayer(InputStream in, Mixer.Info currentMixer, Listener listener) throws Exception {
         this.in = new BufferedInputStream(in);
         this.listener = listener;
 
         AudioFormat format = AudioSystem.getAudioFileFormat(this.in).getFormat();
-        line = AudioSystem.getSourceDataLine(format);
+        
+        line = AudioSystem.getSourceDataLine(format, currentMixer);
         line.open(format);
         LOG.debug("Opened line " + line);
 

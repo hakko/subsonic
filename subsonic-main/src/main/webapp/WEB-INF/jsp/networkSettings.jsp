@@ -3,7 +3,15 @@
 <%--@elvariable id="command" type="net.sourceforge.subsonic.command.NetworkSettingsCommand"--%>
 
 <%@ include file="include.jspf"%>
-<div class="mainframe bgcolor1" onload="init()">
+<spring:theme code="panel.primary" var="themePanelPrimary" scope="page" />
+<div class="mainframe bgcolor1 panel panel-primary ${themePanelPrimary}" onload="init()">
+
+<div class="panel-heading">
+  <i class="fa fa-cog"></i>
+  <fmt:message key="settingsheader.title"/>
+</div>
+<div class="panel-body">
+
 
 	<c:import url="settingsHeader.jsp">
 		<c:param name="cat" value="network" />
@@ -70,6 +78,7 @@
 			</div>
 		</div>
 	</form:form>
+	</div>
 </div>
 <script type="text/javascript" src="<c:url value="/dwr/util.js"/>"></script>
 <script type="text/javascript" language="javascript">

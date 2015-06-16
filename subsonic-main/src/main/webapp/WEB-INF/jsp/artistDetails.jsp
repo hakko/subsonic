@@ -12,10 +12,10 @@
 <a href="#" onclick="toggleStar('art', ${model.artistUri}, '#starImage${sub:jqesc(model.artistUri)}'); return false;">
 	<c:choose>
 		<c:when test="${model.artistStarred}">
-			<img id="starImage${model.artistUri}" src="<spring:theme code="ratingOnImage"/>" alt="">
+			<img id="starImage${model.artistUri}" src="<spring:theme code="ratingOnImage"/>" alt="" class="starred">
 		</c:when>
 		<c:otherwise>
-			<img id="starImage${model.artistUri}" src="<spring:theme code="ratingOffImage"/>" alt="">
+			<img id="starImage${model.artistUri}" src="<spring:theme code="ratingOffImage"/>" alt="" class="starred">
 		</c:otherwise>
 	</c:choose>
 </a>
@@ -57,7 +57,6 @@ ${model.artistName}
 		<c:when test="${not empty album.coverArtUrl}"><c:set var="coverArtUrl">${album.coverArtUrl}</c:set></c:when>
 		<c:otherwise>
 			<sub:url value="coverArt.view" var="coverArtUrl">
-				<sub:param name="size" value="174"/>
 				<c:if test="${not empty album.coverArtPath}"><sub:param name="path" value="${album.coverArtPath}"/></c:if>
 			</sub:url>
 		</c:otherwise>

@@ -3,7 +3,15 @@
 <%--@elvariable id="command" type="net.sourceforge.subsonic.command.PlayerSettingsCommand"--%>
 
 <%@ include file="include.jspf"%>
-<div class="mainframe bgcolor1">
+<spring:theme code="panel.primary" var="themePanelPrimary" scope="page" />
+<div class="mainframe bgcolor1 panel panel-primary ${themePanelPrimary}">
+
+<div class="panel-heading">
+  <i class="fa fa-cog"></i>
+  <fmt:message key="settingsheader.title"/>
+</div>
+<div class="panel-body">
+
 
 	<c:import url="settingsHeader.jsp">
 		<c:param name="cat" value="player" />
@@ -75,6 +83,17 @@
 								</p>
 							</div>
 						</c:forEach>
+						
+            <div class="form-group">
+              <label for="mixer">Jukebox Mixer</label>
+              <form:select path="mixerName"> 
+                <c:forEach items="${command.mixers}" var="mixer">
+                  <form:option label="${mixer}"  
+                    value="${mixer}" />
+                </c:forEach>
+              </form:select>
+            </div>
+						
 
 
 						<div class="form-group">
@@ -220,4 +239,5 @@
       jQuery('.playlist').load("playlist.view?");
     </script>
 	</c:if>
+</div>
 </div>

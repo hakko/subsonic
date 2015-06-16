@@ -38,7 +38,7 @@
 
 <div style="padding:15px; width:80%">
 <h1>
-  <img src="<spring:theme code="searchImage"/>" alt=""/>
+  <i class="fa fa-search"></i>
 	Advanced search
 	</h1>
 

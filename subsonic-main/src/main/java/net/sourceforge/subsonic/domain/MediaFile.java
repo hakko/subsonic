@@ -283,7 +283,7 @@ public class MediaFile implements Serializable, Comparable<MediaFile> {
 		}
 		return metaData;
 	}
-	
+
 	public void setMetaData(MetaData metaData) {
 		this.metaData = metaData;
 	}
@@ -426,14 +426,15 @@ public class MediaFile implements Serializable, Comparable<MediaFile> {
 	}
 
 	public boolean isSpotify() {
-		if (file != null && file.getParent() != null && file.getParent().equals("spotify:")) {
+		if (file != null && file.getParent() != null
+				&& file.getParent().equals("spotify:")) {
 			return true;
 		}
-		
+
 		if (file.getPath().startsWith("spotify:")) {
 			return true;
 		}
-		
+
 		return false;
 	}
 
@@ -477,6 +478,10 @@ public class MediaFile implements Serializable, Comparable<MediaFile> {
 
 		}
 		return mediaFileIds;
+	}
+
+	public static enum MediaType {
+		MUSIC, PODCAST, AUDIOBOOK, VIDEO, DIRECTORY, ALBUM
 	}
 
 }

@@ -1,5 +1,5 @@
 <%@ include file="include.jspf" %>
-<div class="mainframe bgcolor1">
+<div class="mainframe bgcolor1 panel panel-primary <spring:theme code="panel.primary" />">
 
 <c:choose>
     <c:when test="${empty model.buildDate}">
@@ -10,10 +10,11 @@
     </c:otherwise>
 </c:choose>
 
-<h1>
-    <img src="<spring:theme code="helpImage"/>" alt="">
+<div class="panel-heading">
+    <i class="fa fa-info-circle"></i>
     <fmt:message key="help.title"><fmt:param value="${model.brand}"/></fmt:message>
-</h1>
+</div>
+<div class="panel-body">
 
 <table width="75%" class="ruleTable indent">
     <tr><td class="ruleTableHeader"><fmt:message key="help.version.title"/></td><td class="ruleTableCell">${model.brand}, originally written by Sindre Mehus. Built with MusicCabinet plugin, version ${model.buildNumber}, on ${buildDateString}.</td></tr>
@@ -41,5 +42,5 @@
 <p><fmt:message key="help.logfile"><fmt:param value="${model.subsonicLogFile}"/></fmt:message> </p>
 
 <div class="forward"><a href="help.view?"><fmt:message key="common.refresh"/></a></div>
-
+</div>
 </div>

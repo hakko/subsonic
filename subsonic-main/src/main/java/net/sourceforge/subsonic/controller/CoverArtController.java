@@ -107,6 +107,9 @@ public class CoverArtController implements Controller, LastModified {
 		}
 		File file = null;
 		Integer size = ServletRequestUtils.getIntParameter(request, "size");
+		if (size == null) {
+			size = new Integer(200);
+		}
 
 		boolean isSpotify = false;
 		if (URIUtil.isSpotify(path)) {
@@ -114,31 +117,16 @@ public class CoverArtController implements Controller, LastModified {
 			Link link = Link.create(path);
 			if (link.isImageLink()) {
 
-				file = new File(getSpotifyCacheDirectory(),
+				file = new File(
+						getSpotifyCacheDirectory(DigestUtils.md5Hex(path)),
 						DigestUtils.md5Hex(path) + ".jpg");
 				path = file.getAbsolutePath();
 				// check if the image exists, if not cache it
 				if (!file.exists()) {
-					try {
-						if (!spotifyService.lock()) {
-							return null;
-						}
-						Image image = spotifyService.getSpotify().readImage(
-								link);
-						LOG.warn("File does not exist "
-								+ file.getAbsolutePath());
-						if (MediaHelper.waitFor(image, 120)) {
-							Files.write(FileSystems.getDefault().getPath(path),
-									image.getBytes());
-						} else {
-							LOG.warn("Could not download "
-									+ file.getAbsolutePath());
-							file = null;
-						}
-					} finally {
-						spotifyService.unlock();
-					}
-
+					Image image = spotifyService.readImage(link);
+					LOG.warn("File does not exist " + file.getAbsolutePath());
+					Files.write(FileSystems.getDefault().getPath(path),
+							image.getBytes());
 				}
 			}
 		}
@@ -146,15 +134,10 @@ public class CoverArtController implements Controller, LastModified {
 		// Check access.
 		file = (path == null || path.length() == 0) ? null : new File(path);
 		boolean isRemote = path != null && path.startsWith("http");
-			
-		if (file != null && !isSpotify && !isRemote && !securityService.isReadAllowed(file)) {
-			response.sendError(HttpServletResponse.SC_FORBIDDEN);
-			return null;
-		}
 
-		// Optimize if no scaling is required.
-		if (size == null) {
-			sendUnscaled(path, response);
+		if (file != null && !isSpotify && !isRemote
+				&& !securityService.isReadAllowed(file)) {
+			response.sendError(HttpServletResponse.SC_FORBIDDEN);
 			return null;
 		}
 
@@ -162,6 +145,12 @@ public class CoverArtController implements Controller, LastModified {
 		// it will be cached in browser.)
 		if (file == null) {
 			sendDefault(size, response);
+			return null;
+		}
+
+		// Optimize if no scaling is required.
+		if (size == null) {
+			sendUnscaled(path, response);
 			return null;
 		}
 
@@ -208,7 +197,8 @@ public class CoverArtController implements Controller, LastModified {
 
 	private File getCachedImage(String path, int size) throws IOException {
 		String md5 = DigestUtils.md5Hex(path);
-		File cachedImage = new File(getImageCacheDirectory(size), md5 + ".jpeg");
+		File cachedImage = new File(getImageCacheDirectory(size, md5), md5
+				+ ".jpeg");
 
 		// Is cache missing or obsolete?
 		if (!cachedImage.exists()
@@ -253,20 +243,20 @@ public class CoverArtController implements Controller, LastModified {
 			throws ApplicationException, IOException {
 		String extension = FilenameUtils.getExtension(path);
 		if (audioTagService.isAudioFile(extension)) {
-			return new ByteArrayInputStream(audioTagService.getArtwork(new File(path))
-					.getBinaryData());
-		} else if(path.startsWith("http")) {
+			return new ByteArrayInputStream(audioTagService.getArtwork(
+					new File(path)).getBinaryData());
+		} else if (path != null && path.startsWith("http")) {
 			URL url = new URL(path);
-            URLConnection connection = url.openConnection();
-            return connection.getInputStream();
+			URLConnection connection = url.openConnection();
+			return connection.getInputStream();
 		} else {
 			return new FileInputStream(new File(path));
 		}
 	}
 
-	private synchronized File getSpotifyCacheDirectory() {
+	private synchronized File getSpotifyCacheDirectory(String md5) {
 		File dir = new File(SettingsService.getSubsonicHome(), "thumbs");
-		dir = new File(dir, "spotify");
+		dir = new File(dir, "spotify" + "-" + md5.substring(0, 2));
 		if (!dir.exists()) {
 			if (dir.mkdirs()) {
 				LOG.info("Created spotify thumbnail cache " + dir);
@@ -278,9 +268,9 @@ public class CoverArtController implements Controller, LastModified {
 		return dir;
 	}
 
-	private synchronized File getImageCacheDirectory(int size) {
+	private synchronized File getImageCacheDirectory(int size, String md5) {
 		File dir = new File(SettingsService.getSubsonicHome(), "thumbs");
-		dir = new File(dir, String.valueOf(size));
+		dir = new File(dir, String.valueOf(size) + "-" + md5.substring(0, 2));
 		if (!dir.exists()) {
 			if (dir.mkdirs()) {
 				LOG.info("Created thumbnail cache " + dir);

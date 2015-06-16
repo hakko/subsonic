@@ -20,7 +20,7 @@ public class PlayerTest implements AudioPlayer.Listener {
     private AudioPlayer player;
 
     public PlayerTest() throws Exception {
-        player = new AudioPlayer(new FileInputStream("i:\\tmp\\foo.au"), this);
+        player = new AudioPlayer(new FileInputStream("i:\\tmp\\foo.au"), null, this);
         createGUI();
     }
 

@@ -5,27 +5,27 @@
 <%@ include file="toggleStar.jspf" %>
 
 
-<div style="padding: 15px;">
-
-<h1>
+<div class="panel panel-primary panel-material-light-blue">
+<div class="panel-heading">
 <a href="#" onclick="toggleStar('art', '${model.artistUri}', '#starImage${sub:jqesc(model.artistUri)}'); return false;">
 	<c:choose>
 		<c:when test="${model.artistStarred}">
-			<img id="starImage${model.artistUri}" src="<spring:theme code="ratingOnImage"/>" alt="">
+			<img id="starImage${model.artistUri}" src="<spring:theme code="ratingOnImage"/>" alt="" class="starred">
 		</c:when>
 		<c:otherwise>
-			<img id="starImage${model.artistUri}" src="<spring:theme code="ratingOffImage"/>" alt="">
+			<img id="starImage${model.artistUri}" src="<spring:theme code="ratingOffImage"/>" alt="" class="starred">
 		</c:otherwise>
 	</c:choose>
 </a>
 ${model.artistName}
-</h1>
+</div>
+      <div class="panel-body">
 
 <c:if test="${not empty model.artistInfo}">
 		<div class="clearfix">
 			<div class="col-lg-3">
 					<a href="#" onclick="return toggleArtist()">
-						<img id="bioArt" class="img-responsive" width="${model.artistInfoImageSize}" height="${model.artistInfoImageSize}" src="${model.artistInfo.largeImageUrl}" alt="">
+						<img id="bioArt" class="img-responsive" src="${model.artistInfo.extraLargeImageUrl}" alt="">
 					</a>
 			</div>
 			<div class="col-lg-7">
@@ -84,6 +84,9 @@ ${model.artistName}
   		<a class="btn btn-default btn-xs" href="${editArtistUrl}">Edit</a>
   	</c:if>
   </div>
+</div>
+  </div>
+
 </div>
 
 <%@ include file="albums.jspf" %>

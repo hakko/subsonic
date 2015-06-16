@@ -70,6 +70,7 @@ public class PersonalSettingsCommand {
 	private long deviceSyncSize;
 	private Date deviceLastSync;
 	private boolean isReloadNeeded;
+	private boolean songNotificationEnabled;
 
 	public String getDeviceName() {
 		return deviceName;
@@ -366,5 +367,13 @@ public class PersonalSettingsCommand {
 
 	public void setSpotifyUsername(String spotifyUsername) {
 		this.spotifyUsername = spotifyUsername;
+	}
+
+	public boolean isSongNotificationEnabled() {
+		return songNotificationEnabled;
+	}
+
+	public void setSongNotificationEnabled(boolean songNotificationEnabled) {
+		this.songNotificationEnabled = songNotificationEnabled;
 	}
 }

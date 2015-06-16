@@ -192,12 +192,13 @@ public class MediaFileService {
 			}
 			trackIds.addAll(a.getTrackUris());
 			album.setSpotifyUri(a.getSpotifyUri());
+			album.setRating(a.getRating());
 			albums.add(album);
 		}
 		loadMediaFiles(trackIds);
 		return albums;
 	}
-
+	
 	/*
 	 * Inefficient MediaFile instantiation. Only to be used when we don't have
 	 * an id, like when loading files from a saved playlist.

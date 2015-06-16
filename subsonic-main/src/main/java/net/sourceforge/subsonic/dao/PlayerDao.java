@@ -44,7 +44,7 @@ public class PlayerDao extends AbstractDao {
 
     private static final Logger LOG = Logger.getLogger(PlayerDao.class);
     private static final String COLUMNS = "id, name, type, username, ip_address, auto_control_enabled, " +
-            "last_seen, cover_art_scheme, transcode_scheme, dynamic_ip, technology, spotify_enabled, client_id";
+            "last_seen, cover_art_scheme, transcode_scheme, dynamic_ip, technology, spotify_enabled, mixer_name, client_id";
 
     private PlayerRowMapper rowMapper = new PlayerRowMapper();
     private Map<String, Playlist> playlists = Collections.synchronizedMap(new HashMap<String, Playlist>());
@@ -153,13 +153,15 @@ public class PlayerDao extends AbstractDao {
                 "dynamic_ip = ?, " +
                 "technology = ?, " +
                 "spotify_enabled = ?, " +
+                "mixer_name = ?, " +
                 "client_id = ? " +
                 "where id = ?";
         update(sql, player.getName(), player.getType(), player.getUsername(),
                 player.getIpAddress(), player.isAutoControlEnabled(),
                 player.getLastSeen(), player.getCoverArtScheme().name(),
                 player.getTranscodeScheme().name(), player.isDynamicIp(),
-                player.getTechnology(), player.isSpotifyEnabled(), player.getClientId(),
+                player.getTechnology(), player.isSpotifyEnabled(), player.getMixerName(),
+                player.getClientId(),
                 player.getId());
     }
 
@@ -188,6 +190,7 @@ public class PlayerDao extends AbstractDao {
             player.setDynamicIp(rs.getBoolean(col++));
             player.setTechnology(PlayerTechnology.valueOf(rs.getString(col++)));
             player.setSpotifyEnabled(rs.getBoolean(col++));
+            player.setMixerName(rs.getString(col++));
             player.setClientId(rs.getString(col++));
 
             addPlaylist(player);

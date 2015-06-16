@@ -90,8 +90,14 @@ public class RESTJukeboxController extends RESTAbstractController {
 
             Player player = playerService.getPlayer(request, response);
             Player jukeboxPlayer = jukeboxService.getPlayer();
-            boolean controlsJukebox = jukeboxPlayer != null && jukeboxPlayer.getId().equals(player.getId());
-            Playlist playlist = player.getPlaylist();
+            // FIXME: We should check that only people who can control the jukebox do so
+            //boolean controlsJukebox = jukeboxPlayer != null && jukeboxPlayer.getId().equals(player.getId());
+            boolean controlsJukebox = true;
+
+            Playlist playlist = new Playlist();
+            if (jukeboxPlayer != null) {
+            	playlist = jukeboxPlayer.getPlaylist();
+            }
 
             List<Attribute> attrs = new ArrayList<Attribute>(Arrays.asList(
                     new Attribute("currentIndex", controlsJukebox && !playlist.isEmpty() ? playlist.getIndex() : -1),

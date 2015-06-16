@@ -130,12 +130,10 @@ public class ArtistController extends ParameterizableViewController {
 
         if (albums.size() > 3) {
         	map.put("artistInfoMinimized", true);
-        	map.put("artistInfoImageSize", 63);
         } else {
         	if (albums.size() == 1) {
         		albums.get(0).setSelected(true);
         	}
-        	map.put("artistInfoImageSize", 126);
         }
     	for (int i = 0; selectedAlbumIds != null && i < selectedAlbumIds.length; i++) {
     		for (Album album : albums) {
@@ -148,7 +146,6 @@ public class ArtistController extends ParameterizableViewController {
     	map.put("isAlbumStarred", starService.getStarredAlbumsMask(userSettings.getLastFmUsername(), albumUris));
         map.put("albums", albums);
         map.put("trackIds", trackUris);
-        map.put("coverArtSize", 87);
 	}
 
 	private ArtistInfo setArtistInfo(Uri artistUri, Map<String, Object> map) throws ApplicationException {

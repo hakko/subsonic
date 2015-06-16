@@ -10,6 +10,7 @@
   <script defer type="text/javascript" src="<c:url value="/script/pngfix.js"/>"></script>
   <![endif]-->
   <link href="<c:url value="/script/bower_components/bootstrap/dist/css/bootstrap.min.css"/>" rel="stylesheet" media="screen">
+  <link href="<c:url value="/script/bower_components/bootstrap-material-design/dist/css/material-fullpalette.min.css"/>" rel="stylesheet" media="screen">
   <link href="<c:url value="/script/bower_components/font-awesome/css/font-awesome.min.css"/>" rel="stylesheet" media="screen">
   
   
@@ -27,29 +28,25 @@
 
 <c:set var="showRight" value="${model.showRight}" />
 <body class="bgcolor1 container">
-  <div class="upper col-lg-12" data-src="top.view?" data-target="upper">
+  <div class="upper row" data-src="top.view?" data-target="upper">
   </div>
   <div class="lower row">
     <div class="left col-lg-2" data-src="left.view?" data-target="left">
     </div>
     <div class="middle col-lg-12">
       <div class="row">
-        <div class="main col-lg-${showRight ? '8' : '12'}" data-src="nowPlaying.view?" data-target="main">
+        <div class="main col-lg-8" data-src="nowPlaying.view?" data-target="main">
         </div>
-        <c:if test="${showRight}">
-        <div class="right col-lg-4" data-src="right.view?" data-target="right">
+        <div class="playlist col-lg-4" data-src="playlist.view?" data-target="playlist">
         </div>
-        </c:if>
-        </div>
-      </div>
-      <div class="playlist" data-src="playlist.view?" data-target="playlist">
       </div>
     </div>
   </div>
 
 
-  <script type="text/javascript" src="<c:url value="/script/bower_components/jquery/jquery.min.js"/>"></script>
+  <script type="text/javascript" src="<c:url value="/script/bower_components/jquery/dist/jquery.min.js"/>"></script>
   <script type="text/javascript" src="<c:url value="/script/bower_components/bootstrap/dist/js/bootstrap.min.js"/>"></script>
+  <script type="text/javascript" src="<c:url value="/script/bower_components/bootstrap-material-design/dist/js/material.min.js"/>"></script>
   <script type="text/javascript" src="<c:url value="/script/bower_components/mustache/mustache.js"/>"></script>
   <script type="text/javascript" src="<c:url value="/script/bower_components/director/build/director.min.js"/>"></script>
   <!--script type="text/javascript" src="<c:url value="/script/prototype.js"/>"></script-->
@@ -88,10 +85,10 @@
 
 
   <script text="text/javascript">
-    ;(function($) {
-      var router = Router(app.routes);
-      router.init("/");
-    })(jQuery);
+    $.material.init();
+
+    var router = Router(app.routes);
+    router.init("/");
   </script>
 </body>
 </html>

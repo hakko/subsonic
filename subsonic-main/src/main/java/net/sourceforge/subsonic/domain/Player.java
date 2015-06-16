@@ -40,6 +40,7 @@ public class Player {
     private boolean isDynamicIp = true;
     private boolean isAutoControlEnabled = true;
     private boolean spotifyEnabled = true;
+    private String mixerName;
     private Date lastSeen;
     private CoverArtScheme coverArtScheme = CoverArtScheme.MEDIUM;
     private TranscodeScheme transcodeScheme = TranscodeScheme.OFF;
@@ -343,5 +344,13 @@ public class Player {
 
 	public void setSpotifyEnabled(boolean spotifyEnabled) {
 		this.spotifyEnabled = spotifyEnabled;
+	}
+
+	public String getMixerName() {
+		return mixerName;
+	}
+
+	public void setMixerName(String mixerName) {
+		this.mixerName = mixerName;
 	}
 }

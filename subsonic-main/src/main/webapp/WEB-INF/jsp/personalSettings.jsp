@@ -4,7 +4,15 @@
 
 <%@ include file="include.jspf"%>
 
-<div class="mainframe bgcolor1 personal-settings">
+<spring:theme code="panel.primary" var="themePanelPrimary" scope="page" />
+<div class="mainframe bgcolor1 panel panel-primary ${themePanelPrimary} personal-settings">
+
+<div class="panel-heading">
+  <i class="fa fa-cog"></i>
+  <fmt:message key="settingsheader.title"/>
+</div>
+<div class="panel-body">
+
 
 	<c:import url="settingsHeader.jsp">
 		<c:param name="cat" value="personal" />
@@ -403,40 +411,54 @@
 				<table class="table table-condensed">
 					<tr>
 						<td>
-							<div class="checkbox">
-								<label for="nowPlaying"><fmt:message
-										key="personalsettings.shownowplaying" /> <form:checkbox
-										path="showNowPlayingEnabled" id="nowPlaying"
-										cssClass="checkbox" /></label>
+							<div>
+								<label for="nowPlaying">
+								<form:checkbox
+                    path="showNowPlayingEnabled" id="nowPlaying"
+                    cssClass="checkbox" /><fmt:message
+										key="personalsettings.shownowplaying" /> </label>
 							</div>
 						</td>
-						<td><div class="checkbox">
-								<label for="chat"><fmt:message
-										key="personalsettings.showchat" /> <form:checkbox
-										path="showChatEnabled" id="chat" cssClass="checkbox" /></label>
-							</div></td>
+						<td>
+								<label for="chat"> <form:checkbox
+										path="showChatEnabled" id="chat" cssClass="checkbox" />
+										<fmt:message
+                    key="personalsettings.showchat" />
+										</label>
+							</td>
 					</tr>
 					<tr>
 						<td>
-							<div class="checkbox">
-								<label for="nowPlayingAllowed"><fmt:message
-										key="personalsettings.nowplayingallowed" /> <form:checkbox
+								<label for="nowPlayingAllowed"><form:checkbox
 										path="nowPlayingAllowed" id="nowPlayingAllowed"
-										cssClass="checkbox" /> </label>
-							</div>
+										cssClass="checkbox" />
+										<fmt:message
+                    key="personalsettings.nowplayingallowed" /> 
+                    </label>
 
 						</td>
 						<td>
-							<div class="checkbox">
 								<label for="partyModeEnabled"><fmt:message
 										key="personalsettings.partymode" /> <c:import
 										url="helpToolTip.jsp">
 										<c:param name="topic" value="partymode" />
 									</c:import> <form:checkbox path="partyModeEnabled" id="partyModeEnabled"
-										cssClass="checkbox" /> </label>
-							</div>
+										cssClass="checkbox" />
+										<span class="checkbox-material"><span class="check"></span></span>
+										</label>
 						</td>
 					</tr>
+					<tr>
+					 <td>
+					 <label for="song">
+            <form:checkbox path="songNotificationEnabled" id="song" />
+            <span class="checkbox-material"><span class="check"></span></span>
+            <fmt:message key="personalsettings.songnotification"/>
+            </label>
+					 </td>
+					 <td>
+					 </td>
+				  </tr>
 				</table>
 			</div>
 			<div class="panel-footer">
@@ -580,4 +602,5 @@
     </script>
 	</c:if>
 
+</div>
 </div>

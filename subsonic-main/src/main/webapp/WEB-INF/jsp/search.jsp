@@ -6,7 +6,7 @@
 <%@ include file="toggleStar.jspf" %>
 
 <h1>
-    <img src="<spring:theme code="searchImage"/>" alt=""/>
+    <i class="fa fa-search"></i>
     <fmt:message key="search.title"/>
 </h1>
 

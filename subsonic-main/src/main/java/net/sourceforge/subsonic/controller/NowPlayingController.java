@@ -18,7 +18,12 @@
  */
 package net.sourceforge.subsonic.controller;
 
+import static java.util.Arrays.asList;
+
+import java.io.File;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -26,25 +31,29 @@ import javax.servlet.http.HttpServletResponse;
 import net.sourceforge.subsonic.domain.MediaFile;
 import net.sourceforge.subsonic.domain.Player;
 import net.sourceforge.subsonic.domain.TransferStatus;
+import net.sourceforge.subsonic.domain.UserSettings;
 import net.sourceforge.subsonic.service.MediaFileService;
 import net.sourceforge.subsonic.service.PlayerService;
+import net.sourceforge.subsonic.service.SettingsService;
 import net.sourceforge.subsonic.service.StatusService;
+import net.sourceforge.subsonic.util.StringUtil;
 
 import org.springframework.web.servlet.ModelAndView;
-import org.springframework.web.servlet.mvc.AbstractController;
-import org.springframework.web.servlet.view.RedirectView;
+import org.springframework.web.servlet.mvc.ParameterizableViewController;
+
+import com.github.hakko.musiccabinet.dao.util.URIUtil;
 
 /**
  * Controller for showing what's currently playing.
  *
  * @author Sindre Mehus
  */
-public class NowPlayingController extends AbstractController {
+public class NowPlayingController extends ParameterizableViewController {
 
     private PlayerService playerService;
     private StatusService statusService;
     private MediaFileService mediaFileService;
-
+    
     @Override
     protected ModelAndView handleRequestInternal(HttpServletRequest request, HttpServletResponse response) throws Exception {
 
@@ -53,6 +62,17 @@ public class NowPlayingController extends AbstractController {
 
         MediaFile current = statuses.isEmpty() ? null : mediaFileService.getMediaFile(statuses.get(0).getMediaFileUri());
         
+        ModelAndView result = super.handleRequestInternal(request, response);
+        
+        if (current != null) {
+	        File childCoverArt = mediaFileService.getCoverArt(current);
+	        if (childCoverArt != null) {
+	            result.addObject("coverArt", StringUtil.utf8HexEncode(childCoverArt.getPath()));
+	        }
+        }
+        result.addObject("current", current);
+        return result;
+        /*
         String url;
         if (current != null) {
             url = "artist.view?id=" + current.getMetaData().getArtistUri() +
@@ -63,6 +83,7 @@ public class NowPlayingController extends AbstractController {
         }
 
         return new ModelAndView(new RedirectView(url));
+        */
     }
 
     public void setPlayerService(PlayerService playerService) {

@@ -30,7 +30,7 @@ import org.springframework.web.servlet.mvc.multiaction.MultiActionController;
  * This class is modeled according to the Facade pattern (GoF) and delegates tasks
  * to REST*Controller. Sub classes are named to roughly comply with api.jsp.
  */
-public class RESTController extends MultiActionController implements REST_1_10_2 {
+public class RESTController extends MultiActionController implements REST_1_12_0 {
 
     private RESTSystemController restSystemController;
     private RESTBrowseController restBrowseController;
@@ -420,6 +420,34 @@ public class RESTController extends MultiActionController implements REST_1_10_2
 	@Override
 	public void error(HttpServletRequest request, HttpServletResponse response,
 			ErrorCode code, String message) throws Exception {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void getArtistInfo(HttpServletRequest request,
+			HttpServletResponse response) throws Exception {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void getArtistInfo2(HttpServletRequest request,
+			HttpServletResponse response) throws Exception {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void getSimilarSongs(HttpServletRequest request,
+			HttpServletResponse response) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void getSimilarSongs2(HttpServletRequest request,
+			HttpServletResponse response) throws Exception {
 		// TODO Auto-generated method stub
 		
 	}

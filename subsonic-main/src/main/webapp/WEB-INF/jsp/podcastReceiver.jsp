@@ -1,7 +1,9 @@
 <%@ page language="java" contentType="text/html; charset=utf-8" pageEncoding="iso-8859-1"%>
 
     <%@ include file="include.jspf" %>
-<div class="mainframe bgcolor1">
+  <spring:theme code="panel.primary" var="themePanelPrimary" scope="page" />
+  <div class="mainframe bgcolor1 panel panel-primary ${themePanelPrimary}">
+
 
 <script type="text/javascript" language="javascript">
     var channelCount = ${fn:length(model.channels)};
@@ -87,10 +89,12 @@
     }
 </script>
 
-<h1>
-    <img src="<spring:theme code="podcastLargeImage"/>" alt=""/>
-    <fmt:message key="podcastreceiver.title"/>
-</h1>
+    <div class="panel-heading">
+      <i class="fa fa-bullhorn"></i>
+      Radio
+    </div>
+    <div class="panel-body">
+
 
 <table><tr>
     <td style="padding-right:2em"><div class="forward"><a href="javascript:toggleAllEpisodes(true)"><fmt:message key="podcastreceiver.expandall"/></a></div></td>
@@ -261,8 +265,8 @@
 </c:if>
 
 
-<h2><img src="<spring:theme code="podcastImage"/>" alt=""/>&nbsp;<fmt:message key="more.podcast.title"/></h2>
+<h2><fmt:message key="more.podcast.title"/></h2>
 <fmt:message key="more.podcast.text"/>
-
+</div>
 
 </div>

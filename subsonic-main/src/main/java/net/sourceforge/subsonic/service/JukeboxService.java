@@ -25,6 +25,11 @@ import jahspotify.media.Link;
 import jahspotify.services.MediaPlayer;
 
 import java.io.InputStream;
+import java.util.ArrayList;
+import java.util.List;
+
+import javax.sound.sampled.AudioSystem;
+import javax.sound.sampled.Mixer;
 
 import net.sourceforge.subsonic.Logger;
 import net.sourceforge.subsonic.domain.MediaFile;
@@ -48,201 +53,205 @@ import com.github.hakko.musiccabinet.service.spotify.SpotifyService;
  */
 public class JukeboxService implements AudioPlayer.Listener, PlaybackListener {
 
-    private static final Logger LOG = Logger.getLogger(JukeboxService.class);
+	private static final Logger LOG = Logger.getLogger(JukeboxService.class);
 
-    private AudioPlayer audioPlayer;
-    private TranscodingService transcodingService;
-    private AudioScrobblerService audioScrobblerService;
-    private StatusService statusService;
-    private SettingsService settingsService;
-    private SecurityService securityService;
-    private SpotifyService spotifyService;
+	private AudioPlayer audioPlayer;
+	private TranscodingService transcodingService;
+	private AudioScrobblerService audioScrobblerService;
+	private StatusService statusService;
+	private SettingsService settingsService;
+	private SecurityService securityService;
+	private SpotifyService spotifyService;
 
-    private Player player;
-    private TransferStatus status;
-    private MediaFile currentPlayingFile;
-    private Float gain = new Float(0.5f);
-    private int offset;
-    private boolean spotifyListening = false;
+	private Player player;
+	private TransferStatus status;
+	private MediaFile currentPlayingFile;
+	private Float gain = new Float(0.5f);
+	private int offset;
+	private boolean spotifyListening = false;
 
-    /**
-     * Updates the jukebox by starting or pausing playback on the local audio device.
-     *
-     * @param player The player in question.
-     * @param offset Start playing after this many seconds into the track.
-     */
-    public void updateJukebox(Player player, int offset) throws Exception {
-        User user = securityService.getUserByName(player.getUsername());
-        if (!user.isJukeboxRole()) {
-            LOG.warn(user.getUsername() + " is not authorized for jukebox playback.");
-            return;
-        }
+	/**
+	 * Updates the jukebox by starting or pausing playback on the local audio
+	 * device.
+	 *
+	 * @param player
+	 *            The player in question.
+	 * @param offset
+	 *            Start playing after this many seconds into the track.
+	 */
+	public void updateJukebox(Player player, int offset) throws Exception {
+		User user = securityService.getUserByName(player.getUsername());
+		if (!user.isJukeboxRole()) {
+			LOG.warn(user.getUsername()
+					+ " is not authorized for jukebox playback.");
+			return;
+		}
 
-        if (player.getPlaylist().getStatus() == Playlist.Status.PLAYING) {
-            this.player = player;
-            play(player.getPlaylist().getCurrentFile(), offset);
-        } else {
-        	if(this.currentPlayingFile != null && this.currentPlayingFile.isSpotify()) {
-        		try {
-        			if(spotifyService.lock()) {
-        				spotifyService.getSpotify().pause();        				
-        			}
-        		} finally {
-        			spotifyService.unlock();
-        		}
-        	}
-        	else if (audioPlayer != null) {
-                audioPlayer.pause();
-            }
-        }
-    }
+		MediaPlayer.getInstance().setMixerInfo(
+				getMixerInfo(player.getMixerName()));
 
-    private void play(MediaFile file, int offset) {
-        InputStream in = null;
-        try {
+		if (player.getPlaylist().getStatus() == Playlist.Status.PLAYING) {
+			this.player = player;
+			play(player, offset);
+		} else {
+			if (this.currentPlayingFile != null
+					&& this.currentPlayingFile.isSpotify()) {
+				spotifyService.pause();
+			} else if (audioPlayer != null) {
+				audioPlayer.pause();
+			}
+		}
+	}
 
-            // Resume if possible.
-            boolean sameFile = file != null && file.equals(currentPlayingFile);
-            boolean paused = false;
-            if(currentPlayingFile != null && currentPlayingFile.isSpotify()) {
-            	paused = spotifyService.getStatus().equals(PlayerStatus.PAUSED);
-            } else {
-            	paused = audioPlayer != null && audioPlayer.getState() == AudioPlayer.State.PAUSED;
-            }
-            if (sameFile && paused && offset == 0) {
-            	if(currentPlayingFile.isSpotify()) {
-            		try {
-            			if(spotifyService.lock()) {
-            				spotifyService.getSpotify().resume();        				
-            			}
-            		} finally {
-            			spotifyService.unlock();
-            		}
-            	} else {
-            		audioPlayer.play();
-            	}
-            } else {
-                this.offset = offset;
-                if (audioPlayer != null) {
-                    audioPlayer.close();
-                    if (currentPlayingFile != null) {
-                        onSongEnd(currentPlayingFile);
-                    }
-                } else if(currentPlayingFile != null && currentPlayingFile.isSpotify() && spotifyService.getStatus().equals(PlayerStatus.PLAYING)) {
-                	try {
-                		if(spotifyService.lock()) {
-                			spotifyService.getSpotify().stop();
-                		}
-                	} finally {
-                		spotifyService.unlock();
-                	}
-                	onSongEnd(currentPlayingFile);
-                }
+	private void play(Player player, int offset) {
+		InputStream in = null;
+		try {
+			MediaFile file = player.getPlaylist().getCurrentFile();
 
-                if (file != null && file.isSpotify()) {
-            		try {
-            			if(spotifyService.lock()) {
-                        	if(!spotifyListening) {
-                        		spotifyService.getSpotify().addPlaybackListener(this);
-                        		spotifyListening = true;
-                        	}
-                        	
-                        	spotifyService.getSpotify().play(URIUtil.getSpotifyLink(file.getName()));
-            			}
-            		} finally {
-            			spotifyService.unlock();
-            		}
-                	
-                }
-                else if (file != null) {
-                    int duration = file.getMetaData().getDuration() == null ? 0 : file.getMetaData().getDuration() - offset;
-                    TranscodingService.Parameters parameters = new TranscodingService.Parameters(file, new VideoTranscodingSettings(0, 0, offset, duration, false));
-                    String command = settingsService.getJukeboxCommand();
-                    parameters.setTranscoding(new Transcoding(null, null, null, null, command, null, null, false));
-                    in = transcodingService.getTranscodedInputStream(parameters);
-                    audioPlayer = new AudioPlayer(in, this);
-                    synchronized(gain) {
-                    	audioPlayer.setGain(gain);
-                    }
-                    audioPlayer.play();
-                    onSongStart(file);
-                }
-            }
+			// Resume if possible.
+			boolean sameFile = file != null && file.equals(currentPlayingFile);
+			boolean paused = false;
+			if (currentPlayingFile != null && currentPlayingFile.isSpotify()) {
+				paused = spotifyService.getStatus().equals(PlayerStatus.PAUSED);
+			} else {
+				paused = audioPlayer != null
+						&& audioPlayer.getState() == AudioPlayer.State.PAUSED;
+			}
+			if (sameFile && paused && offset == 0) {
+				if (currentPlayingFile.isSpotify()) {
+					spotifyService.resume();
+				} else {
+					audioPlayer.play();
+				}
+			} else {
+				this.offset = offset;
+				if (audioPlayer != null) {
+					LOG.info("Closing AudioPlayer.");
+					audioPlayer.close();
+					audioPlayer = null;
 
-            currentPlayingFile = file;
+					if (currentPlayingFile != null) {
+						onSongEnd(currentPlayingFile);
+					}
+				}
+				if (currentPlayingFile != null
+						&& currentPlayingFile.isSpotify()
+						&& spotifyService.getStatus().equals(
+								PlayerStatus.PLAYING)) {
+					LOG.info("Stopping spotify track");
+					spotifyService.stop();
+					MediaPlayer.getInstance().changeSong();
 
-        } catch (Exception x) {
-            LOG.error("Error in jukebox: " + x, x);
-            IOUtils.closeQuietly(in);
-        }
-    }
+					onSongEnd(currentPlayingFile);
+				}
 
-    public void stateChanged(AudioPlayer audioPlayer, AudioPlayer.State state) {
-        if (state == EOM) {
-            player.getPlaylist().next();
-            play(player.getPlaylist().getCurrentFile(), 0);
-        }
-    }
+				if (file != null && file.isSpotify()) {
+					if (!spotifyListening) {
+						spotifyService.addPlaybackListener(this);
+						spotifyListening = true;
+					}
 
-    public float getGain() {
-    	synchronized(gain) {
-    		return gain;
-    	}
-    }
+					spotifyService.play(URIUtil.getSpotifyLink(file.getName()));
+				} else if (file != null) {
+					int duration = file.getMetaData().getDuration() == null ? 0
+							: file.getMetaData().getDuration() - offset;
+					TranscodingService.Parameters parameters = new TranscodingService.Parameters(
+							file, new VideoTranscodingSettings(0, 0, offset,
+									duration, false));
+					String command = settingsService.getJukeboxCommand();
+					parameters.setTranscoding(new Transcoding(null, null, null,
+							null, command, null, null, false));
+					in = transcodingService
+							.getTranscodedInputStream(parameters);
+					audioPlayer = new AudioPlayer(in,
+							getMixerInfo(player.getMixerName()), this);
+					synchronized (gain) {
+						audioPlayer.setGain(gain);
+					}
+					audioPlayer.play();
+					onSongStart(file);
+				}
+			}
 
-    public synchronized int getPosition() {
-    	if(this.currentPlayingFile != null && this.currentPlayingFile.isSpotify()) {
-    		return MediaPlayer.getInstance().getPosition() / 1000;
-    	}
-        return audioPlayer == null ? 0 : offset + audioPlayer.getPosition();
-    }
+			currentPlayingFile = file;
 
-    /**
-     * Returns the player which currently uses the jukebox.
-     *
-     * @return The player, may be {@code null}.
-     */
-    public Player getPlayer() {
-        return player;
-    }
+		} catch (Exception x) {
+			LOG.error("Error in jukebox: " + x, x);
+			IOUtils.closeQuietly(in);
+		}
+	}
 
-    private void onSongStart(MediaFile file) {
-        LOG.info(player.getUsername() + " starting jukebox for \"" + file.getName() + "\"");
-        status = statusService.createStreamStatus(player);
-        status.setMediaFileUri(file.getUri());
-        status.setFile(file.getName());
-        status.addBytesTransfered(file.length());
-        scrobble(file, false);
-    }
+	public void stateChanged(AudioPlayer audioPlayer, AudioPlayer.State state) {
+		if (state == EOM) {
+			player.getPlaylist().next();
+			play(player, 0);
+		}
+	}
 
-    private void onSongEnd(MediaFile file) {
-        LOG.info(player.getUsername() + " stopping jukebox for \"" + file.getName() + "\"");
-        if (status != null) {
-            statusService.removeStreamStatus(status);
-        }
-        scrobble(file, true);
-    }
+	public float getGain() {
+		synchronized (gain) {
+			return gain;
+		}
+	}
 
-    private void scrobble(MediaFile file, boolean submission) {
-        if (player.getClientId() == null) {  // Don't scrobble REST players.
-            audioScrobblerService.scrobble(player.getUsername(), file, submission);
-        }
-    }
+	public synchronized int getPosition() {
+		if (this.currentPlayingFile != null
+				&& this.currentPlayingFile.isSpotify()) {
+			return MediaPlayer.getInstance().getPosition();
+		}
+		return audioPlayer == null ? 0 : offset + audioPlayer.getPosition();
+	}
 
-    public void setGain(float gain) {
-    	synchronized(this.gain) {
-	        this.gain = gain;
-	        if (audioPlayer != null) {
-	            audioPlayer.setGain(gain);
-	        }
-    	}
-    }
+	/**
+	 * Returns the player which currently uses the jukebox.
+	 *
+	 * @return The player, may be {@code null}.
+	 */
+	public Player getPlayer() {
+		return player;
+	}
 
-    public void setTranscodingService(TranscodingService transcodingService) {
-        this.transcodingService = transcodingService;
-    }
+	private void onSongStart(MediaFile file) {
+		LOG.info(player.getUsername() + " starting jukebox for \""
+				+ file.getName() + "\"");
+		status = statusService.createStreamStatus(player);
+		status.setMediaFileUri(file.getUri());
+		status.setFile(file.getName());
+		status.addBytesTransfered(file.length());
+		scrobble(file, false);
+	}
 
-	public void setAudioScrobblerService(AudioScrobblerService audioScrobblerService) {
+	private void onSongEnd(MediaFile file) {
+		LOG.info(player.getUsername() + " stopping jukebox for \""
+				+ file.getName() + "\"");
+		if (status != null) {
+			statusService.removeStreamStatus(status);
+		}
+		scrobble(file, true);
+	}
+
+	private void scrobble(MediaFile file, boolean submission) {
+		if (player.getClientId() == null) { // Don't scrobble REST players.
+			audioScrobblerService.scrobble(player.getUsername(), file,
+					submission);
+		}
+	}
+
+	public void setGain(float gain) {
+		synchronized (this.gain) {
+			this.gain = gain;
+			if (audioPlayer != null) {
+				audioPlayer.setGain(gain);
+			}
+		}
+	}
+
+	public void setTranscodingService(TranscodingService transcodingService) {
+		this.transcodingService = transcodingService;
+	}
+
+	public void setAudioScrobblerService(
+			AudioScrobblerService audioScrobblerService) {
 		this.audioScrobblerService = audioScrobblerService;
 	}
 
@@ -276,12 +285,11 @@ public class JukeboxService implements AudioPlayer.Listener, PlaybackListener {
 
 	@Override
 	public Link nextTrackToPreload() {
-		
-		
+
 		Playlist playlist = player.getPlaylist();
 		int nextIndex = playlist.getIndex() + 1;
 		MediaFile mediaFile = playlist.getFile(nextIndex);
-		if(mediaFile.isSpotify()) {
+		if (mediaFile.isSpotify()) {
 			LOG.debug("Requesting preload of: " + mediaFile.getName());
 			return URIUtil.getSpotifyLink(mediaFile.getName());
 		}
@@ -290,8 +298,10 @@ public class JukeboxService implements AudioPlayer.Listener, PlaybackListener {
 
 	@Override
 	public void playTokenLost() {
-		// NOOP
-
+		if (this.currentPlayingFile != null
+				&& this.currentPlayingFile.isSpotify()) {
+			spotifyService.pause();
+		}
 	}
 
 	@Override
@@ -305,4 +315,19 @@ public class JukeboxService implements AudioPlayer.Listener, PlaybackListener {
 		// NOOP
 		return 0;
 	}
+
+	private Mixer.Info getMixerInfo(String mixerName) {
+
+		if (mixerName != null) {
+
+			Mixer.Info[] mixerInfos = AudioSystem.getMixerInfo();
+			for (Mixer.Info mixerInfo : mixerInfos) {
+				if (mixerName.equals(mixerInfo.getName())) {
+					return mixerInfo;
+				}
+			}
+		}
+		return null;
+	}
+
 }

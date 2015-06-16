@@ -9,7 +9,6 @@
                     </c:when>
                     <c:otherwise>
                         <sub:url value="coverArt.view" var="coverArtUrl" hashurl="false">
-                            <sub:param name="size" value="126" />
                             <c:if test="${not empty album.coverArtPath}">
                                 <sub:param name="path" value="${album.coverArtPath}" />
                             </c:if>
@@ -29,15 +28,24 @@
 			
 			    <c:choose>
                     <c:when test="${model.player.web && sub:isSpotify(album)}">
-                    <div class="detail play-label" style="margin-top: -85px; padding:5px">
-                      <iframe src="https://embed.spotify.com/?uri=${album.spotifyUri}&theme=light&view=coverart" 
-                        width="100%" height="80px" frameborder="0" 
-                        allowtransparency="true" ></iframe>
+                    <div class="play-label">
+                        <c:import url="playAddDownload.jsp">
+                            <c:param name="uri" value="${album.spotifyUri}"/>
+                            <c:param name="spotify" value="true"/>
+                            <c:param name="starDisabled" value="true"/>
+                            <c:param name="playEnabled" value="true"/>
+                            <c:param name="enqueueEnabled" value="false"/>
+                            <c:param name="addEnabled" value="false"/>
+                            <c:param name="downloadEnabled" value="false"/>
+                            <c:param name="downloadName" value="${not empty model.artistName ? model.artistName : album.artistName} - ${album.title}"/>
+                            <c:param name="asTable" value="false"/>
+                        </c:import>     
+                    
                         </div>
     
                     </c:when>
                     <c:otherwise>
-			            <div class="detail play-label">
+			            <div class="play-label">
                         <c:import url="playAddDownload.jsp">
                             <c:param name="uri" value="${sub:esc(album.trackUris)}"/>
                             <c:param name="starDisabled" value="true"/>
@@ -55,6 +63,15 @@
 				<div class="detail play-label">
 					<em>${album.artistName}</em><br />
 					${album.title}
+          <c:if test="${not empty album.rating}">
+          <div class="rating">
+              <c:import url="rating.jsp">
+                  <c:param name="id" value="${album.id}"/>
+                  <c:param name="readonly" value="false"/>
+                  <c:param name="rating" value="${album.rating}"/>
+              </c:import>
+          </div>
+          </c:if>
 				</div>
 			
 		</div>

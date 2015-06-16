@@ -58,7 +58,6 @@ public class ArtistGenresController extends ParameterizableViewController {
         map.put("artistName", artistInfo.getArtist().getName());
         if (artistInfo.getLargeImageUrl() != null && artistInfo.getBioSummary() != null) {
         	map.put("artistInfo", Util.square(artistInfo));
-        	map.put("artistInfoImageSize", 126);
         }
         map.put("topTags", topTags);
         map.put("tags", tags);

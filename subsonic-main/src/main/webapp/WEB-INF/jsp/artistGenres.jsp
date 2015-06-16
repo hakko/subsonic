@@ -11,10 +11,10 @@
 <a href="#" onclick="toggleStar('art', ${sub:esc(model.artistId)}, '#starImage${sub:jqesc(model.artistId)}'); return false;">
 	<c:choose>
 		<c:when test="${model.artistStarred}">
-			<img id="starImage${model.artistId}" src="<spring:theme code="ratingOnImage"/>" alt="">
+			<img id="starImage${model.artistId}" src="<spring:theme code="ratingOnImage"/>" alt="" class="starred">
 		</c:when>
 		<c:otherwise>
-			<img id="starImage${model.artistId}" src="<spring:theme code="ratingOffImage"/>" alt="">
+			<img id="starImage${model.artistId}" src="<spring:theme code="ratingOffImage"/>" alt="" class="starred">
 		</c:otherwise>
 	</c:choose>
 </a>
@@ -26,7 +26,7 @@ ${model.artistName}
 		<tr>
 			<td style="vertical-align:top">
 				<div class="outerpair1"><div class="outerpair2"><div class="shadowbox"><div class="innerbox">
-					<img id="bioArt" width="${model.artistInfoImageSize}" height="${model.artistInfoImageSize}" src="${model.artistInfo.largeImageUrl}" alt="">
+					<img id="bioArt" src="${model.artistInfo.extraLargeImageUrl}" alt="">
 				</div></div></div></div>
 			</td>
 			<td style="vertical-align:top">

@@ -60,9 +60,12 @@ import net.sourceforge.subsonic.dao.schema.Schema46MusicCabinet0_7_20;
 import net.sourceforge.subsonic.dao.schema.Schema46MusicCabinet0_7_21;
 import net.sourceforge.subsonic.dao.schema.Schema46MusicCabinet0_7_22;
 import net.sourceforge.subsonic.dao.schema.Schema46MusicCabinet0_7_23;
+import net.sourceforge.subsonic.dao.schema.Schema46MusicCabinet0_7_24;
+import net.sourceforge.subsonic.dao.schema.Schema46MusicCabinet0_7_25;
 import net.sourceforge.subsonic.service.SettingsService;
 
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.jdbc.datasource.DriverManagerDataSource;
 
 /**
@@ -95,7 +98,9 @@ public class DaoHelper {
                                 new Schema46MusicCabinet0_7_20(),
                                 new Schema46MusicCabinet0_7_21(),
                                 new Schema46MusicCabinet0_7_22(),
-                                new Schema46MusicCabinet0_7_23()
+                                new Schema46MusicCabinet0_7_23(),
+                                new Schema46MusicCabinet0_7_24(),
+                                new Schema46MusicCabinet0_7_25()
                                 };
     
     private DataSource dataSource;
@@ -131,6 +136,17 @@ public class DaoHelper {
     public JdbcTemplate getJdbcTemplate() {
         return new JdbcTemplate(dataSource);
     }
+    
+    /**
+     * Returns a named parameter JDBC template for performing database operations.
+     *
+     * @return A named parameter JDBC template.
+     */
+    public NamedParameterJdbcTemplate getNamedParameterJdbcTemplate() {
+        return new NamedParameterJdbcTemplate(dataSource);
+    }
+
+    
 
     private DataSource createDataSource() {
         File subsonicHome = SettingsService.getSubsonicHome();

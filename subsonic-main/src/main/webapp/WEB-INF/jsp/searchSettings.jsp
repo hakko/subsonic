@@ -1,7 +1,15 @@
 <%@ page language="java" contentType="text/html; charset=utf-8" pageEncoding="iso-8859-1" %>
 
     <%@ include file="include.jspf" %>
-<div class="mainframe bgcolor1">
+<spring:theme code="panel.primary" var="themePanelPrimary" scope="page" />
+<div class="mainframe bgcolor1 panel panel-primary ${themePanelPrimary}">
+
+<div class="panel-heading">
+  <i class="fa fa-cog"></i>
+  <fmt:message key="settingsheader.title"/>
+</div>
+<div class="panel-body">
+
 <script type="text/javascript" src="<c:url value="/script/wz_tooltip.js"/>"></script>
 <script type="text/javascript" src="<c:url value="/script/tip_balloon.js"/>"></script>
 
@@ -10,6 +18,8 @@
 		app.loadMain('musicCabinetSettings.view');
 	</script>
 </c:if>
+
+
 
 <c:import url="settingsHeader.jsp">
     <c:param name="cat" value="search"/>

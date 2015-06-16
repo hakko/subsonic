@@ -11,10 +11,10 @@
     var slider = null;
 </script>
 
-<div class="bgcolor2 playlistframe">
+<div class="bgcolor2 playlistframe panel panel-default">
 
 
-<div class="bgcolor2" style="top:0; width:100%;padding-top:0.5em">
+<div class="bgcolor2 panel-heading" style="top:0; width:100%;padding-top:0.5em">
   <div class="row form form-inline">
             <c:if test="${model.user.settingsRole}">
                 <div class="form-group">
@@ -118,12 +118,13 @@
 
 <div class="alert alert-warning" id="empty"><fmt:message key="playlist.empty"/></div>
 
-<div class="table-responsive" id="playlistWrapper">
-<table class="table table-striped table-hover table-condensed">
-    <tbody id="playlistBody">
-        <tr id="playlist-tmpl" style="display:none;">
-            <td class="bgcolor2 buttons">
+<div id="playlistWrapper" class="clearfix">
+<div class="table table-striped table-hover">
+    <div id="playlistBody" class="table-body">
+        <div id="playlist-tmpl" style="display:none;" class="playlist-row striped-row clearfix">
+            <div class="bgcolor2 buttons">
                 <div class="btn-group">
+                <input type="checkbox" class="checkbox" id="songIndex" class="form-control">
                 <button class="btn btn-default btn-sm" id="removeSong" onclick="onRemove(this.id.substring(10) - 1)" 
                      alt="<fmt:message key="playlist.remove"/>" title="<fmt:message key="playlist.remove"/>">
                     <span class="fa fa-minus-circle"></span>
@@ -136,17 +137,15 @@
                      alt="<fmt:message key="playlist.down"/>" title="<fmt:message key="playlist.down"/>">
                      <span class="fa fa-arrow-circle-down"></span>
                 </div>
-            </td>
-
-            <td class="selector" class="bgcolor2 form-group"><input type="checkbox" class="checkbox" id="songIndex" class="form-control"></td>
-
-            <c:if test="${model.visibility.trackNumberVisible}">
-                <td class="trackNumber text-right"><span class="detail" id="trackNumber">1</span></td>
-            </c:if>
-
-            <td class="title">
+            </div>
+            <div class="playlist-item">
+              <div>
+                <c:if test="${model.visibility.trackNumberVisible}">
+                <span class="detail" id="trackNumber">1</span>
+                </c:if>
+                <span class="title">
                 <img id="currentImage" src="<spring:theme code="currentImage"/>" alt="" style="display:none">
-                <c:choose>
+                                <c:choose>
                     <c:when test="${model.player.externalWithPlaylist}">
                         <span id="title" class="detail">Title</span>
                     </c:when>
@@ -154,20 +153,23 @@
                         <a id="titleUrl" href="#" class="detail">Title</a>
                     </c:otherwise>
                 </c:choose>
-            </td>
+                </span>
+              </div>
 
-            <c:if test="${model.visibility.albumVisible}"><td class="album"><a id="albumUrl"><span id="album" class="detail">Album</span></a></td></c:if>
-            <c:if test="${model.visibility.artistVisible}"><td class="artist"><a id="artistUrl"><span id="artist" class="detail">Artist</span></a></td></c:if>
-			<c:if test="${model.visibility.composerVisible}"><td class="composer"><span id="composer" class="detail">Composer</span></td></c:if>
-            <c:if test="${model.visibility.genreVisible}"><td class="genre"><span id="genre" class="detail">Genre</span></td></c:if>
-            <c:if test="${model.visibility.yearVisible}"><td class="year"><span id="year" class="detail">Year</span></td></c:if>
-            <c:if test="${model.visibility.formatVisible}"><td class="form"><span id="format" class="detail">Format</span></td></c:if>
-            <c:if test="${model.visibility.fileSizeVisible}"><td class="fileSize text-right"><span id="fileSize" class="detail">Size</span></td></c:if>
-            <c:if test="${model.visibility.durationVisible}"><td class="duration text-right"><span id="duration" class="detail">Duration</span></td></c:if>
-            <c:if test="${model.visibility.bitRateVisible}"><td  class="bitRate"><span id="bitRate" class="detail">Bit Rate</span></td></c:if>
-        </tr>
-    </tbody>
-</table>
+            <c:if test="${model.visibility.albumVisible}"><div class="album"><a id="albumUrl"><span id="album" class="detail">Album</span></a></div></c:if>
+            <c:if test="${model.visibility.artistVisible}"><div class="artist"><a id="artistUrl"><span id="artist" class="detail">Artist</span></a></div></c:if>
+			<c:if test="${model.visibility.composerVisible}"><div class="composer"><span id="composer" class="detail">Composer</span></div></c:if>
+            <c:if test="${model.visibility.genreVisible}"><div class="genre"><span id="genre" class="detail">Genre</span></div></c:if>
+            <c:if test="${model.visibility.yearVisible}"><span class="year label label-default"><span id="year" class="detail">Year</span></c:if>
+            <c:if test="${model.visibility.formatVisible}"><span class="format label label-default"><span id="format" class="detail">Format</span></span></c:if>
+            <c:if test="${model.visibility.fileSizeVisible}"><span class="fileSize label label-default"><span id="fileSize" class="detail">Size</span></span></c:if>
+            <c:if test="${model.visibility.durationVisible}"><span class="duration label label-default"><span id="duration" class="detail">Duration</span></span></c:if>
+            <c:if test="${model.visibility.bitRateVisible}"><span  class="bitRate label label-default" id="bitRate">Bit Rate</span></c:if>
+          </div>
+            
+        </div>
+    </div>
+</div>
 </div>
 </div>
 
@@ -566,7 +568,46 @@
 
         jwplayer('mediaplayer').load(list);
         jwplayer('mediaplayer').play(true);
+        
+        updateWindowTitle(song);
+
+        <c:if test="${model.notify}">
+        showNotification(song);
+        </c:if>
+        
         return false;
+    }
+    
+    function updateWindowTitle(song) {
+        top.document.title = song.title + " - " + song.artist + " - Subsonic";
+    }
+
+    function showNotification(song) {
+        if (!("Notification" in window)) {
+            return;
+        }
+        if (Notification.permission === "granted") {
+            createNotification(song);
+        }
+        else if (Notification.permission !== 'denied') {
+            Notification.requestPermission(function (permission) {
+                Notification.permission = permission;
+                if (permission === "granted") {
+                    createNotification(song);
+                }
+            });
+        }
+    }
+
+    function createNotification(song) {
+        var n = new Notification(song.title, {
+            tag: "subsonic",
+            body: song.artist + " - " + song.album,
+            icon: "coverArt.view?id=" + song.id + "&size=110"
+        });
+        n.onshow = function() {
+            setTimeout(function() {n.close()}, 5000);
+        }
     }
 
     function updateCurrentImage() {

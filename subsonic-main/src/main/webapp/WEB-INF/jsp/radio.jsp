@@ -11,14 +11,14 @@
 
 
 
-	<div class="mainframe bgcolor1">
-
-		<h1>
-			<c:set var="radioImg">
-				<spring:theme code="radioImage" />
-			</c:set>
-			<img alt="Radio" src="${radioImg}" /> Radio
-		</h1>
+  <spring:theme code="panel.primary" var="themePanelPrimary" scope="page" />
+	<div class="mainframe bgcolor1 panel panel-primary ${themePanelPrimary}">
+	
+  	<div class="panel-heading">
+      <i class="fa fa-signal"></i>
+      Radio
+    </div>
+    <div class="panel-body">
 
 		<c:choose>
 			<c:when test="${empty model.topTags}">
@@ -38,10 +38,11 @@
 
 				<div style="clear: both" />
 
-					<input type="button" value="Play radio!"
+          <spring:theme code="button.primary" var="buttonPanelPrimary" scope="page" />
+					<input type="button" value="Play radio!" class="btn ${buttonPanelPrimary}"
 						onClick="return playGenreRadio();" />
 			</c:otherwise>
 		</c:choose>
-
+    </div>
 	</div>
 </jsp:root>

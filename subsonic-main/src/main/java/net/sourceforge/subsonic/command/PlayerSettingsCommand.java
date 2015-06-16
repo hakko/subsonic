@@ -55,6 +55,8 @@ public class PlayerSettingsCommand {
     private boolean isAdmin;
     private boolean isReloadNeeded;
     private boolean isSpotifyEnabled;
+    private List<String> mixers;
+    private String mixerName;
 
     public String getPlayerId() {
         return playerId;
@@ -234,6 +236,22 @@ public class PlayerSettingsCommand {
 
 	public void setSpotifyEnabled(boolean isSpotifyEnabled) {
 		this.isSpotifyEnabled = isSpotifyEnabled;
+	}
+
+	public List<String> getMixers() {
+		return mixers;
+	}
+
+	public void setMixers(List<String> mixers) {
+		this.mixers = mixers;
+	}
+
+	public String getMixerName() {
+		return mixerName;
+	}
+
+	public void setMixerName(String mixerName) {
+		this.mixerName = mixerName;
 	}
 
 	/**

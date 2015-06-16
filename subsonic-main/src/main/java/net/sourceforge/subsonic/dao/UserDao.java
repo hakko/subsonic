@@ -50,10 +50,9 @@ public class UserDao extends AbstractDao {
             "default_home_albums, default_home_songs, artist_grid_width, album_grid_layout, related_artists, " +
             "recommended_artists, reluctant_artist_loading, only_album_artist_recommendations, " +
             "various_artists_shortlist, view_stats_for_all_users, device_serial, device_mount_path, device_sync_size, " +
-            "device_last_sync, spotify_username";
+            "device_last_sync, spotify_username, song_notification";
     private static final String USER_VISIBILITY_COLUMNS = "username, type, caption_cutoff, track_number, artist, " +
             "album, composer, genre, year, bit_rate, duration, format, file_size";
-
     private static final Integer ROLE_ID_ADMIN = 1;
     private static final Integer ROLE_ID_DOWNLOAD = 2;
     private static final Integer ROLE_ID_UPLOAD = 3;
@@ -178,9 +177,9 @@ public class UserDao extends AbstractDao {
         UserSettings userSettings = queryOne(sql, userSettingsRowMapper, username);
         if (userSettings != null) {
         	sql = "select " + USER_VISIBILITY_COLUMNS + " from user_visibility where username=? and type=?";
-        	userSettings.setMainVisibility(queryOne(sql, userVisibilityRowMapper, username, 0));
-        	userSettings.setPlaylistVisibility(queryOne(sql, userVisibilityRowMapper, username, 1));
-        	userSettings.setHomeVisibility(queryOne(sql, userVisibilityRowMapper, username, 2));
+        	userSettings.setMainVisibility((Visibility) queryOne(sql, userVisibilityRowMapper, username, 0));
+        	userSettings.setPlaylistVisibility((Visibility) queryOne(sql, userVisibilityRowMapper, username, 1));
+        	userSettings.setHomeVisibility((Visibility) queryOne(sql, userVisibilityRowMapper, username, 2));
         }
         return userSettings;	
     }
@@ -190,9 +189,9 @@ public class UserDao extends AbstractDao {
         UserSettings userSettings = queryOne(sql, userSettingsRowMapper, deviceName);
         if (userSettings != null) {
         	sql = "select " + USER_VISIBILITY_COLUMNS + " from user_visibility where username=? and type=?";
-        	userSettings.setMainVisibility(queryOne(sql, userVisibilityRowMapper, userSettings.getUsername(), 0));
-        	userSettings.setPlaylistVisibility(queryOne(sql, userVisibilityRowMapper, userSettings.getUsername(), 1));
-        	userSettings.setHomeVisibility(queryOne(sql, userVisibilityRowMapper, userSettings.getUsername(), 2));
+        	userSettings.setMainVisibility((Visibility) queryOne(sql, userVisibilityRowMapper, userSettings.getUsername(), 0));
+        	userSettings.setPlaylistVisibility((Visibility) queryOne(sql, userVisibilityRowMapper, userSettings.getUsername(), 1));
+        	userSettings.setHomeVisibility((Visibility) queryOne(sql, userVisibilityRowMapper, userSettings.getUsername(), 2));
         }
         return userSettings;	
     }
@@ -221,7 +220,7 @@ public class UserDao extends AbstractDao {
                 settings.getRecommendedArtists(), settings.isReluctantArtistLoading(), 
                 settings.isOnlyAlbumArtistRecommendations(), settings.isUseVariousArtistShortlist(),
                 settings.isViewStatsForAllUsers(),
-                settings.getDeviceName(), settings.getDeviceMountPath(), settings.getDeviceSyncSize(), settings.getDeviceLastSync(), settings.getSpotifyUsername()});
+                settings.getDeviceName(), settings.getDeviceMountPath(), settings.getDeviceSyncSize(), settings.getDeviceLastSync(), settings.getSpotifyUsername(), settings.isSongNotificationEnabled()});
         
         template.update("delete from user_visibility where username=?", new Object[]{settings.getUsername()});
 
@@ -383,6 +382,7 @@ public class UserDao extends AbstractDao {
             settings.setDeviceSyncSize(rs.getLong(col++));
             settings.setDeviceLastSync(rs.getTimestamp(col++));
             settings.setSpotifyUsername(rs.getString(col++));
+            settings.setSongNotificationEnabled(rs.getBoolean(col++));
             
             return settings;
         }

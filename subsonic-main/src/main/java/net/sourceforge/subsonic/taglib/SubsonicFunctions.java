@@ -70,6 +70,10 @@ public class SubsonicFunctions {
 		return file.isSpotify();
 	}
 	
+	public static String toSpotifyLink(String uri) {
+		return "http://" + uri.replaceFirst("spotify:", "open.spotify.com/").replaceAll(":", "/");
+	}
+	
 	public static String hex(String unescaped) {
 		return StringUtil.utf8HexEncode(unescaped);
 	}

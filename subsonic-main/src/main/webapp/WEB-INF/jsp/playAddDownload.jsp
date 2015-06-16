@@ -17,10 +17,10 @@ PARAMETERS
     <a href="#" class="btn btn-default btn-star" onclick="toggleStar('t', ${sub:esc(param.starId)}, '#starImage${sub:jqesc(param.starId)}'); return false;">
         <c:choose>
             <c:when test="${param.starred}">
-                <img id="starImage${param.starId}" src="<spring:theme code="ratingOnImage"/>" alt="">
+                <img id="starImage${param.starId}" src="<spring:theme code="ratingOnImage"/>" alt="" class="starred">
             </c:when>
             <c:otherwise>
-                <img id="starImage${param.starId}" src="<spring:theme code="ratingOffImage"/>" alt="">
+                <img id="starImage${param.starId}" src="<spring:theme code="ratingOffImage"/>" alt="" class="starred">
             </c:otherwise>
         </c:choose>
     </a>
@@ -30,6 +30,9 @@ PARAMETERS
 		<c:when test="${param.video}">
 			<sub:url value="/videoPlayer.view" var="videoUrl"><sub:param name="id" value="${param.uri}"/></sub:url>
 			<a class="btn btn-play-dd btn-default" href="${videoUrl}"><img src="<spring:theme code="playImage"/>" alt="<fmt:message key="common.play"/>" title="<fmt:message key="common.play"/>"></a>
+		</c:when>
+		<c:when test="${param.spotify}">
+		  <a class="btn btn-play-dd btn-default" target="_spotify" href="${sub:toSpotifyLink(param.uri)}"><img src="<spring:theme code="playImage"/>" alt="<fmt:message key="common.play"/>" title="<fmt:message key="common.play"/>"></a>
 		</c:when>
 		<c:otherwise><a href="#" class="btn btn-play-dd btn-default" onclick="return onPlay(${param.uri}, 'P');"><img src="<spring:theme code="playImage"/>" alt="<fmt:message key="common.play"/>" title="<fmt:message key="common.play"/>"></a></c:otherwise>
 	</c:choose>
@@ -46,6 +49,10 @@ PARAMETERS
             <sub:url value="/videoPlayer.view" var="videoUrl"><sub:param name="id" value="${param.uri}"/></sub:url>
             <li><a href="${videoUrl}"><img src="<spring:theme code="playImage"/>" alt="<fmt:message key="common.play"/>" title="<fmt:message key="common.play"/>"><fmt:message key="common.play"/></a></li>
         </c:when>
+        <c:when test="${param.spotify}">
+          <li><a href="${sub:toSpotifyLink(param.uri)}" target="_spotify"><img src="<spring:theme code="playImage"/>" alt="<fmt:message key="common.play"/>" title="<fmt:message key="common.play"/>"><fmt:message key="common.play"/></a></li>
+        </c:when>
+        
         <c:otherwise><li><a href="#" onclick="return onPlay(${param.uri}, 'P');"><img src="<spring:theme code="playImage"/>" alt="<fmt:message key="common.play"/>" title="<fmt:message key="common.play"/>"><fmt:message key="common.play"/></a></li></c:otherwise>
     </c:choose>
 

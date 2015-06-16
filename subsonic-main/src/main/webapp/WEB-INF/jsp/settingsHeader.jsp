@@ -2,12 +2,8 @@
 <%@ include file="include.jspf" %>
 
 <c:set var="categories" value="${param.restricted ? 'personal password player share' : 'mediaFolder general advanced personal user player share network transcoding internetRadio podcast tag search musicCabinet'}"/>
-<h1>
-    <img src="<spring:theme code="settingsImage"/>" alt=""/>
-    <fmt:message key="settingsheader.title"/>
-</h1>
 
-<ul class="nav nav-tabs nav-justified">
+<ul class="nav nav-tabs nav-justified <spring:theme code="tabs.primary" />">
 <c:forTokens items="${categories}" delims=" " var="cat" varStatus="loopStatus">
 
     <c:url var="url" value="#/${cat}Settings"/>

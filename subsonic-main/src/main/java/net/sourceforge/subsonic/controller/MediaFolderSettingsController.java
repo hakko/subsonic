@@ -24,8 +24,10 @@ import jahspotify.AbstractConnectionListener;
 
 import java.io.File;
 import java.util.Date;
+import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
@@ -38,6 +40,12 @@ import net.sourceforge.subsonic.service.MediaFolderService;
 import net.sourceforge.subsonic.service.SearchService;
 import net.sourceforge.subsonic.service.SettingsService;
 
+import org.apache.commons.fileupload.FileItem;
+import org.apache.commons.fileupload.FileItemFactory;
+import org.apache.commons.fileupload.FileUploadException;
+import org.apache.commons.fileupload.disk.DiskFileItemFactory;
+import org.apache.commons.fileupload.servlet.ServletFileUpload;
+import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.ParameterizableViewController;
@@ -63,6 +71,7 @@ public class MediaFolderSettingsController extends
 	private LibraryUpdateService libraryUpdateService;
 	private DatabaseAdministrationService dbAdmService;
 	private SpotifyService spotifyService;
+	private byte[] keyBytes;
 
 	private static final Logger LOG = Logger
 			.getLogger(MediaFolderSettingsController.class);
@@ -72,8 +81,11 @@ public class MediaFolderSettingsController extends
 			HttpServletResponse response) throws Exception {
 
 		Map<String, Object> map = new HashMap<String, Object>();
+		
 
-		if (isDeleteMediaFolder(request)
+		Map<String, String> parameters = getParameters(request);
+
+		if (isDeleteMediaFolder(parameters)
 				&& libraryUpdateService.isIndexBeingCreated()) {
 			return new ModelAndView("musicCabinetUnavailable"); // not
 																// informative,
@@ -81,12 +93,12 @@ public class MediaFolderSettingsController extends
 		}
 
 		if (isFormSubmission(request)) {
-			if (!arePathParametersValid(request)) {
+			if (!arePathParametersValid(parameters)) {
 				map.put("error", "mediaFoldersettings.nopath");
 			} else {
-				updateSpotifyFromRequest(request, map);
-				updateMediaFoldersFromRequest(request);
-				addNewMediaFolderFromRequest(request);
+				updateSpotifyFromRequest(parameters, map);
+				updateMediaFoldersFromRequest(parameters);
+				addNewMediaFolderFromRequest(parameters);
 				settingsService.setSettingsChanged();
 				map.put("hasArtists", libraryBrowserService.hasArtists());
 				map.put("reload", true);
@@ -105,19 +117,15 @@ public class MediaFolderSettingsController extends
 						&& dbAdmService.isDatabaseUpdated());
 
 		map.put("spotifyAvailable", false);
+		map.put("spotifyKeyExists",
+				new File(settingsService.getSpotifyKey()).exists());
 		if (spotifyService.isSpotifyAvailable()) {
 			map.put("spotifyAvailable", true);
 			map.put("spotifyLoggedIn", false);
 			if (spotifyService.isLoggedIn()) {
-				try {
-					if (spotifyService.lock()) {
-						map.put("spotifyLoggedIn", true);
-						map.put("spotifyUsername", spotifyService.getSpotify()
-								.getUser().getDisplayName());
-					}
-				} finally {
-					spotifyService.unlock();
-				}
+				map.put("spotifyLoggedIn", true);
+				map.put("spotifyUsername", spotifyService.getUser()
+						.getDisplayName());
 			}
 		}
 
@@ -136,25 +144,25 @@ public class MediaFolderSettingsController extends
 		return "POST".equals(request.getMethod());
 	}
 
-	private boolean isDeleteMediaFolder(HttpServletRequest request) {
+	private boolean isDeleteMediaFolder(Map<String, String> parameters) {
 		for (MediaFolder mediaFolder : mediaFolderService.getAllMediaFolders()) {
-			if (getParameter(request, "delete", mediaFolder.getId()) != null) {
+			if (getParameter(parameters, "delete", mediaFolder.getId()) != null) {
 				return true;
 			}
 		}
 		return false;
 	}
 
-	private boolean arePathParametersValid(HttpServletRequest request) {
+	private boolean arePathParametersValid(Map<String, String> parameters) {
 		for (MediaFolder mediaFolder : mediaFolderService.getAllMediaFolders()) {
 			Integer id = mediaFolder.getId();
-			if (getParameter(request, "path", id) == null) {
+			if (getParameter(parameters, "path", id) == null) {
 				return false;
 			}
 		}
 
-		String name = trimToNull(request.getParameter("name"));
-		String path = trimToNull(request.getParameter("path"));
+		String name = trimToNull(parameters.get("name"));
+		String path = trimToNull(parameters.get("path"));
 		if (name != null && path == null) {
 			return false;
 		}
@@ -162,22 +170,22 @@ public class MediaFolderSettingsController extends
 		return true;
 	}
 
-	private void updateMediaFoldersFromRequest(HttpServletRequest request) {
+	private void updateMediaFoldersFromRequest(Map<String, String> parameters) {
 		Set<String> deletedPaths = new HashSet<>();
 
 		for (MediaFolder mediaFolder : mediaFolderService.getAllMediaFolders()) {
 			Integer id = mediaFolder.getId();
 
-			if (getParameter(request, "delete", id) != null) {
+			if (getParameter(parameters, "delete", id) != null) {
 				mediaFolderService.deleteMediaFolder(id);
 				String path = mediaFolder.getPath().getAbsolutePath();
 				if (mediaFolder.isIndexed() && !hasIndexedParentFolder(path)) {
 					deletedPaths.add(path);
 				}
 			} else {
-				String path = getParameter(request, "path", id);
-				String name = getParameter(request, "name", id);
-				boolean indexed = getParameter(request, "indexed", id) != null;
+				String path = getParameter(parameters, "path", id);
+				String name = getParameter(parameters, "name", id);
+				boolean indexed = getParameter(parameters, "indexed", id) != null;
 
 				if (mediaFolder.isIndexed() && !indexed) {
 					deletedPaths.add(path);
@@ -196,14 +204,21 @@ public class MediaFolderSettingsController extends
 		}
 	}
 
-	private void updateSpotifyFromRequest(HttpServletRequest request,
-			Map<String, Object> response) {
+	private void updateSpotifyFromRequest(Map<String, String> parameters,
+			Map<String, Object> response) throws Exception {
+		
+		if (keyBytes != null) {
+			createKey(keyBytes, response);
+		}
 
-		final String username = request.getParameter("spotify_username");
-		final String password = request.getParameter("spotify_password");
+		final String username = parameters.get("spotify_username");
+		final String password = parameters.get("spotify_password");
 		if (StringUtils.isEmpty(username) || StringUtils.isEmpty(password)) {
 			return;
 		}
+		settingsService.setSpotifyUserName(username);
+		settingsService.setSpotifyPassword(password);
+		settingsService.save();
 
 		final BlockingRequest<Boolean> blockingRequest = new BlockingRequest<Boolean>() {
 			@Override
@@ -230,6 +245,59 @@ public class MediaFolderSettingsController extends
 			spotifyService.removeListener(loginListener);
 		}
 	}
+	
+	private Map<String, String> getParameters(HttpServletRequest request) throws FileUploadException {
+		
+		keyBytes = null;
+		Map<String, String> parameters = new HashMap<String, String>();
+		if (ServletFileUpload.isMultipartContent(request)) {
+			
+			Map<String, Object> map = new HashMap<String, Object>();
+			FileItemFactory factory = new DiskFileItemFactory();
+			ServletFileUpload upload = new ServletFileUpload(factory);
+			List<?> items = upload.parseRequest(request);
+
+			// Look for file items.
+			for (Object o : items) {
+				FileItem item = (FileItem) o;
+
+				if (!item.isFormField()) {
+					byte[] data = item.get();
+
+					if (data.length > 0) {
+						keyBytes = data;
+					}
+					break;
+				} else {
+					parameters.put(item.getFieldName(), item.getString());
+				}
+			}
+			
+			
+
+			return parameters;
+		}
+		
+		for(Enumeration<String> e = request.getParameterNames(); e.hasMoreElements();) {
+			String key = e.nextElement();
+			parameters.put(key, request.getParameter(key));
+		}
+		return parameters;
+
+	}
+	
+
+	private void createKey(byte[] data, Map<String, Object> map) {
+
+		try {
+			String keyFile = settingsService.getSpotifyKey();
+			FileUtils.writeByteArrayToFile(new File(keyFile), data);
+
+		} catch (Exception x) {
+			LOG.warn("Failed to upload spotify key: " + x, x);
+			map.put("error", x);
+		}
+	}
 
 	private boolean hasIndexedParentFolder(String folder) {
 		return mediaFolderService.hasIndexedParentFolder(folder);
@@ -239,10 +307,10 @@ public class MediaFolderSettingsController extends
 		mediaFolderService.setChildFoldersToNonIndexed(deletedPaths);
 	}
 
-	private void addNewMediaFolderFromRequest(HttpServletRequest request) {
-		String name = trimToNull(request.getParameter("name"));
-		String path = trimToNull(request.getParameter("path"));
-		boolean indexed = trimToNull(request.getParameter("indexed")) != null;
+	private void addNewMediaFolderFromRequest(Map<String, String> parameters) {
+		String name = trimToNull(parameters.get("name"));
+		String path = trimToNull(parameters.get("path"));
+		boolean indexed = trimToNull(parameters.get("indexed")) != null;
 
 		if (name != null || path != null) {
 			File file = new File(path);
@@ -251,9 +319,9 @@ public class MediaFolderSettingsController extends
 		}
 	}
 
-	private String getParameter(HttpServletRequest request, String name,
+	private String getParameter(Map<String, String> parameters, String name,
 			Integer id) {
-		return StringUtils.trimToNull(request.getParameter(name + "[" + id
+		return StringUtils.trimToNull(parameters.get(name + "[" + id
 				+ "]"));
 	}
 
