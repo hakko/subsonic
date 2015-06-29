@@ -26,6 +26,7 @@ import net.sourceforge.subsonic.service.SettingsService;
 import org.directwebremoting.WebContext;
 import org.directwebremoting.WebContextFactory;
 
+import com.github.hakko.musiccabinet.dao.util.URIUtil;
 import com.github.hakko.musiccabinet.exception.ApplicationException;
 import com.github.hakko.musiccabinet.service.StarService;
 
@@ -36,56 +37,70 @@ import com.github.hakko.musiccabinet.service.StarService;
  */
 public class UIStarService {
 
-    private static final Logger LOG = Logger.getLogger(UIStarService.class);
+	private static final Logger LOG = Logger.getLogger(UIStarService.class);
 
-    private SecurityService securityService;
-    private SettingsService settingsService;
-    private StarService starService;
-    
-    public void starArtist(int artistId) {
-    	starService.starArtist(getUser(), artistId);
-    }
+	private SecurityService securityService;
+	private SettingsService settingsService;
+	private StarService starService;
 
-    public void unstarArtist(int artistId) {
-    	starService.unstarArtist(getUser(), artistId);
-    }
+	public void starArtist(String artistUri) {
+		starService.starArtist(getUser(), URIUtil.parseURI(artistUri));
+	}
 
-    public void starAlbum(int albumId) {
-    	starService.starAlbum(getUser(), albumId);
-    }
+	public void unstarArtist(String artistUri) {
+		starService.unstarArtist(getUser(), URIUtil.parseURI(artistUri));
+	}
 
-    public void unstarAlbum(int albumId) {
-    	starService.unstarAlbum(getUser(), albumId);
-    }
-
-    public void starTrack(int trackId) {
-    	try {
-			starService.starTrack(getUser(), trackId);
-		} catch (ApplicationException e) {
-			LOG.warn("Could not post starred track as loved song on last.fm!", e);
+	public void starAlbum(String albumUri) {
+		try {
+			starService.starAlbum(getUser(), URIUtil.parseURI(albumUri));
+		} catch (Exception e) {
+			LOG.error("Error starring album " + e.getMessage(), e);
 		}
-    }
+	}
 
-    public void unstarTrack(int trackId) {
-    	try {
-			starService.unstarTrack(getUser(), trackId);
-		} catch (ApplicationException e) {
-			LOG.warn("Could not post unstarred track as unloved song on last.fm!", e);
+	public void unstarAlbum(String albumUri) {
+		try {
+
+			starService.unstarAlbum(getUser(), URIUtil.parseURI(albumUri));
+		} catch (Exception e) {
+			LOG.error("Error starring album " + e.getMessage(), e);
 		}
-    }
 
-    private String getUser() {
-        WebContext webContext = WebContextFactory.get();
-        UserSettings userSettings = settingsService.getUserSettings(
-        		securityService.getCurrentUsername(webContext.getHttpServletRequest()));
-        return userSettings.getLastFmUsername();
-    }
+	}
 
-    // Spring setters
-    
-    public void setSecurityService(SecurityService securityService) {
-        this.securityService = securityService;
-    }
+	public void starTrack(String trackUri) {
+		try {
+			starService.starTrack(getUser(), URIUtil.parseURI(trackUri));
+		} catch (ApplicationException e) {
+			LOG.warn("Could not post starred track as loved song on last.fm!",
+					e);
+		}
+	}
+
+	public void unstarTrack(String trackUri) {
+		try {
+			starService.unstarTrack(getUser(), URIUtil.parseURI(trackUri));
+		} catch (ApplicationException e) {
+			LOG.warn(
+					"Could not post unstarred track as unloved song on last.fm!",
+					e);
+		}
+	}
+
+	private String getUser() {
+		WebContext webContext = WebContextFactory.get();
+		UserSettings userSettings = settingsService
+				.getUserSettings(securityService.getCurrentUsername(webContext
+						.getHttpServletRequest()));
+		return userSettings.getLastFmUsername();
+	}
+
+	// Spring setters
+
+	public void setSecurityService(SecurityService securityService) {
+		this.securityService = securityService;
+	}
 
 	public void setSettingsService(SettingsService settingsService) {
 		this.settingsService = settingsService;

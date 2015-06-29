@@ -47,16 +47,24 @@
  */
 package net.sbbi.upnp.messages;
 
-import org.xml.sax.*;
-import javax.xml.parsers.*;
-import java.io.*;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.io.StringReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
 
+import javax.xml.parsers.ParserConfigurationException;
+import javax.xml.parsers.SAXParser;
+import javax.xml.parsers.SAXParserFactory;
+
+import net.sbbi.upnp.services.ServiceStateVariable;
+import net.sbbi.upnp.services.UPNPService;
+
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-
-import net.sbbi.upnp.services.*;
+import org.xml.sax.InputSource;
+import org.xml.sax.SAXException;
 
 /**
  * This class is used to create state variable messages to

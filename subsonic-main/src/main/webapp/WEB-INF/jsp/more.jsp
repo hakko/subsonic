@@ -1,14 +1,11 @@
 <%@ page language="java" contentType="text/html; charset=utf-8" pageEncoding="iso-8859-1"%>
 
-<html><head>
-    <%@ include file="head.jspf" %>
+    <%@ include file="include.jspf" %>
     <style type="text/css">
         #progressBar {width: 350px; height: 10px; border: 1px solid black; display:none;}
         #progressBarContent {width: 0; height: 10px; background: url("<c:url value="/icons/progress.png"/>") repeat;}
     </style>
-    <script type="text/javascript" src="<c:url value="/dwr/engine.js"/>"></script>    
     <script type="text/javascript" src="<c:url value="/dwr/interface/transferService.js"/>"></script>
-    <script type="text/javascript" src="<c:url value="/dwr/util.js"/>"></script>
 
     <script type="text/javascript">
         function refreshProgress() {
@@ -38,8 +35,7 @@
         }
     </script>
 
-</head>
-<body class="mainframe bgcolor1" onload="${model.user.uploadRole ? "refreshProgress()" : ""}">
+<div class="mainframe bgcolor1" onload="${model.user.uploadRole ? "refreshProgress()" : ""}">
 
 <h1>
     <img src="<spring:theme code="moreImage"/>" alt=""/>
@@ -78,5 +74,4 @@
     </div>
 
 </c:if>
-
-</body></html>
+</div>

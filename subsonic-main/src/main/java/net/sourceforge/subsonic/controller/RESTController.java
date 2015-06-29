@@ -30,7 +30,7 @@ import org.springframework.web.servlet.mvc.multiaction.MultiActionController;
  * This class is modeled according to the Facade pattern (GoF) and delegates tasks
  * to REST*Controller. Sub classes are named to roughly comply with api.jsp.
  */
-public class RESTController extends MultiActionController implements REST_1_8_0 {
+public class RESTController extends MultiActionController implements REST_1_12_0 {
 
     private RESTSystemController restSystemController;
     private RESTBrowseController restBrowseController;
@@ -186,8 +186,10 @@ public class RESTController extends MultiActionController implements REST_1_8_0 
     }
 
     @Override
-    public void getAvatar(HttpServletRequest request, HttpServletResponse response) throws Exception {
+    public ModelAndView getAvatar(HttpServletRequest request, HttpServletResponse response) throws Exception {
         restMediaRetrievalController.getAvatar(request, response);
+        //FIXME
+        return null;
     }
 
     @Override
@@ -318,5 +320,136 @@ public class RESTController extends MultiActionController implements REST_1_8_0 
     public void setRestUserController(RESTUserController restUserController) {
         this.restUserController = restUserController;
     }
+
+	@Override
+	public void getGenres(HttpServletRequest request,
+			HttpServletResponse response) throws Exception {
+		restBrowseController.getGenres(request, response);
+	}
+
+	@Override
+	public void getSongsByGenre(HttpServletRequest request,
+			HttpServletResponse response) throws Exception {
+		restBrowseController.getSongsByGenre(request, response);
+	}
+
+	@Override
+	public ModelAndView hls(HttpServletRequest request,
+			HttpServletResponse response) throws Exception {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public void refreshPodcasts(HttpServletRequest request,
+			HttpServletResponse response) throws Exception {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void createPodcastChannel(HttpServletRequest request,
+			HttpServletResponse response) throws Exception {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void deletePodcastChannel(HttpServletRequest request,
+			HttpServletResponse response) throws Exception {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void deletePodcastEpisode(HttpServletRequest request,
+			HttpServletResponse response) throws Exception {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void downloadPodcastEpisode(HttpServletRequest request,
+			HttpServletResponse response) throws Exception {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void getInternetRadioStations(HttpServletRequest request,
+			HttpServletResponse response) throws Exception {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void getBookmarks(HttpServletRequest request,
+			HttpServletResponse response) throws Exception {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void createBookmark(HttpServletRequest request,
+			HttpServletResponse response) throws Exception {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void deleteBookmark(HttpServletRequest request,
+			HttpServletResponse response) throws Exception {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public ModelAndView videoPlayer(HttpServletRequest request,
+			HttpServletResponse response) throws Exception {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public void updateUser(HttpServletRequest request,
+			HttpServletResponse response) throws Exception {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void error(HttpServletRequest request, HttpServletResponse response,
+			ErrorCode code, String message) throws Exception {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void getArtistInfo(HttpServletRequest request,
+			HttpServletResponse response) throws Exception {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void getArtistInfo2(HttpServletRequest request,
+			HttpServletResponse response) throws Exception {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void getSimilarSongs(HttpServletRequest request,
+			HttpServletResponse response) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void getSimilarSongs2(HttpServletRequest request,
+			HttpServletResponse response) throws Exception {
+		// TODO Auto-generated method stub
+		
+	}
 
 }

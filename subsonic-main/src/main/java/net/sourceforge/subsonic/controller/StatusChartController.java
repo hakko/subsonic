@@ -18,20 +18,35 @@
  */
 package net.sourceforge.subsonic.controller;
 
-import net.sourceforge.subsonic.domain.*;
-import net.sourceforge.subsonic.service.*;
-import org.jfree.chart.*;
-import org.jfree.chart.axis.*;
-import org.jfree.chart.plot.*;
-import org.jfree.chart.renderer.xy.*;
-import org.jfree.data.*;
-import org.jfree.data.time.*;
-import org.springframework.web.servlet.*;
-
-import javax.servlet.http.*;
-import java.awt.*;
-import java.util.*;
+import java.awt.BasicStroke;
+import java.awt.Color;
+import java.awt.GradientPaint;
+import java.awt.Paint;
+import java.util.Collections;
+import java.util.Date;
 import java.util.List;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+import net.sourceforge.subsonic.domain.TransferStatus;
+import net.sourceforge.subsonic.service.StatusService;
+
+import org.jfree.chart.ChartFactory;
+import org.jfree.chart.ChartUtilities;
+import org.jfree.chart.JFreeChart;
+import org.jfree.chart.axis.AxisLocation;
+import org.jfree.chart.axis.ValueAxis;
+import org.jfree.chart.plot.XYPlot;
+import org.jfree.chart.renderer.xy.XYItemRenderer;
+import org.jfree.data.Range;
+import org.jfree.data.time.DateRange;
+import org.jfree.data.time.Millisecond;
+import org.jfree.data.time.MovingAverage;
+import org.jfree.data.time.TimeSeries;
+import org.jfree.data.time.TimeSeriesCollection;
+import org.jfree.data.time.TimeSeriesDataItem;
+import org.springframework.web.servlet.ModelAndView;
 
 /**
  * Controller for generating a chart showing bitrate vs time.

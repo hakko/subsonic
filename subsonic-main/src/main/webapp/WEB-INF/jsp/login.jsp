@@ -1,16 +1,13 @@
 <%@ page language="java" contentType="text/html; charset=utf-8" pageEncoding="iso-8859-1"%>
-<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 
-<html><head>
-    <%@ include file="head.jspf" %>
+    <%@ include file="include.jspf" %>
     <script type="text/javascript">
         if (window != window.top) {
             top.location.href = location.href;
         }
     </script>
 
-</head>
-<body class="mainframe bgcolor1" onload="document.getElementById('j_username').focus()">
+<div class="mainframe bgcolor1" onload="document.getElementById('j_username').focus()">
 
 <form action="<c:url value="/j_spring_security_check"/>" method="POST">
     <div class="bgcolor2" align="center" style="border:1px solid black; padding:20px 50px 20px 50px; margin-top:100px">
@@ -55,5 +52,4 @@
 
     </div>
 </form>
-</body>
-</html>
+</div>

@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item android:id="@+id/song_menu_play_now"
+          android:title="@string/common.play_now"/>
+
+    <item android:id="@+id/song_menu_play_next"
+          android:title="@string/common.play_next"/>
+
+    <item android:id="@+id/song_menu_play_last"
+          android:title="@string/common.play_last"/>
+
+    <item android:id="@+id/song_menu_pin"
+          android:title="@string/common.pin"/>
+
+    <item android:id="@+id/song_menu_unpin"
+          android:title="@string/common.unpin"/>
+
+    <item android:id="@+id/song_menu_star"
+          android:title="@string/star.menu_star"/>
+
+    <item android:id="@+id/song_menu_unstar"
+          android:title="@string/star.menu_unstar"/>
+
+    <item android:id="@+id/song_menu_share"
+          android:title="@string/share.menu_share"/>
+
+</menu>

@@ -40,11 +40,6 @@ h2, b, tr {
     color: #696969;
 }
 
-/* Table sizing */
-table {
-    margin: 0 0 0 0;
-}
-
 /* Main frame image & colour */
 .mainframe {
     background-color: #e7e7e7;
@@ -155,14 +150,6 @@ label {
     line-height: 140%;
 }
 
-table {
-    font-size: 100%;
-    line-height: 140%;
-    padding: 0;
-    border: 0;
-    margin: 0 0 0.4em 0;
-}
-
 /* Table with some white space above it.*/
 table.indent {
     margin: 1em 0 0.4em 0;
@@ -249,4 +236,12 @@ img {
 
 .ruleTableHeader {
     font-weight: bold;
+}
+.overlay {
+    position: relative;
+}
+.spotify-icon {
+    position: absolute;
+    top: 0;
+    right: 0;
 }

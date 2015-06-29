@@ -18,11 +18,12 @@
  */
 package net.sourceforge.subsonic.validator;
 
-import org.springframework.validation.Validator;
-import org.springframework.validation.Errors;
 import net.sourceforge.subsonic.command.DonateCommand;
 import net.sourceforge.subsonic.controller.DonateController;
 import net.sourceforge.subsonic.service.SettingsService;
+
+import org.springframework.validation.Errors;
+import org.springframework.validation.Validator;
 
 /**
  * Validator for {@link DonateController}.

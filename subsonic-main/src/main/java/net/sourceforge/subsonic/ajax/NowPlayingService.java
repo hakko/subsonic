@@ -33,7 +33,6 @@ import java.util.Map;
 import net.sourceforge.subsonic.Logger;
 import net.sourceforge.subsonic.domain.AvatarScheme;
 import net.sourceforge.subsonic.domain.MediaFile;
-import net.sourceforge.subsonic.domain.MetaData;
 import net.sourceforge.subsonic.domain.Player;
 import net.sourceforge.subsonic.domain.TransferStatus;
 import net.sourceforge.subsonic.domain.UserSettings;
@@ -47,6 +46,8 @@ import org.apache.commons.lang.StringUtils;
 import org.directwebremoting.WebContext;
 import org.directwebremoting.WebContextFactory;
 
+import com.github.hakko.musiccabinet.configuration.Uri;
+import com.github.hakko.musiccabinet.domain.model.library.MetaData;
 import com.github.hakko.musiccabinet.domain.model.music.AlbumInfo;
 import com.github.hakko.musiccabinet.service.LibraryBrowserService;
 import com.github.hakko.musiccabinet.service.lastfm.AlbumInfoService;
@@ -99,7 +100,7 @@ public class NowPlayingService {
         for (TransferStatus status : statuses) {
 
             Player player = status.getPlayer();
-            int mediaFileId = status.getMediaFileId();
+            Uri mediaFileUri = status.getMediaFileUri();
 
             if (status.getMillisSinceLastUpdate() / 1000L / 60L < 60 && 
             		player != null && player.getUsername() != null) {
@@ -112,8 +113,12 @@ public class NowPlayingService {
                 
                 NowPlayingInfo npi;
                 if ((npi = lastPlayingInfo.get(player.getId())) == null ||
-                		npi.getMediaFileId() != mediaFileId) {
-                	MediaFile mediaFile = mediaFileService.getMediaFile(mediaFileId);
+                		!npi.getMediaFileUri().equals(mediaFileUri)) {
+                	MediaFile mediaFile = mediaFileService.getMediaFile(mediaFileUri);
+                	if (mediaFile == null || mediaFile.getMetaData() == null) {
+                		continue;
+                	}
+                	
                     Artwork artwork = getArtwork(mediaFile, settingsService.isPreferLastFmArtwork());
 					lastPlayingInfo.put(player.getId(), npi = 
 							getNowPlayingInfo(username, userSettings, mediaFile, artwork));
@@ -129,11 +134,11 @@ public class NowPlayingService {
     	MetaData md = mediaFile.getMetaData();
     	String artist = md.getArtist();
     	String title = md.getTitle();
-    	String albumUrl = "artist.view?id=" + md.getArtistId() + "&albumId=" + md.getAlbumId()
-    			+ "&trackId=" + mediaFile.getId();
+    	String albumUrl = "artist.view?id=" + md.getArtistUri() + "&albumId=" + md.getAlbumUri()
+    			+ "&trackId=" + mediaFile.getUri();
     	String lyricsUrl;
     	if (md.hasLyrics()) {
-    		lyricsUrl = "lyrics.view?mfId=" + mediaFile.getId();
+    		lyricsUrl = "lyrics.view?mfId=" + mediaFile.getUri();
     	} else {
     		lyricsUrl = settingsService.getLyricsUrl();
     		lyricsUrl = StringUtils.replace(lyricsUrl, "$(artist)", urlEncode(artist));
@@ -151,12 +156,16 @@ public class NowPlayingService {
     	artist = toHtml(abbreviate(artist, 25));
     	title = toHtml(abbreviate(title, 25));
     	username = toHtml(abbreviate(username, 25));
-    	return new NowPlayingInfo(mediaFile.getId(), username, artist, title, tooltip, 
+    	return new NowPlayingInfo(mediaFile.getUri(), username, artist, title, tooltip, 
     			albumUrl, lyricsUrl, artwork.imageUrl, artwork.zoomImageUrl, avatarUrl);
     }
     
     private Artwork getArtwork(MediaFile mediaFile, boolean preferLastFm) {
-    	int albumId = mediaFile.getMetaData().getAlbumId();
+    	if(mediaFile == null || mediaFile.getMetaData() == null) {
+    		return new Artwork();
+    	}
+    	
+    	Uri albumId = mediaFile.getMetaData().getAlbumUri();
     	if (preferLastFm) {
     		AlbumInfo albumInfo = albumInfoService.getAlbumInfosForAlbumIds(asList(albumId)).get(albumId);
     		if (albumInfo != null) {
@@ -165,7 +174,7 @@ public class NowPlayingService {
     					albumInfo.getExtraLargeImageUrl());
     		}
     	}
-    	String path = libraryBrowserService.getCoverArtFileForTrack(mediaFile.getId());
+    	String path = libraryBrowserService.getCoverArtFileForTrack(mediaFile.getUri());
     	if (path != null) {
             return new Artwork(
             		"coverArt.view?size=64&pathUtf8Hex=" + utf8HexEncode(path),

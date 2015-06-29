@@ -18,134 +18,173 @@
  */
 package net.sourceforge.subsonic.command;
 
+import java.util.Date;
+import java.util.List;
+
 import net.sourceforge.subsonic.controller.PersonalSettingsController;
 import net.sourceforge.subsonic.domain.Avatar;
 import net.sourceforge.subsonic.domain.Theme;
 import net.sourceforge.subsonic.domain.User;
 import net.sourceforge.subsonic.domain.UserSettings;
 
-import java.util.List;
-
 /**
  * Command used in {@link PersonalSettingsController}.
- *
+ * 
  * @author Sindre Mehus
  */
 public class PersonalSettingsCommand {
-    private User user;
-    private String localeIndex;
-    private String[] locales;
-    private String themeIndex;
-    private Theme[] themes;
-    private int avatarId;
-    private List<Avatar> avatars;
-    private Avatar customAvatar;
-    private UserSettings.Visibility mainVisibility;
-    private UserSettings.Visibility playlistVisibility;
-    private UserSettings.Visibility homeVisibility;
-    private boolean partyModeEnabled;
-    private boolean showNowPlayingEnabled;
-    private boolean showChatEnabled;
-    private boolean nowPlayingAllowed;
-    private boolean lastFmEnabled;
-    private String lastFmUsername;
-    private boolean albumOrderAscending;
-    private boolean albumOrderByYear;
-    private String defaultHomeView;
-    private short defaultHomeArtists;
-    private short defaultHomeAlbums;
-    private short defaultHomeSongs;
-    private short artistGridWidth;
-    private boolean albumGridLayout;
-    private short relatedArtists;
-    private short recommendedArtists;
-    private boolean reluctantArtistLoading;
-    private boolean onlyAlbumArtistRecommendations;
-    private boolean useVariousArtistsShortlist;
-    private boolean viewStatsForAllUsers;
-    private boolean isReloadNeeded;
-    
-    public User getUser() {
-        return user;
-    }
+	private User user;
+	private String localeIndex;
+	private String[] locales;
+	private String themeIndex;
+	private Theme[] themes;
+	private int avatarId;
+	private List<Avatar> avatars;
+	private Avatar customAvatar;
+	private UserSettings.Visibility mainVisibility;
+	private UserSettings.Visibility playlistVisibility;
+	private UserSettings.Visibility homeVisibility;
+	private boolean partyModeEnabled;
+	private boolean showNowPlayingEnabled;
+	private boolean showChatEnabled;
+	private boolean nowPlayingAllowed;
+	private boolean lastFmEnabled;
+	private String lastFmUsername;
+	private String spotifyUsername;
+	private boolean albumOrderAscending;
+	private boolean albumOrderByYear;
+	private String defaultHomeView;
+	private short defaultHomeArtists;
+	private short defaultHomeAlbums;
+	private short defaultHomeSongs;
+	private short artistGridWidth;
+	private boolean albumGridLayout;
+	private short relatedArtists;
+	private short recommendedArtists;
+	private boolean reluctantArtistLoading;
+	private boolean onlyAlbumArtistRecommendations;
+	private boolean useVariousArtistsShortlist;
+	private boolean viewStatsForAllUsers;
+	private String deviceName;
+	private String deviceMountPath;
+	private long deviceSyncSize;
+	private Date deviceLastSync;
+	private boolean isReloadNeeded;
+	private boolean songNotificationEnabled;
 
-    public void setUser(User user) {
-        this.user = user;
-    }
+	public String getDeviceName() {
+		return deviceName;
+	}
 
-    public String getLocaleIndex() {
-        return localeIndex;
-    }
+	public void setDeviceName(String deviceName) {
+		this.deviceName = deviceName;
+	}
 
-    public void setLocaleIndex(String localeIndex) {
-        this.localeIndex = localeIndex;
-    }
+	public String getDeviceMountPath() {
+		return deviceMountPath;
+	}
 
-    public String[] getLocales() {
-        return locales;
-    }
+	public void setDeviceMountPath(String deviceMountPath) {
+		this.deviceMountPath = deviceMountPath;
+	}
 
-    public void setLocales(String[] locales) {
-        this.locales = locales;
-    }
+	public long getDeviceSyncSize() {
+		return deviceSyncSize;
+	}
 
-    public String getThemeIndex() {
-        return themeIndex;
-    }
+	public void setDeviceSyncSize(long deviceSyncSize) {
+		this.deviceSyncSize = deviceSyncSize;
+	}
 
-    public void setThemeIndex(String themeIndex) {
-        this.themeIndex = themeIndex;
-    }
+	public Date getDeviceLastSync() {
+		return deviceLastSync;
+	}
 
-    public Theme[] getThemes() {
-        return themes;
-    }
+	public void setDeviceLastSync(Date deviceLastSync) {
+		this.deviceLastSync = deviceLastSync;
+	}
 
-    public void setThemes(Theme[] themes) {
-        this.themes = themes;
-    }
+	public User getUser() {
+		return user;
+	}
 
-    public int getAvatarId() {
-        return avatarId;
-    }
+	public void setUser(User user) {
+		this.user = user;
+	}
 
-    public void setAvatarId(int avatarId) {
-        this.avatarId = avatarId;
-    }
+	public String getLocaleIndex() {
+		return localeIndex;
+	}
 
-    public List<Avatar> getAvatars() {
-        return avatars;
-    }
+	public void setLocaleIndex(String localeIndex) {
+		this.localeIndex = localeIndex;
+	}
 
-    public void setAvatars(List<Avatar> avatars) {
-        this.avatars = avatars;
-    }
+	public String[] getLocales() {
+		return locales;
+	}
 
-    public Avatar getCustomAvatar() {
-        return customAvatar;
-    }
+	public void setLocales(String[] locales) {
+		this.locales = locales;
+	}
 
-    public void setCustomAvatar(Avatar customAvatar) {
-        this.customAvatar = customAvatar;
-    }
+	public String getThemeIndex() {
+		return themeIndex;
+	}
 
-    public UserSettings.Visibility getMainVisibility() {
-        return mainVisibility;
-    }
+	public void setThemeIndex(String themeIndex) {
+		this.themeIndex = themeIndex;
+	}
 
-    public void setMainVisibility(UserSettings.Visibility mainVisibility) {
-        this.mainVisibility = mainVisibility;
-    }
+	public Theme[] getThemes() {
+		return themes;
+	}
 
-    public UserSettings.Visibility getPlaylistVisibility() {
-        return playlistVisibility;
-    }
+	public void setThemes(Theme[] themes) {
+		this.themes = themes;
+	}
 
-    public void setPlaylistVisibility(UserSettings.Visibility playlistVisibility) {
-        this.playlistVisibility = playlistVisibility;
-    }
+	public int getAvatarId() {
+		return avatarId;
+	}
 
-    public UserSettings.Visibility getHomeVisibility() {
+	public void setAvatarId(int avatarId) {
+		this.avatarId = avatarId;
+	}
+
+	public List<Avatar> getAvatars() {
+		return avatars;
+	}
+
+	public void setAvatars(List<Avatar> avatars) {
+		this.avatars = avatars;
+	}
+
+	public Avatar getCustomAvatar() {
+		return customAvatar;
+	}
+
+	public void setCustomAvatar(Avatar customAvatar) {
+		this.customAvatar = customAvatar;
+	}
+
+	public UserSettings.Visibility getMainVisibility() {
+		return mainVisibility;
+	}
+
+	public void setMainVisibility(UserSettings.Visibility mainVisibility) {
+		this.mainVisibility = mainVisibility;
+	}
+
+	public UserSettings.Visibility getPlaylistVisibility() {
+		return playlistVisibility;
+	}
+
+	public void setPlaylistVisibility(UserSettings.Visibility playlistVisibility) {
+		this.playlistVisibility = playlistVisibility;
+	}
+
+	public UserSettings.Visibility getHomeVisibility() {
 		return homeVisibility;
 	}
 
@@ -154,54 +193,54 @@ public class PersonalSettingsCommand {
 	}
 
 	public boolean isPartyModeEnabled() {
-        return partyModeEnabled;
-    }
+		return partyModeEnabled;
+	}
 
-    public void setPartyModeEnabled(boolean partyModeEnabled) {
-        this.partyModeEnabled = partyModeEnabled;
-    }
+	public void setPartyModeEnabled(boolean partyModeEnabled) {
+		this.partyModeEnabled = partyModeEnabled;
+	}
 
-    public boolean isShowNowPlayingEnabled() {
-        return showNowPlayingEnabled;
-    }
+	public boolean isShowNowPlayingEnabled() {
+		return showNowPlayingEnabled;
+	}
 
-    public void setShowNowPlayingEnabled(boolean showNowPlayingEnabled) {
-        this.showNowPlayingEnabled = showNowPlayingEnabled;
-    }
+	public void setShowNowPlayingEnabled(boolean showNowPlayingEnabled) {
+		this.showNowPlayingEnabled = showNowPlayingEnabled;
+	}
 
-    public boolean isShowChatEnabled() {
-        return showChatEnabled;
-    }
+	public boolean isShowChatEnabled() {
+		return showChatEnabled;
+	}
 
-    public void setShowChatEnabled(boolean showChatEnabled) {
-        this.showChatEnabled = showChatEnabled;
-    }
+	public void setShowChatEnabled(boolean showChatEnabled) {
+		this.showChatEnabled = showChatEnabled;
+	}
 
-    public boolean isNowPlayingAllowed() {
-        return nowPlayingAllowed;
-    }
+	public boolean isNowPlayingAllowed() {
+		return nowPlayingAllowed;
+	}
 
-    public void setNowPlayingAllowed(boolean nowPlayingAllowed) {
-        this.nowPlayingAllowed = nowPlayingAllowed;
-    }
+	public void setNowPlayingAllowed(boolean nowPlayingAllowed) {
+		this.nowPlayingAllowed = nowPlayingAllowed;
+	}
 
-    public boolean isLastFmEnabled() {
-        return lastFmEnabled;
-    }
+	public boolean isLastFmEnabled() {
+		return lastFmEnabled;
+	}
 
-    public void setLastFmEnabled(boolean lastFmEnabled) {
-        this.lastFmEnabled = lastFmEnabled;
-    }
+	public void setLastFmEnabled(boolean lastFmEnabled) {
+		this.lastFmEnabled = lastFmEnabled;
+	}
 
-    public String getLastFmUsername() {
-        return lastFmUsername;
-    }
+	public String getLastFmUsername() {
+		return lastFmUsername;
+	}
 
-    public void setLastFmUsername(String lastFmUsername) {
-        this.lastFmUsername = lastFmUsername;
-    }
+	public void setLastFmUsername(String lastFmUsername) {
+		this.lastFmUsername = lastFmUsername;
+	}
 
-    public boolean isAlbumOrderAscending() {
+	public boolean isAlbumOrderAscending() {
 		return albumOrderAscending;
 	}
 
@@ -293,7 +332,8 @@ public class PersonalSettingsCommand {
 		return onlyAlbumArtistRecommendations;
 	}
 
-	public void setOnlyAlbumArtistRecommendations(boolean onlyAlbumArtistRecommendations) {
+	public void setOnlyAlbumArtistRecommendations(
+			boolean onlyAlbumArtistRecommendations) {
 		this.onlyAlbumArtistRecommendations = onlyAlbumArtistRecommendations;
 	}
 
@@ -314,10 +354,26 @@ public class PersonalSettingsCommand {
 	}
 
 	public boolean isReloadNeeded() {
-        return isReloadNeeded;
-    }
+		return isReloadNeeded;
+	}
 
-    public void setReloadNeeded(boolean reloadNeeded) {
-        isReloadNeeded = reloadNeeded;
-    }
+	public void setReloadNeeded(boolean reloadNeeded) {
+		isReloadNeeded = reloadNeeded;
+	}
+
+	public String getSpotifyUsername() {
+		return spotifyUsername;
+	}
+
+	public void setSpotifyUsername(String spotifyUsername) {
+		this.spotifyUsername = spotifyUsername;
+	}
+
+	public boolean isSongNotificationEnabled() {
+		return songNotificationEnabled;
+	}
+
+	public void setSongNotificationEnabled(boolean songNotificationEnabled) {
+		this.songNotificationEnabled = songNotificationEnabled;
+	}
 }

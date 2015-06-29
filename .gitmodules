@@ -1,0 +1,3 @@
+[submodule "libjahspotify"]
+	path = libjahspotify
+	url = https://github.com/tthomas48/libjahspotify

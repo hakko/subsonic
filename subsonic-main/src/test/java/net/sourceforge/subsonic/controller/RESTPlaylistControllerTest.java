@@ -139,17 +139,17 @@ public class RESTPlaylistControllerTest {
 
         MetaData metaData = new MetaData();
         metaData.setMediaType(Mediatype.MP3);
-        metaData.setArtistId(artist.getId());
+        metaData.setArtistUri(artist.getUri());
         metaData.setArtist(artist.getName());
         metaData.setAlbum(album.getName());
-        metaData.setAlbumId(album.getId());
+        metaData.setAlbumUri(album.getUri());
         metaData.setDuration((short) 352);
         metaData.setBitrate((short) 128);
-        metaData.setSize(5624132);
+        metaData.setSize((long) 5624132);
         metaData.setDiscNr((short) 1);
         metaData.setTrackNr((short) 1);
         metaData.setPath("/path/to/file.mp3");
-        metaData.setYear((short) 2013);
+        metaData.setYear(2013);
         Track track = new Track(71463, "The Jack", metaData);
 
         return MediaFileService.getMediaFile(track);

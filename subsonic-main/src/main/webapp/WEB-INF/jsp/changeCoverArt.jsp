@@ -1,11 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=utf-8" pageEncoding="iso-8859-1"%>
 
-<html><head>
-    <%@ include file="head.jspf" %>
-    <script type="text/javascript" src="<c:url value="/dwr/engine.js"/>"></script>    
-    <script type="text/javascript" src="<c:url value="/dwr/interface/coverArtService.js"/>"></script>
-    <script type="text/javascript" src="<c:url value="/dwr/util.js"/>"></script>
-    <script type="text/javascript" src="<c:url value="/script/prototype.js"/>"></script>
+    <%@ include file="include.jspf" %>
     <script type="text/javascript" src="https://www.google.com/jsapi"></script>
 
     <script type="text/javascript" language="javascript">
@@ -145,8 +140,7 @@
 
 
     </script>
-</head>
-<body class="mainframe bgcolor1">
+<div class="mainframe bgcolor1">
 <h1><fmt:message key="changecoverart.title"/></h1>
 <form action="javascript:search()">
     <table class="indent"><tr>
@@ -157,15 +151,15 @@
 
 <form action="javascript:setImage(dwr.util.getValue('url'))">
     <table><tr>
-        <input id="id" type="hidden" name="id" value="${model.id}"/>
+        <input id="id" type="hidden" name="id" value="${model.uri}"/>
         <td><label for="url"><fmt:message key="changecoverart.address"/></label></td>
         <td style="padding-left:0.5em"><input type="text" name="url" size="50" id="url" value="http://"/></td>
         <td style="padding-left:0.5em"><input type="submit" value="<fmt:message key="common.ok"/>"></td>
     </tr></table>
 </form>
 <sub:url value="artist.view" var="backUrl">
-	<sub:param name="id" value="${model.artistId}"/>
-	<sub:param name="albumId" value="${model.albumId}"/>
+	<sub:param name="id" value="${model.artistUri}"/>
+	<sub:param name="albumId" value="${model.albumUri}"/>
 </sub:url>
 <div style="padding-top:0.5em;padding-bottom:0.5em">
     <div class="back"><a href="${backUrl}"><fmt:message key="common.back"/></a></div>
@@ -206,4 +200,4 @@
     </div>
 </div>
 
-</body></html>
+</div>

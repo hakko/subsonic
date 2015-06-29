@@ -36,9 +36,12 @@ import net.sourceforge.subsonic.Logger;
 import net.sourceforge.subsonic.domain.Album;
 import net.sourceforge.subsonic.domain.ArtistLink;
 import net.sourceforge.subsonic.domain.MediaFile;
+import net.sourceforge.subsonic.domain.Player;
 import net.sourceforge.subsonic.domain.User;
 import net.sourceforge.subsonic.domain.UserSettings;
 import net.sourceforge.subsonic.service.MediaFileService;
+import net.sourceforge.subsonic.service.PlayerService;
+import net.sourceforge.subsonic.service.RatingService;
 import net.sourceforge.subsonic.service.SecurityService;
 import net.sourceforge.subsonic.service.SettingsService;
 import net.sourceforge.subsonic.util.Util;
@@ -48,6 +51,7 @@ import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.ParameterizableViewController;
 import org.springframework.web.servlet.view.RedirectView;
 
+import com.github.hakko.musiccabinet.configuration.Uri;
 import com.github.hakko.musiccabinet.domain.model.aggr.ArtistRecommendation;
 import com.github.hakko.musiccabinet.domain.model.library.LastFmUser;
 import com.github.hakko.musiccabinet.domain.model.library.Period;
@@ -65,6 +69,7 @@ public class HomeController extends ParameterizableViewController {
     private static final Logger LOG = Logger.getLogger(HomeController.class);
 
     private SettingsService settingsService;
+    private PlayerService playerService;
     private SecurityService securityService;
     private UserTopArtistsService userTopArtistsService;
     private ArtistRecommendationService artistRecommendationService;
@@ -72,11 +77,15 @@ public class HomeController extends ParameterizableViewController {
     private LibraryBrowserService libraryBrowserService;
     private MediaFileService mediaFileService;
     private StarService starService;
+    private RatingService ratingService;
+
 
     @Override
     protected ModelAndView handleRequestInternal(HttpServletRequest request, HttpServletResponse response) throws Exception {
 
         Map<String, Object> map = new HashMap<String, Object>();
+        
+        Player player = playerService.getPlayer(request, response);
 
         User user = securityService.getCurrentUser(request);
         UserSettings userSettings = settingsService.getUserSettings(user.getUsername());
@@ -118,11 +127,12 @@ public class HomeController extends ParameterizableViewController {
         if ("topartists".equals(listType) || "recommended".equals(listType) || "Artists".equals(listGroup)) {
         	setArtists(listType, listGroup, query, page, userSettings, lastFmUsername, map);
         } else if ("newest".equals(listType) || "Albums".equals(listGroup)) {
-        	setAlbums(listType, query, page, userSettings, lastFmUsername, map);
+        	setAlbums(player, listType, query, page, userSettings, lastFmUsername, map);
         } else if ("Songs".equals(listGroup)) {
         	setSongs(listType, query, page, userSettings, lastFmUsername, map);
         }
 
+        map.put("player", player);
         map.put("welcomeTitle", settingsService.getWelcomeTitle());
         map.put("welcomeSubtitle", settingsService.getWelcomeSubtitle());
         map.put("welcomeMessage", settingsService.getWelcomeMessage());
@@ -208,13 +218,13 @@ public class HomeController extends ParameterizableViewController {
     	return null;
     }
 
-    private void setAlbums(String listType, String query, int page,
+    private void setAlbums(Player player, String listType, String query, int page,
     		UserSettings userSettings, String lastFmUsername, Map<String, Object> map) {
     	final int ALBUMS = userSettings.getDefaultHomeAlbums();
     	int offset = page * ALBUMS, limit = ALBUMS + 1;
 
     	List<Album> albums = mediaFileService.getAlbums(
-    			getAlbums(listType, query, offset, limit, lastFmUsername));
+    			getAlbums(listType, query, offset, limit, lastFmUsername, null, -1, -1, player.isSpotifyEnabled()));
 
     	if (albums.size() > ALBUMS) {
     		map.put("morePages", true);
@@ -222,27 +232,33 @@ public class HomeController extends ParameterizableViewController {
     	}
     	map.put("page", page);
     	map.put("albums", albums);
-        map.put("isAlbumStarred", starService.getStarredAlbumsMask(lastFmUsername, getAlbumIds(albums)));
+        map.put("isAlbumStarred", starService.getStarredAlbumsMask(lastFmUsername, getAlbumUris(albums)));
 		map.put("artistGridWidth", userSettings.getArtistGridWidth());
 		map.put("albumGridLayout", userSettings.isAlbumGridLayout());
     }
 
-    private List<Integer> getAlbumIds(List<Album> albums) {
-    	List<Integer> albumIds = new ArrayList<>();
+    private List<? extends Uri> getAlbumUris(List<Album> albums) {
+    	List<Uri> albumIds = new ArrayList<>();
     	for (Album album : albums) {
-    		albumIds.add(album.getId());
+    		albumIds.add(album.getUri());
     	}
     	return albumIds;
     }
 
-    public List<com.github.hakko.musiccabinet.domain.model.music.Album> getAlbums(
-    		String listType, String query, int offset, int limit, String lastFmUsername) {
+    public List<com.github.hakko.musiccabinet.domain.model.music.Album> getAlbums( 
+    		String listType, String query, int offset, int limit, String lastFmUsername, String genre, int fromYear, int toYear, boolean spotifyEnabled) {
+    	
     	switch (listType) {
-		case "newest": return libraryBrowserService.getRecentlyAddedAlbums(offset, limit, query);
-		case "recent": return libraryBrowserService.getRecentlyPlayedAlbums(lastFmUsername, offset, limit, query);
-		case "frequent": return libraryBrowserService.getMostPlayedAlbums(lastFmUsername, offset, limit, query);
-		case "starred": return libraryBrowserService.getStarredAlbums(lastFmUsername, offset, limit, query);
-		case "random": return libraryBrowserService.getRandomAlbums(limit);
+    	case "highest": return ratingService.getHighestRatedAlbums(offset, limit);
+    	case "frequent": return libraryBrowserService.getMostPlayedAlbums(spotifyEnabled, lastFmUsername, offset, limit, query);
+    	case "recent": return libraryBrowserService.getRecentlyPlayedAlbums(spotifyEnabled, lastFmUsername, offset, limit, query);
+		case "newest": return libraryBrowserService.getRecentlyAddedAlbums(spotifyEnabled, offset, limit, query);
+		case "starred": return libraryBrowserService.getStarredAlbums(spotifyEnabled, lastFmUsername, offset, limit, query);
+		case "alphabeticalbyartist":  return libraryBrowserService.getAlbumsByArtist(spotifyEnabled, lastFmUsername, offset, limit, query);
+		case "alphabeticalbyname":  return libraryBrowserService.getAlbumsByName(spotifyEnabled, lastFmUsername, offset, limit, query);
+		case "bygenre":  return libraryBrowserService.getAlbumsByGenre(spotifyEnabled, lastFmUsername, offset, limit, query, genre);		
+		case "byyear":  return libraryBrowserService.getAlbumsByYear(spotifyEnabled, lastFmUsername, offset, limit, query, fromYear, toYear);
+		case "random": return libraryBrowserService.getRandomAlbums(spotifyEnabled, limit);
 		}
     	return null;
     }
@@ -252,7 +268,7 @@ public class HomeController extends ParameterizableViewController {
     	final int SONGS = userSettings.getDefaultHomeSongs();
     	int offset = page * SONGS, limit = SONGS + 1;
 
-    	List<Integer> mediaFileIds = getMediaFileIds(listType, query, offset, limit, lastFmUsername);
+    	List<? extends Uri> mediaFileIds = getMediaFileUris(listType, query, offset, limit, lastFmUsername);
     	mediaFileService.loadMediaFiles(mediaFileIds);
     	List<MediaFile> mediaFiles = mediaFileService.getMediaFiles(mediaFileIds);
 
@@ -266,23 +282,23 @@ public class HomeController extends ParameterizableViewController {
     	map.put("mediaFiles", mediaFiles);
     	map.put("multipleArtists", true);
     	map.put("visibility", userSettings.getHomeVisibility());
-        map.put("isTrackStarred", starService.getStarredTracksMask(lastFmUsername, getTrackIds(mediaFiles)));
+        map.put("isTrackStarred", starService.getStarredTracksMask(lastFmUsername, getTrackUris(mediaFiles)));
     }
 
-    private List<Integer> getTrackIds(List<MediaFile> mediaFiles) {
-    	List<Integer> trackIds = new ArrayList<>();
+    private List<Uri> getTrackUris(List<MediaFile> mediaFiles) {
+    	List<Uri> trackUris = new ArrayList<>();
     	for (MediaFile mediaFile : mediaFiles) {
-    		trackIds.add(mediaFile.getId());
+    		trackUris.add(mediaFile.getUri());
     	}
-    	return trackIds;
+    	return trackUris;
     }
 
-    private List<Integer> getMediaFileIds(String listType, String query, int offset, int limit, String lastFmUsername) {
+    private List<? extends Uri> getMediaFileUris(String listType, String query, int offset, int limit, String lastFmUsername) {
     	switch (listType) {
-		case "recent": return libraryBrowserService.getRecentlyPlayedTrackIds(lastFmUsername, offset, limit, query);
-		case "frequent": return libraryBrowserService.getMostPlayedTrackIds(lastFmUsername, offset, limit, query);
-		case "starred": return libraryBrowserService.getStarredTrackIds(lastFmUsername, offset, limit, query);
-		case "random": return libraryBrowserService.getRandomTrackIds(limit);
+		case "recent": return libraryBrowserService.getRecentlyPlayedTrackUris(lastFmUsername, offset, limit, query);
+		case "frequent": return libraryBrowserService.getMostPlayedTrackUris(lastFmUsername, offset, limit, query);
+		case "starred": return libraryBrowserService.getStarredTrackUris(lastFmUsername, offset, limit, query);
+		case "random": return libraryBrowserService.getRandomTrackUris(limit);
     	}
 		return null;
 	}
@@ -293,6 +309,10 @@ public class HomeController extends ParameterizableViewController {
 
     public void setSecurityService(SecurityService securityService) {
         this.securityService = securityService;
+    }
+    
+    public void setPlayerService(PlayerService playerService) {
+        this.playerService = playerService;
     }
 
     public void setUserTopArtistsService(UserTopArtistsService userTopArtistsService) {
@@ -317,6 +337,10 @@ public class HomeController extends ParameterizableViewController {
 
 	public void setStarService(StarService starService) {
 		this.starService = starService;
+	}
+
+	public void setRatingService(RatingService ratingService) {
+		this.ratingService = ratingService;
 	}
 
 }

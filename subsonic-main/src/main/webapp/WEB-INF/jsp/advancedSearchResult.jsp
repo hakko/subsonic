@@ -1,23 +1,31 @@
 <%@ page language="java" contentType="text/html; charset=utf-8" pageEncoding="iso-8859-1" %>
-<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
-<%--@elvariable id="model" type="java.util.Map"--%>
+<%@ include file="include.jspf" %>
+<div class="mainframe bgcolor1">
 
-<html><head>
-	<%@ include file="head.jspf" %>
-</head><body class="mainframe bgcolor1">
 
-<h2>
-<a href="javascript:noop()" onclick="top.playlist.onPlay(${model.trackIds}, 'P');">Play all</a> |
-<a href="javascript:noop()" onclick="top.playlist.onPlay(${model.trackIds}, 'E');">Enqueue all</a> |
-<a href="javascript:noop()" onclick="top.playlist.onPlay(${model.trackIds}, 'A');">Add all</a>
-</h2>
 
-<%@ include file="songs.jspf" %>
 
-<c:if test="${empty model.mediaFiles}">(no results found)</c:if>
+<c:choose>
+<c:when test="${empty model.mediaFiles}">
+  <div class="alert alert-warning"><fmt:message key="search.hits.none"/></div>
+</c:when>
+<c:otherwise>
+  <div class="btn-group">
+  
+    <a class="btn btn-default" href="#" onclick="return onPlay(${sub:esc(model.trackUris)}, 'P');">Play all</a>
+    <a class="btn btn-default" href="#" onclick="return onPlay(${sub:esc(model.trackUris)}, 'E');">Enqueue all</a>
+    <a class="btn btn-default" href="#" onclick="return onPlay(${sub:esc(model.trackUris)}, 'A');">Add all</a>
+  </div>
+  <%@ include file="songs.jspf" %>
+  
+  <ul class="pager">
+  <c:if test="${model.page > 0}"><div class="previous back"><a href="#" onclick="return window.search(this, ${model.page - 1});"><fmt:message key="common.previous"/></a></div></c:if>
+  <c:if test="${not empty model.morePages}"><div class="next forward"><a href="#" onclick="return window.search(this, ${model.page + 1});"><fmt:message key="common.next"/></a></div></c:if>
+  </ul>
+  
+</c:otherwise>
+</c:choose>
 
-<c:if test="${model.page > 0}"><div class="back"><a href="javascript:void(0)" onclick="javascript:window.search(${model.page - 1}); return false;"><fmt:message key="common.previous"/></a></div></c:if>
-<c:if test="${not empty model.morePages}"><div class="forward"><a href="javascript:void(0)" onclick="javascript:window.search(${model.page + 1}); return false;"><fmt:message key="common.next"/></a></div></c:if>
 
-</body>
-</html>
+
+</div>

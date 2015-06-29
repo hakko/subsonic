@@ -54,6 +54,9 @@ public class PlayerSettingsCommand {
     private Player[] players;
     private boolean isAdmin;
     private boolean isReloadNeeded;
+    private boolean isSpotifyEnabled;
+    private List<String> mixers;
+    private String mixerName;
 
     public String getPlayerId() {
         return playerId;
@@ -227,7 +230,31 @@ public class PlayerSettingsCommand {
         isReloadNeeded = reloadNeeded;
     }
 
-    /**
+    public boolean isSpotifyEnabled() {
+		return isSpotifyEnabled;
+	}
+
+	public void setSpotifyEnabled(boolean isSpotifyEnabled) {
+		this.isSpotifyEnabled = isSpotifyEnabled;
+	}
+
+	public List<String> getMixers() {
+		return mixers;
+	}
+
+	public void setMixers(List<String> mixers) {
+		this.mixers = mixers;
+	}
+
+	public String getMixerName() {
+		return mixerName;
+	}
+
+	public void setMixerName(String mixerName) {
+		this.mixerName = mixerName;
+	}
+
+	/**
      * Holds the transcoding and whether it is active for the given player.
      */
     public static class TranscodingHolder {

@@ -18,9 +18,9 @@
  */
 package net.sourceforge.subsonic.domain;
 
-import org.apache.commons.lang.StringUtils;
-
 import java.util.Date;
+
+import org.apache.commons.lang.StringUtils;
 
 /**
  * Represens a remote player.  A player has a unique ID, a user-defined name, a logged-on user,
@@ -39,6 +39,8 @@ public class Player {
     private String ipAddress;
     private boolean isDynamicIp = true;
     private boolean isAutoControlEnabled = true;
+    private boolean spotifyEnabled = true;
+    private String mixerName;
     private Date lastSeen;
     private CoverArtScheme coverArtScheme = CoverArtScheme.MEDIUM;
     private TranscodeScheme transcodeScheme = TranscodeScheme.OFF;
@@ -335,4 +337,20 @@ public class Player {
     public String toString() {
         return getDescription();
     }
+
+	public boolean isSpotifyEnabled() {
+		return spotifyEnabled;
+	}
+
+	public void setSpotifyEnabled(boolean spotifyEnabled) {
+		this.spotifyEnabled = spotifyEnabled;
+	}
+
+	public String getMixerName() {
+		return mixerName;
+	}
+
+	public void setMixerName(String mixerName) {
+		this.mixerName = mixerName;
+	}
 }

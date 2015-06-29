@@ -18,17 +18,18 @@
  */
 package net.sourceforge.subsonic.service.metadata;
 
-import net.sourceforge.subsonic.Logger;
-import net.sourceforge.subsonic.domain.MediaFile;
-import net.sourceforge.subsonic.domain.MetaData;
-import net.sourceforge.subsonic.io.InputStreamReaderThread;
-import net.sourceforge.subsonic.service.TranscodingService;
-import net.sourceforge.subsonic.util.StringUtil;
-
 import java.io.File;
 import java.io.InputStream;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+
+import net.sourceforge.subsonic.Logger;
+import net.sourceforge.subsonic.domain.MediaFile;
+import net.sourceforge.subsonic.io.InputStreamReaderThread;
+import net.sourceforge.subsonic.service.TranscodingService;
+import net.sourceforge.subsonic.util.StringUtil;
+
+import com.github.hakko.musiccabinet.domain.model.library.MetaData;
 
 /**
  * Parses meta data from video files using FFmpeg (http://ffmpeg.org/).
@@ -62,7 +63,7 @@ public class FFmpegParser extends MetaDataParser {
 
             File ffmpeg = new File(transcodingService.getTranscodeDirectory(), "ffmpeg");
 
-            String[] command = new String[]{ffmpeg.getAbsolutePath(), "-i", file.getFile().getAbsolutePath()};
+            String[] command = new String[]{ffmpeg.getAbsolutePath(), "-i", file.getAbsolutePath()};
             Process process = Runtime.getRuntime().exec(command);
             InputStream stdout = process.getInputStream();
             InputStream stderr = process.getErrorStream();
@@ -87,12 +88,12 @@ public class FFmpegParser extends MetaDataParser {
                     int hours = Integer.parseInt(matcher.group(1));
                     int minutes = Integer.parseInt(matcher.group(2));
                     int seconds = Integer.parseInt(matcher.group(3));
-                    metaData.setDuration(hours * 3600 + minutes * 60 + seconds);
+                    metaData.setDuration((short) (hours * 3600 + minutes * 60 + seconds));
                 }
 
                 matcher = BITRATE_PATTERN.matcher(line);
                 if (matcher.find()) {
-                    metaData.setBitRate(Integer.valueOf(matcher.group(1)));
+                    metaData.setBitrate(Short.valueOf(matcher.group(1)));
                 }
 
                 matcher = DIMENSION_PATTERN.matcher(line);
@@ -131,7 +132,8 @@ public class FFmpegParser extends MetaDataParser {
      */
     @Override
     public void setMetaData(MediaFile file, MetaData metaData) {
-        throw new RuntimeException("setMetaData() not supported in " + getClass().getSimpleName());
+    	super.setMetaData(file, metaData);
+        LOG.warn("setMetaData() not supported in " + getClass().getSimpleName());
     }
 
     /**

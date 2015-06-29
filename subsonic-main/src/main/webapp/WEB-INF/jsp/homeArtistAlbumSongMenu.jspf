@@ -1,41 +1,23 @@
-<h3>
-    <c:forTokens items="Artists Albums Songs" delims=" " var="listGroup" varStatus="loopStatus">
-        <c:if test="${loopStatus.count > 1}">&nbsp;|&nbsp;</c:if>
-        <sub:url var="url" value="home.view">
-            <sub:param name="listType" value="${model.listType}"/>
-            <sub:param name="listGroup" value="${listGroup}"/>
-        </sub:url>
+<ul class="nav nav-pills nav-justified">
+	<c:forTokens items="Artists Albums Songs" delims=" " var="listGroup"
+		varStatus="loopStatus">
+		<sub:url var="url" value="home.view">
+			<sub:param name="listType" value="${model.listType}" />
+			<sub:param name="listGroup" value="${listGroup}" />
+		</sub:url>
 
-        <c:choose>
-            <c:when test="${model.listGroup eq listGroup}">
-                <span class="headerSelected">${listGroup}</span>
-            </c:when>
-            <c:otherwise>
-                <a href="${url}">${listGroup}</a>
-            </c:otherwise>
-        </c:choose>
+		<li ${model.listGroup eq listGroup ? 'class="active"' : ''}><a
+			href="${url}">${listGroup}</a></li>
 
-    </c:forTokens>
-</h3>
+	</c:forTokens>
+</ul>
 
-<c:if test="${model.listType ne 'random'}"><%@ include file="homeQuery.jspf" %></c:if>
+<c:if test="${model.listType ne 'random'}"><%@ include
+		file="homeQuery.jspf"%></c:if>
 
-<c:if test="${model.listGroup eq 'Songs'}"><%@ include file="homeSongs.jspf" %></c:if>
-<c:if test="${model.listGroup eq 'Albums'}"><%@ include file="homeAlbums.jspf" %></c:if>
-<c:if test="${model.listGroup eq 'Artists'}"><%@ include file="homeArtists.jspf" %></c:if>
-
-<c:if test="${model.listType ne 'random'}">
-	<sub:url var="url" value="home.view">
-		<sub:param name="listType" value="${model.listType}"/>
-		<sub:param name="listGroup" value="${model.listGroup}"/>
-		<c:if test="${model.listUsers eq 'current'}">
-			<c:set var="target">For everyone</c:set>
-			<sub:param name="listUsers" value="all"/>
-		</c:if>
-		<c:if test="${model.listUsers eq 'all'}">
-			<c:set var="target">For me</c:set>
-			<sub:param name="listUsers" value="current"/>
-		</c:if>
-	</sub:url>
-	<div class="forward"><a href="${url}">${target}</a></div>	
-</c:if>
+<c:if test="${model.listGroup eq 'Songs'}"><%@ include
+		file="homeSongs.jspf"%></c:if>
+<c:if test="${model.listGroup eq 'Albums'}"><%@ include
+		file="homeAlbums.jspf"%></c:if>
+<c:if test="${model.listGroup eq 'Artists'}"><%@ include
+		file="homeArtists.jspf"%></c:if>

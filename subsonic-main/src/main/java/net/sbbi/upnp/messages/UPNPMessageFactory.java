@@ -47,7 +47,9 @@
  */
 package net.sbbi.upnp.messages;
 
-import net.sbbi.upnp.services.*;
+import net.sbbi.upnp.services.ServiceAction;
+import net.sbbi.upnp.services.ServiceStateVariable;
+import net.sbbi.upnp.services.UPNPService;
 
 /**
  * Factory to create UPNP messages to access and communicate with

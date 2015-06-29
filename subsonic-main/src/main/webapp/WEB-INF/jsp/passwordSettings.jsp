@@ -1,9 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=utf-8" pageEncoding="iso-8859-1"%>
 
-<html><head>
-    <%@ include file="head.jspf" %>
-</head>
-<body class="mainframe bgcolor1">
+    <%@ include file="include.jspf" %>
+<div class="mainframe bgcolor1">
 
 <c:import url="settingsHeader.jsp">
     <c:param name="cat" value="password"/>
@@ -42,4 +40,4 @@
     </c:otherwise>
 </c:choose>
 
-</body></html>
+</div>

@@ -20,7 +20,9 @@ package net.sourceforge.subsonic.domain;
 
 import java.io.File;
 import java.io.FileFilter;
+import java.io.FileInputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -35,6 +37,13 @@ import net.sourceforge.subsonic.util.FileUtil;
 
 import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.lang.builder.CompareToBuilder;
+import org.json.JSONArray;
+import org.json.JSONException;
+
+import com.github.hakko.musiccabinet.configuration.SubsonicUri;
+import com.github.hakko.musiccabinet.configuration.Uri;
+import com.github.hakko.musiccabinet.dao.util.URIUtil;
+import com.github.hakko.musiccabinet.domain.model.library.MetaData;
 
 /**
  * Represents a file or directory containing music. Media files can be put in a
@@ -49,20 +58,23 @@ public class MediaFile implements Serializable, Comparable<MediaFile> {
 
 	private static final Logger LOG = Logger.getLogger(MediaFile.class);
 
-	private int id;
+	private Uri uri;
 	private File file;
 	private boolean isFile;
 	private boolean isDirectory;
 	private boolean isVideo;
 	private long lastModified;
 	private MetaData metaData;
-	
+
 	/**
-	 * Preferred usage:
-	 * {@link MediaFileService#getmediaFile}.
+	 * Preferred usage: {@link MediaFileService#getmediaFile}.
 	 */
 	public MediaFile(int id, File file) {
-		this.id = id;
+		this(new SubsonicUri(id), file);
+	}
+
+	public MediaFile(Uri uri, File file) {
+		this.uri = uri;
 		this.file = file;
 
 		// Cache these values for performance.
@@ -73,7 +85,8 @@ public class MediaFile implements Serializable, Comparable<MediaFile> {
 
 		if (isFile) {
 			getMetaData();
-			LOG.debug("created file with id " + id + " from file " + file + ", metadata = " + metaData);
+			LOG.debug("created file with uri " + uri + " from file " + file
+					+ ", metadata = " + metaData);
 		}
 	}
 
@@ -83,25 +96,22 @@ public class MediaFile implements Serializable, Comparable<MediaFile> {
 	protected MediaFile() {
 		isFile = true;
 	}
-	
+
+	@Deprecated
 	public MediaFile(int id) {
-		this.id = id;
+		this.uri = new SubsonicUri(id);
 		this.isFile = true;
-		this.metaData = new MetaData();
 	}
 
-	public int getId() {
-		return id;
-	}
-	
-	public File getFile() {
-		return file;
+	public MediaFile(Uri uri) {
+		this.uri = uri;
+		this.isFile = true;
 	}
 
-	public void setFile(File file) {
-		this.file = file;
+	public Uri getUri() {
+		return uri;
 	}
-	
+
 	public boolean isFile() {
 		return isFile;
 	}
@@ -124,13 +134,18 @@ public class MediaFile implements Serializable, Comparable<MediaFile> {
 		return isVideo;
 	}
 
+	public boolean isLocal() {
+		return file != null;
+	}
+
 	/**
 	 * Returns whether this music file is one of the root music folders.
 	 * 
 	 * @return Whether this music file is one of the root music folders.
 	 */
 	public boolean isRoot() {
-		MediaFolderService mediaFolderSettings = ServiceLocator.getMediaFolderService();
+		MediaFolderService mediaFolderSettings = ServiceLocator
+				.getMediaFolderService();
 		List<MediaFolder> folders = mediaFolderSettings.getAllMediaFolders();
 		for (MediaFolder folder : folders) {
 			if (file.equals(folder.getPath())) {
@@ -158,6 +173,9 @@ public class MediaFile implements Serializable, Comparable<MediaFile> {
 	 *         the file does not exist
 	 */
 	public long length() {
+		if (file == null) {
+			return 0;
+		}
 		return file.length();
 	}
 
@@ -167,6 +185,13 @@ public class MediaFile implements Serializable, Comparable<MediaFile> {
 	 * @return Whether this music file exists.
 	 */
 	public boolean exists() {
+
+		if (isSpotify()) {
+			return true;
+		}
+		if (URIUtil.isRemote(uri)) {
+			return true;
+		}
 		return file.exists();
 	}
 
@@ -177,7 +202,18 @@ public class MediaFile implements Serializable, Comparable<MediaFile> {
 	 * @return The name of the music file.
 	 */
 	public String getName() {
+		if (file == null) {
+			return getUriPath();
+		}
 		return file.getName();
+	}
+
+	public void setPath(String path) {
+		this.file = new File(path);
+	}
+
+	private String getUriPath() {
+		return this.getUri().getUri().toString();
 	}
 
 	/**
@@ -201,6 +237,9 @@ public class MediaFile implements Serializable, Comparable<MediaFile> {
 	 * @return The file suffix.
 	 */
 	public String getSuffix() {
+		if (!isLocal()) {
+			return "mp3";
+		}
 		return FilenameUtils.getExtension(getName());
 	}
 
@@ -210,7 +249,25 @@ public class MediaFile implements Serializable, Comparable<MediaFile> {
 	 * @return The full pathname as a string.
 	 */
 	public String getPath() {
+		if (file == null) {
+			return getUriPath();
+		}
 		return file.getPath();
+	}
+
+	public String getAbsolutePath() {
+		if (file == null) {
+			return getUriPath();
+		}
+		return file.getAbsolutePath();
+	}
+
+	public InputStream getInputStream() throws IOException {
+
+		if (file != null) {
+			return new FileInputStream(file);
+		}
+		return this.uri.getUri().toURL().openStream();
 	}
 
 	/**
@@ -225,6 +282,10 @@ public class MediaFile implements Serializable, Comparable<MediaFile> {
 			metaData = (parser == null) ? null : parser.getMetaData(this);
 		}
 		return metaData;
+	}
+
+	public void setMetaData(MetaData metaData) {
+		this.metaData = metaData;
 	}
 
 	/**
@@ -248,7 +309,10 @@ public class MediaFile implements Serializable, Comparable<MediaFile> {
 	 * @throws IOException
 	 *             If an I/O error occurs.
 	 */
-	public MediaFile getParent() throws IOException {
+	public MediaFile getParent() {
+		if (file == null) {
+			return null;
+		}
 		File parent = file.getParentFile();
 		return parent == null ? null : createMediaFile(parent);
 	}
@@ -264,6 +328,10 @@ public class MediaFile implements Serializable, Comparable<MediaFile> {
 	 *             If an I/O error occurs.
 	 */
 	public List<MediaFile> getChildren(FileFilter filter) throws IOException {
+		if (file == null) {
+			return new ArrayList<MediaFile>();
+		}
+
 		File[] children = FileUtil.listFiles(file, filter);
 		List<MediaFile> result = new ArrayList<MediaFile>(children.length);
 
@@ -276,14 +344,15 @@ public class MediaFile implements Serializable, Comparable<MediaFile> {
 				LOG.warn("Failed to create mediaFile for " + child, x);
 			}
 		}
-		
+
 		Collections.sort(result);
 
 		return result;
 	}
 
 	private MediaFile createMediaFile(File file) {
-		return ServiceLocator.getMediaFileService().getNonIndexedMediaFile(file);
+		return ServiceLocator.getMediaFileService()
+				.getNonIndexedMediaFile(file);
 	}
 
 	private boolean acceptMedia(File file) throws IOException {
@@ -300,13 +369,13 @@ public class MediaFile implements Serializable, Comparable<MediaFile> {
 	}
 
 	private static boolean isMusicFile(File file) {
-		return FilenameUtils.isExtension(file.getName(), 
-				ServiceLocator.getSettingsService().getMusicFileTypesAsArray());
+		return FilenameUtils.isExtension(file.getName(), ServiceLocator
+				.getSettingsService().getMusicFileTypesAsArray());
 	}
 
 	private static boolean isVideoFile(File file) {
-		return FilenameUtils.isExtension(file.getName(), 
-				ServiceLocator.getSettingsService().getVideoFileTypesAsArray());
+		return FilenameUtils.isExtension(file.getName(), ServiceLocator
+				.getSettingsService().getVideoFileTypesAsArray());
 	}
 
 	/**
@@ -318,15 +387,19 @@ public class MediaFile implements Serializable, Comparable<MediaFile> {
 
 		// Exclude all hidden files starting with a "." or "@eaDir" (thumbnail
 		// dir created on Synology devices).
-		return (file.getName().startsWith(".") || file.getName().startsWith("@eaDir"));
+		return (file.getName().startsWith(".") || file.getName().startsWith(
+				"@eaDir"));
 	}
 
 	public boolean equals(Object o) {
-		if (o == null) return false;
-		if (o == this) return true;
-		if (o.getClass() != getClass()) return false;
-		
-		return id == ((MediaFile) o).id;
+		if (o == null)
+			return false;
+		if (o == this)
+			return true;
+		if (o.getClass() != getClass())
+			return false;
+
+		return uri == ((MediaFile) o).uri;
 	}
 
 	/**
@@ -336,7 +409,7 @@ public class MediaFile implements Serializable, Comparable<MediaFile> {
 	 */
 	@Override
 	public int hashCode() {
-		return id;
+		return uri.hashCode();
 	}
 
 	/**
@@ -346,7 +419,23 @@ public class MediaFile implements Serializable, Comparable<MediaFile> {
 	 */
 	@Override
 	public String toString() {
+		if (isSpotify()) {
+			return file.getName();
+		}
 		return getPath();
+	}
+
+	public boolean isSpotify() {
+		if (file != null && file.getParent() != null
+				&& file.getParent().equals("spotify:")) {
+			return true;
+		}
+
+		if (file.getPath().startsWith("spotify:")) {
+			return true;
+		}
+
+		return false;
 	}
 
 	@Override
@@ -359,20 +448,40 @@ public class MediaFile implements Serializable, Comparable<MediaFile> {
 		} else if (isDirectory && mf.isDirectory) {
 			return getName().compareTo(mf.getName());
 		}
-		
+
 		MetaData md1 = getMetaData();
 		MetaData md2 = mf.getMetaData();
-		
+
 		CompareToBuilder ctb = new CompareToBuilder()
-		.append(nvl(md1.getDiscNumber(), 1), nvl(md2.getDiscNumber(), 1))
-		.append(nvl(md1.getTrackNumber(), -1), nvl(md2.getTrackNumber(), -1))
-		.append(md1.getTitle(), md2.getTitle());
-		
+				.append(nvl(md1.getDiscNr(), 1), nvl(md2.getDiscNr(), 1))
+				.append(nvl(md1.getTrackNr(), -1), nvl(md2.getTrackNr(), -1))
+				.append(md1.getTitle(), md2.getTitle());
+
 		return ctb.toComparison();
 	}
-	
-	private int nvl(Integer value, int defaultValue) {
+
+	private int nvl(Short value, int defaultValue) {
 		return value == null ? defaultValue : value;
+	}
+
+	/*
+	 * given string "['x', 'y', 'z']", returns the integers x, y and z as a
+	 * list.
+	 */
+	public static List<? extends Uri> getMediaFileUris(String query)
+			throws JSONException {
+		List<Uri> mediaFileIds = new ArrayList<>();
+
+		JSONArray list = new JSONArray(query);
+		for (int i = 0; i < list.length(); i++) {
+			mediaFileIds.add(URIUtil.parseURI(list.getString(i)));
+
+		}
+		return mediaFileIds;
+	}
+
+	public static enum MediaType {
+		MUSIC, PODCAST, AUDIOBOOK, VIDEO, DIRECTORY, ALBUM
 	}
 
 }

@@ -18,10 +18,14 @@
  */
 package net.sourceforge.subsonic.io;
 
-import net.sourceforge.subsonic.*;
-import org.apache.commons.io.*;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 
-import java.io.*;
+import net.sourceforge.subsonic.Logger;
+
+import org.apache.commons.io.IOUtils;
 
 /**
  * Utility class which reads everything from an input stream and optionally logs it.

@@ -18,9 +18,15 @@
  */
 package net.sourceforge.subsonic.service.metadata;
 
+import java.io.File;
+import java.util.SortedSet;
+import java.util.TreeSet;
+import java.util.logging.LogManager;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
 import net.sourceforge.subsonic.Logger;
 import net.sourceforge.subsonic.domain.MediaFile;
-import net.sourceforge.subsonic.domain.MetaData;
 
 import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.lang.StringUtils;
@@ -32,11 +38,7 @@ import org.jaudiotagger.tag.Tag;
 import org.jaudiotagger.tag.datatype.Artwork;
 import org.jaudiotagger.tag.reference.GenreTypes;
 
-import java.util.SortedSet;
-import java.util.TreeSet;
-import java.util.logging.LogManager;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
+import com.github.hakko.musiccabinet.domain.model.library.MetaData;
 
 /**
  * Parses meta data from audio files using the Jaudiotagger library
@@ -70,24 +72,27 @@ public class JaudiotaggerParser extends MetaDataParser {
         MetaData metaData = getBasicMetaData(file);
 
         try {
-            AudioFile audioFile = AudioFileIO.read(file.getFile());
-            Tag tag = audioFile.getTag();
-            if (tag != null) {
-                metaData.setArtist(getTagField(tag, FieldKey.ARTIST));
-                metaData.setAlbum(getTagField(tag, FieldKey.ALBUM));
-                metaData.setTitle(getTagField(tag, FieldKey.TITLE));
-                metaData.setYear(getTagField(tag, FieldKey.YEAR));
-                metaData.setGenre(mapGenre(getTagField(tag, FieldKey.GENRE)));
-                metaData.setDiscNumber(parseDiscNumber(getTagField(tag, FieldKey.DISC_NO)));
-                metaData.setTrackNumber(parseTrackNumber(getTagField(tag, FieldKey.TRACK)));
-            }
+        	if(file.isLocal()) {
+	            AudioFile audioFile = AudioFileIO.read(new File(file.getAbsolutePath()));
+	            Tag tag = audioFile.getTag();
+	            if (tag != null) {
+	                metaData.setArtist(getTagField(tag, FieldKey.ARTIST));
+	                metaData.setAlbum(getTagField(tag, FieldKey.ALBUM));
+	                metaData.setTitle(getTagField(tag, FieldKey.TITLE));
+	                metaData.setYear(getTagField(tag, FieldKey.YEAR));
+	                metaData.setGenre(mapGenre(getTagField(tag, FieldKey.GENRE)));
+	                metaData.setDiscNr(parseDiscNumber(getTagField(tag, FieldKey.DISC_NO)));
+	                metaData.setTrackNr(parseTrackNumber(getTagField(tag, FieldKey.TRACK)));
+	            }
+	            
+	            AudioHeader audioHeader = audioFile.getAudioHeader();
+	            if (audioHeader != null) {
+	                metaData.setVbr(audioHeader.isVariableBitRate());
+	                metaData.setBitrate((short) audioHeader.getBitRateAsNumber());
+	                metaData.setDuration((short) audioHeader.getTrackLength());
+	            }
+        	}
 
-            AudioHeader audioHeader = audioFile.getAudioHeader();
-            if (audioHeader != null) {
-                metaData.setVariableBitRate(audioHeader.isVariableBitRate());
-                metaData.setBitRate((int) audioHeader.getBitRateAsNumber());
-                metaData.setDuration(audioHeader.getTrackLength());
-            }
 
 
         } catch (Throwable x) {
@@ -135,38 +140,38 @@ public class JaudiotaggerParser extends MetaDataParser {
      * Parses the track number from the given string.  Also supports
      * track numbers on the form "4/12".
      */
-    private Integer parseTrackNumber(String trackNumber) {
+    private Short parseTrackNumber(String trackNumber) {
         if (trackNumber == null) {
             return null;
         }
 
-        Integer result = null;
+        Short result = null;
 
         try {
-            result = new Integer(trackNumber);
+            result = new Short(trackNumber);
         } catch (NumberFormatException x) {
             Matcher matcher = TRACK_NUMBER_PATTERN.matcher(trackNumber);
             if (matcher.matches()) {
                 try {
-                    result = Integer.valueOf(matcher.group(1));
+                    result = Short.valueOf(matcher.group(1));
                 } catch (NumberFormatException e) {
                     return null;
                 }
             }
         }
 
-        if (Integer.valueOf(0).equals(result)) {
+        if (result == null || result == 0) {
             return null;
         }
         return result;
     }
 
-    private Integer parseDiscNumber(String discNumber) {
+    private Short parseDiscNumber(String discNumber) {
         if (discNumber == null) {
             return null;
         }
         try {
-            return Integer.valueOf(discNumber);
+            return Short.valueOf(discNumber);
         } catch (NumberFormatException x) {
             return null;
         }
@@ -182,18 +187,22 @@ public class JaudiotaggerParser extends MetaDataParser {
     public void setMetaData(MediaFile file, MetaData metaData) {
 
         try {
-            AudioFile audioFile = AudioFileIO.read(file.getFile());
+        	super.setMetaData(file, metaData);
+        	if(!file.isLocal()) {
+        		return;
+        	}
+            AudioFile audioFile = AudioFileIO.read(new File(file.getAbsolutePath()));
             Tag tag = audioFile.getTagOrCreateAndSetDefault();
 
             tag.setField(FieldKey.ARTIST, StringUtils.trimToEmpty(metaData.getArtist()));
             tag.setField(FieldKey.ALBUM_ARTIST, StringUtils.trimToEmpty(metaData.getAlbumArtist()));
             tag.setField(FieldKey.COMPOSER, StringUtils.trimToEmpty(metaData.getComposer()));
             tag.setField(FieldKey.ALBUM, StringUtils.trimToEmpty(metaData.getAlbum()));
-            tag.setField(FieldKey.TITLE, StringUtils.trimToEmpty(metaData.getTitle()));
-            tag.setField(FieldKey.YEAR, StringUtils.trimToEmpty(metaData.getYear()));
+            tag.setField(FieldKey.TITLE, addExplicit(metaData));
+            tag.setField(FieldKey.YEAR, StringUtils.trimToEmpty(metaData.getYearAsString()));
             tag.setField(FieldKey.GENRE, StringUtils.trimToEmpty(metaData.getGenre()));
             
-            Integer track = metaData.getTrackNumber();
+            Short track = metaData.getTrackNr();
             if (track == null) {
                 tag.deleteField(FieldKey.TRACK);
             } else {
@@ -206,6 +215,20 @@ public class JaudiotaggerParser extends MetaDataParser {
             LOG.warn("Failed to update tags for file " + file, x);
             throw new RuntimeException("Failed to update tags for file " + file + ". " + x.getMessage(), x);
         }
+    }
+    
+    private String addExplicit(MetaData metaData) {
+    	String title = StringUtils.trimToEmpty(metaData.getTitle());
+    	title = title.replace("[Explicit]", "");
+    	title = title.replace("[Clean]", "");
+    	title = title.trim();
+    	if (metaData.getExplicit() == 1) {
+    		title += " [Explicit]";
+    	}
+    	else if(metaData.getExplicit() == 2) {
+    		title += " [Clean]";
+    	}
+    	return title;
     }
 
     /**
@@ -275,7 +298,10 @@ public class JaudiotaggerParser extends MetaDataParser {
     }
 
     private Artwork getArtwork(MediaFile file) throws Exception {
-        AudioFile audioFile = AudioFileIO.read(file.getFile());
+    	if (!file.isLocal()) {
+    		return null;
+    	}
+        AudioFile audioFile = AudioFileIO.read(new File(file.getAbsolutePath()));
         Tag tag = audioFile.getTag();
         return tag == null ? null : tag.getFirstArtwork();
     }

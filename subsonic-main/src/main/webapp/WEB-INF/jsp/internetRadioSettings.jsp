@@ -1,16 +1,28 @@
-<%@ page language="java" contentType="text/html; charset=utf-8" pageEncoding="iso-8859-1" %>
+<%@ page language="java" contentType="text/html; charset=utf-8"
+    pageEncoding="iso-8859-1"%>
+<%@ include file="include.jspf"%>
 
-<html><head>
-    <%@ include file="head.jspf" %>
-</head>
-<body class="mainframe bgcolor1">
+ <spring:theme code="panel.primary" var="themePanelPrimary" scope="page" />
+<div class="mainframe bgcolor1 panel panel-primary ${themePanelPrimary}">
+
+<div class="panel-heading">
+  <i class="fa fa-cog"></i>
+  <fmt:message key="settingsheader.title"/>
+</div>
+<div class="panel-body">
 
 <c:import url="settingsHeader.jsp">
     <c:param name="cat" value="internetRadio"/>
 </c:import>
 
-<form method="post" action="internetRadioSettings.view">
-<table class="indent">
+    <form method="post" action="internetRadioSettings.view"
+        onsubmit="return submitForm(this, 'Settings saved.');">
+        <div class="statusMessage"></div>
+        <div class="panel panel-default">
+            <div class="panel-heading"><fmt:message key="settingsheader.internetRadio"/></div>
+
+
+            <table class="table table-striped table-hover table-condensed">
     <tr>
         <th><fmt:message key="internetradiosettings.name"/></th>
         <th><fmt:message key="internetradiosettings.streamurl"/></th>
@@ -48,6 +60,8 @@
         </td>
     </tr>
 </table>
+</div>
+</div>
 </form>
 
 
@@ -59,4 +73,5 @@
     <script language="javascript" type="text/javascript">parent.frames.left.location.href="left.view?"</script>
 </c:if>
 
-</body></html>
+</div>
+</div>

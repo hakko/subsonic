@@ -18,8 +18,6 @@
  */
 package net.sourceforge.subsonic.controller;
 
-import static org.apache.commons.lang.math.NumberUtils.toInt;
-
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -32,14 +30,18 @@ import javax.servlet.http.HttpServletResponse;
 
 import net.sourceforge.subsonic.Logger;
 import net.sourceforge.subsonic.domain.MediaFile;
+import net.sourceforge.subsonic.domain.Player;
 import net.sourceforge.subsonic.domain.UserSettings;
 import net.sourceforge.subsonic.service.MediaFileService;
+import net.sourceforge.subsonic.service.PlayerService;
 import net.sourceforge.subsonic.service.SecurityService;
 import net.sourceforge.subsonic.service.SettingsService;
 
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.ParameterizableViewController;
 
+import com.github.hakko.musiccabinet.configuration.Uri;
+import com.github.hakko.musiccabinet.dao.util.URIUtil;
 import com.github.hakko.musiccabinet.service.StarService;
 
 /**
@@ -48,6 +50,7 @@ import com.github.hakko.musiccabinet.service.StarService;
 public class AlbumController extends ParameterizableViewController {
 
     private SecurityService securityService;
+    private PlayerService playerService;
     private SettingsService settingsService;
 	private MediaFileService mediaFileService;
 	private StarService starService;
@@ -58,13 +61,15 @@ public class AlbumController extends ParameterizableViewController {
     protected ModelAndView handleRequestInternal(HttpServletRequest request, HttpServletResponse response) throws Exception {
         Map<String, Object> map = new HashMap<String, Object>();
 
-        Set<Integer> artistIds = new HashSet<>();
+        Set<Uri> artistIds = new HashSet<>();
+        
+        Player player = playerService.getPlayer(request, response);
 
         MediaFile mediaFile;
         List<MediaFile> mediaFiles = new ArrayList<>();
-        for (String param : request.getParameterValues("mf")) {
-        	mediaFiles.add(mediaFile = mediaFileService.getMediaFile(toInt(param)));
-        	artistIds.add(mediaFile.getMetaData().getArtistId());
+        for (String param : request.getParameterValues("mf[]")) {
+        	mediaFiles.add(mediaFile = mediaFileService.getMediaFile(URIUtil.parseURI(param)));
+        	artistIds.add(mediaFile.getMetaData().getArtistUri());
         }
 
         map.put("mediaFiles", mediaFiles);
@@ -74,24 +79,29 @@ public class AlbumController extends ParameterizableViewController {
         map.put("visibility", userSettings.getMainVisibility());
         map.put("user", securityService.getCurrentUser(request));
         map.put("isTrackStarred", starService.getStarredTracksMask(userSettings.getLastFmUsername(), 
-        		getTrackIds(mediaFiles)));
+        		getTrackUris(mediaFiles)));
         map.put("trackId", request.getParameter("trackId"));
         map.put("albumView", true);
+        map.put("player", player);
 
         ModelAndView result = super.handleRequestInternal(request, response);
         result.addObject("model", map);
         return result;
     }
 
-    private List<Integer> getTrackIds(List<MediaFile> mediaFiles) {
-    	List<Integer> trackIds = new ArrayList<>();
+    private List<Uri> getTrackUris(List<MediaFile> mediaFiles) {
+    	List<Uri> trackUris = new ArrayList<>();
     	for (MediaFile mediaFile : mediaFiles) {
-    		trackIds.add(mediaFile.getId());
+    		trackUris.add(mediaFile.getUri());
     	}
-    	return trackIds;
+    	return trackUris;
     }
     
     // Spring setters
+    
+    public void setPlayerService(PlayerService playerService) {
+        this.playerService = playerService;
+    }
 
     public void setSettingsService(SettingsService settingsService) {
         this.settingsService = settingsService;

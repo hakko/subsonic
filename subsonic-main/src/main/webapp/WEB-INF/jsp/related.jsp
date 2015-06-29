@@ -1,10 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=utf-8" pageEncoding="utf-8"%>
 
-<html><head>
-    <%@ include file="head.jspf" %>
-    <link href="<c:url value="/style/shadow.css"/>" rel="stylesheet">
-</head>
-<body class="mainframe bgcolor1">
+    <%@ include file="include.jspf" %>
+<div class="mainframe bgcolor1">
 
 <div style="padding: 15px;">
 
@@ -29,7 +26,7 @@
 </table>
 
 <br>
-<h1><a href="javascript:noop()" onclick="top.playlist.onPlayRelatedArtistsSampler(${model.id}, ${fn:length(model.artists)});">
+<h1><a href="#" onclick="return onPlayRelatedArtistsSampler(${model.id}, ${fn:length(model.artists)});">
 		<img src="<spring:theme code="playImage"/>" alt="Play related artists sampler" title="Play related artists sampler">
 	</a>Related artists
 </h1>
@@ -40,5 +37,4 @@
 <%@ include file="artistRecommendation.jspf" %>
 
 </div>
-
-</body></html>
+</div>

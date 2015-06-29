@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<classpath>
+	<classpathentry kind="src" path="subsonic-booter/src/main/java"/>
+	<classpathentry kind="src" path="subsonic-main/src/main/java"/>
+	<classpathentry kind="src" path="subsonic-main/src/test/java"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-1.7">
+		<attributes>
+			<attribute name="owner.project.facets" value="java"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry combineaccessrules="false" kind="src" path="/musiccabinet-server"/>
+	<classpathentry kind="output" path="bin"/>
+</classpath>

@@ -18,9 +18,9 @@
  */
 package net.sourceforge.subsonic.service.metadata;
 
-import net.sourceforge.subsonic.service.metadata.MetaDataParser;
 import net.sourceforge.subsonic.domain.MediaFile;
-import net.sourceforge.subsonic.domain.MetaData;
+
+import com.github.hakko.musiccabinet.domain.model.library.MetaData;
 
 /**
  * Parses meta data by guessing artist, album and song title based on the path of the file.
@@ -37,16 +37,6 @@ public class DefaultMetaDataParser extends MetaDataParser {
      */
     public MetaData getRawMetaData(MediaFile file) {
         return getBasicMetaData(file);
-    }
-
-    /**
-     * Updates the given file with the given meta data.
-     * This method has no effect.
-     *
-     * @param file     The music file to update.
-     * @param metaData The new meta data.
-     */
-    public void setMetaData(MediaFile file, MetaData metaData) {
     }
 
     /**

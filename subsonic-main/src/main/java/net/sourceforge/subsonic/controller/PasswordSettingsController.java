@@ -18,12 +18,13 @@
  */
 package net.sourceforge.subsonic.controller;
 
-import org.springframework.web.servlet.mvc.*;
-import net.sourceforge.subsonic.service.*;
-import net.sourceforge.subsonic.command.*;
-import net.sourceforge.subsonic.domain.*;
+import javax.servlet.http.HttpServletRequest;
 
-import javax.servlet.http.*;
+import net.sourceforge.subsonic.command.PasswordSettingsCommand;
+import net.sourceforge.subsonic.domain.User;
+import net.sourceforge.subsonic.service.SecurityService;
+
+import org.springframework.web.servlet.mvc.SimpleFormController;
 
 /**
  * Controller for the page used to change password.

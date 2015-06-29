@@ -18,17 +18,20 @@
  */
 package net.sourceforge.subsonic.controller;
 
-import net.sourceforge.subsonic.domain.MediaFile;
-import net.sourceforge.subsonic.service.MediaFileService;
-
-import org.apache.commons.lang.math.NumberUtils;
-import org.springframework.web.servlet.ModelAndView;
-import org.springframework.web.servlet.mvc.ParameterizableViewController;
+import java.util.HashMap;
+import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.util.HashMap;
-import java.util.Map;
+
+import net.sourceforge.subsonic.domain.MediaFile;
+import net.sourceforge.subsonic.service.MediaFileService;
+
+import org.springframework.web.servlet.ModelAndView;
+import org.springframework.web.servlet.mvc.ParameterizableViewController;
+
+import com.github.hakko.musiccabinet.configuration.Uri;
+import com.github.hakko.musiccabinet.dao.util.URIUtil;
 
 /**
  * Controller for saving playlists.
@@ -42,8 +45,8 @@ public class ChangeCoverArtController extends ParameterizableViewController {
     @Override
     protected ModelAndView handleRequestInternal(HttpServletRequest request, HttpServletResponse response) throws Exception {
 
-        int mediaFileId = NumberUtils.toInt(request.getParameter("id"));
-        MediaFile mediaFile = mediaFileService.getMediaFile(mediaFileId);
+        Uri mediaFileUri = URIUtil.parseURI(request.getParameter("id"));
+        MediaFile mediaFile = mediaFileService.getMediaFile(mediaFileUri);
 
         String artist = mediaFile.getMetaData().getArtist();
         String album = mediaFile.getMetaData().getAlbum();
@@ -51,9 +54,9 @@ public class ChangeCoverArtController extends ParameterizableViewController {
         Map<String, Object> map = new HashMap<String, Object>();
         map.put("artist", artist);
         map.put("album", album);
-        map.put("id", mediaFileId);
-        map.put("artistId", request.getParameter("artistId"));
-        map.put("albumId", request.getParameter("albumId"));
+        map.put("uri", mediaFileUri);
+        map.put("artistUri", mediaFile.getMetaData().getArtistUri());
+        map.put("albumUri", mediaFile.getMetaData().getAlbumUri());
 
         ModelAndView result = super.handleRequestInternal(request, response);
         result.addObject("model", map);

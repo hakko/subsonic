@@ -37,6 +37,7 @@ import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mockito;
 
+import com.github.hakko.musiccabinet.configuration.SubsonicUri;
 import com.github.hakko.musiccabinet.domain.model.aggr.ArtistRecommendation;
 import com.github.hakko.musiccabinet.domain.model.library.MetaData;
 import com.github.hakko.musiccabinet.domain.model.library.MetaData.Mediatype;
@@ -56,7 +57,7 @@ public class RESTBrowseControllerTest {
     private Album album;
     private Track track;
     private int artistId, albumId, trackId;
-    private List<Integer> trackIds = asList(trackId);
+    private List trackUris = asList(new SubsonicUri(trackId));
     private String user = "username", lastFmUser = "lastFmUsername";
 
     private static final String ARTISTS = "rest/browse/getArtists.xml";
@@ -85,17 +86,17 @@ public class RESTBrowseControllerTest {
 
         MetaData metaData = new MetaData();
         metaData.setMediaType(Mediatype.MP3);
-        metaData.setArtistId(artist.getId());
+        metaData.setArtistUri(artist.getUri());
         metaData.setArtist(artist.getName());
         metaData.setAlbum(album.getName());
-        metaData.setAlbumId(album.getId());
+        metaData.setAlbumUri(album.getUri());
         metaData.setDuration((short) 352);
         metaData.setBitrate((short) 128);
-        metaData.setSize(5624132);
+        metaData.setSize((long) 5624132);
         metaData.setDiscNr((short) 1);
         metaData.setTrackNr((short) 1);
         metaData.setPath("/path/to/file.mp3");
-        metaData.setYear((short) 2013);
+        metaData.setYear(2013);
         track = new Track(trackId = 71463, "The Jack", metaData);
 
         XMLUnit.setIgnoreWhitespace(true);
@@ -147,12 +148,12 @@ public class RESTBrowseControllerTest {
         browseController.setSettingsService(settingsService);
 
         ArtistInfoService artistInfoService = mock(ArtistInfoService.class);
-        when(artistInfoService.getArtistInfo(artistId)).thenReturn(new ArtistInfo(artist));
+        when(artistInfoService.getArtistInfo(new SubsonicUri(artistId))).thenReturn(new ArtistInfo(artist));
         browseController.setArtistInfoService(artistInfoService);
 
-        LibraryBrowserService libraryBrowserService = mock(LibraryBrowserService.class);
-        when(libraryBrowserService.getAlbums(artistId, true, true)).thenReturn(null);
-        browseController.setLibraryBrowserService(libraryBrowserService);
+        //LibraryBrowserService libraryBrowserService = mock(LibraryBrowserService.class);
+        //when(libraryBrowserService.getAlbums(new ArrayList<Album>(), new SubsonicUri(artistId), true, true)).thenReturn(null);
+        //browseController.setLibraryBrowserService(libraryBrowserService);
 
         MediaFileService mediaFileService = mock(MediaFileService.class);
         when(mediaFileService.getAlbums(null, true)).thenReturn(albums);
@@ -174,7 +175,7 @@ public class RESTBrowseControllerTest {
         when(response.getWriter()).thenReturn(new PrintWriter(sw));
 
         MediaFileService mediaFileService = mock(MediaFileService.class);
-        when(mediaFileService.getMediaFile(trackId)).thenReturn(
+        when(mediaFileService.getMediaFile(new SubsonicUri(trackId))).thenReturn(
                 new MediaFile(0, new File("ACDC/High voltage/ACDC - The Jack.mp3")));
         browseController.setMediaFileService(mediaFileService);
 
@@ -183,8 +184,8 @@ public class RESTBrowseControllerTest {
         browseController.setSettingsService(settingsService);
 
         LibraryBrowserService libraryBrowserService = mock(LibraryBrowserService.class);
-        when(libraryBrowserService.getAlbum(albumId)).thenReturn(album);
-        when(libraryBrowserService.getTracks(album.getTrackIds())).thenReturn(asList(track));
+        when(libraryBrowserService.getAlbum(new SubsonicUri(albumId))).thenReturn(album);
+        when(libraryBrowserService.getTracks(album.getTrackUris())).thenReturn(asList(track));
         browseController.setLibraryBrowserService(libraryBrowserService);
 
         browseController.getAlbum(request, response);
@@ -201,7 +202,7 @@ public class RESTBrowseControllerTest {
         when(response.getWriter()).thenReturn(new PrintWriter(sw));
 
         MediaFileService mediaFileService = mock(MediaFileService.class);
-        when(mediaFileService.getMediaFile(trackId)).thenReturn(
+        when(mediaFileService.getMediaFile(new SubsonicUri(trackId))).thenReturn(
                 MediaFileService.getMediaFile(track));
         browseController.setMediaFileService(mediaFileService);
 
@@ -227,16 +228,16 @@ public class RESTBrowseControllerTest {
 
         LibraryBrowserService libraryBrowserService = mock(LibraryBrowserService.class);
         when(libraryBrowserService.getStarredArtists(lastFmUser, 0, MAX_VALUE, null)).thenReturn(
-                asList(new ArtistRecommendation(artist.getName(), artistId)));
-        when(libraryBrowserService.getStarredAlbums(lastFmUser, 0, MAX_VALUE, null)).thenReturn(
+                asList(new ArtistRecommendation(artist.getName(), new SubsonicUri(artistId))));
+        when(libraryBrowserService.getStarredAlbums(true, lastFmUser, 0, MAX_VALUE, null)).thenReturn(
                 asList(album));
-        when(libraryBrowserService.getStarredTrackIds(lastFmUser, 0, MAX_VALUE, null)).thenReturn(
-                trackIds);
-        when(libraryBrowserService.getTracks(trackIds)).thenReturn(asList(track));
+        when(libraryBrowserService.getStarredTrackUris(lastFmUser, 0, MAX_VALUE, null)).thenReturn(
+                trackUris);
+        when(libraryBrowserService.getTracks(trackUris)).thenReturn(asList(track));
         browseController.setLibraryBrowserService(libraryBrowserService);
 
         MediaFileService mediaFileService = mock(MediaFileService.class);
-        when(mediaFileService.getMediaFile(trackId)).thenReturn(getMediaFile(track));
+        when(mediaFileService.getMediaFile(new SubsonicUri(trackId))).thenReturn(getMediaFile(track));
         browseController.setMediaFileService(mediaFileService);
 
         browseController.getStarred(request, response);

@@ -18,10 +18,11 @@ import net.sourceforge.subsonic.service.SecurityService;
 import net.sourceforge.subsonic.service.SettingsService;
 import net.sourceforge.subsonic.util.Util;
 
-import org.apache.commons.lang.math.NumberUtils;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.ParameterizableViewController;
 
+import com.github.hakko.musiccabinet.configuration.Uri;
+import com.github.hakko.musiccabinet.dao.util.URIUtil;
 import com.github.hakko.musiccabinet.domain.model.aggr.ArtistRecommendation;
 import com.github.hakko.musiccabinet.domain.model.music.ArtistInfo;
 import com.github.hakko.musiccabinet.service.ArtistRecommendationService;
@@ -44,22 +45,22 @@ public class RelatedController extends ParameterizableViewController {
         User user = securityService.getCurrentUser(request);
         UserSettings userSettings = settingsService.getUserSettings(user.getUsername());
 
-        int id = NumberUtils.toInt(request.getParameter("id"));
+        Uri uri = URIUtil.parseURI(request.getParameter("id"));
         Map<String, Object> map = new HashMap<String, Object>();
         boolean onlyAlbumArtists = userSettings.isOnlyAlbumArtistRecommendations();
 
-        ArtistInfo artistInfo = Util.square(artistInfoService.getArtistInfo(id));
+        ArtistInfo artistInfo = Util.square(artistInfoService.getArtistInfo(uri));
         List<ArtistRecommendation> artistsInLibrary = Util.square(recommendationService.
-                getRelatedArtistsInLibrary(id, userSettings.getRelatedArtists(), onlyAlbumArtists));
+                getRelatedArtistsInLibrary(uri, userSettings.getRelatedArtists(), onlyAlbumArtists));
         List<String> namesNotInLibrary = recommendationService.
-                getRelatedArtistsNotInLibrary(id, userSettings.getRecommendedArtists(), onlyAlbumArtists);
+                getRelatedArtistsNotInLibrary(uri, userSettings.getRecommendedArtists(), onlyAlbumArtists);
 
         List<ArtistLink> artistsNotInLibrary = new ArrayList<>();
         for (String name : namesNotInLibrary) {
             artistsNotInLibrary.add(new ArtistLink(name, encode(name, ENCODING_UTF8)));
         }
 
-        map.put("id", id);
+        map.put("id", uri);
         map.put("artist", artistInfo.getArtist().getName());
         map.put("artistInfo", artistInfo);
         map.put("artists", artistsInLibrary);

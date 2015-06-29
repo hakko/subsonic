@@ -18,6 +18,8 @@
  */
 package net.sourceforge.subsonic.ajax;
 
+import com.github.hakko.musiccabinet.configuration.Uri;
+
 /**
  * Details about what a user is currently listening to.
  *
@@ -25,7 +27,7 @@ package net.sourceforge.subsonic.ajax;
  */
 public class NowPlayingInfo {
 
-	private final int mediaFileId;
+	private final Uri mediaFileUri;
     private final String username;
     private final String artist;
     private final String title;
@@ -37,9 +39,9 @@ public class NowPlayingInfo {
     private final String avatarUrl;
     private final long firstRegistered;
 
-    public NowPlayingInfo(int mediaFileId, String user, String artist, String title, String tooltip, String albumUrl,
+    public NowPlayingInfo(Uri mediaFileUri, String user, String artist, String title, String tooltip, String albumUrl,
                           String lyricsUrl, String coverArtUrl, String coverArtZoomUrl, String avatarUrl) {
-    	this.mediaFileId = mediaFileId;
+    	this.mediaFileUri = mediaFileUri;
     	this.username = user;
         this.artist = artist;
         this.title = title;
@@ -52,8 +54,8 @@ public class NowPlayingInfo {
         this.firstRegistered = System.currentTimeMillis();
     }
 
-    public int getMediaFileId() {
-    	return mediaFileId;
+    public Uri getMediaFileUri() {
+    	return mediaFileUri;
     }
     
     public String getUsername() {

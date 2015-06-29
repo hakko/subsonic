@@ -18,16 +18,18 @@
  */
 package net.sourceforge.subsonic.controller;
 
-import org.apache.commons.lang.math.NumberUtils;
-import org.springframework.web.servlet.mvc.ParameterizableViewController;
-import org.springframework.web.servlet.ModelAndView;
-
-import com.github.hakko.musiccabinet.service.LibraryBrowserService;
+import java.util.HashMap;
+import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.util.Map;
-import java.util.HashMap;
+
+import org.springframework.web.servlet.ModelAndView;
+import org.springframework.web.servlet.mvc.ParameterizableViewController;
+
+import com.github.hakko.musiccabinet.configuration.Uri;
+import com.github.hakko.musiccabinet.dao.util.URIUtil;
+import com.github.hakko.musiccabinet.service.LibraryBrowserService;
 
 /**
  * Controller for the lyrics popup.
@@ -39,8 +41,8 @@ public class LyricsController extends ParameterizableViewController {
 	private LibraryBrowserService libraryBrowserService;
 	
     protected ModelAndView handleRequestInternal(HttpServletRequest request, HttpServletResponse response) throws Exception {
-        int mediaFileId = NumberUtils.toInt(request.getParameter("mfId"));
-        String lyrics = libraryBrowserService.getLyricsForTrack(mediaFileId);
+        Uri mediaFileUri = URIUtil.parseURI(request.getParameter("mfId"));
+        String lyrics = libraryBrowserService.getLyricsForTrack(mediaFileUri);
         
         Map<String, Object> map = new HashMap<String, Object>();
         map.put("lyrics", lyrics);

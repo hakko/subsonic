@@ -18,12 +18,13 @@
  */
 package net.sourceforge.subsonic.taglib;
 
-import org.apache.commons.lang.StringEscapeUtils;
+import java.io.IOException;
 
 import javax.servlet.jsp.JspException;
 import javax.servlet.jsp.JspTagException;
 import javax.servlet.jsp.tagext.BodyTagSupport;
-import java.io.IOException;
+
+import org.apache.commons.lang.StringEscapeUtils;
 
 /**
  * Escapes the characters in a <code>String</code> using JavaScript String rules.

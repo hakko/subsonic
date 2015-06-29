@@ -24,9 +24,6 @@ import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.springframework.web.servlet.ModelAndView;
-import org.springframework.web.servlet.mvc.ParameterizableViewController;
-
 import net.sourceforge.subsonic.Logger;
 import net.sourceforge.subsonic.domain.Player;
 import net.sourceforge.subsonic.domain.User;
@@ -34,6 +31,9 @@ import net.sourceforge.subsonic.domain.UserSettings;
 import net.sourceforge.subsonic.service.PlayerService;
 import net.sourceforge.subsonic.service.SecurityService;
 import net.sourceforge.subsonic.service.SettingsService;
+
+import org.springframework.web.servlet.ModelAndView;
+import org.springframework.web.servlet.mvc.ParameterizableViewController;
 
 /**
  * Controller for the playlist frame.
@@ -60,6 +60,7 @@ public class PlaylistController extends ParameterizableViewController {
         map.put("players", playerService.getPlayersForUserAndClientId(user.getUsername(), null));
         map.put("visibility", userSettings.getPlaylistVisibility());
         map.put("partyMode", userSettings.isPartyModeEnabled());
+        map.put("notify", userSettings.isSongNotificationEnabled());
         ModelAndView result = super.handleRequestInternal(request, response);
         result.addObject("model", map);
         return result;

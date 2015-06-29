@@ -18,9 +18,9 @@
  */
 package net.sourceforge.subsonic.domain;
 
-import java.io.File;
-
 import net.sourceforge.subsonic.util.BoundedList;
+
+import com.github.hakko.musiccabinet.configuration.Uri;
 
 /**
  * Status for a single transfer (stream, download or upload).
@@ -33,8 +33,8 @@ public class TransferStatus {
     private static final long SAMPLE_INTERVAL_MILLIS = 5000;
 
     private Player player;
-    private int mediaFileId;
-    private File file;
+    private Uri mediaFileUri;
+    private String file;
     private long bytesTransfered;
     private long bytesSkipped;
     private long bytesTotal;
@@ -143,12 +143,12 @@ public class TransferStatus {
         bytesSkipped += byteCount;
     }
 
-    public int getMediaFileId() {
-		return mediaFileId;
+    public Uri getMediaFileUri() {
+		return mediaFileUri;
 	}
 
-	public void setMediaFileId(int mediaFileId) {
-		this.mediaFileId = mediaFileId;
+	public void setMediaFileUri(Uri mediaFileUri) {
+		this.mediaFileUri = mediaFileUri;
 	}
 
 	/**
@@ -156,7 +156,7 @@ public class TransferStatus {
      *
      * @return The file that is currently being transferred.
      */
-    public synchronized File getFile() {
+    public synchronized String getFile() {
         return file;
     }
 
@@ -165,7 +165,7 @@ public class TransferStatus {
      *
      * @param file The file that is currently being transferred.
      */
-    public synchronized void setFile(File file) {
+    public synchronized void setFile(String file) {
         this.file = file;
     }
 

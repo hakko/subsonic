@@ -18,8 +18,8 @@
  */
 package net.sourceforge.subsonic.service;
 
-import net.sourceforge.subsonic.dao.*;
-import net.sourceforge.subsonic.domain.*;
+import net.sourceforge.subsonic.dao.MusicFileInfoDao;
+import net.sourceforge.subsonic.domain.MusicFileInfo;
 
 /**
  * Provides services for user rating and comments, as well

@@ -10,31 +10,55 @@ PARAMETERS
   downloadName: Preferred name of download zip (optional)
   asTable: Whether to put the images in td tags.
 --%>
-
-<sub:url value="/download.view" var="downloadUrl"><sub:param name="id" value="${param.id}"/><sub:param name="name" value="${param.downloadName}"/></sub:url>
+<div class="btn-group">
+<sub:url value="/download.view" var="downloadUrl"><sub:param name="id" value="${param.uri}"/><sub:param name="name" value="${param.downloadName}"/></sub:url>
 <c:if test="${empty param.starDisabled}">
-    <c:if test="${param.asTable}"><td></c:if>
-    <a href="#" onclick="toggleStar('t', ${param.starId}, '#starImage${param.starId}'); return false;">
+    <c:if test="${param.asTable}"><td class="play-add-download btn-group"></c:if>
+    <a href="#" class="btn btn-default btn-star" onclick="toggleStar('t', ${sub:esc(param.starId)}, '#starImage${sub:jqesc(param.starId)}'); return false;">
         <c:choose>
             <c:when test="${param.starred}">
-                <img id="starImage${param.starId}" src="<spring:theme code="ratingOnImage"/>" alt="">
+                <img id="starImage${param.starId}" src="<spring:theme code="ratingOnImage"/>" alt="" class="starred">
             </c:when>
             <c:otherwise>
-                <img id="starImage${param.starId}" src="<spring:theme code="ratingOffImage"/>" alt="">
+                <img id="starImage${param.starId}" src="<spring:theme code="ratingOffImage"/>" alt="" class="starred">
             </c:otherwise>
         </c:choose>
     </a>
-    <c:if test="${param.asTable}"></td></c:if>
 </c:if>
-<c:if test="${param.asTable}"><td></c:if><c:if test="${empty param.playEnabled or param.playEnabled}">
+<c:if test="${empty param.playEnabled or param.playEnabled}">
 	<c:choose>
 		<c:when test="${param.video}">
-			<sub:url value="/videoPlayer.view" var="videoUrl"><sub:param name="id" value="${param.id}"/></sub:url>
-			<a href="${videoUrl}" target="main"><img src="<spring:theme code="playImage"/>" alt="<fmt:message key="common.play"/>" title="<fmt:message key="common.play"/>"></a>
+			<sub:url value="/videoPlayer.view" var="videoUrl"><sub:param name="id" value="${param.uri}"/></sub:url>
+			<a class="btn btn-play-dd btn-default" href="${videoUrl}"><img src="<spring:theme code="playImage"/>" alt="<fmt:message key="common.play"/>" title="<fmt:message key="common.play"/>"></a>
 		</c:when>
-		<c:otherwise><a href="javascript:noop()" onclick="top.playlist.onPlay(${param.id}, 'P');"><img src="<spring:theme code="playImage"/>" alt="<fmt:message key="common.play"/>" title="<fmt:message key="common.play"/>"></a></c:otherwise>
+		<c:when test="${param.spotify}">
+		  <a class="btn btn-play-dd btn-default" target="_spotify" href="${sub:toSpotifyLink(param.uri)}"><img src="<spring:theme code="playImage"/>" alt="<fmt:message key="common.play"/>" title="<fmt:message key="common.play"/>"></a>
+		</c:when>
+		<c:otherwise><a href="#" class="btn btn-play-dd btn-default" onclick="return onPlay(${param.uri}, 'P');"><img src="<spring:theme code="playImage"/>" alt="<fmt:message key="common.play"/>" title="<fmt:message key="common.play"/>"></a></c:otherwise>
 	</c:choose>
-</c:if><c:if test="${param.asTable}"></td></c:if>
-<c:if test="${param.asTable}"><td></c:if><c:if test="${param.enqueueEnabled and not param.video}"><a href="javascript:noop()" onclick="top.playlist.onPlay(${param.id}, 'E');"><img src="<spring:theme code="enqueueImage"/>" alt="Enqueue" title="Enqueue"></a></c:if><c:if test="${param.asTable}"></td></c:if>
-<c:if test="${param.asTable}"><td></c:if><c:if test="${(empty param.addEnabled or param.addEnabled) and not param.video}"><a href="javascript:noop()" onclick="top.playlist.onPlay(${param.id}, 'A');"><img src="<spring:theme code="addImage"/>" alt="Add last" title="Add last"></a></c:if><c:if test="${param.asTable}"></td></c:if>
-<c:if test="${param.asTable}"><td></c:if><c:if test="${param.downloadEnabled}">|<a href="${downloadUrl}"><img src="<spring:theme code="downloadImage"/>" alt="<fmt:message key="common.download"/>" title="<fmt:message key="common.download"/>"></a></c:if><c:if test="${param.asTable}"></td></c:if>
+                <button type="button" class="btn btn-play-dd btn-default dropdown-toggle" data-toggle="dropdown">
+                    <span class="caret"></span>
+                    <span class="sr-only">Toggle Dropdown</span>
+                </button>           
+	
+</c:if>
+<ul class="dropdown-menu" role="menu">
+<c:if test="${empty param.playEnabled or param.playEnabled}">
+    <c:choose>
+        <c:when test="${param.video}">
+            <sub:url value="/videoPlayer.view" var="videoUrl"><sub:param name="id" value="${param.uri}"/></sub:url>
+            <li><a href="${videoUrl}"><img src="<spring:theme code="playImage"/>" alt="<fmt:message key="common.play"/>" title="<fmt:message key="common.play"/>"><fmt:message key="common.play"/></a></li>
+        </c:when>
+        <c:when test="${param.spotify}">
+          <li><a href="${sub:toSpotifyLink(param.uri)}" target="_spotify"><img src="<spring:theme code="playImage"/>" alt="<fmt:message key="common.play"/>" title="<fmt:message key="common.play"/>"><fmt:message key="common.play"/></a></li>
+        </c:when>
+        
+        <c:otherwise><li><a href="#" onclick="return onPlay(${param.uri}, 'P');"><img src="<spring:theme code="playImage"/>" alt="<fmt:message key="common.play"/>" title="<fmt:message key="common.play"/>"><fmt:message key="common.play"/></a></li></c:otherwise>
+    </c:choose>
+
+</c:if>
+<c:if test="${param.enqueueEnabled and not param.video}"><li><a href="#" onclick="return onPlay(${param.uri}, 'E');"><img src="<spring:theme code="enqueueImage"/>" alt="Enqueue" title="Enqueue">Enqueue</a></li></c:if>
+<c:if test="${(empty param.addEnabled or param.addEnabled) and not param.video}"><li><a href="#" onclick="return onPlay(${param.uri}, 'A');"><img src="<spring:theme code="addImage"/>" alt="Add last" title="Add last">Add last</a></li></c:if>
+<c:if test="${param.downloadEnabled}"><li><a href="${downloadUrl}"><img src="<spring:theme code="downloadImage"/>" alt="<fmt:message key="common.download"/>" title="<fmt:message key="common.download"/>"><fmt:message key="common.download"/></a></li></c:if>
+</ul>
+</div>

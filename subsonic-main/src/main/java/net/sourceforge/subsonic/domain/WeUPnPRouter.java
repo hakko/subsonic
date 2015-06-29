@@ -18,10 +18,10 @@
  */
 package net.sourceforge.subsonic.domain;
 
+import java.net.InetAddress;
+
 import org.wetorrent.upnp.GatewayDevice;
 import org.wetorrent.upnp.GatewayDiscover;
-
-import java.net.InetAddress;
 
 /**
  * @author Sindre Mehus

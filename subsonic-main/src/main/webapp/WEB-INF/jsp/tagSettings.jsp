@@ -1,22 +1,31 @@
 <%@ page language="java" contentType="text/html; charset=utf-8" pageEncoding="iso-8859-1" %>
 
-<html><head>
-    <%@ include file="head.jspf" %>
- 	<script type="text/javascript" src="<c:url value="/script/prototype.js"/>"></script>
+    <%@ include file="include.jspf" %>
  	
-</head>
-<body class="mainframe bgcolor1">
+ <spring:theme code="panel.primary" var="themePanelPrimary" scope="page" />
+<div class="mainframe bgcolor1 panel panel-primary ${themePanelPrimary}">
+
+<div class="panel-heading">
+  <i class="fa fa-cog"></i>
+  <fmt:message key="settingsheader.title"/>
+</div>
+<div class="panel-body">
+
+<c:import url="settingsHeader.jsp">
+    <c:param name="cat" value="musicCabinet"/>
+</c:import>
+
 
 <script type="text/javascript" language="javascript">
 	function toggleCheckbox(h) {
-		$('tagSettings').getInputs('checkbox').each(function(e) { if (e.name != 'toggle') e.checked = h });
+	    jQuery("#tagSettings input[type=checkbox]").each(function(index) {  if (this.name != 'toggle') this.checked = h });
 	}
 </script>
 
 <p style="padding-top:1em"><b>Tag configuration</b></p>
 
-<form:form method="post" action="tagSettings.view" commandName="command" id="tagSettings">
-
+<form:form method="post" action="tagSettings.view" commandName="command" id="tagSettings" onsubmit="return submitForm(this, 'Tag settings saved.');">
+    <div class="statusMessage"></div>
 <div style="width:60%">
 
 <c:choose>
@@ -55,4 +64,6 @@
 
 </form:form>
 
-</body></html>
+
+</div>
+</div>

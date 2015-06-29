@@ -20,8 +20,9 @@ package net.sourceforge.subsonic.command;
 
 import java.util.List;
 
-import net.sourceforge.subsonic.controller.*;
-import net.sourceforge.subsonic.domain.*;
+import net.sourceforge.subsonic.controller.UserSettingsController;
+import net.sourceforge.subsonic.domain.TranscodeScheme;
+import net.sourceforge.subsonic.domain.User;
 
 /**
  * Command used in {@link UserSettingsController}.

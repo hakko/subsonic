@@ -1,91 +1,66 @@
-<%@ page language="java" contentType="text/html; charset=utf-8" pageEncoding="iso-8859-1"%>
-<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<%@ page language="java" contentType="text/html; charset=utf-8"
+	pageEncoding="iso-8859-1"%>
 
-<html><head>
-    <%@ include file="head.jspf" %>
-</head>
+<%@ include file="include.jspf"%>
 
-<body class="bgcolor2 topframe" style="margin:0.4em 1em 0.4em 1em">
+<nav class="col-lg-12 navbar navbar-default <spring:theme code="navbar.theme" />  topframe" role="navigation">
 
-<fmt:message key="top.home" var="home"/>
-<fmt:message key="top.now_playing" var="nowPlaying"/>
-<fmt:message key="top.settings" var="settings"/>
-<fmt:message key="top.status" var="status"/>
-<fmt:message key="top.podcast" var="podcast"/>
-<fmt:message key="top.help" var="help"/>
+	<fmt:message key="top.home" var="home" />
+	<fmt:message key="top.now_playing" var="nowPlaying" />
+	<fmt:message key="top.settings" var="settings" />
+	<fmt:message key="top.status" var="status" />
+	<fmt:message key="top.podcast" var="podcast" />
+	<fmt:message key="top.help" var="help" />
 
-<table style="margin:0"><tr valign="middle">
-    <td class="logo" style="padding-right:2em"><a href="help.view?" target="main"><img src="<spring:theme code="logoImage"/>" title="${help}" alt=""></a></td>
+	<!-- Brand and toggle get grouped for better mobile display -->
+	<div class="navbar-header">
+		<button type="button" class="navbar-toggle" data-toggle="collapse"
+			data-target="#bs-example-navbar-collapse-1">
+			<span class="sr-only">Toggle navigation</span> <span class="icon-bar"></span>
+			<span class="icon-bar"></span> <span class="icon-bar"></span>
+		</button>
+		<a href="#/" onclick="return toggleLeft();" class="navbar-brand"><img
+			src="<spring:theme code="logoImage"/>" title="${help}" alt=""></a>
+	</div>
+	<div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+		<ul class="nav navbar-nav">
+			<li class="text-center"><c:if
+					test="${not model.mediaFoldersExist}">
+					<p class="warning">
+						<fmt:message key="top.missing" />
+					</p>
+				</c:if></li>
+			<li class="text-center"><a href="#/home"><i class="fa fa-home"></i><p>${home}</p></a></li>
+			<li class="text-center"><a href="#/genres"><i class="fa fa-cloud"></i><br />Genres</a></li>
+			<li class="text-center"><a href="#/radio"><i class="fa fa-signal"></i><br />Radio</a></li>
+			<li class="text-center"><a href="#/podcastReceiver"><i class="fa fa-bullhorn"></i><br />${podcast}</a></li>
+			<li class="text-center"><a href="#/nowPlaying"><i class="fa fa-play-circle"></i><br />${nowPlaying}</a></li>
+			<c:if test="${model.user.settingsRole}">
+				<li class="text-center"><a href="#/settings"><i class="fa fa-cog"></i><br />${settings}</a></li>
+			</c:if>
+			<li class="text-center"><a href="#/status"><i class="fa fa-bar-chart"></i><br />${status}</a></li>
+			<li class="text-center"><a href="#/help"><i class="fa fa-info-circle"></i><br />${help}</a></li>
 
-    <c:if test="${not model.mediaFoldersExist}">
-        <td style="padding-right:2em">
-            <p class="warning"><fmt:message key="top.missing"/></p>
-        </td>
-    </c:if>
-
-    <td>
-        <table><tr align="center">
-            <td style="min-width:4em;padding-right:1.5em">
-                <a href="home.view?" target="main"><img src="<spring:theme code="homeImage"/>" title="${home}" alt="${home}"></a><br>
-                <a href="home.view?" target="main">${home}</a>
-            </td>
-	        <td style="min-width:4em;padding-right:1.5em">
-	            <a href="genres.view?" target="main"><img src="<spring:theme code="genresImage"/>" title="Genres" alt="Genres"></a><br>
-	            <a href="genres.view?" target="main">Genres</a>
-	        </td>
-	        <td style="min-width:4em;padding-right:1.5em">
-	            <a href="radio.view?" target="main"><img src="<spring:theme code="radioImage"/>" title="Radio" alt="Radio"></a><br>
-	            <a href="radio.view?" target="main">Radio</a>
-	        </td>
-	        <td style="min-width:4em;padding-right:1.5em">
-	            <a href="fileTree.view?" target="main"><img src="<spring:theme code="fileTreeImage"/>" title="File tree" alt="File tree"></a><br>
-	            <a href="fileTree.view?" target="main">File tree</a>
-	        </td>
-            <td style="min-width:4em;padding-right:1.5em">
-                <a href="podcastReceiver.view?" target="main"><img src="<spring:theme code="podcastLargeImage"/>" title="${podcast}" alt="${podcast}"></a><br>
-                <a href="podcastReceiver.view?" target="main">${podcast}</a>
-            </td>
-            <td style="min-width:4em;padding-right:1.5em">
-                <a href="nowPlaying.view?" target="main"><img src="<spring:theme code="nowPlayingImage"/>" title="${nowPlaying}" alt="${nowPlaying}"></a><br>
-                <a href="nowPlaying.view?" target="main">${nowPlaying}</a>
-            </td>
-            <c:if test="${model.user.settingsRole}">
-                <td style="min-width:4em;padding-right:1.5em">
-                    <a href="settings.view?" target="main"><img src="<spring:theme code="settingsImage"/>" title="${settings}" alt="${settings}"></a><br>
-                    <a href="settings.view?" target="main">${settings}</a>
-                </td>
-            </c:if>
-            <td style="min-width:4em;padding-right:1.5em">
-                <a href="status.view?" target="main"><img src="<spring:theme code="statusImage"/>" title="${status}" alt="${status}"></a><br>
-                <a href="status.view?" target="main">${status}</a>
-            </td>
-            <td style="min-width:4em;padding-right:1.5em">
-                <a href="help.view?" target="main"><img src="<spring:theme code="helpImage"/>" title="${help}" alt="${help}"></a><br>
-                <a href="help.view?" target="main">${help}</a>
-            </td>
-
-            <td style="padding-left:1em">
-                <form method="post" action="search.view" target="main" name="searchForm">
-                    <table><tr>
-                        <td><input type="text" name="query" id="query" size="28"></td>
-                        <td><a href="javascript:document.searchForm.submit()"><img src="<spring:theme code="searchImage"/>" alt="${search}" title="${search}"></a></td>
-                    </tr></table>
-                </form>
-            </td>
-
-            <td style="padding-left:15pt;text-align:center;">
-                <p class="detail" style="line-height:1.5">
-                    <a href="j_spring_security_logout" target="_top"><fmt:message key="top.logout"><fmt:param value="${model.user.username}"/></fmt:message></a>
-                    <c:if test="${not model.licensed}">
-                        <br>
-                        <a href="donate.view" target="main"><img src="<spring:theme code="donateSmallImage"/>" alt=""></a>
-                        <a href="donate.view" target="main"><fmt:message key="donate.title"/></a>
-                    </c:if>
-                </p>
-            </td>
-        </tr></table>
-    </td>
-
-</tr></table>
-
-</body></html>
+		</ul>
+		<form class="navbar-form navbar-left" role="search" method="POST"
+			action="search.view" data-target="main" name="searchForm" onsubmit="return submitForm(this);">
+			<div class="form-group">
+				<input type="text" name="query" class="form-control"
+					placeholder="Search">
+			</div>
+			<a href="#" onclick="return submitForm(this);"><i class="fa fa-search"></i></a>
+		</form>
+		<p class="navbar-text">
+			<a href="j_spring_security_logout"><fmt:message
+					key="top.logout">
+					<fmt:param value="${model.user.username}" />
+				</fmt:message></a>
+			<c:if test="${not model.licensed}">
+				<br>
+				<a href="#/donate"><i class="fa fa-heart"></i></a>
+				<a href="#/donate"><fmt:message
+						key="donate.title" /></a>
+			</c:if>
+		</p>
+	</div>
+</nav>

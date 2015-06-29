@@ -18,13 +18,20 @@
  */
 package net.sourceforge.subsonic;
 
-import net.sourceforge.subsonic.service.*;
-import net.sourceforge.subsonic.util.*;
-import org.apache.commons.lang.exception.*;
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.PrintWriter;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.Collections;
+import java.util.Date;
+import java.util.List;
 
-import java.io.*;
-import java.text.*;
-import java.util.*;
+import net.sourceforge.subsonic.service.SettingsService;
+import net.sourceforge.subsonic.util.BoundedList;
+
+import org.apache.commons.lang.exception.ExceptionUtils;
 
 /**
  * Logger implementation which logs to SUBSONIC_HOME/subsonic.log.
@@ -41,7 +48,7 @@ public class Logger {
     private String category;
 
     private static List<Entry> entries = Collections.synchronizedList(new BoundedList<Entry>(50));
-    private static PrintWriter writer;
+    private static PrintWriter writer;    
 
     /**
      * Creates a logger for the given class.
@@ -165,15 +172,14 @@ public class Logger {
     }
 
     public static File getLogFile() {
-        File subsonicHome = SettingsService.getSubsonicHome();
-        return new File(subsonicHome, "subsonic.log");
+    	return SettingsService.getSubsonicLog();
     }
 
     /**
     * Log level.
     */
     public enum Level {
-        DEBUG, INFO, WARN, ERROR
+        ALL, DEBUG, INFO, WARN, ERROR
     }
 
     /**

@@ -18,21 +18,23 @@
  */
 package net.sourceforge.subsonic.taglib;
 
-import net.sourceforge.subsonic.Logger;
-import net.sourceforge.subsonic.filter.ParameterDecodingFilter;
-import net.sourceforge.subsonic.util.StringUtil;
-import org.apache.taglibs.standard.tag.common.core.UrlSupport;
-import org.apache.commons.lang.CharUtils;
-
-import javax.servlet.jsp.JspException;
-import javax.servlet.jsp.JspTagException;
-import javax.servlet.jsp.PageContext;
-import javax.servlet.jsp.tagext.BodyTagSupport;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.List;
+
+import javax.servlet.jsp.JspException;
+import javax.servlet.jsp.JspTagException;
+import javax.servlet.jsp.PageContext;
+import javax.servlet.jsp.tagext.BodyTagSupport;
+
+import net.sourceforge.subsonic.Logger;
+import net.sourceforge.subsonic.filter.ParameterDecodingFilter;
+import net.sourceforge.subsonic.util.StringUtil;
+
+import org.apache.commons.lang.CharUtils;
+import org.apache.taglibs.standard.tag.common.core.UrlSupport;
 
 /**
  * Creates a URL with optional query parameters. Similar to 'c:url', but
@@ -54,6 +56,7 @@ public class UrlTag extends BodyTagSupport {
     public static final String DEFAULT_ENCODING = "Utf8Hex";
     private static final Logger LOG = Logger.getLogger(UrlTag.class);
 
+    private boolean hashurl = true;
     private String var;
     private String value;
     private String encoding = DEFAULT_ENCODING;
@@ -86,9 +89,14 @@ public class UrlTag extends BodyTagSupport {
         String baseUrl = UrlSupport.resolveUrl(value, null, pageContext);
 
         StringBuffer result = new StringBuffer();
-        result.append(baseUrl);
+        if(hashurl) {
+	        result.append("#/");
+	        result.append(baseUrl.replaceAll(".view", ""));
+        } else {
+        	result.append(baseUrl);
+        }
         if (!parameters.isEmpty()) {
-            result.append('?');
+            result.append("?");
 
             for (int i = 0; i < parameters.size(); i++) {
                 Parameter parameter = parameters.get(i);
@@ -98,12 +106,12 @@ public class UrlTag extends BodyTagSupport {
                         result.append(ParameterDecodingFilter.PARAM_SUFFIX);
                     }
 
-                    result.append('=');
+                    result.append("=");
                     if (parameter.getValue() != null) {
                         result.append(encode(parameter.getValue()));
                     }
                     if (i < parameters.size() - 1) {
-                        result.append("&amp;");
+                        result.append("&");
                     }
 
                 } catch (UnsupportedEncodingException x) {
@@ -182,6 +190,14 @@ public class UrlTag extends BodyTagSupport {
 
     public void setEncoding(String encoding) {
         this.encoding = encoding;
+    }
+    
+    public boolean getHashurl() {
+    	return hashurl;
+    }
+    
+    public void setHashurl(boolean hashurl) {
+    	this.hashurl = hashurl;
     }
 
     /**

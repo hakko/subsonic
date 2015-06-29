@@ -55,9 +55,6 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Set;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-
 import net.sbbi.upnp.Discovery;
 import net.sbbi.upnp.devices.UPNPDevice;
 import net.sbbi.upnp.devices.UPNPRootDevice;
@@ -68,6 +65,9 @@ import net.sbbi.upnp.messages.StateVariableResponse;
 import net.sbbi.upnp.messages.UPNPMessageFactory;
 import net.sbbi.upnp.messages.UPNPResponseException;
 import net.sbbi.upnp.services.UPNPService;
+
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 
 /**
  * This class can be used to access some funtionalities on the 

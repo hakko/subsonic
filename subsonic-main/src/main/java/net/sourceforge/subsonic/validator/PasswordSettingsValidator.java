@@ -18,9 +18,11 @@
  */
 package net.sourceforge.subsonic.validator;
 
-import org.springframework.validation.*;
-import net.sourceforge.subsonic.command.*;
-import net.sourceforge.subsonic.controller.*;
+import net.sourceforge.subsonic.command.PasswordSettingsCommand;
+import net.sourceforge.subsonic.controller.PasswordSettingsController;
+
+import org.springframework.validation.Errors;
+import org.springframework.validation.Validator;
 
 /**
  * Validator for {@link PasswordSettingsController}.

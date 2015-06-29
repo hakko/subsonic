@@ -1,10 +1,12 @@
 <%@ page language="java" contentType="text/html; charset=utf-8" pageEncoding="utf-8"%>
 
-<html><head>
-    <%@ include file="head.jspf" %>
-    <link href="<c:url value="/style/shadow.css"/>" rel="stylesheet">
-</head>
-<body class="mainframe bgcolor1">
+    <%@ include file="include.jspf" %>
+<div class="mainframe bgcolor1 panel panel-primary <spring:theme code="panel.primary" />">
+
+<div class="panel-heading">
+    <i class="fa fa-cloud"></i>
+    Genres
+</div>
 
 <div style="line-height: 1.5; padding: 15px;">
 
@@ -13,9 +15,9 @@
 	<c:if test="${model.page == 0}">
 		<c:if test="${not empty model.genreDescription}"><div style="width:650px">${model.genreDescription}</div></c:if>
 		<c:choose><c:when test="${not empty model.genre}">
-			<a href="javascript:noop()" onclick="javascript:top.playlist.onPlayGenreRadio(new Array('${model.genre}'))">Play ${model.title} radio</a>
+			<a href="#" onclick="return playlist.onPlayGenreRadio(new Array('${model.genre}'))">Play ${model.title} radio</a>
 		</c:when><c:otherwise>
-			<a href="javascript:noop()" onclick="javascript:top.playlist.onPlayGroupRadio('${model.group}')">Play group radio</a>
+			<a href="#" onclick="return playlist.onPlayGroupRadio('${model.group}')">Play group radio</a>
 		</c:otherwise></c:choose>
 		| <a href="${model.url}">Browse last.fm</a>
 		<h1 style="margin-top: 15px">Top artists</h1>
@@ -59,10 +61,10 @@
 		<a href="${url}">${group.name}</a>
 	</c:forEach>
 	<c:if test="${empty model.topTagsOccurrences and empty model.lastFmGroups}">
-		<p>Please configure which genres to use <a href="tagSettings.view">here</a>.
+		<p>Please configure which genres to use <a href="#/tagSettings">here</a>.
 	</c:if>
 </c:if>
 
 </div>
+</div>
 
-</body></html>

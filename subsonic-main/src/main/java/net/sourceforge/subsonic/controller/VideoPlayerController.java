@@ -20,7 +20,6 @@ package net.sourceforge.subsonic.controller;
 
 import static org.apache.commons.lang.StringUtils.removeEnd;
 import static org.apache.commons.lang.StringUtils.removeStart;
-import static org.apache.commons.lang.math.NumberUtils.toInt;
 
 import java.util.HashMap;
 import java.util.LinkedHashMap;
@@ -39,6 +38,9 @@ import net.sourceforge.subsonic.util.StringUtil;
 import org.springframework.web.bind.ServletRequestUtils;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.ParameterizableViewController;
+
+import com.github.hakko.musiccabinet.configuration.Uri;
+import com.github.hakko.musiccabinet.dao.util.URIUtil;
 
 /**
  * Controller for the page used to play videos.
@@ -62,26 +64,28 @@ public class VideoPlayerController extends ParameterizableViewController {
     	LOG.debug("got request " + request.getParameter("id"));
     	
         Map<String, Object> map = new HashMap<String, Object>();
-        int mediaFileId = toInt(removeEnd(removeStart(request.getParameter("id"), "["), "]"));
+        Uri mediaFileUri = URIUtil.parseURI(removeEnd(removeStart(request.getParameter("id"), "["), "]"));
         
-        LOG.debug("ask for id " + mediaFileId);
+        LOG.debug("ask for id " + mediaFileUri);
         
-        MediaFile file = mediaFileService.getMediaFile(mediaFileId);
+        MediaFile file = mediaFileService.getMediaFile(mediaFileUri);
 
         int timeOffset = ServletRequestUtils.getIntParameter(request, "timeOffset", 0);
         timeOffset = Math.max(0, timeOffset);
-        Integer duration = file.getMetaData().getDuration();
+        Short duration = file.getMetaData().getDuration();
+        short durationSeconds = 0;
         if (duration != null) {
+        	durationSeconds = duration.shortValue();
             map.put("skipOffsets", createSkipOffsets(duration));
             timeOffset = Math.min(duration, timeOffset);
-            duration -= timeOffset;
+            durationSeconds -= timeOffset;
         }
 
         map.put("video", file);
         map.put("player", playerService.getPlayer(request, response).getId());
         map.put("maxBitRate", ServletRequestUtils.getIntParameter(request, "maxBitRate", DEFAULT_BIT_RATE));
         map.put("popout", ServletRequestUtils.getBooleanParameter(request, "popout", false));
-        map.put("duration", duration);
+        map.put("duration", durationSeconds);
         map.put("timeOffset", timeOffset);
         map.put("bitRates", BIT_RATES);
 

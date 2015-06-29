@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                android:orientation="horizontal"
+                android:layout_width="fill_parent"
+                android:layout_height="70dip">
+
+    <CheckedTextView
+            android:id="@+id/song_check"
+            android:layout_width="wrap_content"
+            android:layout_height="fill_parent"
+            android:layout_alignParentLeft="true"
+            android:visibility="visible"
+            android:gravity="center_vertical"
+            android:checkMark="?android:attr/textCheckMark"
+            android:paddingLeft="3dip"/>
+
+    <TextView
+            android:text="Foo Bar"
+            android:id="@+id/song_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentTop="true"
+            android:layout_toRightOf="@+id/song_check"
+            android:layout_toLeftOf="@+id/song_download_button"
+            android:layout_alignWithParentIfMissing="true"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:singleLine="true"
+            android:ellipsize="end"
+            android:paddingTop="11dip"
+            android:drawableRight="@drawable/now_playing"
+            android:drawablePadding="2dip"
+            android:paddingLeft="10dip"
+            android:paddingRight="4dip"/>
+
+    <ImageView
+            android:id="@+id/song_download_button"
+            android:src="@drawable/download_pinned"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:paddingTop="10dip"
+            android:paddingRight="6dip"
+            android:paddingLeft="6dip"
+            android:background="@drawable/media_button"
+            android:contentDescription="@null"/>
+
+    <TextView
+            android:text="Bar Foo"
+            android:id="@+id/song_artist"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:layout_toRightOf="@+id/song_check"
+            android:layout_toLeftOf="@+id/song_status"
+            android:layout_alignWithParentIfMissing="true"
+            android:textAppearance="?android:attr/textAppearanceSmall"
+            android:singleLine="true"
+            android:ellipsize="end"
+            android:paddingLeft="10dip"
+            android:paddingBottom="10dip"
+            />
+
+    <TextView
+            android:text="3:32"
+            android:id="@+id/song_status"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentBottom="true"
+            android:textAppearance="?android:attr/textAppearanceSmall"
+            android:singleLine="true"
+            android:paddingLeft="10dip"
+            android:paddingRight="9dip"
+            android:paddingBottom="10dip"
+            />
+
+</RelativeLayout>

@@ -18,11 +18,11 @@
  */
 package net.sourceforge.subsonic.io;
 
-import org.apache.commons.lang.math.Range;
-
 import java.io.FilterOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
+
+import org.apache.commons.lang.math.Range;
 
 
 /**

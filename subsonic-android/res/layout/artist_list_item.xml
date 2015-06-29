@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                android:orientation="horizontal"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content">
+
+    <ImageView
+            android:id="@+id/artist_more"
+            android:src="@drawable/action_overflow_small"
+            android:background="@drawable/media_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"/>
+
+    <TextView xmlns:android="http://schemas.android.com/apk/res/android"
+              android:id="@+id/artist_name"
+              android:text="Artist name"
+              android:singleLine="true"
+              android:layout_width="wrap_content"
+              android:layout_height="wrap_content"
+              android:layout_toLeftOf="@id/artist_more"
+              android:layout_alignParentLeft="true"
+              android:textAppearance="?android:attr/textAppearanceMedium"
+              android:gravity="left|center_vertical"
+              android:paddingLeft="6dip"
+              android:paddingRight="6dip"
+              android:minHeight="50dip"/>
+
+</RelativeLayout>

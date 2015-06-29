@@ -1,11 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=utf-8" pageEncoding="iso-8859-1" %>
 
-<html>
-<head>
-    <%@ include file="head.jspf" %>
-    <script type="text/javascript" src="https://apis.google.com/js/plusone.js"></script>
-</head>
-<body class="mainframe bgcolor1">
+    <%@ include file="include.jspf" %>
+<div class="mainframe bgcolor1">
 
 <h1><fmt:message key="share.title"/></h1>
 
@@ -40,5 +36,5 @@
         <div class="forward" style="float:left"><a href="shareSettings.view"><fmt:message key="share.manage"/></a></div>
     </c:if>
 </div>
-</body>
-</html>
+    <script type="text/javascript" src="https://apis.google.com/js/plusone.js"></script>
+</div>

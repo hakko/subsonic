@@ -27,6 +27,14 @@ import java.util.concurrent.Future;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
+import net.sourceforge.subsonic.Logger;
+import net.sourceforge.subsonic.domain.NATPMPRouter;
+import net.sourceforge.subsonic.domain.Router;
+import net.sourceforge.subsonic.domain.SBBIRouter;
+import net.sourceforge.subsonic.domain.WeUPnPRouter;
+import net.sourceforge.subsonic.util.StringUtil;
+import net.sourceforge.subsonic.util.Util;
+
 import org.apache.http.HttpResponse;
 import org.apache.http.HttpStatus;
 import org.apache.http.NameValuePair;
@@ -40,14 +48,6 @@ import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.message.BasicNameValuePair;
 import org.apache.http.params.HttpConnectionParams;
 import org.apache.http.util.EntityUtils;
-
-import net.sourceforge.subsonic.Logger;
-import net.sourceforge.subsonic.domain.NATPMPRouter;
-import net.sourceforge.subsonic.domain.Router;
-import net.sourceforge.subsonic.domain.SBBIRouter;
-import net.sourceforge.subsonic.domain.WeUPnPRouter;
-import net.sourceforge.subsonic.util.StringUtil;
-import net.sourceforge.subsonic.util.Util;
 
 /**
  * Provides network-related services, including port forwarding on UPnP routers and

@@ -19,9 +19,10 @@
 package net.sourceforge.subsonic.service.metadata;
 
 import static org.junit.Assert.assertEquals;
-import net.sourceforge.subsonic.domain.MetaData;
 
 import org.junit.Test;
+
+import com.github.hakko.musiccabinet.domain.model.library.MetaData;
 
 /**
  * Unit test of {@link MetaData}.
@@ -57,7 +58,7 @@ public class MetaDataTestCase {
 
     private void doTestGetDurationAsString(int seconds, String expected) {
         MetaData metaData = new MetaData();
-        metaData.setDuration(seconds);
+        metaData.setDuration((short) seconds);
         assertEquals("Error in getDurationAsString().", expected, metaData.getDurationAsString());
     }
 
@@ -82,6 +83,6 @@ public class MetaDataTestCase {
     private void doTestGetYearAsInteger(String yearString, Integer expected) {
         MetaData metaData = new MetaData();
         metaData.setYear(yearString);
-        assertEquals("Error in getYearAsInteger().", expected, metaData.getYearAsInteger());
+        assertEquals("Error in getYearAsInteger().", expected, metaData.getYear());
     }
 }

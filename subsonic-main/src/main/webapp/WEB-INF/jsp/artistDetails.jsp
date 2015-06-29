@@ -1,34 +1,21 @@
 <%@ page language="java" contentType="text/html; charset=utf-8" pageEncoding="iso-8859-1" %>
-<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
-<%--@elvariable id="model" type="java.util.Map"--%>
 
-<html><head>
-	<%@ include file="head.jspf" %>
-	<link href="<c:url value="/style/shadow.css"/>" rel="stylesheet">
-	<script type="text/javascript" src="<c:url value="/script/jquery-1.7.2.min.js"/>"></script>
-    <script type="text/javascript" src="<c:url value="/dwr/engine.js"/>"></script>
-	<script type="text/javascript" src="<c:url value="/dwr/util.js"/>"></script>
-	<script type="text/javascript" src="<c:url value="/dwr/interface/uiStarService.js"/>"></script>
-</head><body class="mainframe bgcolor1" onload="init()">
+	<%@ include file="include.jspf" %>
+<div class="mainframe bgcolor1">
 
 <%@ include file="toggleStar.jspf" %>
 
-<script type="text/javascript" language="javascript">
-    function init() {
-        dwr.engine.setErrorHandler(null);
-	}
-</script>
 
 <div style="padding: 15px;">
 
 <h1>
-<a href="#" onclick="toggleStar('art', ${model.artistId}, '#starImage${model.artistId}'); return false;">
+<a href="#" onclick="toggleStar('art', ${model.artistUri}, '#starImage${sub:jqesc(model.artistUri)}'); return false;">
 	<c:choose>
 		<c:when test="${model.artistStarred}">
-			<img id="starImage${model.artistId}" src="<spring:theme code="ratingOnImage"/>" alt="">
+			<img id="starImage${model.artistUri}" src="<spring:theme code="ratingOnImage"/>" alt="" class="starred">
 		</c:when>
 		<c:otherwise>
-			<img id="starImage${model.artistId}" src="<spring:theme code="ratingOffImage"/>" alt="">
+			<img id="starImage${model.artistUri}" src="<spring:theme code="ratingOffImage"/>" alt="" class="starred">
 		</c:otherwise>
 	</c:choose>
 </a>
@@ -55,7 +42,7 @@ ${model.artistName}
 						<a href="${url}">${topTag.name}</a><c:if test="${i.count < fn:length(model.topTags)}">, </c:if>
 					</c:forEach>
 					<c:if test="${fn:length(model.topTags) > 0}">
-						<a href="artistGenres.view?id=${model.artistId}">&raquo;</a>
+						<a href="artistGenres.view?id=${model.artistUri}">&raquo;</a>
 					</c:if>
 				</div>
 			</td>
@@ -70,7 +57,6 @@ ${model.artistName}
 		<c:when test="${not empty album.coverArtUrl}"><c:set var="coverArtUrl">${album.coverArtUrl}</c:set></c:when>
 		<c:otherwise>
 			<sub:url value="coverArt.view" var="coverArtUrl">
-				<sub:param name="size" value="174"/>
 				<c:if test="${not empty album.coverArtPath}"><sub:param name="path" value="${album.coverArtPath}"/></c:if>
 			</sub:url>
 		</c:otherwise>
@@ -83,7 +69,7 @@ ${model.artistName}
 		</div>
 		<div style="float:left">
 			<b>${album.title}</b><c:if test="${album.year > 0}"> <em>(${album.year})</em></c:if>
-			<c:if test="${album.id != -1}"> <a href="artist.view?id=${model.artistId}&albumId=${album.id}">&raquo;</a></c:if>
+			<c:if test="${album.uri != -1}"> <a href="artist.view?id=${model.artistUri}&albumId=${album.uri}">&raquo;</a></c:if>
 		</div>
 		<div style="clear:both;"></div>
 	</div>
@@ -96,12 +82,12 @@ ${model.artistName}
 <c:forEach items="${model.topTracks}" var="track" varStatus="i">
 	<tr>
 		<td>
-			<c:if test="${track.id != -1 && model.user.streamRole}">
+			<c:if test="${track.uri != -1 && model.user.streamRole}">
 				<table>
 					<tr>
-						<td><a href="javascript:noop()" onclick="top.playlist.onPlay([${track.id}], 'P');"><img src="<spring:theme code="playImage"/>" alt="Play" title="Play"></a></td>
-						<td><a href="javascript:noop()" onclick="top.playlist.onPlay([${track.id}], 'E');"><img src="<spring:theme code="enqueueImage"/>" alt="Enqueue" title="Enqueue"></a></td>
-						<td><a href="javascript:noop()" onclick="top.playlist.onPlay([${track.id}], 'A');"><img src="<spring:theme code="addImage"/>" alt="Add" title="Add"></a></td>
+						<td><a href="#" onclick="return onPlay([${sub:esc(track.uri)}], 'P');"><img src="<spring:theme code="playImage"/>" alt="Play" title="Play"></a></td>
+						<td><a href="#" onclick="return onPlay([${sub:esc(track.uri)}], 'E');"><img src="<spring:theme code="enqueueImage"/>" alt="Enqueue" title="Enqueue"></a></td>
+						<td><a href="#" onclick="return onPlay([${sub:esc(track.uri)}], 'A');"><img src="<spring:theme code="addImage"/>" alt="Add" title="Add"></a></td>
 					</tr>
 				</table>
 			</c:if>
@@ -115,13 +101,20 @@ ${model.artistName}
 </div>
 
 <sub:url value="artist.view" var="artistUrl">
-	<sub:param name="id" value="${model.artistId}"/>
+	<sub:param name="id" value="${model.artistUri}"/>
 </sub:url>
 
-<div style="padding-top:15px"/>
+<div style="padding-top:15px">
+
+</div>
 <div class="back"><a href="${artistUrl}"><fmt:message key="common.back"/></a></div>
 
 </div>
 
-</body>
-</html>
+<script type="text/javascript">
+    function init() {
+        dwr.engine.setErrorHandler(null);
+  	}
+    init();
+</script>
+</div>

@@ -47,12 +47,12 @@
  */
 package net.sbbi.upnp.messages;
 
+import net.sbbi.upnp.services.ServiceStateVariable;
+
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
-
-import net.sbbi.upnp.services.*;
 
 /**
  * Simple SAX handler for UPNP state variable query response message parsing, this message is in SOAP format

@@ -47,7 +47,7 @@
  */
 package net.sbbi.upnp.devices;
 
-import java.net.*;
+import java.net.URL;
 
 /**
  * Java Bean for a device icon properties

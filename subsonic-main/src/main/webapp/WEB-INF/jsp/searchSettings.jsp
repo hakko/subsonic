@@ -1,18 +1,25 @@
 <%@ page language="java" contentType="text/html; charset=utf-8" pageEncoding="iso-8859-1" %>
-<%--@elvariable id="command" type="net.sourceforge.subsonic.command.SearchSettingsCommand"--%>
 
-<html><head>
-    <%@ include file="head.jspf" %>
-</head>
-<body class="mainframe bgcolor1">
+    <%@ include file="include.jspf" %>
+<spring:theme code="panel.primary" var="themePanelPrimary" scope="page" />
+<div class="mainframe bgcolor1 panel panel-primary ${themePanelPrimary}">
+
+<div class="panel-heading">
+  <i class="fa fa-cog"></i>
+  <fmt:message key="settingsheader.title"/>
+</div>
+<div class="panel-body">
+
 <script type="text/javascript" src="<c:url value="/script/wz_tooltip.js"/>"></script>
 <script type="text/javascript" src="<c:url value="/script/tip_balloon.js"/>"></script>
 
 <c:if test="${command.creatingIndex}">
 	<script type="text/javascript">
-		window.location.replace('musicCabinetSettings.view');
+		app.loadMain('musicCabinetSettings.view');
 	</script>
 </c:if>
+
+
 
 <c:import url="settingsHeader.jsp">
     <c:param name="cat" value="search"/>
@@ -58,5 +65,4 @@
 	</form:form>
 </c:if>
 </div>
-
-</body></html>
+</div>

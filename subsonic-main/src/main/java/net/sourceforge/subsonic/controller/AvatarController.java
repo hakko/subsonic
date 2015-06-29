@@ -18,14 +18,15 @@
  */
 package net.sourceforge.subsonic.controller;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
 import net.sourceforge.subsonic.domain.Avatar;
 import net.sourceforge.subsonic.service.SettingsService;
+
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.Controller;
 import org.springframework.web.servlet.mvc.LastModified;
-
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 
 /**
  * Controller which produces avatar images.

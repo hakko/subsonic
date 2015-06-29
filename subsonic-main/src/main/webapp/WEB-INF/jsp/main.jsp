@@ -1,10 +1,8 @@
 <%@ page language="java" contentType="text/html; charset=utf-8" pageEncoding="iso-8859-1" %>
-<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
-<%--@elvariable id="model" type="java.util.Map"--%>
 
-<html><head>
-	<%@ include file="head.jspf" %>
-</head><body class="mainframe bgcolor1">
+<%@ include file="include.jspf" %>
+
+<div class="mainframe bgcolor1">
 
 <h1>${model.dir.name}</h1>
 
@@ -28,13 +26,12 @@
 
 	<c:if test="${fn:length(model.files) > 0}">
 		<h2>
-			<a href="javascript:noop()" onclick="top.playlist.onPlay(${model.trackIds}, 'P');">Play all</a> |
-			<a href="javascript:noop()" onclick="top.playlist.onPlay(${model.trackIds}, 'E');">Enqueue all</a> |
-			<a href="javascript:noop()" onclick="top.playlist.onPlay(${model.trackIds}, 'A');">Add all</a>
+			<a href="#" onclick="return onPlay('${sub:esc(model.trackUris)}', 'P');">Play all</a> |
+			<a href="#" onclick="return onPlay('${sub:esc(model.trackUris)}', 'E');">Enqueue all</a> |
+			<a href="#" onclick="return onPlay('${sub:esc(model.trackUris)}', 'A');">Add all</a>
 		</h2>
-		<table style="border-collapse:collapse;white-space:nowrap">
 			<c:forEach items="${model.files}" var="file" varStatus="loopStatus">
-				<tr>
+				<div>
 					<c:import url="playAddDownload.jsp">
 						<c:param name="id" value="[${file.id}]"/>
 						<c:param name="video" value="${file.video and model.player.web}"/>
@@ -45,11 +42,9 @@
 						<c:param name="downloadEnabled" value="${model.user.downloadRole}"/>
 						<c:param name="asTable" value="true"/>
 					</c:import>
-					<td style="padding-right:1.25em;white-space:nowrap">${fn:escapeXml(file.title)}</td>
-				</tr>
+					${fn:escapeXml(file.title)}
+				</div>
 			</c:forEach>
 		</table>
 	</c:if>
-
-</body>
-</html>
+</div>

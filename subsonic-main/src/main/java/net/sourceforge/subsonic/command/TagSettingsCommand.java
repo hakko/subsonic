@@ -2,9 +2,9 @@ package net.sourceforge.subsonic.command;
 
 import java.util.List;
 
-import com.github.hakko.musiccabinet.domain.model.aggr.TagOccurrence;
-
 import net.sourceforge.subsonic.controller.TagSettingsController;
+
+import com.github.hakko.musiccabinet.domain.model.aggr.TagOccurrence;
 
 /**
  * Command used in {@link TagSettingsController}.

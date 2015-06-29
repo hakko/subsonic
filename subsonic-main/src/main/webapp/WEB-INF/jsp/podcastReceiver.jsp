@@ -1,11 +1,9 @@
 <%@ page language="java" contentType="text/html; charset=utf-8" pageEncoding="iso-8859-1"%>
 
-<html><head>
-    <%@ include file="head.jspf" %>
-    <script type="text/javascript" src="<c:url value="/script/scripts.js"/>"></script>
-    <script type="text/javascript" src="<c:url value="/script/prototype.js"/>"></script>
-</head>
-<body class="mainframe bgcolor1">
+    <%@ include file="include.jspf" %>
+  <spring:theme code="panel.primary" var="themePanelPrimary" scope="page" />
+  <div class="mainframe bgcolor1 panel panel-primary ${themePanelPrimary}">
+
 
 <script type="text/javascript" language="javascript">
     var channelCount = ${fn:length(model.channels)};
@@ -91,10 +89,12 @@
     }
 </script>
 
-<h1>
-    <img src="<spring:theme code="podcastLargeImage"/>" alt=""/>
-    <fmt:message key="podcastreceiver.title"/>
-</h1>
+    <div class="panel-heading">
+      <i class="fa fa-bullhorn"></i>
+      Radio
+    </div>
+    <div class="panel-body">
+
 
 <table><tr>
     <td style="padding-right:2em"><div class="forward"><a href="javascript:toggleAllEpisodes(true)"><fmt:message key="podcastreceiver.expandall"/></a></div></td>
@@ -192,7 +192,7 @@
                                 <str:truncateNicely upper="40">${episode.title}</str:truncateNicely>
                             </c:when>
                             <c:otherwise>
-                                <a target="main" href="${mainUrl}"><str:truncateNicely upper="40">${episode.title}</str:truncateNicely></a>
+                                <a href="${mainUrl}"><str:truncateNicely upper="40">${episode.title}</str:truncateNicely></a>
                             </c:otherwise>
                         </c:choose>
                     </span>
@@ -265,9 +265,8 @@
 </c:if>
 
 
-<h2><img src="<spring:theme code="podcastImage"/>" alt=""/>&nbsp;<fmt:message key="more.podcast.title"/></h2>
+<h2><fmt:message key="more.podcast.title"/></h2>
 <fmt:message key="more.podcast.text"/>
+</div>
 
-
-</body>
-</html>
+</div>

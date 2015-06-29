@@ -25,11 +25,13 @@ public class AudioScrobblerService {
 			try {
 				MetaData metaData = new MetaData();
 				metaData.setArtist(mediaFile.getMetaData().getArtist());
-				metaData.setArtistId(mediaFile.getMetaData().getArtistId());
+				metaData.setArtistUri(mediaFile.getMetaData().getArtistUri());
 				metaData.setAlbum(mediaFile.getMetaData().getAlbum());
-				metaData.setAlbumId(mediaFile.getMetaData().getAlbumId());
-				metaData.setDuration((short) mediaFile.getMetaData().getDuration().intValue());
-				Track track = new Track(mediaFile.getId(), mediaFile.getTitle(), metaData);
+				metaData.setAlbumUri(mediaFile.getMetaData().getAlbumUri());
+				if (mediaFile.getMetaData().getDuration() != null) {
+				  metaData.setDuration((short) mediaFile.getMetaData().getDuration().intValue());
+				}
+				Track track = new Track(mediaFile.getUri(), mediaFile.getTitle(), metaData);
 
 				scrobbleService.scrobble(lastFmUsername, track, submission);
 			} catch (Throwable t) {

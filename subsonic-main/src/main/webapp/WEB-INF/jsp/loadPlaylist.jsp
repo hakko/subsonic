@@ -1,8 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=utf-8" pageEncoding="iso-8859-1"%>
-<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 
-<html><head>
-    <%@ include file="head.jspf" %>
+    <%@ include file="include.jspf" %>
 
     <script type="text/javascript" language="javascript">
         function deletePlaylist(deleteUrl) {
@@ -11,8 +9,7 @@
             }
         }
     </script>
-</head>
-<body class="mainframe bgcolor1">
+<div class="mainframe bgcolor1">
 
 <h1>
     <c:choose>
@@ -26,10 +23,10 @@
 </h1>
 <c:choose>
     <c:when test="${not model.playlistDirectoryExists}">
-        <p class="warning"><fmt:message key="playlist.load.missing_folder"><fmt:param value="${model.playlistDirectory}"/></fmt:message></p>
+        <p class="alert alert-warning"><fmt:message key="playlist.load.missing_folder"><fmt:param value="${model.playlistDirectory}"/></fmt:message></p>
     </c:when>
     <c:when test="${empty model.playlists}">
-        <p class="warning"><fmt:message key="playlist.load.empty"/></p>
+        <p class="alert alert-warning"><fmt:message key="playlist.load.empty"/></p>
     </c:when>
     <c:otherwise>
         <table class="ruleTable indent">
@@ -70,5 +67,4 @@
         </table>
     </c:otherwise>
 </c:choose>
-
-</body></html>
+</div>

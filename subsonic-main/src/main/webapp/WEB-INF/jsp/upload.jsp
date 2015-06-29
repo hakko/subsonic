@@ -1,9 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=utf-8" pageEncoding="iso-8859-1"%>
 
-<html><head>
-    <%@ include file="head.jspf" %>
-</head><body>
-
+    <%@ include file="include.jspf" %>
+<div>
 <h1><fmt:message key="upload.title"/></h1>
 
 <c:forEach items="${model.uploadedFiles}" var="file">
@@ -24,6 +22,5 @@
 </c:choose>
 
 <div class="back"><a href="more.view?"><fmt:message key="common.back"/></a></div>
-</body></html>
-
+</div>
 

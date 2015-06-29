@@ -18,6 +18,13 @@
  */
 package net.sourceforge.subsonic.service;
 
+import java.io.File;
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.Arrays;
+import java.util.LinkedList;
+import java.util.List;
+
 import net.sourceforge.subsonic.Logger;
 import net.sourceforge.subsonic.controller.VideoPlayerController;
 import net.sourceforge.subsonic.dao.TranscodingDao;
@@ -30,18 +37,11 @@ import net.sourceforge.subsonic.domain.VideoTranscodingSettings;
 import net.sourceforge.subsonic.io.TranscodeInputStream;
 import net.sourceforge.subsonic.util.StringUtil;
 import net.sourceforge.subsonic.util.Util;
+
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.io.filefilter.PrefixFileFilter;
 import org.apache.commons.lang.StringUtils;
-
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.util.Arrays;
-import java.util.LinkedList;
-import java.util.List;
 
 /**
  * Provides services for transcoding media. Transcoding is the process of
@@ -201,7 +201,7 @@ public class TranscodingService {
             }
         } else if (maxBitRate != null) {
             boolean supported = isDownsamplingSupported(mediaFile);
-            Integer bitRate = mediaFile.getMetaData().getBitRate();
+            Short bitRate = mediaFile.getMetaData().getBitrate();
             if (supported && bitRate != null && bitRate > maxBitRate) {
                 parameters.setDownsample(true);
             }
@@ -241,7 +241,7 @@ public class TranscodingService {
             LOG.warn("Failed to transcode " + parameters.getMediaFile() + ". Using original.", x);
         }
 
-        return new FileInputStream(parameters.getMediaFile().getFile());
+        return parameters.getMediaFile().getInputStream();
     }
 
 
@@ -362,7 +362,7 @@ public class TranscodingService {
 
                 // Work-around for filename character encoding problem on Windows.
                 // Create temporary file, and feed this to the transcoder.
-                String path = mediaFile.getFile().getAbsolutePath();
+                String path = mediaFile.getAbsolutePath();
                 if (Util.isWindows() && !mediaFile.isVideo() && !StringUtils.isAsciiPrintable(path)) {
                     tmpFile = File.createTempFile("subsonic", "." + FilenameUtils.getExtension(path));
                     tmpFile.deleteOnExit();

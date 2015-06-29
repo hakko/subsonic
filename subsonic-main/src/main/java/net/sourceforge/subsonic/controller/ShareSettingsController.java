@@ -18,7 +18,6 @@
  */
 package net.sourceforge.subsonic.controller;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
@@ -29,15 +28,15 @@ import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.apache.commons.lang.StringUtils;
-import org.springframework.web.servlet.ModelAndView;
-import org.springframework.web.servlet.mvc.ParameterizableViewController;
-
 import net.sourceforge.subsonic.domain.MediaFile;
 import net.sourceforge.subsonic.domain.Share;
 import net.sourceforge.subsonic.domain.User;
 import net.sourceforge.subsonic.service.SecurityService;
 import net.sourceforge.subsonic.service.ShareService;
+
+import org.apache.commons.lang.StringUtils;
+import org.springframework.web.servlet.ModelAndView;
+import org.springframework.web.servlet.mvc.ParameterizableViewController;
 
 /**
  * Controller for the page used to administrate the set of shared media.
@@ -107,11 +106,7 @@ public class ShareSettingsController extends ParameterizableViewController {
             List<MediaFile> files = shareService.getSharedFiles(share.getId());
             if (!files.isEmpty()) {
                 MediaFile file = files.get(0);
-                try {
-                    result.add(new ShareInfo(share, file.isDirectory() ? file : file.getParent()));
-                } catch (IOException e) {
-                    // Ignored
-                }
+                result.add(new ShareInfo(share, file.isDirectory() ? file : file.getParent()));
             }
         }
         return result;

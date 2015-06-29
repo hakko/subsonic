@@ -1,10 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=utf-8" pageEncoding="iso-8859-1" %>
-<%--@elvariable id="command" type="net.sourceforge.subsonic.command.DonateCommand"--%>
-<html>
-<head>
-    <%@ include file="head.jspf" %>
-</head>
-<body class="mainframe bgcolor1">
+    <%@ include file="include.jspf" %>
+<div class="mainframe bgcolor1">
 
 <h1>
     <img src="<spring:theme code="donateImage"/>" alt=""/>
@@ -143,5 +139,4 @@
 </c:choose>
 
 </div>
-</body>
-</html>
+</div>

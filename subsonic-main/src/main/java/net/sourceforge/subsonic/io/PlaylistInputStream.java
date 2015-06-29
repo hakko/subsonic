@@ -18,18 +18,17 @@
  */
 package net.sourceforge.subsonic.io;
 
+import java.io.IOException;
+import java.io.InputStream;
+
 import net.sourceforge.subsonic.Logger;
-import net.sourceforge.subsonic.domain.VideoTranscodingSettings;
-import net.sourceforge.subsonic.util.FileUtil;
 import net.sourceforge.subsonic.domain.MediaFile;
 import net.sourceforge.subsonic.domain.Player;
 import net.sourceforge.subsonic.domain.Playlist;
 import net.sourceforge.subsonic.domain.TransferStatus;
+import net.sourceforge.subsonic.domain.VideoTranscodingSettings;
 import net.sourceforge.subsonic.service.AudioScrobblerService;
 import net.sourceforge.subsonic.service.TranscodingService;
-
-import java.io.IOException;
-import java.io.InputStream;
 
 /**
  * Implementation of {@link InputStream} which reads from a {@link Playlist}.
@@ -112,7 +111,7 @@ public class PlaylistInputStream extends InputStream {
             close();
         } else if (!file.equals(currentFile)) {
             close();
-            LOG.info(player.getUsername() + " listening to \"" + FileUtil.getShortPath(file.getFile()) + "\"");
+            LOG.info(player.getUsername() + " listening to \"" + file.getPath() + "\"");
             if (player.getClientId() == null) {  // Don't scrobble REST players.
                 audioScrobblerService.scrobble(player.getUsername(), file, false);
             }
@@ -120,8 +119,8 @@ public class PlaylistInputStream extends InputStream {
             TranscodingService.Parameters parameters = transcodingService.getParameters(file, player, maxBitRate, preferredTargetFormat, videoTranscodingSettings);
             currentInputStream = transcodingService.getTranscodedInputStream(parameters);
             currentFile = file;
-            status.setMediaFileId(file.getId());
-            status.setFile(currentFile.getFile());
+            status.setMediaFileUri(file.getUri());
+            status.setFile(currentFile.getName());
         }
     }
 

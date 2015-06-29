@@ -1,8 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=utf-8" pageEncoding="iso-8859-1"%>
 
-<html><head>
-    <%@ include file="head.jspf" %>
-</head><body class="mainframe bgcolor1">
+<%@ include file="include.jspf" %>
+<div class="mainframe bgcolor1">
 
 <h1>Database query</h1>
 
@@ -42,4 +41,4 @@
     </p>
 </c:if>
 
-</body></html>
+</div>

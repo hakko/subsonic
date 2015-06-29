@@ -16,6 +16,8 @@ import net.sourceforge.subsonic.util.XMLBuilder.AttributeSet;
 import org.springframework.web.bind.ServletRequestUtils;
 import org.springframework.web.servlet.ModelAndView;
 
+import com.github.hakko.musiccabinet.configuration.Uri;
+import com.github.hakko.musiccabinet.dao.util.URIUtil;
 import com.github.hakko.musiccabinet.service.LibraryBrowserService;
 
 public class RESTMediaRetrievalController extends RESTAbstractController {
@@ -108,16 +110,18 @@ public class RESTMediaRetrievalController extends RESTAbstractController {
         request = wrapRequest(request);
 
         Map<String, Object> map = new HashMap<String, Object>();
-        int id = ServletRequestUtils.getRequiredIntParameter(request, "id");
-        MediaFile file = mediaFileService.getMediaFile(id);
+        Uri uri = URIUtil.parseURI(ServletRequestUtils.getRequiredStringParameter(request, "id"));
+        MediaFile file = mediaFileService.getMediaFile(uri);
 
         int timeOffset = ServletRequestUtils.getIntParameter(request, "timeOffset", 0);
         timeOffset = Math.max(0, timeOffset);
-        Integer duration = file.getMetaData().getDuration();
+        Short duration = file.getMetaData().getDuration();
+        short durationSeconds = 0;
         if (duration != null) {
+        	durationSeconds = duration.shortValue();
             map.put("skipOffsets", VideoPlayerController.createSkipOffsets(duration));
-            timeOffset = Math.min(duration, timeOffset);
-            duration -= timeOffset;
+            timeOffset = Math.min(durationSeconds, timeOffset);
+            durationSeconds -= timeOffset;
         }
 
         map.put("id", request.getParameter("id"));
@@ -127,7 +131,7 @@ public class RESTMediaRetrievalController extends RESTAbstractController {
         map.put("v", request.getParameter("v"));
         map.put("video", file);
         map.put("maxBitRate", ServletRequestUtils.getIntParameter(request, "maxBitRate", VideoPlayerController.DEFAULT_BIT_RATE));
-        map.put("duration", duration);
+        map.put("duration", durationSeconds);
         map.put("timeOffset", timeOffset);
         map.put("bitRates", VideoPlayerController.BIT_RATES);
         map.put("autoplay", ServletRequestUtils.getBooleanParameter(request, "autoplay", true));

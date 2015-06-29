@@ -1,12 +1,15 @@
 <%@ page language="java" contentType="text/html; charset=utf-8" pageEncoding="iso-8859-1" %>
 
-<html><head>
-    <%@ include file="head.jspf" %>
-</head>
-<body class="mainframe bgcolor1">
-<script type="text/javascript" src="<c:url value="/script/wz_tooltip.js"/>"></script>
-<script type="text/javascript" src="<c:url value="/script/tip_balloon.js"/>"></script>
-<script type="text/javascript" src="<c:url value="/script/prototype.js"/>"></script>
+    <%@ include file="include.jspf" %>
+<spring:theme code="panel.primary" var="themePanelPrimary" scope="page" />
+<div class="mainframe bgcolor1 panel panel-primary ${themePanelPrimary}">
+
+<div class="panel-heading">
+  <i class="fa fa-cog"></i>
+  <fmt:message key="settingsheader.title"/>
+</div>
+<div class="panel-body">
+
 
 <c:import url="settingsHeader.jsp">
     <c:param name="cat" value="musicCabinet"/>
@@ -14,8 +17,8 @@
 
 <p style="padding-top:1em"><b>MusicCabinet configuration</b></p>
 
-<form:form method="post" action="musicCabinetSettings.view" commandName="command" onsubmit="document.getElementById('button').disabled = 1;">
-
+<form:form method="post" action="musicCabinetSettings.view" commandName="command" onsubmit="return submitForm(this, 'MusicCabinet settings saved.');">
+    <div class="statusMessage"></div>
 <c:choose>
  <c:when test="${command.databaseRunning}">
   <c:choose>
@@ -164,15 +167,15 @@
           </table>
           <input type="submit" value="Save" style="margin-right:0.3em"/>
           <br/><br/><br/>
-          <p><a href="tagSettings.view">Tag settings</a> | <a href="groupSettings.view">Group settings</a></p>
+          <p><a href="#/tagSettings">Tag settings</a> | <a href="#/groupSettings">Group settings</a></p>
 
 		<script type="text/javascript" language="javascript">
-		['artistRadioTotalCount', 'artistRadioArtistCount', 'artistTopTracksTotalCount',
-		 'genreRadioTotalCount', 'genreRadioArtistCount'].each(function(item) {
-			Event.observe(item, 'keyup', function(e) {
+		jQuery(['#artistRadioTotalCount', '#artistRadioArtistCount', '#artistTopTracksTotalCount',
+		 '#genreRadioTotalCount', '#genreRadioArtistCount']).each(function(index, item) {
+		    jQuery(item).keyup(function(e) {
 				this.value = this.value.replace(/[^0-9]/g,'');
 				return true;
-			})
+			});
 		});
 		</script>
 
@@ -221,5 +224,5 @@
 </c:choose>
 
 </form:form>
-
-</body></html>
+</div>
+</div>

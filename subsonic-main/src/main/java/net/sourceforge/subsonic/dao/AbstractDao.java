@@ -18,9 +18,15 @@
  */
 package net.sourceforge.subsonic.dao;
 
+import java.util.Date;
 import java.util.List;
+import java.util.Map;
+import java.util.concurrent.TimeUnit;
 
 import org.springframework.jdbc.core.*;
+import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
+
+import net.sourceforge.subsonic.Logger;
 
 /**
  * Abstract superclass for all DAO's.
@@ -28,6 +34,8 @@ import org.springframework.jdbc.core.*;
  * @author Sindre Mehus
  */
 public class AbstractDao {
+    private static final Logger LOG = Logger.getLogger(AbstractDao.class);
+    
     private DaoHelper daoHelper;
 
     /**
@@ -38,29 +46,127 @@ public class AbstractDao {
         return daoHelper.getJdbcTemplate();
     }
 
+    /**
+     * Similar to {@link #getJdbcTemplate()}, but with named parameters.
+     */
+    public NamedParameterJdbcTemplate getNamedParameterJdbcTemplate() {
+        return daoHelper.getNamedParameterJdbcTemplate();
+    }
+
     protected String questionMarks(String columns) {
         int count = columns.split(", ").length;
-        StringBuffer buf = new StringBuffer();
+        StringBuilder builder = new StringBuilder();
         for (int i = 0; i < count; i++) {
-            buf.append('?');
+            builder.append('?');
             if (i < count - 1) {
-                buf.append(", ");
+                builder.append(", ");
             }
         }
-        return buf.toString();
+        return builder.toString();
+    }
+
+    protected String prefix(String columns, String prefix) {
+        StringBuilder builder = new StringBuilder();
+        for (String s : columns.split(", ")) {
+            builder.append(prefix).append(".").append(s).append(",");
+        }
+        if (builder.length() > 0) {
+            builder.setLength(builder.length() - 1);
+        }
+        return builder.toString();
     }
 
     protected int update(String sql, Object... args) {
-        return getJdbcTemplate().update(sql, args);
+        long t = System.nanoTime();
+        int result = getJdbcTemplate().update(sql, args);
+        log(sql, t);
+        return result;
     }
 
-    protected <T> List<T> query(String sql, RowMapper<T> rowMapper, Object... args) {
-        return getJdbcTemplate().query(sql, args, rowMapper);
+    private void log(String sql, long startTimeNano) {
+        long millis = (System.nanoTime() - startTimeNano) / 1000000L;
+
+        // Log queries that take more than 2 seconds.
+        if (millis > TimeUnit.SECONDS.toMillis(2L)) {
+            LOG.debug(millis + " ms:  " + sql);
+        }
     }
 
-    protected <T> T queryOne(String sql, RowMapper<T> rowMapper, Object... args) {
-        List<T> result = query(sql, rowMapper, args);
-        return result.isEmpty() ? null : result.get(0);
+    protected <T> List<T> query(String sql, RowMapper rowMapper, Object... args) {
+        long t = System.nanoTime();
+        List<T> result = getJdbcTemplate().query(sql, args, rowMapper);
+        log(sql, t);
+        return result;
+    }
+
+    protected <T> List<T> namedQuery(String sql, RowMapper rowMapper, Map<String, Object> args) {
+        long t = System.nanoTime();
+        List<T> result = getNamedParameterJdbcTemplate().query(sql, args, rowMapper);
+        log(sql, t);
+        return result;
+    }
+
+    protected List<String> queryForStrings(String sql, Object... args) {
+        long t = System.nanoTime();
+        List<String> result = getJdbcTemplate().queryForList(sql, args, String.class);
+        log(sql, t);
+        return result;
+    }
+
+    protected List<Integer> queryForInts(String sql, Object... args) {
+        long t = System.nanoTime();
+        List<Integer> result = getJdbcTemplate().queryForList(sql, args, Integer.class);
+        log(sql, t);
+        return result;
+    }
+
+    protected List<String> namedQueryForStrings(String sql, Map<String, Object> args) {
+        long t = System.nanoTime();
+        List<String> result = getNamedParameterJdbcTemplate().queryForList(sql, args, String.class);
+        log(sql, t);
+        return result;
+    }
+
+    protected Integer queryForInt(String sql, Integer defaultValue, Object... args) {
+        long t = System.nanoTime();
+        List<Integer> list = getJdbcTemplate().queryForList(sql, args, Integer.class);
+        Integer result = list.isEmpty() ? defaultValue : list.get(0) == null ? defaultValue : list.get(0);
+        log(sql, t);
+        return result;
+    }
+
+    protected Integer namedQueryForInt(String sql, Integer defaultValue, Map<String, Object> args) {
+        long t = System.nanoTime();
+        List<Integer> list = getNamedParameterJdbcTemplate().queryForList(sql, args, Integer.class);
+        Integer result = list.isEmpty() ? defaultValue : list.get(0) == null ? defaultValue : list.get(0);
+        log(sql, t);
+        return result;
+    }
+
+    protected Date queryForDate(String sql, Date defaultValue, Object... args) {
+        long t = System.nanoTime();
+        List<Date> list = getJdbcTemplate().queryForList(sql, args, Date.class);
+        Date result = list.isEmpty() ? defaultValue : list.get(0) == null ? defaultValue : list.get(0);
+        log(sql, t);
+        return result;
+    }
+
+    protected Long queryForLong(String sql, Long defaultValue, Object... args) {
+        long t = System.nanoTime();
+        List<Long> list = getJdbcTemplate().queryForList(sql, args, Long.class);
+        Long result = list.isEmpty() ? defaultValue : list.get(0) == null ? defaultValue : list.get(0);
+        log(sql, t);
+        return result;
+    }
+
+    protected <T> T queryOne(String sql, RowMapper rowMapper, Object... args) {
+        List<T> list = query(sql, rowMapper, args);
+        return list.isEmpty() ? null : list.get(0);
+    }
+
+    protected <T> T namedQueryOne(String sql, RowMapper rowMapper, Map<String, Object> args) {
+        List<T> list = namedQuery(sql, rowMapper, args);
+        return list.isEmpty() ? null : list.get(0);
     }
 
     public void setDaoHelper(DaoHelper daoHelper) {

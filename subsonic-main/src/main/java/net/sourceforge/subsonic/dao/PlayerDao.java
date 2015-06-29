@@ -26,14 +26,14 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.springframework.jdbc.core.simple.ParameterizedRowMapper;
-
 import net.sourceforge.subsonic.Logger;
 import net.sourceforge.subsonic.domain.CoverArtScheme;
 import net.sourceforge.subsonic.domain.Player;
 import net.sourceforge.subsonic.domain.PlayerTechnology;
 import net.sourceforge.subsonic.domain.Playlist;
 import net.sourceforge.subsonic.domain.TranscodeScheme;
+
+import org.springframework.jdbc.core.simple.ParameterizedRowMapper;
 
 /**
  * Provides player-related database services.
@@ -44,7 +44,7 @@ public class PlayerDao extends AbstractDao {
 
     private static final Logger LOG = Logger.getLogger(PlayerDao.class);
     private static final String COLUMNS = "id, name, type, username, ip_address, auto_control_enabled, " +
-            "last_seen, cover_art_scheme, transcode_scheme, dynamic_ip, technology, client_id";
+            "last_seen, cover_art_scheme, transcode_scheme, dynamic_ip, technology, spotify_enabled, mixer_name, client_id";
 
     private PlayerRowMapper rowMapper = new PlayerRowMapper();
     private Map<String, Playlist> playlists = Collections.synchronizedMap(new HashMap<String, Playlist>());
@@ -101,7 +101,7 @@ public class PlayerDao extends AbstractDao {
                 player.getIpAddress(), player.isAutoControlEnabled(),
                 player.getLastSeen(), player.getCoverArtScheme().name(),
                 player.getTranscodeScheme().name(), player.isDynamicIp(),
-                player.getTechnology().name(), player.getClientId());
+                player.getTechnology().name(), player.isSpotifyEnabled(), player.getClientId());
         addPlaylist(player);
 
         LOG.info("Created player " + id + '.');
@@ -152,13 +152,17 @@ public class PlayerDao extends AbstractDao {
                 "transcode_scheme = ?, " +
                 "dynamic_ip = ?, " +
                 "technology = ?, " +
+                "spotify_enabled = ?, " +
+                "mixer_name = ?, " +
                 "client_id = ? " +
                 "where id = ?";
         update(sql, player.getName(), player.getType(), player.getUsername(),
                 player.getIpAddress(), player.isAutoControlEnabled(),
                 player.getLastSeen(), player.getCoverArtScheme().name(),
                 player.getTranscodeScheme().name(), player.isDynamicIp(),
-                player.getTechnology(), player.getClientId(), player.getId());
+                player.getTechnology(), player.isSpotifyEnabled(), player.getMixerName(),
+                player.getClientId(),
+                player.getId());
     }
 
     private void addPlaylist(Player player) {
@@ -185,6 +189,8 @@ public class PlayerDao extends AbstractDao {
             player.setTranscodeScheme(TranscodeScheme.valueOf(rs.getString(col++)));
             player.setDynamicIp(rs.getBoolean(col++));
             player.setTechnology(PlayerTechnology.valueOf(rs.getString(col++)));
+            player.setSpotifyEnabled(rs.getBoolean(col++));
+            player.setMixerName(rs.getString(col++));
             player.setClientId(rs.getString(col++));
 
             addPlaylist(player);

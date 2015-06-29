@@ -44,6 +44,13 @@
             <required>false</required>
             <rtexprvalue>true</rtexprvalue>
         </attribute>
+        <attribute>
+            <description>Where to encode as a javascript hash based url.</description>
+            <name>hashurl</name>
+            <required>false</required>
+            <rtexprvalue>true</rtexprvalue>
+        </attribute>
+        
     </tag>
 
     <tag>
@@ -110,5 +117,42 @@
             <rtexprvalue>true</rtexprvalue>
         </attribute>
     </tag>
+    <function>
+        <name>esc</name>
+        <function-class>net.sourceforge.subsonic.taglib.SubsonicFunctions</function-class>
+        <function-signature>String esc(java.lang.Object)</function-signature>
+    </function>
+    <function>
+        <name>jqesc</name>
+        <function-class>net.sourceforge.subsonic.taglib.SubsonicFunctions</function-class>
+        <function-signature>String jqesc(java.lang.String)</function-signature>
+    </function>    
+    <function>
+        <name>isSpotify</name>
+        <function-class>net.sourceforge.subsonic.taglib.SubsonicFunctions</function-class>
+        <function-signature>boolean isSpotify(net.sourceforge.subsonic.domain.Album)</function-signature>
+    </function>
+    <function>
+        <name>isSpotifyFile</name>
+        <function-class>net.sourceforge.subsonic.taglib.SubsonicFunctions</function-class>
+        <function-signature>boolean isSpotifyFile(net.sourceforge.subsonic.domain.MediaFile)</function-signature>
+    </function>
+    <function>
+        <name>toSpotifyLink</name>
+        <function-class>net.sourceforge.subsonic.taglib.SubsonicFunctions</function-class>
+        <function-signature>java.lang.String toSpotifyLink(java.lang.String)</function-signature>
+    </function>
+    <function>
+        <name>dehex</name>
+        <function-class>net.sourceforge.subsonic.taglib.SubsonicFunctions</function-class>
+        <function-signature>String deHex(java.lang.String)</function-signature>
+    </function>
+    <function>
+        <name>hex</name>
+        <function-class>net.sourceforge.subsonic.taglib.SubsonicFunctions</function-class>
+        <function-signature>String hex(java.lang.String)</function-signature>
+    </function>    
+        
+
 
 </taglib>

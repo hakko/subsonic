@@ -47,10 +47,12 @@
  */
 package net.sbbi.upnp.devices;
 
-import net.sbbi.upnp.services.*;
+import java.net.URL;
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
 
-import java.util.*;
-import java.net.*;
+import net.sbbi.upnp.services.UPNPService;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;

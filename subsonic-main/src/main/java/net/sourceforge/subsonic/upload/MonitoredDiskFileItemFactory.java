@@ -18,10 +18,10 @@
  */
 package net.sourceforge.subsonic.upload;
 
+import java.io.File;
+
 import org.apache.commons.fileupload.FileItem;
 import org.apache.commons.fileupload.disk.DiskFileItemFactory;
-
-import java.io.File;
 
 /**
  * Extension of Commons FileUpload for monitoring the upload progress.

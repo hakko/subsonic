@@ -1,16 +1,31 @@
-
-	var musicFiles = [[]<c:forEach items="${model.albums}" var="a">,[[]<c:forEach items="${a.trackIds}" var="t">,${t}</c:forEach>]</c:forEach>];
+<%@ taglib prefix="sub" uri="http://subsonic.org/taglib/sub" %>
+    var musicFiles = ${sub:esc(model.albums)};
 	
 	function toggleAlbum(index) {
-		a = '#albart' + index;
-		$(a).attr('width', 174 + 87 - $(a).attr('width'));
-		$(a).attr('height', 174 + 87 - $(a).attr('height'));
+        return $(function($) {
+		  a = '#albart' + index;
+		  $(a).attr('width', 174 + 87 - $(a).attr('width'));
+		  $(a).attr('height', 174 + 87 - $(a).attr('height'));
 
-		$('#albcmd' + index).toggle();
-		$('#albtit' + index).toggle();
-		$('#albson' + index).toggle();
+		  $('#albcmd' + index).toggle();
+		  $('#albtit' + index).toggle();
+		  $('#albson' + index).toggle();
 
-		if ($('#albson' + index).children().size() == 0) {
-			$('#albson' + index).load('album.view?view' + musicFiles[index].join('&mf=') <c:if test="${not empty model.trackId}">+ '&trackId=${model.trackId}'</c:if>);
-		}
+		  if ($('#albson' + index).children().size() == 0) {
+		      $('#albson' + index).load('album.view?view', {
+            <c:if test="${not empty model.trackUri}">
+            "trackId": "${model.trackUri}",
+            </c:if>
+		        "mf": musicFiles[index - 1]
+		      }, function() {
+
+  		      setupZoom('<c:url value="/"/>');
+  		      $('html,body').scrollTop($('#albson' + index).offset().top);
+            console.log('done');
+		      });
+		      
+		      //$('html,body').scrollTop($('#albson' + index).offset().top);
+		  }
+		  return false;
+        }(jQuery));
 	}

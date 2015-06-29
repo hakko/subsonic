@@ -47,15 +47,25 @@
  */
 package net.sbbi.upnp.services;
 
-import org.apache.commons.jxpath.*;
-import org.apache.commons.jxpath.xml.*;
-
-import java.util.*;
 import java.io.IOException;
-import java.net.*;
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
 
 import net.sbbi.upnp.JXPathParser;
-import net.sbbi.upnp.devices.*;
+import net.sbbi.upnp.devices.UPNPDevice;
+import net.sbbi.upnp.devices.UPNPRootDevice;
+
+import org.apache.commons.jxpath.Container;
+import org.apache.commons.jxpath.JXPathContext;
+import org.apache.commons.jxpath.JXPathException;
+import org.apache.commons.jxpath.Pointer;
+import org.apache.commons.jxpath.xml.DocumentContainer;
 
 /**
  * Representation of an UPNP service

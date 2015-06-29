@@ -14,8 +14,7 @@
 	http://www.springframework.org/schema/integration/spring-integration.xsd
 	http://www.springframework.org/schema/task
 	http://www.springframework.org/schema/task/spring-task.xsd">
-
-
+	
 	<!-- SPRING SECURITY BEANS -->
 
 	<bean id="passwordEncoder"
@@ -59,7 +58,7 @@
     <bean id="avatarDao" class="net.sourceforge.subsonic.dao.AvatarDao">
         <property name="daoHelper" ref="daoHelper"/>
     </bean>
-
+    
     <bean id="shareDao" class="net.sourceforge.subsonic.dao.ShareDao">
         <property name="daoHelper" ref="daoHelper"/>
     </bean>
@@ -96,7 +95,13 @@
         <property name="userDao" ref="userDao"/>
         <property name="avatarDao" ref="avatarDao"/>
         <property name="versionService" ref="versionService"/>
+        <property name="spotifySettingsService" ref="spotifySettingsService" />
     </bean>
+    
+    <bean id="ratingService" class="net.sourceforge.subsonic.service.RatingService">
+        <property name="ratingDao" ref="ratingDao"/>
+    </bean>
+    
 
     <bean id="mediaFolderService" class="net.sourceforge.subsonic.service.MediaFolderService" init-method="init">
         <property name="mediaFolderDao" ref="mediaFolderDao"/>
@@ -109,6 +114,7 @@
         <property name="libraryStatusService" ref="ajaxLibraryStatusService"/>
         <property name="libraryScannerService" ref="libraryScannerService"/>
         <property name="lastFmSettingsService" ref="lastFmSettingsService"/>
+        <property name="spotifySettingsService" ref="spotifySettingsService"/>
     </bean>
 
     <bean id="networkService" class="net.sourceforge.subsonic.service.NetworkService" init-method="init">
@@ -162,22 +168,33 @@
         <property name="audioScrobblerService" ref="audioScrobblerService"/>
         <property name="settingsService" ref="settingsService"/>
         <property name="securityService" ref="securityService"/>
+        <property name="spotifyService" ref="spotifyService" />
     </bean>
 
     <bean id="metaDataParserFactory" class="net.sourceforge.subsonic.service.metadata.MetaDataParserFactory" init-method="init">
         <property name="parsers">
             <list>
-                <bean class="net.sourceforge.subsonic.service.metadata.JaudiotaggerParser"/>
+                <bean class="net.sourceforge.subsonic.service.metadata.JaudiotaggerParser">
+                    <property name="libraryAdditionDao" ref="libraryAdditionDao"/>
+                </bean>
                 <bean class="net.sourceforge.subsonic.service.metadata.FFmpegParser">
                     <property name="transcodingService" ref="transcodingService"/>
+                    <property name="libraryAdditionDao" ref="libraryAdditionDao"/>
                 </bean>
-                <bean class="net.sourceforge.subsonic.service.metadata.DefaultMetaDataParser"/>
+                <bean class="net.sourceforge.subsonic.service.metadata.DefaultMetaDataParser">
+                    <property name="libraryAdditionDao" ref="libraryAdditionDao"/>
+                </bean>
             </list>
         </property>
     </bean>
     
     <bean id="artistIndexService" class="net.sourceforge.subsonic.service.ArtistIndexService">
         <property name="settingsService" ref="settingsService"/>
+    </bean>
+    
+    <bean id="deviceListenerService" class="net.sourceforge.subsonic.service.sync.DeviceListenerService" init-method="init">
+        <property name="settingsService" ref="settingsService"/>
+        <property name="libraryBrowserService" ref="libraryBrowserService"/>
     </bean>
     
 
@@ -238,6 +255,11 @@
         <property name="settingsService" ref="settingsService"/>
         <property name="tagUpdateService" ref="tagUpdateService"/>
     </bean>
+    
+    <bean id="ajaxDeviceLocatorService" class="net.sourceforge.subsonic.ajax.DeviceLocatorService">
+        <property name="settingsService" ref="settingsService"/>
+    </bean>
+    
 
 
 	<!-- MUSICCABINET copy/paste (propertyConfigurer is Subsonic specific) -->
@@ -369,6 +391,10 @@
 
     <bean id="lastFmSettingsService" class="com.github.hakko.musiccabinet.service.lastfm.LastFmSettingsService">
     </bean>
+    
+    <bean id="spotifySettingsService" class="com.github.hakko.musiccabinet.service.spotify.SpotifySettingsService">
+    </bean>
+    
 
     <bean id="artistInfoService" class="com.github.hakko.musiccabinet.service.lastfm.ArtistInfoService">
         <property name="artistInfoClient" ref="artistInfoClient"/>
@@ -472,7 +498,40 @@
     <bean id="nameSearchService" class="com.github.hakko.musiccabinet.service.NameSearchService">
         <property name="nameSearchDao" ref="nameSearchDao"/>
     </bean>
-
+    
+    <bean id="spotifySearchService" class="com.github.hakko.musiccabinet.service.spotify.SpotifySearchService">
+        <property name="spotifyService" ref="spotifyService" />
+    </bean>
+    
+    <bean id="spotifyMissingAlbumService" class="com.github.hakko.musiccabinet.service.spotify.MissingAlbumService">
+        <property name="spotifyService" ref="spotifyService" />
+        <property name="spotifyLibraryBrowserDao" ref="spotifyLibraryBrowserDao" />
+        <property name="jdbcLibraryBrowserDao" ref="jdbcLibraryBrowserDao" />
+        <property name="webserviceHistoryService" ref="webserviceHistoryService"/>
+        <property name="libraryAdditionDao" ref="libraryAdditionDao"/>
+        <property name="albumInfoDao" ref="albumInfoDao"/>
+    </bean>
+    
+    <bean id="spotifyMissingArtistService" class="com.github.hakko.musiccabinet.service.spotify.MissingArtistService">
+        <property name="spotifyService" ref="spotifyService" />
+        <property name="spotifyLibraryBrowserDao" ref="spotifyLibraryBrowserDao" />
+        <property name="jdbcLibraryBrowserDao" ref="jdbcLibraryBrowserDao" />
+        <property name="webserviceHistoryService" ref="webserviceHistoryService"/>
+        <property name="libraryAdditionDao" ref="libraryAdditionDao"/>
+        <property name="albumInfoDao" ref="albumInfoDao"/>
+    </bean>
+    
+    
+    <bean id="compositeNameSearchService" class="com.github.hakko.musiccabinet.service.CompositeNameSearchService">
+        <property name="services">
+          <set>
+            <ref bean="nameSearchService" />
+            <ref bean="spotifySearchService" />
+          </set>
+      </property>
+        
+    </bean>
+    
     <bean id="artistRecommendationService" class="com.github.hakko.musiccabinet.service.ArtistRecommendationService">
         <property name="artistRecommendationDao" ref="artistRecommendationDao"/>
     </bean>
@@ -501,6 +560,8 @@
         <property name="userTopArtistsService" ref="userTopArtistsService"/>
         <property name="userRecommendedArtistsService" ref="userRecommendedArtistsService"/>
         <property name="userLovedTracksService" ref="userLovedTracksService"/>
+        <property name="missingArtistService" ref="spotifyMissingArtistService" />
+        <property name="missingAlbumService" ref="spotifyMissingAlbumService" />
         <property name="searchIndexUpdateExecutorService" ref="searchIndexUpdateExecutorService"/>
         <property name="searchIndexUpdateSettingsService" ref="searchIndexUpdateSettingsService"/>
     </bean>
@@ -591,7 +652,15 @@
 
     <bean id="releaseClient" class="com.github.hakko.musiccabinet.ws.musicbrainz.ReleaseClient">
         <property name="webserviceHistoryService" ref="webserviceHistoryService"/>
-    </bean> 
+    </bean>
+    
+    <!--  Spotify Services -->
+    
+    <bean id="spotifyService" class="com.github.hakko.musiccabinet.service.spotify.SpotifyService" init-method="init">
+        <property name="settingsService" ref="spotifySettingsService"/>
+        <property name="spotifyDao" ref="spotifyDao"/>
+    </bean>
+    
 
 
     <!--  DAOs  -->
@@ -611,16 +680,34 @@
     <bean id="libraryDeletionDao" class="com.github.hakko.musiccabinet.dao.jdbc.JdbcLibraryDeletionDao">
         <property name="dataSource" ref="dataSource"/>
     </bean>
-
-    <bean id="libraryBrowserDao" class="com.github.hakko.musiccabinet.dao.jdbc.JdbcLibraryBrowserDao">
+    
+    <bean id="jdbcLibraryBrowserDao" class="com.github.hakko.musiccabinet.dao.jdbc.JdbcLibraryBrowserDao">
         <property name="dataSource" ref="dataSource"/>
         <property name="lastFmSettingsService" ref="lastFmSettingsService"/>
+    </bean>
+    
+    <bean id="spotifyLibraryBrowserDao" class="com.github.hakko.musiccabinet.dao.spotify.SpotifyLibraryBrowserDao">
+        <property name="spotifyService" ref="spotifyService" />
+        <property name="nameSearchService" ref="spotifySearchService" />
+    </bean>
+    
+    <bean id="libraryBrowserDao" class="com.github.hakko.musiccabinet.dao.aggregate.AggregateLibraryBrowserDao">
+        <property name="daos">
+            <list>
+                <ref bean="jdbcLibraryBrowserDao" />    
+                <ref bean="spotifyLibraryBrowserDao" />
+            </list>
+        </property>
     </bean>
 
     <bean id="musicDao" class="com.github.hakko.musiccabinet.dao.jdbc.JdbcMusicDao">
         <property name="dataSource" ref="dataSource"/>
     </bean>
-
+    
+    <bean id="ratingDao" class="com.github.hakko.musiccabinet.dao.jdbc.JdbcRatingDao">
+        <property name="dataSource" ref="dataSource"/>
+    </bean>
+    
     <bean id="starDao" class="com.github.hakko.musiccabinet.dao.jdbc.JdbcStarDao">
         <property name="dataSource" ref="dataSource"/>
     </bean>
@@ -642,9 +729,23 @@
     <bean id="trackRelationDao" class="com.github.hakko.musiccabinet.dao.jdbc.JdbcTrackRelationDao">
         <property name="dataSource" ref="dataSource"/>
     </bean>
+    
 
-    <bean id="artistInfoDao" class="com.github.hakko.musiccabinet.dao.jdbc.JdbcArtistInfoDao">
+    <bean id="jdbcArtistInfoDao" class="com.github.hakko.musiccabinet.dao.jdbc.JdbcArtistInfoDao">
         <property name="dataSource" ref="dataSource"/>
+    </bean>
+    
+    <bean id="spotifyArtistInfoDao" class="com.github.hakko.musiccabinet.dao.spotify.SpotifyArtistInfoDao">
+        <property name="spotifyService" ref="spotifyService" />
+    </bean>
+    
+    <bean id="artistInfoDao" class="com.github.hakko.musiccabinet.dao.aggregate.AggregateArtistInfoDao">
+        <property name="daos">
+            <list>
+                <ref bean="jdbcArtistInfoDao" />    
+                <ref bean="spotifyArtistInfoDao" />
+            </list>
+        </property>
     </bean>
 
     <bean id="albumInfoDao" class="com.github.hakko.musiccabinet.dao.jdbc.JdbcAlbumInfoDao">
@@ -692,6 +793,10 @@
     <bean id="lastFmDao" class="com.github.hakko.musiccabinet.dao.jdbc.JdbcLastFmDao">
         <property name="dataSource" ref="dataSource"/>
     </bean>
+    
+    <bean id="spotifyDao" class="com.github.hakko.musiccabinet.dao.jdbc.JdbcSpotifyDao">
+        <property name="dataSource" ref="dataSource"/>
+    </bean>
 
     <bean id="userTopArtistsDao" class="com.github.hakko.musiccabinet.dao.jdbc.JdbcUserTopArtistsDao">
         <property name="dataSource" ref="dataSource"/>
@@ -712,7 +817,7 @@
     <bean id="musicBrainzArtistDao" class="com.github.hakko.musiccabinet.dao.jdbc.JdbcMusicBrainzArtistDao">
         <property name="dataSource" ref="dataSource"/>
     </bean>
-
+    
     <bean id="musicBrainzAlbumDao" class="com.github.hakko.musiccabinet.dao.jdbc.JdbcMusicBrainzAlbumDao">
         <property name="dataSource" ref="dataSource"/>
     </bean>
@@ -725,8 +830,7 @@
         <property name="dataSource" ref="dataSource"/>
         <property name="initialDataSource" ref="initialDataSource"/>
     </bean>
-
-
+    
     <!--  DATA SOURCE -->
 
     <bean id="dataSource" destroy-method="close"

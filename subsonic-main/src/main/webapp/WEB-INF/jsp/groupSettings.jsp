@@ -1,12 +1,14 @@
 <%@ page language="java" contentType="text/html; charset=utf-8" pageEncoding="iso-8859-1" %>
 
-<html><head>
-    <%@ include file="head.jspf" %>
-</head>
-<body class="mainframe bgcolor1">
-<script type="text/javascript" src="<c:url value="/script/jquery-1.7.2.min.js"/>"></script>
-<script type="text/javascript" src="<c:url value="/script/wz_tooltip.js"/>"></script>
-<script type="text/javascript" src="<c:url value="/script/tip_balloon.js"/>"></script>
+    <%@ include file="include.jspf" %>
+ <spring:theme code="panel.primary" var="themePanelPrimary" scope="page" />
+<div class="mainframe bgcolor1 panel panel-primary ${themePanelPrimary}">
+
+<div class="panel-heading">
+  <i class="fa fa-cog"></i>
+  Group Settings
+</div>
+<div class="panel-body">
 
 <script type="text/javascript">
 	function add(group) {
@@ -52,5 +54,5 @@
 	<input type="button" value="<fmt:message key="common.cancel"/>" onclick="location.href='nowPlaying.view'">
 
 </form>
-
-</body></html>
+</div>
+</div>

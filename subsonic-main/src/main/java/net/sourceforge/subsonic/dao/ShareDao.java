@@ -22,9 +22,12 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.List;
 
+import net.sourceforge.subsonic.domain.Share;
+
 import org.springframework.jdbc.core.simple.ParameterizedRowMapper;
 
-import net.sourceforge.subsonic.domain.Share;
+import com.github.hakko.musiccabinet.configuration.SubsonicUri;
+import com.github.hakko.musiccabinet.configuration.Uri;
 
 /**
  * Provides database services for shared media.
@@ -102,7 +105,7 @@ public class ShareDao extends AbstractDao {
      * @param shareId The ID of the share.
      * @return The paths of the shared files.
      */
-    public List<Integer> getSharedFiles(int shareId) {
+    public List<Uri> getSharedFiles(int shareId) {
         return query("select media_file_id from share_file where share_id=?", shareFileRowMapper, shareId);
     }
 
@@ -122,9 +125,9 @@ public class ShareDao extends AbstractDao {
         }
     }
 
-    private static class ShareFileRowMapper implements ParameterizedRowMapper<Integer> {
-        public Integer mapRow(ResultSet rs, int rowNum) throws SQLException {
-            return rs.getInt(1);
+    private static class ShareFileRowMapper implements ParameterizedRowMapper<Uri> {
+        public Uri mapRow(ResultSet rs, int rowNum) throws SQLException {
+            return new SubsonicUri(rs.getInt(1));
         }
 
     }

@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <!-- Any customizations for your app running on devices with Theme.Holo here -->
+
+    <style name="SubsonicTheme" parent="@android:style/Theme.Holo">
+        <item name="android:windowBackground">@drawable/background</item>
+    </style>
+
+    <style name="SubsonicTheme.NoBackground" parent="@android:style/Theme.Holo"/>
+
+</resources>

@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item android:id="@+id/menu_pin"
+          android:title="@string/download.menu_pin"
+          android:visible="false"/>
+
+    <item android:id="@+id/menu_unpin"
+          android:title="@string/download.menu_unpin"
+          android:visible="false"/>
+
+    <item android:id="@+id/download.menu_star"
+          android:title="@string/star.menu_star"
+          android:visible="false"/>
+
+    <item android:id="@+id/download.menu_unstar"
+          android:title="@string/star.menu_unstar"
+          android:visible="false"/>
+
+    <item android:id="@+id/download.menu_share"
+          android:title="@string/share.menu_share"
+          android:visible="false"/>
+
+    <item android:id="@+id/download.menu_show_album"
+          android:title="@string/download.menu_show_album"
+          android:visible="false"/>
+
+    <item android:id="@+id/download.menu_lyrics"
+          android:title="@string/download.menu_lyrics"
+          android:visible="false"/>
+
+    <item android:id="@+id/download.menu_remove"
+          android:title="@string/download.menu_remove"
+          android:visible="false"/>
+
+</menu>

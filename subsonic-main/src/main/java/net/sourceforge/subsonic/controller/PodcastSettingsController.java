@@ -18,12 +18,13 @@
  */
 package net.sourceforge.subsonic.controller;
 
-import org.springframework.web.servlet.mvc.SimpleFormController;
-import net.sourceforge.subsonic.service.SettingsService;
-import net.sourceforge.subsonic.service.PodcastService;
-import net.sourceforge.subsonic.command.PodcastSettingsCommand;
-
 import javax.servlet.http.HttpServletRequest;
+
+import net.sourceforge.subsonic.command.PodcastSettingsCommand;
+import net.sourceforge.subsonic.service.PodcastService;
+import net.sourceforge.subsonic.service.SettingsService;
+
+import org.springframework.web.servlet.mvc.SimpleFormController;
 
 /**
  * Controller for the page used to administrate the Podcast receiver.

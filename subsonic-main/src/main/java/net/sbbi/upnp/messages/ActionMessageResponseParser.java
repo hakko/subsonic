@@ -47,11 +47,12 @@
  */
 package net.sbbi.upnp.messages;
 
+import net.sbbi.upnp.services.ServiceAction;
+import net.sbbi.upnp.services.ServiceActionArgument;
+
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.xml.sax.Attributes;
-
-import net.sbbi.upnp.services.*;
 
 /**
  * Simple SAX handler for UPNP response message parsing, this message is in SOAP format

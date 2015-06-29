@@ -1,17 +1,52 @@
 <sub:url value="home.view" var="prevUrl">
-	<sub:param name="listType" value="${model.listType}"/>
-	<sub:param name="listGroup" value="${model.listGroup}"/>
-	<sub:param name="query" value="${model.query}"/>
-	<sub:param name="page" value="${model.page - 1}"/>
+	<sub:param name="listType" value="${model.listType}" />
+	<sub:param name="listGroup" value="${model.listGroup}" />
+	<sub:param name="query" value="${model.query}" />
+	<sub:param name="page" value="${model.page - 1}" />
 </sub:url>
 <sub:url value="home.view" var="nextUrl">
-	<sub:param name="listType" value="${model.listType}"/>
-	<sub:param name="listGroup" value="${model.listGroup}"/>
-	<sub:param name="query" value="${model.query}"/>
-	<sub:param name="page" value="${model.page + 1}"/>
+	<sub:param name="listType" value="${model.listType}" />
+	<sub:param name="listGroup" value="${model.listGroup}" />
+	<sub:param name="query" value="${model.query}" />
+	<sub:param name="page" value="${model.page + 1}" />
 </sub:url>
 
-<div style="padding-top:15px"/>
+<div class="btn-group">
+	<c:if test="${model.page > 0}">
 
-<c:if test="${model.page > 0}"><div class="back"><a href="${prevUrl}"><fmt:message key="common.previous"/></a></div></c:if>
-<c:if test="${not empty model.morePages}"><div class="forward"><a href="${nextUrl}"><fmt:message key="common.next"/></a></div></c:if>
+		<a href="${prevUrl}" class="btn btn-default"> <i
+			class="fa fa-arrow-circle-o-left"></i> <fmt:message
+				key="common.previous" />
+
+		</a>
+	</c:if>
+	<c:if test="${not empty model.morePages}">
+
+		<a href="${nextUrl}" class="btn btn-default"><fmt:message
+				key="common.next" /> <i class="fa fa-arrow-circle-o-right"></i> </a>
+	</c:if>
+</div>
+<c:if test="${model.listType ne 'random'}">
+	<sub:url var="allUrl" value="home.view">
+		<sub:param name="listType" value="${model.listType}" />
+		<sub:param name="listGroup" value="${model.listGroup}" />
+		<sub:param name="listUsers" value="all" />
+	</sub:url>
+	<sub:url var="meUrl" value="home.view">
+		<sub:param name="listType" value="${model.listType}" />
+		<sub:param name="listGroup" value="${model.listGroup}" />
+		<sub:param name="listUsers" value="current" />
+	</sub:url>
+
+	<div class="btn-group">
+		<button type="button" class="btn btn-default dropdown-toggle"
+			data-toggle="dropdown">
+			For <span class="caret"></span>
+		</button>
+		<ul class="dropdown-menu" role="menu">
+			<li><a href="${allUrl}"><c:if test="${model.listUsers eq 'all'}"><i class="fa fa-check-circle-o"></i></c:if>Everyone</a></li>
+			<li><a href="${meUrl}"><c:if test="${model.listUsers eq 'current'}"><i class="fa fa-check-circle-o"></i></c:if>Me</a></li>
+		</ul>
+	</div>
+</c:if>
+

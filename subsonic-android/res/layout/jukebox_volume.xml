@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                android:id="@+id/toast_layout_root"
+                android:orientation="vertical"
+                android:layout_width="fill_parent"
+                android:layout_height="fill_parent"
+                android:padding="20dip"
+                android:background="@drawable/toast_frame">
+
+    <TextView
+            android:id="@+id/jukebox_volume_title"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentTop="true"
+            android:gravity="center_horizontal"
+            android:text="@string/download.jukebox_volume"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:textColor="#ffffffff"
+            android:shadowColor="#bb000000"
+            android:shadowRadius="2.75"
+            android:paddingLeft="32dp"
+            android:paddingRight="32dp"
+            android:paddingBottom="12dp"
+            />
+    <ImageView
+            android:id="@+id/jukebox_volume_image"
+            android:src="@drawable/volume"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_below="@+id/jukebox_volume_title"
+            android:paddingRight="12dip"
+            />
+    <SeekBar style="@style/SeekBar"
+             android:id="@+id/jukebox_volume_progress_bar"
+             android:layout_width="fill_parent"
+             android:layout_height="wrap_content"
+             android:layout_alignParentRight="true"
+             android:layout_below="@+id/jukebox_volume_title"
+             android:layout_toRightOf="@+id/jukebox_volume_image"
+             android:paddingBottom="3dp"
+            />
+
+</RelativeLayout>

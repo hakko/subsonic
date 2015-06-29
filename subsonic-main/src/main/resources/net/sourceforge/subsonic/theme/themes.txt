@@ -2,6 +2,7 @@
 
 # Themes by Thomas Bruce Dyrud
 # Darksub theme, courtesy of Don Pearson edited by Chicoray adapted for musiccabinet by rouge
+material "Material"
 darksub "darksub"
 musiccabinet_black "MusicCabinet (Black)"
 musiccabinet_white "MusicCabinet (White)"

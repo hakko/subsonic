@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<subsonic-response xmlns="http://subsonic.org/restapi" status="ok" version="1.9.0">
+    <songsByGenre>
+        <song id="16" parent="15" title="Atrapado" album="Ant&#237;gona" artist="Ant&#237;gona" isDir="false" coverArt="15" created="2012-12-26T17:05:54" duration="261"
+              bitRate="128" track="1" year="2008" genre="Metal" size="4188288" suffix="mp3" contentType="audio/mpeg" isVideo="false" path="Antigona/Antigona/01 - Atrapado.mp3"
+              albumId="2" artistId="2" type="music"/>
+        <song id="17" parent="15" title="Gritar al cielo" album="Ant&#237;gona" artist="Ant&#237;gona" isDir="false" coverArt="15" created="2012-12-26T17:05:44" duration="233"
+              bitRate="128" track="2" year="2008" genre="Metal" size="3737728" suffix="mp3" contentType="audio/mpeg" isVideo="false" path="Antigona/Antigona/02 - Gritar al cielo.mp3"
+              albumId="2" artistId="2" type="music"/>
+        <song id="18" parent="15" title="En sus garras" album="Ant&#237;gona" artist="Ant&#237;gona" isDir="false" coverArt="15" created="2012-12-26T17:05:22" duration="239"
+              bitRate="128" track="3" year="2008" genre="Metal" size="3846272" suffix="mp3" contentType="audio/mpeg" isVideo="false" path="Antigona/Antigona/03 - En sus garras.mp3"
+              albumId="2" artistId="2" type="music"/>
+        <song id="19" parent="15" title="Nuevos Horizontes" album="Ant&#237;gona" artist="Ant&#237;gona" isDir="false" coverArt="15" created="2012-12-26T17:05:35" duration="310"
+              bitRate="128" track="4" year="2008" genre="Metal" size="4980864" suffix="mp3" contentType="audio/mpeg" isVideo="false" path="Antigona/Antigona/04 - Nuevos Horizontes.mp3"
+              albumId="2" artistId="2" type="music"/>
+    </songsByGenre>
+</subsonic-response>

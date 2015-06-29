@@ -12,16 +12,17 @@ import net.sourceforge.subsonic.util.XMLBuilder.Attribute;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.web.bind.ServletRequestUtils;
 
+import com.github.hakko.musiccabinet.configuration.Uri;
 import com.github.hakko.musiccabinet.domain.model.music.Album;
 import com.github.hakko.musiccabinet.domain.model.music.Artist;
 import com.github.hakko.musiccabinet.domain.model.music.Track;
+import com.github.hakko.musiccabinet.service.INameSearchService;
 import com.github.hakko.musiccabinet.service.LibraryBrowserService;
-import com.github.hakko.musiccabinet.service.NameSearchService;
 
 public class RESTSearchController extends RESTAbstractController {
 
     private RESTBrowseController restBrowseController;
-    private NameSearchService nameSearchService;
+    private INameSearchService nameSearchService;
     private LibraryBrowserService libraryBrowserService;
 
     @Deprecated
@@ -67,7 +68,7 @@ public class RESTSearchController extends RESTAbstractController {
         int songOffset = ServletRequestUtils.getIntParameter(request, "songOffset", 0);
         List<Track> tracks = nameSearchService.getTracks(StringUtils.trimToEmpty(query),
                 songOffset, songCount).getResults();
-        List<Integer> mediaFileIds = restBrowseController.getMediaFileIds(tracks);
+        List<Uri> mediaFileIds = restBrowseController.getMediaFileUris(tracks);
         restBrowseController.addTracks(builder, libraryBrowserService.getTracks(mediaFileIds), null, player, "song");
 
         builder.endAll();
@@ -78,7 +79,7 @@ public class RESTSearchController extends RESTAbstractController {
         this.restBrowseController = restBrowseController;
     }
 
-    public void setNameSearchService(NameSearchService nameSearchService) {
+    public void setNameSearchService(INameSearchService nameSearchService) {
         this.nameSearchService = nameSearchService;
     }
 

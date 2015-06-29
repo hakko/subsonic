@@ -2,15 +2,7 @@
 
 <html>
 <head>
-    <%@ include file="head.jspf" %>
-    <script type="text/javascript" src="<c:url value="/dwr/engine.js"/>"></script>
-        <script type="text/javascript" src="<c:url value="/dwr/util.js"/>"></script>
-        <script type="text/javascript" src="<c:url value="/dwr/interface/chatService.js"/>"></script>
-        <script type="text/javascript" src="<c:url value="/dwr/interface/nowPlayingService.js"/>"></script>
-        <script type="text/javascript" src="<c:url value="/script/prototype.js"/>"></script>
-        <script type="text/javascript" src="<c:url value="/script/scripts.js"/>"></script>
-        <script type="text/javascript" src="<c:url value="/script/fancyzoom/FancyZoom.js"/>"></script>
-        <script type="text/javascript" src="<c:url value="/script/fancyzoom/FancyZoomHTML.js"/>"></script>
+    <%@ include file="include.jspf" %>
 
 <body class="bgcolor1 rightframe" style="padding-top:2em" onload="init()">
 
@@ -107,18 +99,18 @@
 
             // Delete all the rows except for the "pattern" row
             dwr.util.removeAllRows("chatlog", { filter:function(div) {
-                return (div.id != "pattern");
+                return (div.id != "chat-tmpl");
             }});
 
             // Create a new set cloned from the pattern row
             for (var i = 0; i < messages.messages.length; i++) {
                 var message = messages.messages[i];
                 var id = i + 1;
-                dwr.util.cloneNode("pattern", { idSuffix:id });
+                dwr.util.cloneNode("chat-tmpl", { idSuffix:id });
                 dwr.util.setValue("user" + id, message.username);
                 dwr.util.setValue("date" + id, " [" + formatDate(message.date) + "]");
                 dwr.util.setValue("content" + id, message.content);
-                $("pattern" + id).show();
+                $("chat-tmpl" + id).show();
             }
 
             var clearDiv = $("clearDiv");
@@ -151,7 +143,7 @@
 
     <table>
         <tbody id="chatlog">
-        <tr id="pattern" style="display:none;margin:0;padding:0 0 0.15em 0;border:0"><td>
+        <tr id="chat-tmpl" style="display:none;margin:0;padding:0 0 0.15em 0;border:0"><td>
             <span id="user" class="detail" style="font-weight:bold"></span>&nbsp;<span id="date" class="detail"></span> <span id="content"></span></td>
         </tr>
         </tbody>

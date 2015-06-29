@@ -44,6 +44,8 @@ import org.apache.commons.lang.RandomStringUtils;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.ParameterizableViewController;
 
+import com.github.hakko.musiccabinet.configuration.Uri;
+
 /**
  * Controller for the page used to play shared music (Twitter, Facebook etc).
  *
@@ -113,7 +115,7 @@ public class ExternalPlayerController extends ParameterizableViewController {
     }
 
     private List<MediaFile> getSongs(Share share) {
-        List<Integer> mediaFileIds = shareDao.getSharedFiles(share.getId());
+        List<Uri> mediaFileIds = shareDao.getSharedFiles(share.getId());
         mediaFileService.loadMediaFiles(mediaFileIds);
         return mediaFileService.getMediaFiles(mediaFileIds);
     }

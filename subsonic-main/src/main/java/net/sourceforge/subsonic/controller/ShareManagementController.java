@@ -21,7 +21,6 @@ package net.sourceforge.subsonic.controller;
 import static org.apache.commons.lang.StringUtils.removeEnd;
 import static org.apache.commons.lang.StringUtils.removeStart;
 import static org.apache.commons.lang.StringUtils.split;
-import static org.apache.commons.lang.math.NumberUtils.toInt;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -45,6 +44,9 @@ import net.sourceforge.subsonic.service.ShareService;
 
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.multiaction.MultiActionController;
+
+import com.github.hakko.musiccabinet.configuration.Uri;
+import com.github.hakko.musiccabinet.dao.util.URIUtil;
 
 /**
  * Controller for sharing music on Twitter, Facebook etc.
@@ -71,8 +73,8 @@ public class ShareManagementController extends MultiActionController {
             Playlist playlist = player.getPlaylist();
             files = Arrays.asList(playlist.getFiles());
         } else {
-        	List<Integer> mediaFileIds = getMediaFileIds(request.getParameter("ids"));
-	        files = mediaFileService.getMediaFiles(mediaFileIds);
+        	List<Uri> mediaFileUris = getMediaFileUris(request.getParameter("ids"));
+	        files = mediaFileService.getMediaFiles(mediaFileUris);
         }
 
         Map<String, Object> map = new HashMap<String, Object>();
@@ -87,10 +89,10 @@ public class ShareManagementController extends MultiActionController {
     /*
      * given string "[x, y, z]", returns the integers x, y and z as a list.
      */
-    private List<Integer> getMediaFileIds(String query) {
-    	List<Integer> mediaFileIds = new ArrayList<>(); 
+    private List<Uri> getMediaFileUris(String query) {
+    	List<Uri> mediaFileIds = new ArrayList<>(); 
     	for (String s : split(removeEnd(removeStart(query, "["), "]"), ", ")) {
-    		mediaFileIds.add(toInt(s));
+    		mediaFileIds.add(URIUtil.parseURI(s));
     	}
     	return mediaFileIds;
     }

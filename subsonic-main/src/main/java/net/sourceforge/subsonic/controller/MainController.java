@@ -32,18 +32,23 @@ import javax.servlet.http.HttpServletResponse;
 import net.sourceforge.subsonic.Logger;
 import net.sourceforge.subsonic.domain.MediaFile;
 import net.sourceforge.subsonic.domain.Player;
+import net.sourceforge.subsonic.domain.UserSettings;
 import net.sourceforge.subsonic.service.MediaFileService;
 import net.sourceforge.subsonic.service.PlayerService;
 import net.sourceforge.subsonic.service.SecurityService;
+import net.sourceforge.subsonic.service.SettingsService;
 
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.ParameterizableViewController;
+
+import com.github.hakko.musiccabinet.configuration.Uri;
 
 /**
  * Controller for the main page.
  */
 public class MainController extends ParameterizableViewController {
 
+	private SettingsService settingsService;
     private SecurityService securityService;
     private PlayerService playerService;
     private MediaFileService mediaFileService;
@@ -60,17 +65,20 @@ public class MainController extends ParameterizableViewController {
         MediaFile dir = mediaFileService.getNonIndexedMediaFile(path);
         List<MediaFile> subDirectories = dir.getChildren(DIRECTORY);
         List<MediaFile> files = dir.getChildren(FILE);
-        List<Integer> trackIds = new ArrayList<>(files.size());
+        List<Uri> trackIds = new ArrayList<>(files.size());
 
         for (MediaFile file : files) {
-        	trackIds.add(file.getId());
+        	trackIds.add(file.getUri());
         }
-        
+
+        UserSettings userSettings = settingsService.getUserSettings(securityService.getCurrentUsername(request));
         map.put("player", player);
         map.put("dir", dir);
         map.put("subDirectories", subDirectories);
         map.put("files", files);
         map.put("trackIds", trackIds);
+        map.put("showNowPlaying", userSettings.isShowNowPlayingEnabled());
+        map.put("showChat", userSettings.isShowChatEnabled());
         map.put("user", securityService.getCurrentUser(request));
 
         ModelAndView result = super.handleRequestInternal(request, response);
@@ -90,6 +98,10 @@ public class MainController extends ParameterizableViewController {
 
     public void setmediaFileService(MediaFileService mediaFileService) {
         this.mediaFileService = mediaFileService;
+    }
+    
+    public void setSettingsService(SettingsService settingsService) {
+        this.settingsService = settingsService;
     }
     
 }

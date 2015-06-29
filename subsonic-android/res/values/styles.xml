@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <style name="PlaybackControl">
+        <item name="android:background">@drawable/media_button</item>
+        <item name="android:scaleType">fitCenter</item>
+        <item name="android:padding">6dip</item>
+        <item name="android:layout_marginLeft">4dip</item>
+        <item name="android:layout_marginRight">4dip</item>
+        <item name="android:layout_width">54dip</item>
+        <item name="android:layout_height">54dip</item>
+        <item name="android:contentDescription">@null</item>
+    </style>
+
+    <style name="PlaybackControl.Small" parent="@style/PlaybackControl">
+        <item name="android:layout_width">46dip</item>
+        <item name="android:layout_height">46dip</item>
+    </style>
+
+    <style name="MainMenuTextView">
+        <item name="android:layout_width">fill_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:textAppearance">?android:attr/textAppearanceMedium</item>
+        <item name="android:gravity">center_vertical</item>
+        <item name="android:paddingLeft">6dip</item>
+        <item name="android:paddingRight">6dip</item>
+        <item name="android:minHeight">50dip</item>
+    </style>
+
+    <style name="MainMenuTextView.AlbumList" parent="MainMenuTextView">
+        <item name="android:drawableRight">@drawable/navigate_right</item>
+        <item name="android:drawablePadding">6dip</item>
+    </style>
+
+    <style name="WidgetButton">
+        <item name="android:background">@drawable/media_button</item>
+        <item name="android:padding">@dimen/widget_button_padding</item>
+        <item name="android:focusable">true</item>
+        <item name="android:layout_width">@dimen/widget_button_size</item>
+        <item name="android:layout_height">@dimen/widget_button_size</item>
+        <item name="android:scaleType">fitCenter</item>
+        <item name="android:contentDescription">@null</item>
+    </style>
+
+    <style name="OverlayToggleButton">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:textSize">18sp</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:background">@null</item>
+        <item name="android:padding">10dip</item>
+    </style>
+
+    <style name="HeaderTextView">
+        <item name="android:layout_width">fill_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:textSize">14sp</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:textColor">@color/mediaControlForeground</item>
+        <item name="android:background">@color/dividerColor</item>
+        <item name="android:gravity">center_vertical</item>
+        <item name="android:paddingLeft">4dp</item>
+    </style>
+
+    <style name="MenuBarButton">
+        <item name="android:layout_width">0dip</item>
+        <item name="android:layout_height">45dip</item>
+        <item name="android:layout_weight">1</item>
+        <item name="android:textSize">13sp</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:textColor">@color/buttonBarTextColor</item>
+        <item name="android:background">@drawable/menubar_button</item>
+    </style>
+
+    <!-- Work-around for bug in Android 2 -->
+    <style name="ListView">
+        <item name="android:cacheColorHint">@android:color/transparent</item>
+    </style>
+
+    <!-- Holo-style seekbar -->
+    <style name="SeekBar">
+        <item name="android:paddingLeft">16.0dip</item>
+        <item name="android:paddingRight">16.0dip</item>
+        <item name="android:focusable">true</item>
+        <item name="android:indeterminateOnly">false</item>
+        <item name="android:indeterminateDrawable">@drawable/scrubber_progress_horizontal_holo_dark</item>
+        <item name="android:progressDrawable">@drawable/scrubber_progress_horizontal_holo_dark</item>
+        <item name="android:thumb">@drawable/scrubber_control_selector_holo</item>
+        <item name="android:thumbOffset">16.0dip</item>
+        <item name="android:height">13.0dip</item>
+    </style>
+</resources>

@@ -37,9 +37,10 @@ import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.SimpleFormController;
 import org.springframework.web.servlet.view.RedirectView;
 
+import com.github.hakko.musiccabinet.configuration.Uri;
 import com.github.hakko.musiccabinet.domain.model.music.Track;
+import com.github.hakko.musiccabinet.service.INameSearchService;
 import com.github.hakko.musiccabinet.service.LibraryUpdateService;
-import com.github.hakko.musiccabinet.service.NameSearchService;
 import com.github.hakko.musiccabinet.service.StarService;
 
 /**
@@ -53,7 +54,7 @@ public class SearchController extends SimpleFormController {
     private SettingsService settingsService;
     private PlayerService playerService;
     private LibraryUpdateService libraryUpdateService;
-    private NameSearchService nameSearchService;
+    private INameSearchService nameSearchService;
     private StarService starService;
 
     private static final int ARTIST_COUNT = 5;
@@ -86,7 +87,7 @@ public class SearchController extends SimpleFormController {
                 command.setAlbums(nameSearchService.getAlbums(any, 0, ALBUM_COUNT).getResults());
                 command.setSongs(nameSearchService.getTracks(any, 0, TRACK_COUNT).getResults());
                 command.setIsTrackStarred(starService.getStarredTracksMask(userSettings.getLastFmUsername(), 
-                		getTrackIds(command.getSongs())));
+                		getTrackUris(command.getSongs())));
 
                 command.setPlayer(playerService.getPlayer(request, response));
                 command.setIndexCreated(true);
@@ -98,10 +99,10 @@ public class SearchController extends SimpleFormController {
         return new ModelAndView(getSuccessView(), errors.getModel());
     }
     
-    private List<Integer> getTrackIds(List<Track> tracks) {
-    	List<Integer> trackIds = new ArrayList<>();
+    private List<Uri> getTrackUris(List<Track> tracks) {
+    	List<Uri> trackIds = new ArrayList<>();
     	for (Track track : tracks) {
-    		trackIds.add(track.getId());
+    		trackIds.add(track.getUri());
     	}
     	return trackIds;
     }
@@ -122,7 +123,7 @@ public class SearchController extends SimpleFormController {
 		this.libraryUpdateService = libraryUpdateService;
 	}
 
-	public void setNameSearchService(NameSearchService nameSearchService) {
+	public void setNameSearchService(INameSearchService nameSearchService) {
 		this.nameSearchService = nameSearchService;
 	}
 

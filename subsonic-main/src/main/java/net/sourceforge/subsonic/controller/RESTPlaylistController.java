@@ -23,9 +23,10 @@ import net.sourceforge.subsonic.util.XMLBuilder.Attribute;
 import net.sourceforge.subsonic.util.XMLBuilder.AttributeSet;
 
 import org.apache.commons.io.FilenameUtils;
-import org.apache.commons.lang.math.NumberUtils;
 import org.springframework.web.bind.ServletRequestBindingException;
 import org.springframework.web.bind.ServletRequestUtils;
+
+import com.github.hakko.musiccabinet.dao.util.URIUtil;
 
 public class RESTPlaylistController extends RESTAbstractController {
 
@@ -109,7 +110,7 @@ public class RESTPlaylistController extends RESTAbstractController {
 
             String[] ids = ServletRequestUtils.getStringParameters(request, "songId");
             for (String id : ids) {
-                playlist.addFiles(Playlist.ADD, mediaFileService.getMediaFile(NumberUtils.toInt(id)));
+                playlist.addFiles(Playlist.ADD, mediaFileService.getMediaFile(URIUtil.parseURI(id)));
             }
             playlistService.savePlaylist(playlist);
 
@@ -174,8 +175,8 @@ public class RESTPlaylistController extends RESTAbstractController {
                 playlist.removeFileAt(index);
             }
 
-            for (int trackIdToAdd : ServletRequestUtils.getIntParameters(request, "songIdToAdd")) {
-                playlist.addFiles(ADD, mediaFileService.getMediaFile(trackIdToAdd));
+            for (String trackIdToAdd : ServletRequestUtils.getStringParameters(request, "songIdToAdd")) {
+                playlist.addFiles(ADD, mediaFileService.getMediaFile(URIUtil.parseURI(trackIdToAdd)));
             }
             playlistService.savePlaylist(playlist);
 

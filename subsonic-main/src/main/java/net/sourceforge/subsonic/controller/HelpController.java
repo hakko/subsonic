@@ -19,13 +19,19 @@
 package net.sourceforge.subsonic.controller;
 
 import static com.github.hakko.musiccabinet.log.Logger.getLogFileLocation;
-import net.sourceforge.subsonic.*;
-import net.sourceforge.subsonic.service.*;
-import org.springframework.web.servlet.*;
-import org.springframework.web.servlet.mvc.*;
 
-import javax.servlet.http.*;
-import java.util.*;
+import java.util.HashMap;
+import java.util.Map;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+import net.sourceforge.subsonic.Logger;
+import net.sourceforge.subsonic.service.SettingsService;
+import net.sourceforge.subsonic.service.VersionService;
+
+import org.springframework.web.servlet.ModelAndView;
+import org.springframework.web.servlet.mvc.ParameterizableViewController;
 
 /**
  * Controller for the help page.

@@ -18,14 +18,17 @@
  */
 package net.sourceforge.subsonic.controller;
 
-import net.sourceforge.subsonic.command.*;
-import net.sourceforge.subsonic.domain.*;
-import net.sourceforge.subsonic.service.*;
-import org.springframework.web.servlet.*;
-import org.springframework.web.servlet.mvc.*;
-import org.springframework.web.servlet.view.*;
+import javax.servlet.http.HttpServletRequest;
 
-import javax.servlet.http.*;
+import net.sourceforge.subsonic.command.SavePlaylistCommand;
+import net.sourceforge.subsonic.domain.Player;
+import net.sourceforge.subsonic.domain.Playlist;
+import net.sourceforge.subsonic.service.PlayerService;
+import net.sourceforge.subsonic.service.PlaylistService;
+
+import org.springframework.web.servlet.ModelAndView;
+import org.springframework.web.servlet.mvc.SimpleFormController;
+import org.springframework.web.servlet.view.RedirectView;
 
 /**
  * Controller for saving playlists.
