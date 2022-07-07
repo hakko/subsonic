@@ -13,7 +13,7 @@
     </parent>
     
     <properties>
-        <jetty.version>8.1.7.v20120910</jetty.version>
+        <jetty.version>10.0.10</jetty.version>
     </properties>
     
     <repositories>
